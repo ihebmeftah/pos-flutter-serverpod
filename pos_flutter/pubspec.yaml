@@ -27,6 +27,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   flutter:
     sdk: flutter
+  get: ^4.7.3
   pos_client:
     path: ../pos_client
   serverpod_auth_idp_flutter: 3.1.1
