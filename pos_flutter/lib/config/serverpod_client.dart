@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/routes/app_pages.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'app_config.dart';
@@ -19,6 +20,11 @@ class ServerpodClient extends GetxService {
       ..connectivityMonitor = FlutterConnectivityMonitor()
       ..authSessionManager = FlutterAuthSessionManager();
     await _client.auth.initialize();
+    _client.auth.authInfoListenable.addListener(() {
+      if (!_client.auth.isAuthenticated) {
+        Get.offAllNamed(Routes.AUTHENTIFICATION);
+      }
+    });
     return this;
   }
 }

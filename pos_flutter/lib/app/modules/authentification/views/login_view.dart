@@ -1,0 +1,197 @@
+import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+
+import '../../../routes/app_pages.dart';
+import '../../../themes/assets.dart';
+import '../controllers/login_controller.dart';
+
+class LoginView extends GetView<LoginController> {
+  const LoginView({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Theme(
+        data: context.theme.copyWith(
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.grey.shade200,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey.shade500),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey.shade500),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey.shade400),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.red.shade400),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.red.shade200),
+            ),
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: const AssetImage(R.imagesJpegBg),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.white.withValues(alpha: 0.7),
+                  BlendMode.modulate,
+                ),
+              ),
+            ),
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              spacing: 10.0,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Welcome Back!',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                ),
+                const Text(
+                  'Please sign in to your account',
+                  style: TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 20),
+                Form(
+                  key: controller.loginformKey,
+                  child: Column(
+                    spacing: 16.0,
+                    children: [
+                      TextFormField(
+                        controller: controller.emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email/Username',
+                          prefixIcon: const Icon(Icons.email),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email/username';
+                          }
+                          return null;
+                        },
+                      ),
+                      GetBuilder<LoginController>(
+                        id: 'obscurePassword',
+                        builder: (_) {
+                          return TextFormField(
+                            controller: controller.passwordController,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: const Icon(
+                                Icons.password,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  controller.obscurePassword
+                                      ? Icons.visibility_sharp
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: controller.toggleObscurePwd,
+                              ),
+                            ),
+                            obscureText: controller.obscurePassword,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              if (value.length < 6) {
+                                return 'Password must be at least 6 characters';
+                              }
+                              return null;
+                            },
+                          );
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              GetBuilder<LoginController>(
+                                id: 'rememberMe',
+                                builder: (_) {
+                                  return Checkbox.adaptive(
+                                    value: controller.rememberMe,
+                                    onChanged: (value) =>
+                                        controller.toggleRemebreMe(),
+                                    fillColor:
+                                        WidgetStateProperty.resolveWith<Color>((
+                                          Set<WidgetState> states,
+                                        ) {
+                                          if (states.contains(
+                                            WidgetState.selected,
+                                          )) {}
+                                          return Colors.transparent;
+                                        }),
+                                    checkColor: Colors.blue,
+                                  );
+                                },
+                              ),
+                              const Text(
+                                'Remember me',
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: const Text('Forgot Password?'),
+                          ),
+                        ],
+                      ),
+                      ElevatedButton(
+                        onPressed: controller.onLogin,
+                        child: const Text('SIGN IN'),
+                      ),
+                      Column(
+                        children: [
+                          const Center(child: Text('Or sign in with')),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("Don't have an account?"),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                ),
+                                onPressed: () => Get.toNamed(Routes.REGISTER),
+                                child: const Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

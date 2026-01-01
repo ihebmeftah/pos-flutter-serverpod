@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/config/serverpod_client.dart';
 
 import '../controllers/home_controller.dart';
+import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -14,9 +16,9 @@ class HomeView extends GetView<HomeController> {
         centerTitle: true,
       ),
       body: Center(
-        child: Text(
-          'HomeView is working',
-          style: TextStyle(fontSize: 20),
+        child: TextButton(
+          onPressed: ServerpodClient.instance.auth.signOutAllDevices,
+          child: Text("Logout"),
         ),
       ),
     );
