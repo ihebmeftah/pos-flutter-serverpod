@@ -19,6 +19,18 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
 
+  pg-admin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_LISTEN_PORT=5050
+    ports:
+      - "5050:5050"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+  
   # Test services
   postgres_test:
     image: pgvector/pgvector:pg16
@@ -42,3 +54,4 @@ services:
 volumes:
   pos_data:
   pos_test_data:
+  pgadmin-data:
