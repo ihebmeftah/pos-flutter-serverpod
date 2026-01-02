@@ -23,7 +23,15 @@ class LoginController extends GetxController {
         await _emailAuthController.login();
         if (_emailAuthController.isAuthenticated) {
           Get.offAllNamed(Routes.HOME);
-        } else {}
+        } else {
+          Get.snackbar(
+            'Login Failed',
+            'Invalid email or password',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
       }
     } catch (e) {
       Get.snackbar(

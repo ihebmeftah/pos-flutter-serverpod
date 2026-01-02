@@ -6,5 +6,7 @@ class AuthentificationController extends GetxController with StateMixin {
   final EmailAuthController emailAuthController = .new(
     client: ServerpodClient.instance,
   );
- 
+
+  void onGoogleLogin() {}
+  void onFacebookLogin() {}
 }
