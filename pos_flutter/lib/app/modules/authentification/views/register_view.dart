@@ -71,7 +71,7 @@ class RegisterView extends GetView<RegisterController> {
                   child: Column(
                     spacing: 16.0,
                     children: [
-                      Row(
+                      /*   Row(
                         spacing: 17,
                         children: [
                           Expanded(
@@ -112,6 +112,7 @@ class RegisterView extends GetView<RegisterController> {
                           ),
                         ],
                       ),
+                     */
                       TextFormField(
                         controller: controller.email,
                         decoration: InputDecoration(
@@ -129,7 +130,7 @@ class RegisterView extends GetView<RegisterController> {
                           return null;
                         },
                       ),
-                      TextFormField(
+                      /*            TextFormField(
                         controller: controller.phone,
                         decoration: InputDecoration(
                           labelText: 'Phone Number',
@@ -143,7 +144,7 @@ class RegisterView extends GetView<RegisterController> {
 
                           return null;
                         },
-                      ),
+                      ),*/
                       GetBuilder<RegisterController>(
                         id: 'obscurePassword',
                         builder: (_) {
