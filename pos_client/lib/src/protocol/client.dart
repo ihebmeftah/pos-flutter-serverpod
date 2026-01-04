@@ -16,7 +16,7 @@ import 'package:serverpod_client/serverpod_client.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
-import 'package:pos_client/src/protocol/greetings/greeting.dart' as _i5;
+import 'package:pos_client/src/protocol/buildings/building.dart' as _i5;
 import 'protocol.dart' as _i6;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
@@ -233,21 +233,25 @@ class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
   );
 }
 
-/// This is an example endpoint that returns a greeting message through
-/// its [hello] method.
 /// {@category Endpoint}
-class EndpointGreeting extends _i2.EndpointRef {
-  EndpointGreeting(_i2.EndpointCaller caller) : super(caller);
+class EndpointBuilding extends _i2.EndpointRef {
+  EndpointBuilding(_i2.EndpointCaller caller) : super(caller);
 
   @override
-  String get name => 'greeting';
+  String get name => 'building';
 
-  /// Returns a personalized greeting message: "Hello {name}".
-  _i3.Future<_i5.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i5.Greeting>(
-        'greeting',
-        'hello',
-        {'name': name},
+  _i3.Future<List<_i5.Building>> getAllBuildings() =>
+      caller.callServerEndpoint<List<_i5.Building>>(
+        'building',
+        'getAllBuildings',
+        {},
+      );
+
+  _i3.Future<_i5.Building> createBuilding(_i5.Building building) =>
+      caller.callServerEndpoint<_i5.Building>(
+        'building',
+        'createBuilding',
+        {'building': building},
       );
 }
 
@@ -293,7 +297,7 @@ class Client extends _i2.ServerpodClientShared {
        ) {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
-    greeting = EndpointGreeting(this);
+    building = EndpointBuilding(this);
     modules = Modules(this);
   }
 
@@ -301,7 +305,7 @@ class Client extends _i2.ServerpodClientShared {
 
   late final EndpointJwtRefresh jwtRefresh;
 
-  late final EndpointGreeting greeting;
+  late final EndpointBuilding building;
 
   late final Modules modules;
 
@@ -309,7 +313,7 @@ class Client extends _i2.ServerpodClientShared {
   Map<String, _i2.EndpointRef> get endpointRefLookup => {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
-    'greeting': greeting,
+    'building': building,
   };
 
   @override

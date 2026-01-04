@@ -13,11 +13,12 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../auth/email_idp_endpoint.dart' as _i2;
 import '../auth/jwt_refresh_endpoint.dart' as _i3;
-import '../greetings/greeting_endpoint.dart' as _i4;
+import '../buildings/building_endpoint.dart' as _i4;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i5;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i5;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i6;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i7;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -35,10 +36,10 @@ class Endpoints extends _i1.EndpointDispatch {
           'jwtRefresh',
           null,
         ),
-      'greeting': _i4.GreetingEndpoint()
+      'building': _i4.BuildingEndpoint()
         ..initialize(
           server,
-          'greeting',
+          'building',
           null,
         ),
     };
@@ -236,16 +237,26 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    connectors['greeting'] = _i1.EndpointConnector(
-      name: 'greeting',
-      endpoint: endpoints['greeting']!,
+    connectors['building'] = _i1.EndpointConnector(
+      name: 'building',
+      endpoint: endpoints['building']!,
       methodConnectors: {
-        'hello': _i1.MethodConnector(
-          name: 'hello',
+        'getAllBuildings': _i1.MethodConnector(
+          name: 'getAllBuildings',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['building'] as _i4.BuildingEndpoint)
+                  .getAllBuildings(session),
+        ),
+        'createBuilding': _i1.MethodConnector(
+          name: 'createBuilding',
           params: {
-            'name': _i1.ParameterDescription(
-              name: 'name',
-              type: _i1.getType<String>(),
+            'building': _i1.ParameterDescription(
+              name: 'building',
+              type: _i1.getType<_i5.Building>(),
               nullable: false,
             ),
           },
@@ -253,16 +264,17 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['greeting'] as _i4.GreetingEndpoint).hello(
-                session,
-                params['name'],
-              ),
+              ) async => (endpoints['building'] as _i4.BuildingEndpoint)
+                  .createBuilding(
+                    session,
+                    params['building'],
+                  ),
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i5.Endpoints()
+    modules['serverpod_auth_idp'] = _i6.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i6.Endpoints()
+    modules['serverpod_auth_core'] = _i7.Endpoints()
       ..initializeEndpoints(server);
   }
 }

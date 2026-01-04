@@ -1,0 +1,16 @@
+class: Building
+table: building
+fields:
+  ### The name of the building.
+  name: String
+  ### The address of the building.
+  address: String
+  ### The time when the building opens.
+  openingTime: DateTime
+  ### The time when the building closes.
+  closingTime: DateTime
+  ### The ID of the authenticated user associated with this building.
+  authUserId: UuidValue?, relation(parent=serverpod_auth_core_user), scope=serverOnly
+  ### Indicates whether the building supports multiple orders per table.
+  tableMultiOrder: bool, default=false
+

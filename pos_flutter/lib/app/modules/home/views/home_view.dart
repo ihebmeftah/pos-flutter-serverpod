@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/routes/app_pages.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 
 import '../controllers/home_controller.dart';
@@ -16,9 +17,17 @@ class HomeView extends GetView<HomeController> {
         centerTitle: true,
       ),
       body: Center(
-        child: TextButton(
-          onPressed: ServerpodClient.instance.auth.signOutAllDevices,
-          child: Text("Logout"),
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () => Get.toNamed(Routes.BUILDINGS),
+              child: Text("Buildings"),
+            ),
+            TextButton(
+              onPressed: ServerpodClient.instance.auth.signOutAllDevices,
+              child: Text("Logout"),
+            ),
+          ],
         ),
       ),
     );
