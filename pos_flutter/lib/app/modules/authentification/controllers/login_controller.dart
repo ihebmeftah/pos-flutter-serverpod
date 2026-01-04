@@ -22,7 +22,7 @@ class LoginController extends GetxController {
       if (loginformKey.currentState!.validate()) {
         await _emailAuthController.login();
         if (_emailAuthController.isAuthenticated) {
-          Get.offAllNamed(Routes.HOME);
+          Get.offAllNamed(Routes.INDEX);
         } else {
           Get.snackbar(
             'Login Failed',

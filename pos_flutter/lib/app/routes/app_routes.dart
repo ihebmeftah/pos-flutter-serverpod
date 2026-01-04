@@ -11,6 +11,9 @@ abstract class Routes {
   static const LOGIN = _Paths.AUTHENTIFICATION + _Paths.LOGIN;
   static const BUILDINGS = _Paths.BUILDINGS;
   static const FORM_BUILDING = _Paths.BUILDINGS + _Paths.FORM_BUILDING;
+  static const INDEX = _Paths.INDEX;
+  static const ORDER = _Paths.ORDER;
+  static const TABLES = _Paths.TABLES;
 }
 
 abstract class _Paths {
@@ -21,4 +24,7 @@ abstract class _Paths {
   static const LOGIN = '/login';
   static const BUILDINGS = '/buildings';
   static const FORM_BUILDING = '/form-building';
+  static const INDEX = '/index';
+  static const ORDER = '/order';
+  static const TABLES = '/tables';
 }

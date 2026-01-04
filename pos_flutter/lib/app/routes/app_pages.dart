@@ -9,10 +9,16 @@ import '../modules/authentification/views/login_view.dart';
 import '../modules/authentification/views/register_view.dart';
 import '../modules/buildings/bindings/buildings_binding.dart';
 import '../modules/buildings/bindings/form_building_binding.dart';
-import '../modules/buildings/views/form_building_view.dart';
 import '../modules/buildings/views/buildings_view.dart';
+import '../modules/buildings/views/form_building_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/index/bindings/index_binding.dart';
+import '../modules/index/views/index_view.dart';
+import '../modules/order/bindings/order_binding.dart';
+import '../modules/order/views/order_view.dart';
+import '../modules/tables/bindings/tables_binding.dart';
+import '../modules/tables/views/tables_view.dart';
 
 part 'app_routes.dart';
 
@@ -54,6 +60,27 @@ class AppPages {
           binding: FormBuildingBinding(),
         ),
       ],
+    ),
+    GetPage(
+      name: _Paths.INDEX,
+      page: () => const IndexView(),
+      bindings: [
+        IndexBinding(),
+        HomeBinding(),
+        TablesBinding(),
+
+        OrderBinding(),
+      ],
+    ),
+    GetPage(
+      name: _Paths.ORDER,
+      page: () => const OrderView(),
+      binding: OrderBinding(),
+    ),
+    GetPage(
+      name: _Paths.TABLES,
+      page: () => const TablesView(),
+      binding: TablesBinding(),
     ),
   ];
 }

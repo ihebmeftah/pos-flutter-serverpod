@@ -27,4 +27,8 @@ class ServerpodClient extends GetxService {
     });
     return this;
   }
+
+  Set<String>? get userScopes {
+    return instance.auth.authInfo?.scopeNames;
+  }
 }

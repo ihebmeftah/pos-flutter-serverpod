@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/data/local/local_storage.dart'
+    show LocalStorage;
 
 import '../../../components/appbottomsheet.dart';
 import '../../../components/appemptyscreen.dart';
@@ -30,7 +32,7 @@ class BuildingsView extends GetView<BuildingsController> {
                       "Building: ${building.name}",
                       style: context.textTheme.titleLarge,
                     ),
-                /*     if (building.photos != null)
+                    /*     if (building.photos != null)
                       SizedBox(
                         height: 200,
                         width: double.infinity,
@@ -45,7 +47,8 @@ class BuildingsView extends GetView<BuildingsController> {
                           ),
                         ),
                       ),
-                   */],
+                   */
+                  ],
                 );
               },
               leading: CircleAvatar(
@@ -57,8 +60,8 @@ class BuildingsView extends GetView<BuildingsController> {
               ),
               trailing: TextButton(
                 onPressed: () async {
-                  // await LocalStorage().saveBuilding(building);
-                  //  Get.offAllNamed(Routes.INDEX);
+                  await LocalStorage().saveBuilding(building);
+                  Get.offAllNamed(Routes.INDEX);
                 },
                 child: Text("Consult"),
               ),

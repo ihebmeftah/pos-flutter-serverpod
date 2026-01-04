@@ -29,6 +29,9 @@ dependencies:
     sdk: flutter
   get: ^4.7.3
   hexcolor: ^3.0.2
+  flutter_svg: ^2.2.0
+  get_storage: ^2.1.1
+
   pos_client:
     path: ../pos_client
   serverpod_auth_idp_flutter: 3.1.1
@@ -62,6 +65,7 @@ flutter:
   assets:
     - assets/config.json
     - assets/images/jpeg/
+    - assets/images/svg/
 
 dependency_overrides:
   flutter_secure_storage: ^10.0.0
