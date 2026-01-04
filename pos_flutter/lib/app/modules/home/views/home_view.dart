@@ -16,9 +16,10 @@ class HomeView extends GetView<HomeController> {
         title: const Text('HomeView'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
+      body: controller.obx(
+        (s) => Column(
           children: [
+            Text('Welcome, ${controller.userProfile.email ?? 'User'}!'),
             TextButton(
               onPressed: () => Get.toNamed(Routes.BUILDINGS),
               child: Text("Buildings"),
@@ -29,6 +30,8 @@ class HomeView extends GetView<HomeController> {
             ),
           ],
         ),
+        onLoading: const Center(child: CircularProgressIndicator()),
+        onError: (error) => Center(child: Text('Error: $error')),
       ),
     );
   }

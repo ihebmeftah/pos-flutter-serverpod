@@ -29,6 +29,13 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   @override
   String get name => 'emailIdp';
 
+  _i3.Future<_i4.UserProfileModel> getUserProfile() =>
+      caller.callServerEndpoint<_i4.UserProfileModel>(
+        'emailIdp',
+        'getUserProfile',
+        {},
+      );
+
   /// Logs in the user and returns a new session.
   ///
   /// Throws an [EmailAccountLoginException] in case of errors, with reason:
