@@ -21,12 +21,31 @@ class Appemptyscreen extends StatelessWidget {
       return () => Get.toNamed(Routes.FORM_BUILDING);
     }
 
+    if ((Get.currentRoute == Routes.INDEX && route == Routes.TABLES) ||
+        Get.currentRoute == Routes.TABLES) {
+      return () => Get.toNamed(Routes.FORM_TABLE);
+    }
+
     return null;
   }
 
   String get getText {
     if (Get.currentRoute == route || Get.currentRoute == Routes.BUILDINGS) {
       return "You don't have any buildings yet.";
+    }
+
+    if ((Get.currentRoute == Routes.INDEX && route == Routes.TABLES) ||
+        Get.currentRoute == Routes.TABLES) {
+      return "Your building has no tables yet.";
+    }
+
+    if ((Get.currentRoute == Routes.INDEX && route == Routes.ORDER) ||
+        Get.currentRoute == Routes.ORDER) {
+      return "Your building has no orders yet.";
+    }
+    if (Get.currentRoute == route ||
+        Get.currentRoute.contains(Routes.ORDER_DETAILS)) {
+      return "This order has no details yet.";
     }
     return "";
   }
@@ -61,7 +80,7 @@ class EmptyWidget extends StatelessWidget {
         spacing: 5,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.info_outline, size: 30),
+          Icon(Icons.info, size: 30),
           Text(
             getText,
             textAlign: TextAlign.center,

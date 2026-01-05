@@ -12,3 +12,6 @@ jwtRefresh:
 building:
   - getAllBuildings:
   - createBuilding:
+buildingTables:
+  - getTables:
+  - createTables:

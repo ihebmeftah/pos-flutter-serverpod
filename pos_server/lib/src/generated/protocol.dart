@@ -17,8 +17,14 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
 import 'buildings/building.dart' as _i5;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i6;
+import 'buildings_tables/building_tables.dart' as _i6;
+import 'buildings_tables/table_status_enum.dart' as _i7;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i8;
+import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
+    as _i9;
 export 'buildings/building.dart';
+export 'buildings_tables/building_tables.dart';
+export 'buildings_tables/table_status_enum.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -28,6 +34,68 @@ class Protocol extends _i1.SerializationManagerServer {
   static final Protocol _instance = Protocol._();
 
   static final List<_i2.TableDefinition> targetTableDefinitions = [
+    _i2.TableDefinition(
+      name: 'b_tables',
+      dartName: 'BTable',
+      schema: 'public',
+      module: 'pos',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'b_tables_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'number',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'seatsMax',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '4',
+        ),
+        _i2.ColumnDefinition(
+          name: 'buildingId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'b_tables_fk_0',
+          columns: ['buildingId'],
+          referenceTable: 'building',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'b_tables_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
     _i2.TableDefinition(
       name: 'building',
       dartName: 'Building',
@@ -143,11 +211,27 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i5.Building) {
       return _i5.Building.fromJson(data) as T;
     }
+    if (t == _i6.BTable) {
+      return _i6.BTable.fromJson(data) as T;
+    }
+    if (t == _i7.TableStatus) {
+      return _i7.TableStatus.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i5.Building?>()) {
       return (data != null ? _i5.Building.fromJson(data) : null) as T;
     }
-    if (t == List<_i6.Building>) {
-      return (data as List).map((e) => deserialize<_i6.Building>(e)).toList()
+    if (t == _i1.getType<_i6.BTable?>()) {
+      return (data != null ? _i6.BTable.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i7.TableStatus?>()) {
+      return (data != null ? _i7.TableStatus.fromJson(data) : null) as T;
+    }
+    if (t == List<_i8.Building>) {
+      return (data as List).map((e) => deserialize<_i8.Building>(e)).toList()
+          as T;
+    }
+    if (t == List<_i9.BTable>) {
+      return (data as List).map((e) => deserialize<_i9.BTable>(e)).toList()
           as T;
     }
     try {
@@ -165,6 +249,8 @@ class Protocol extends _i1.SerializationManagerServer {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _i5.Building => 'Building',
+      _i6.BTable => 'BTable',
+      _i7.TableStatus => 'TableStatus',
       _ => null,
     };
   }
@@ -181,6 +267,10 @@ class Protocol extends _i1.SerializationManagerServer {
     switch (data) {
       case _i5.Building():
         return 'Building';
+      case _i6.BTable():
+        return 'BTable';
+      case _i7.TableStatus():
+        return 'TableStatus';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -205,6 +295,12 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (dataClassName == 'Building') {
       return deserialize<_i5.Building>(data['data']);
+    }
+    if (dataClassName == 'BTable') {
+      return deserialize<_i6.BTable>(data['data']);
+    }
+    if (dataClassName == 'TableStatus') {
+      return deserialize<_i7.TableStatus>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -244,6 +340,8 @@ class Protocol extends _i1.SerializationManagerServer {
     switch (t) {
       case _i5.Building:
         return _i5.Building.t;
+      case _i6.BTable:
+        return _i6.BTable.t;
     }
     return null;
   }

@@ -1,0 +1,7 @@
+enum: TableStatus
+serialized: byName
+default: available
+values:
+  - available
+  - occupied
+  - reserved

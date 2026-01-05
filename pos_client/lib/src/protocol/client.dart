@@ -17,7 +17,9 @@ import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
 import 'package:pos_client/src/protocol/buildings/building.dart' as _i5;
-import 'protocol.dart' as _i6;
+import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
+    as _i6;
+import 'protocol.dart' as _i7;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -262,6 +264,35 @@ class EndpointBuilding extends _i2.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointBuildingTables extends _i2.EndpointRef {
+  EndpointBuildingTables(_i2.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'buildingTables';
+
+  _i3.Future<List<_i6.BTable>> getTables(int buildingId) =>
+      caller.callServerEndpoint<List<_i6.BTable>>(
+        'buildingTables',
+        'getTables',
+        {'buildingId': buildingId},
+      );
+
+  _i3.Future<List<_i6.BTable>> createTables({
+    required int nbtables,
+    required int seatsMax,
+    required int buildingId,
+  }) => caller.callServerEndpoint<List<_i6.BTable>>(
+    'buildingTables',
+    'createTables',
+    {
+      'nbtables': nbtables,
+      'seatsMax': seatsMax,
+      'buildingId': buildingId,
+    },
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i1.Caller(client);
@@ -293,7 +324,7 @@ class Client extends _i2.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i6.Protocol(),
+         _i7.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -305,6 +336,7 @@ class Client extends _i2.ServerpodClientShared {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     building = EndpointBuilding(this);
+    buildingTables = EndpointBuildingTables(this);
     modules = Modules(this);
   }
 
@@ -314,6 +346,8 @@ class Client extends _i2.ServerpodClientShared {
 
   late final EndpointBuilding building;
 
+  late final EndpointBuildingTables buildingTables;
+
   late final Modules modules;
 
   @override
@@ -321,6 +355,7 @@ class Client extends _i2.ServerpodClientShared {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
     'building': building,
+    'buildingTables': buildingTables,
   };
 
   @override

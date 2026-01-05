@@ -14,11 +14,12 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../auth/email_idp_endpoint.dart' as _i2;
 import '../auth/jwt_refresh_endpoint.dart' as _i3;
 import '../buildings/building_endpoint.dart' as _i4;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i5;
+import '../buildings_tables/building_tables_endpoint.dart' as _i5;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i6;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i6;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i7;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i8;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -40,6 +41,12 @@ class Endpoints extends _i1.EndpointDispatch {
         ..initialize(
           server,
           'building',
+          null,
+        ),
+      'buildingTables': _i5.BuildingTablesEndpoint()
+        ..initialize(
+          server,
+          'buildingTables',
           null,
         ),
     };
@@ -266,7 +273,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'building': _i1.ParameterDescription(
               name: 'building',
-              type: _i1.getType<_i5.Building>(),
+              type: _i1.getType<_i6.Building>(),
               nullable: false,
             ),
           },
@@ -282,9 +289,67 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i6.Endpoints()
+    connectors['buildingTables'] = _i1.EndpointConnector(
+      name: 'buildingTables',
+      endpoint: endpoints['buildingTables']!,
+      methodConnectors: {
+        'getTables': _i1.MethodConnector(
+          name: 'getTables',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['buildingTables'] as _i5.BuildingTablesEndpoint)
+                      .getTables(
+                        session,
+                        params['buildingId'],
+                      ),
+        ),
+        'createTables': _i1.MethodConnector(
+          name: 'createTables',
+          params: {
+            'nbtables': _i1.ParameterDescription(
+              name: 'nbtables',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'seatsMax': _i1.ParameterDescription(
+              name: 'seatsMax',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['buildingTables'] as _i5.BuildingTablesEndpoint)
+                      .createTables(
+                        session,
+                        nbtables: params['nbtables'],
+                        seatsMax: params['seatsMax'],
+                        buildingId: params['buildingId'],
+                      ),
+        ),
+      },
+    );
+    modules['serverpod_auth_idp'] = _i7.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i7.Endpoints()
+    modules['serverpod_auth_core'] = _i8.Endpoints()
       ..initializeEndpoints(server);
   }
 }
