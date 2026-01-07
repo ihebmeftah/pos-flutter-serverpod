@@ -20,10 +20,19 @@ class Appemptyscreen extends StatelessWidget {
     if (Get.currentRoute == route || Get.currentRoute == Routes.BUILDINGS) {
       return () => Get.toNamed(Routes.FORM_BUILDING);
     }
-
+    /*if (Get.currentRoute == route || Get.currentRoute == Routes.STAFF) {
+      return () => Get.toNamed(Routes.STAFF_FORM);
+    }*/
+    if ((Get.currentRoute == Routes.INDEX && route == Routes.ARTICLE) ||
+        Get.currentRoute == Routes.ARTICLE) {
+      return () => Get.toNamed(Routes.ARTICLE_FORM);
+    }
     if ((Get.currentRoute == Routes.INDEX && route == Routes.TABLES) ||
         Get.currentRoute == Routes.TABLES) {
       return () => Get.toNamed(Routes.FORM_TABLE);
+    }
+    if (Get.currentRoute == route || Get.currentRoute == Routes.CATEGORIE) {
+      return () => Get.toNamed(Routes.CATEGORIE_FORM);
     }
 
     return null;
@@ -33,12 +42,20 @@ class Appemptyscreen extends StatelessWidget {
     if (Get.currentRoute == route || Get.currentRoute == Routes.BUILDINGS) {
       return "You don't have any buildings yet.";
     }
-
+    /*  if (Get.currentRoute == route || Get.currentRoute == Routes.STAFF) {
+      return "You don't have any staff yet.";
+    }*/
+    if ((Get.currentRoute == Routes.INDEX && route == Routes.ARTICLE) ||
+        Get.currentRoute == Routes.ARTICLE) {
+      return "Your building has no articles yet.";
+    }
     if ((Get.currentRoute == Routes.INDEX && route == Routes.TABLES) ||
         Get.currentRoute == Routes.TABLES) {
       return "Your building has no tables yet.";
     }
-
+    if (Get.currentRoute == route || Get.currentRoute == Routes.CATEGORIE) {
+      return "Your building has no categories yet.";
+    }
     if ((Get.currentRoute == Routes.INDEX && route == Routes.ORDER) ||
         Get.currentRoute == Routes.ORDER) {
       return "Your building has no orders yet.";
@@ -68,9 +85,11 @@ class EmptyWidget extends StatelessWidget {
     return TextButton(
       style: TextButton.styleFrom(
         disabledBackgroundColor: Colors.grey.shade200,
-        backgroundColor: Colors.grey.shade200,
+        backgroundColor: Routes.ARTICLE == route ? null : Colors.grey.shade200,
         foregroundColor: Colors.brown.shade700,
-        disabledForegroundColor: Colors.brown.shade700,
+        disabledForegroundColor: Routes.ARTICLE == route
+            ? null
+            : Colors.brown.shade700,
         disabledIconColor: Colors.brown.shade700,
         padding: const EdgeInsets.all(20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

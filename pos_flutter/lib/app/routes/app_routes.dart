@@ -18,6 +18,11 @@ abstract class Routes {
   static const ORDER_DETAILS = _Paths.ORDER + _Paths.ORDER_DETAILS;
   static const ORDERS_TABLES = _Paths.ORDER + _Paths.TABLES;
   static const FORM_TABLE = _Paths.TABLES + _Paths.FORM_TABLE;
+  static const ARTICLE = _Paths.ARTICLE;
+  static const INVENTORY = _Paths.INVENTORY;
+  static const CATEGORIE = _Paths.CATEGORIE;
+  static const CATEGORIE_FORM = _Paths.CATEGORIE + _Paths.CATEGORIE_FORM;
+  static const ARTICLE_FORM = _Paths.ARTICLE + _Paths.ARTICLE_FORM;
 }
 
 abstract class _Paths {
@@ -34,4 +39,9 @@ abstract class _Paths {
   static const PASS_ORDER = '/pass-order';
   static const ORDER_DETAILS = '/order-details';
   static const FORM_TABLE = '/form-table';
+  static const ARTICLE = '/article';
+  static const INVENTORY = '/inventory';
+  static const CATEGORIE = '/categorie';
+  static const CATEGORIE_FORM = '/categorie-form';
+  static const ARTICLE_FORM = '/article-form';
 }

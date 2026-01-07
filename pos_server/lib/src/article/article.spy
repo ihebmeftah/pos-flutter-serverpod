@@ -1,0 +1,7 @@
+class: Article
+table: article
+fields:
+  name: String,
+  description: String?
+  price: double,
+  categorie: Categorie?, relation

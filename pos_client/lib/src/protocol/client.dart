@@ -10,30 +10,59 @@
 // ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import 'dart:async' as _i2;
+import 'package:pos_client/src/protocol/article/article.dart' as _i3;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i1;
-import 'package:serverpod_client/serverpod_client.dart' as _i2;
-import 'dart:async' as _i3;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
-import 'package:pos_client/src/protocol/buildings/building.dart' as _i5;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i5;
+import 'package:pos_client/src/protocol/buildings/building.dart' as _i6;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
-    as _i6;
-import 'package:pos_client/src/protocol/greetings/greeting.dart' as _i7;
-import 'protocol.dart' as _i8;
+    as _i7;
+import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i8;
+import 'package:pos_client/src/protocol/greetings/greeting.dart' as _i9;
+import 'protocol.dart' as _i10;
+
+/// {@category Endpoint}
+class EndpointArticle extends _i1.EndpointRef {
+  EndpointArticle(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'article';
+
+  _i2.Future<List<_i3.Article>> getArticles(int buildingId) =>
+      caller.callServerEndpoint<List<_i3.Article>>(
+        'article',
+        'getArticles',
+        {'buildingId': buildingId},
+      );
+
+  _i2.Future<_i3.Article> createArticle({
+    required _i3.Article article,
+    required int buildingId,
+  }) => caller.callServerEndpoint<_i3.Article>(
+    'article',
+    'createArticle',
+    {
+      'article': article,
+      'buildingId': buildingId,
+    },
+  );
+}
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 /// {@category Endpoint}
-class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
-  EndpointEmailIdp(_i2.EndpointCaller caller) : super(caller);
+class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
+  EndpointEmailIdp(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'emailIdp';
 
-  _i3.Future<_i4.UserProfileModel> getUserProfile() =>
-      caller.callServerEndpoint<_i4.UserProfileModel>(
+  _i2.Future<_i5.UserProfileModel> getUserProfile() =>
+      caller.callServerEndpoint<_i5.UserProfileModel>(
         'emailIdp',
         'getUserProfile',
         {},
@@ -49,10 +78,10 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i3.Future<_i4.AuthSuccess> login({
+  _i2.Future<_i5.AuthSuccess> login({
     required String email,
     required String password,
-  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
     'emailIdp',
     'login',
     {
@@ -72,8 +101,8 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   /// registration. If the email is already registered, the returned ID will not
   /// be valid.
   @override
-  _i3.Future<_i2.UuidValue> startRegistration({required String email}) =>
-      caller.callServerEndpoint<_i2.UuidValue>(
+  _i2.Future<_i1.UuidValue> startRegistration({required String email}) =>
+      caller.callServerEndpoint<_i1.UuidValue>(
         'emailIdp',
         'startRegistration',
         {'email': email},
@@ -90,8 +119,8 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   /// - [EmailAccountRequestExceptionReason.invalid] if no request exists
   ///   for the given [accountRequestId] or [verificationCode] is invalid.
   @override
-  _i3.Future<String> verifyRegistrationCode({
-    required _i2.UuidValue accountRequestId,
+  _i2.Future<String> verifyRegistrationCode({
+    required _i1.UuidValue accountRequestId,
     required String verificationCode,
   }) => caller.callServerEndpoint<String>(
     'emailIdp',
@@ -117,10 +146,10 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   ///
   /// Returns a session for the newly created user.
   @override
-  _i3.Future<_i4.AuthSuccess> finishRegistration({
+  _i2.Future<_i5.AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
-  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
     'emailIdp',
     'finishRegistration',
     {
@@ -143,8 +172,8 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   ///   made too many attempts trying to request a password reset.
   ///
   @override
-  _i3.Future<_i2.UuidValue> startPasswordReset({required String email}) =>
-      caller.callServerEndpoint<_i2.UuidValue>(
+  _i2.Future<_i1.UuidValue> startPasswordReset({required String email}) =>
+      caller.callServerEndpoint<_i1.UuidValue>(
         'emailIdp',
         'startPasswordReset',
         {'email': email},
@@ -165,8 +194,8 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   /// should be overridden to return credentials for the next step instead
   /// of the credentials for setting the password.
   @override
-  _i3.Future<String> verifyPasswordResetCode({
-    required _i2.UuidValue passwordResetRequestId,
+  _i2.Future<String> verifyPasswordResetCode({
+    required _i1.UuidValue passwordResetRequestId,
     required String verificationCode,
   }) => caller.callServerEndpoint<String>(
     'emailIdp',
@@ -192,7 +221,7 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i3.Future<void> finishPasswordReset({
+  _i2.Future<void> finishPasswordReset({
     required String finishPasswordResetToken,
     required String newPassword,
   }) => caller.callServerEndpoint<void>(
@@ -208,8 +237,8 @@ class EndpointEmailIdp extends _i1.EndpointEmailIdpBase {
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
 /// is made available on the server and enables automatic token refresh on the client.
 /// {@category Endpoint}
-class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
-  EndpointJwtRefresh(_i2.EndpointCaller caller) : super(caller);
+class EndpointJwtRefresh extends _i5.EndpointRefreshJwtTokens {
+  EndpointJwtRefresh(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'jwtRefresh';
@@ -233,9 +262,9 @@ class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
   /// This endpoint is unauthenticated, meaning the client won't include any
   /// authentication information with the call.
   @override
-  _i3.Future<_i4.AuthSuccess> refreshAccessToken({
+  _i2.Future<_i5.AuthSuccess> refreshAccessToken({
     required String refreshToken,
-  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
     'jwtRefresh',
     'refreshAccessToken',
     {'refreshToken': refreshToken},
@@ -244,21 +273,21 @@ class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
 }
 
 /// {@category Endpoint}
-class EndpointBuilding extends _i2.EndpointRef {
-  EndpointBuilding(_i2.EndpointCaller caller) : super(caller);
+class EndpointBuilding extends _i1.EndpointRef {
+  EndpointBuilding(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'building';
 
-  _i3.Future<List<_i5.Building>> getAllBuildings() =>
-      caller.callServerEndpoint<List<_i5.Building>>(
+  _i2.Future<List<_i6.Building>> getAllBuildings() =>
+      caller.callServerEndpoint<List<_i6.Building>>(
         'building',
         'getAllBuildings',
         {},
       );
 
-  _i3.Future<_i5.Building> createBuilding(_i5.Building building) =>
-      caller.callServerEndpoint<_i5.Building>(
+  _i2.Future<_i6.Building> createBuilding(_i6.Building building) =>
+      caller.callServerEndpoint<_i6.Building>(
         'building',
         'createBuilding',
         {'building': building},
@@ -266,24 +295,24 @@ class EndpointBuilding extends _i2.EndpointRef {
 }
 
 /// {@category Endpoint}
-class EndpointBuildingTables extends _i2.EndpointRef {
-  EndpointBuildingTables(_i2.EndpointCaller caller) : super(caller);
+class EndpointBuildingTables extends _i1.EndpointRef {
+  EndpointBuildingTables(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'buildingTables';
 
-  _i3.Future<List<_i6.BTable>> getTables(int buildingId) =>
-      caller.callServerEndpoint<List<_i6.BTable>>(
+  _i2.Future<List<_i7.BTable>> getTables(int buildingId) =>
+      caller.callServerEndpoint<List<_i7.BTable>>(
         'buildingTables',
         'getTables',
         {'buildingId': buildingId},
       );
 
-  _i3.Future<List<_i6.BTable>> createTables({
+  _i2.Future<List<_i7.BTable>> createTables({
     required int nbtables,
     required int seatsMax,
     required int buildingId,
-  }) => caller.callServerEndpoint<List<_i6.BTable>>(
+  }) => caller.callServerEndpoint<List<_i7.BTable>>(
     'buildingTables',
     'createTables',
     {
@@ -294,18 +323,45 @@ class EndpointBuildingTables extends _i2.EndpointRef {
   );
 }
 
+/// {@category Endpoint}
+class EndpointCategorie extends _i1.EndpointRef {
+  EndpointCategorie(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'categorie';
+
+  _i2.Future<List<_i8.Categorie>> getCategories(int buildingId) =>
+      caller.callServerEndpoint<List<_i8.Categorie>>(
+        'categorie',
+        'getCategories',
+        {'buildingId': buildingId},
+      );
+
+  _i2.Future<_i8.Categorie> createCategorie({
+    required _i8.Categorie categorie,
+    required int buildingId,
+  }) => caller.callServerEndpoint<_i8.Categorie>(
+    'categorie',
+    'createCategorie',
+    {
+      'categorie': categorie,
+      'buildingId': buildingId,
+    },
+  );
+}
+
 /// This is an example endpoint that returns a greeting message through
 /// its [hello] method.
 /// {@category Endpoint}
-class EndpointGreeting extends _i2.EndpointRef {
-  EndpointGreeting(_i2.EndpointCaller caller) : super(caller);
+class EndpointGreeting extends _i1.EndpointRef {
+  EndpointGreeting(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i3.Future<_i7.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i7.Greeting>(
+  _i2.Future<_i9.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i9.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -314,16 +370,16 @@ class EndpointGreeting extends _i2.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    serverpod_auth_idp = _i1.Caller(client);
-    serverpod_auth_core = _i4.Caller(client);
+    serverpod_auth_idp = _i4.Caller(client);
+    serverpod_auth_core = _i5.Caller(client);
   }
 
-  late final _i1.Caller serverpod_auth_idp;
+  late final _i4.Caller serverpod_auth_idp;
 
-  late final _i4.Caller serverpod_auth_core;
+  late final _i5.Caller serverpod_auth_core;
 }
 
-class Client extends _i2.ServerpodClientShared {
+class Client extends _i1.ServerpodClientShared {
   Client(
     String host, {
     dynamic securityContext,
@@ -334,16 +390,16 @@ class Client extends _i2.ServerpodClientShared {
     Duration? streamingConnectionTimeout,
     Duration? connectionTimeout,
     Function(
-      _i2.MethodCallContext,
+      _i1.MethodCallContext,
       Object,
       StackTrace,
     )?
     onFailedCall,
-    Function(_i2.MethodCallContext)? onSucceededCall,
+    Function(_i1.MethodCallContext)? onSucceededCall,
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i8.Protocol(),
+         _i10.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -352,13 +408,17 @@ class Client extends _i2.ServerpodClientShared {
          disconnectStreamsOnLostInternetConnection:
              disconnectStreamsOnLostInternetConnection,
        ) {
+    article = EndpointArticle(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     building = EndpointBuilding(this);
     buildingTables = EndpointBuildingTables(this);
+    categorie = EndpointCategorie(this);
     greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
+
+  late final EndpointArticle article;
 
   late final EndpointEmailIdp emailIdp;
 
@@ -368,21 +428,25 @@ class Client extends _i2.ServerpodClientShared {
 
   late final EndpointBuildingTables buildingTables;
 
+  late final EndpointCategorie categorie;
+
   late final EndpointGreeting greeting;
 
   late final Modules modules;
 
   @override
-  Map<String, _i2.EndpointRef> get endpointRefLookup => {
+  Map<String, _i1.EndpointRef> get endpointRefLookup => {
+    'article': article,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
     'building': building,
     'buildingTables': buildingTables,
+    'categorie': categorie,
     'greeting': greeting,
   };
 
   @override
-  Map<String, _i2.ModuleEndpointCaller> get moduleLookup => {
+  Map<String, _i1.ModuleEndpointCaller> get moduleLookup => {
     'serverpod_auth_idp': modules.serverpod_auth_idp,
     'serverpod_auth_core': modules.serverpod_auth_core,
   };

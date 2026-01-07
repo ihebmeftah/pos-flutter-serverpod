@@ -1,3 +1,6 @@
+article:
+  - getArticles:
+  - createArticle:
 emailIdp:
   - getUserProfile:
   - login:
@@ -15,5 +18,8 @@ building:
 buildingTables:
   - getTables:
   - createTables:
+categorie:
+  - getCategories:
+  - createCategorie:
 greeting:
   - hello:
