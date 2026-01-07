@@ -18,14 +18,14 @@ abstract class Categorie
     this.id,
     required this.name,
     required this.description,
-    this.buildingId,
+    required this.buildingId,
   });
 
   factory Categorie({
     int? id,
     required String name,
     required String description,
-    int? buildingId,
+    required int? buildingId,
   }) = _CategorieImpl;
 
   factory Categorie.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -120,7 +120,7 @@ class _CategorieImpl extends Categorie {
     int? id,
     required String name,
     required String description,
-    int? buildingId,
+    required int? buildingId,
   }) : super._(
          id: id,
          name: name,

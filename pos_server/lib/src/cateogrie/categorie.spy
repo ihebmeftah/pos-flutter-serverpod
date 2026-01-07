@@ -3,4 +3,4 @@ table: categorie
 fields:
   name: String,
   description: String
-  buildingId: int?, relation(parent=building), scope=serverOnly
+  buildingId: int?, relation(parent=building), scope=serverOnly, required

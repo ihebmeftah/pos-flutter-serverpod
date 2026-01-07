@@ -4,4 +4,4 @@ fields:
   name: String,
   description: String?
   price: double,
-  categorie: Categorie?, relation
+  categorie: Categorie?, relation,required

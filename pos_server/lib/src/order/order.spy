@@ -1,0 +1,10 @@
+class: Order
+table: orders
+fields:
+  status: OrderStatus, default=progress
+  createdAt: DateTime, default=now
+  updatedAt: DateTime?,
+  btable: BTable?, relation,required
+  passedBy: module:serverpod_auth_core:AuthUser?, relation,
+  closedby: module:serverpod_auth_core:AuthUser?, relation
+  items: List<OrderItem>?, relation

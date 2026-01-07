@@ -23,3 +23,11 @@ categorie:
   - createCategorie:
 greeting:
   - hello:
+order:
+  - getOrders:
+  - getOrderById:
+  - createOrder:
+  - payItem:
+  - payAllItems:
+  - getOrderCurrOfTable:
+  - getOrdersOfTable:

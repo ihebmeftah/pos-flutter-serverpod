@@ -19,6 +19,7 @@ abstract class BTable implements _i1.SerializableModel {
     required this.number,
     int? seatsMax,
     _i2.TableStatus? status,
+    required this.buildingId,
   }) : seatsMax = seatsMax ?? 4,
        status = status ?? _i2.TableStatus.available;
 
@@ -27,6 +28,7 @@ abstract class BTable implements _i1.SerializableModel {
     required int number,
     int? seatsMax,
     _i2.TableStatus? status,
+    required int? buildingId,
   }) = _BTableImpl;
 
   factory BTable.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -35,6 +37,7 @@ abstract class BTable implements _i1.SerializableModel {
       number: jsonSerialization['number'] as int,
       seatsMax: jsonSerialization['seatsMax'] as int,
       status: _i2.TableStatus.fromJson((jsonSerialization['status'] as String)),
+      buildingId: jsonSerialization['buildingId'] as int?,
     );
   }
 
@@ -50,6 +53,8 @@ abstract class BTable implements _i1.SerializableModel {
 
   _i2.TableStatus status;
 
+  int? buildingId;
+
   /// Returns a shallow copy of this [BTable]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -58,6 +63,7 @@ abstract class BTable implements _i1.SerializableModel {
     int? number,
     int? seatsMax,
     _i2.TableStatus? status,
+    int? buildingId,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -67,6 +73,7 @@ abstract class BTable implements _i1.SerializableModel {
       'number': number,
       'seatsMax': seatsMax,
       'status': status.toJson(),
+      if (buildingId != null) 'buildingId': buildingId,
     };
   }
 
@@ -84,11 +91,13 @@ class _BTableImpl extends BTable {
     required int number,
     int? seatsMax,
     _i2.TableStatus? status,
+    required int? buildingId,
   }) : super._(
          id: id,
          number: number,
          seatsMax: seatsMax,
          status: status,
+         buildingId: buildingId,
        );
 
   /// Returns a shallow copy of this [BTable]
@@ -100,12 +109,14 @@ class _BTableImpl extends BTable {
     int? number,
     int? seatsMax,
     _i2.TableStatus? status,
+    Object? buildingId = _Undefined,
   }) {
     return BTable(
       id: id is int? ? id : this.id,
       number: number ?? this.number,
       seatsMax: seatsMax ?? this.seatsMax,
       status: status ?? this.status,
+      buildingId: buildingId is int? ? buildingId : this.buildingId,
     );
   }
 }

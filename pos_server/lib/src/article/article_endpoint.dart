@@ -50,4 +50,21 @@ class ArticleEndpoint extends Endpoint {
       article,
     );
   }
+
+  @doNotGenerate
+  Future<Article> getArticleById(
+    Session session,
+    int articleId,
+    int buildingId,
+  ) async {
+    Article? article = await Article.db.findFirstRow(
+      session,
+      where: (a) =>
+          a.id.equals(articleId) & a.categorie.buildingId.equals(buildingId),
+    );
+    if (article == null) {
+      throw Exception('Article with id $articleId not found');
+    }
+    return article;
+  }
 }

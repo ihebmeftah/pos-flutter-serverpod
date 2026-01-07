@@ -23,4 +23,13 @@ class BuildingEndpoint extends Endpoint {
     building.authUserId = session.authenticated?.authUserId;
     return await Building.db.insertRow(session, building);
   }
+
+  @doNotGenerate
+  Future<Building> getBuildingById(Session session, int buildingId) async {
+    Building? building = await Building.db.findById(session, buildingId);
+    if (building == null) {
+      throw Exception('Building with id $buildingId not found');
+    }
+    return building;
+  }
 }

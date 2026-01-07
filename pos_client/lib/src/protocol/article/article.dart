@@ -21,7 +21,7 @@ abstract class Article implements _i1.SerializableModel {
     this.description,
     required this.price,
     required this.categorieId,
-    this.categorie,
+    required this.categorie,
   });
 
   factory Article({
@@ -30,7 +30,7 @@ abstract class Article implements _i1.SerializableModel {
     String? description,
     required double price,
     required int categorieId,
-    _i2.Categorie? categorie,
+    required _i2.Categorie? categorie,
   }) = _ArticleImpl;
 
   factory Article.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -102,7 +102,7 @@ class _ArticleImpl extends Article {
     String? description,
     required double price,
     required int categorieId,
-    _i2.Categorie? categorie,
+    required _i2.Categorie? categorie,
   }) : super._(
          id: id,
          name: name,

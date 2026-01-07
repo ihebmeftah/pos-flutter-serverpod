@@ -20,7 +20,7 @@ abstract class Building
     required this.address,
     required this.openingTime,
     required this.closingTime,
-    this.authUserId,
+    required this.authUserId,
     bool? tableMultiOrder,
   }) : tableMultiOrder = tableMultiOrder ?? false;
 
@@ -30,7 +30,7 @@ abstract class Building
     required String address,
     required DateTime openingTime,
     required DateTime closingTime,
-    _i1.UuidValue? authUserId,
+    required _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
   }) = _BuildingImpl;
 
@@ -160,7 +160,7 @@ class _BuildingImpl extends Building {
     required String address,
     required DateTime openingTime,
     required DateTime closingTime,
-    _i1.UuidValue? authUserId,
+    required _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
   }) : super._(
          id: id,

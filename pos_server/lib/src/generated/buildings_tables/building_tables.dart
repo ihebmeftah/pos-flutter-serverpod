@@ -19,7 +19,7 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required this.number,
     int? seatsMax,
     _i2.TableStatus? status,
-    this.buildingId,
+    required this.buildingId,
   }) : seatsMax = seatsMax ?? 4,
        status = status ?? _i2.TableStatus.available;
 
@@ -28,7 +28,7 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required int number,
     int? seatsMax,
     _i2.TableStatus? status,
-    int? buildingId,
+    required int? buildingId,
   }) = _BTableImpl;
 
   factory BTable.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -90,6 +90,7 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       'number': number,
       'seatsMax': seatsMax,
       'status': status.toJson(),
+      if (buildingId != null) 'buildingId': buildingId,
     };
   }
 
@@ -131,7 +132,7 @@ class _BTableImpl extends BTable {
     required int number,
     int? seatsMax,
     _i2.TableStatus? status,
-    int? buildingId,
+    required int? buildingId,
   }) : super._(
          id: id,
          number: number,

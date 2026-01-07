@@ -1,0 +1,7 @@
+enum: OrderStatus
+serialized: byName
+default: progress
+values:
+  - progress
+  - delivred
+  - payed

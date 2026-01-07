@@ -10,7 +10,6 @@ fields:
   ### The time when the building closes.
   closingTime: DateTime
   ### The ID of the authenticated user associated with this building.
-  authUserId: UuidValue?, relation(parent=serverpod_auth_core_user), scope=serverOnly
+  authUserId: UuidValue?, relation(parent=serverpod_auth_core_user), scope=serverOnly,required
   ### Indicates whether the building supports multiple orders per table.
   tableMultiOrder: bool, default=false
-

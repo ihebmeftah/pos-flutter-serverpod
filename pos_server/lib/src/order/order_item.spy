@@ -1,0 +1,7 @@
+class: OrderItem
+table: order_items
+fields:
+    article: Article
+    passedBy: module:serverpod_auth_core:AuthUser?, relation
+    payed: bool, default=false
+    

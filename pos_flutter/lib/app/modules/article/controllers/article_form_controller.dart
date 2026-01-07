@@ -19,6 +19,7 @@ class ArticleFormController extends GetxController {
     description: description.text,
     price: double.parse(price.text),
     categorieId: selectedCategory!.id!,
+    categorie: selectedCategory,
   );
   void createArticle() async {
     try {

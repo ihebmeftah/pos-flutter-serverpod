@@ -22,17 +22,24 @@ import 'buildings_tables/building_tables.dart' as _i7;
 import 'buildings_tables/table_status_enum.dart' as _i8;
 import 'cateogrie/categorie.dart' as _i9;
 import 'greetings/greeting.dart' as _i10;
-import 'package:pos_server/src/generated/article/article.dart' as _i11;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i12;
+import 'order/order.dart' as _i11;
+import 'order/order_item.dart' as _i12;
+import 'order/order_status_enum.dart' as _i13;
+import 'package:pos_server/src/generated/article/article.dart' as _i14;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i15;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
-    as _i13;
-import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i14;
+    as _i16;
+import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i17;
+import 'package:pos_server/src/generated/order/order.dart' as _i18;
 export 'article/article.dart';
 export 'buildings/building.dart';
 export 'buildings_tables/building_tables.dart';
 export 'buildings_tables/table_status_enum.dart';
 export 'cateogrie/categorie.dart';
 export 'greetings/greeting.dart';
+export 'order/order.dart';
+export 'order/order_item.dart';
+export 'order/order_status_enum.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -319,6 +326,185 @@ class Protocol extends _i1.SerializationManagerServer {
       ],
       managed: true,
     ),
+    _i2.TableDefinition(
+      name: 'order_items',
+      dartName: 'OrderItem',
+      schema: 'public',
+      module: 'pos',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'order_items_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'article',
+          columnType: _i2.ColumnType.json,
+          isNullable: false,
+          dartType: 'protocol:Article',
+        ),
+        _i2.ColumnDefinition(
+          name: 'passedById',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'payed',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: '_ordersItemsOrdersId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'order_items_fk_0',
+          columns: ['passedById'],
+          referenceTable: 'serverpod_auth_core_user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'order_items_fk_1',
+          columns: ['_ordersItemsOrdersId'],
+          referenceTable: 'orders',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'order_items_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'orders',
+      dartName: 'Order',
+      schema: 'public',
+      module: 'pos',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'orders_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:OrderStatus',
+          columnDefault: '\'progress\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'btableId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'passedById',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'closedbyId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'orders_fk_0',
+          columns: ['btableId'],
+          referenceTable: 'b_tables',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'orders_fk_1',
+          columns: ['passedById'],
+          referenceTable: 'serverpod_auth_core_user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'orders_fk_2',
+          columns: ['closedbyId'],
+          referenceTable: 'serverpod_auth_core_user',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'orders_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+      ],
+      managed: true,
+    ),
     ..._i3.Protocol.targetTableDefinitions,
     ..._i4.Protocol.targetTableDefinitions,
     ..._i2.Protocol.targetTableDefinitions,
@@ -369,6 +555,15 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i10.Greeting) {
       return _i10.Greeting.fromJson(data) as T;
     }
+    if (t == _i11.Order) {
+      return _i11.Order.fromJson(data) as T;
+    }
+    if (t == _i12.OrderItem) {
+      return _i12.OrderItem.fromJson(data) as T;
+    }
+    if (t == _i13.OrderStatus) {
+      return _i13.OrderStatus.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i5.Article?>()) {
       return (data != null ? _i5.Article.fromJson(data) : null) as T;
     }
@@ -387,20 +582,45 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i10.Greeting?>()) {
       return (data != null ? _i10.Greeting.fromJson(data) : null) as T;
     }
-    if (t == List<_i11.Article>) {
-      return (data as List).map((e) => deserialize<_i11.Article>(e)).toList()
+    if (t == _i1.getType<_i11.Order?>()) {
+      return (data != null ? _i11.Order.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i12.OrderItem?>()) {
+      return (data != null ? _i12.OrderItem.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i13.OrderStatus?>()) {
+      return (data != null ? _i13.OrderStatus.fromJson(data) : null) as T;
+    }
+    if (t == List<_i12.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i12.OrderItem>(e)).toList()
           as T;
     }
-    if (t == List<_i12.Building>) {
-      return (data as List).map((e) => deserialize<_i12.Building>(e)).toList()
+    if (t == _i1.getType<List<_i12.OrderItem>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i12.OrderItem>(e))
+                    .toList()
+              : null)
           as T;
     }
-    if (t == List<_i13.BTable>) {
-      return (data as List).map((e) => deserialize<_i13.BTable>(e)).toList()
+    if (t == List<_i14.Article>) {
+      return (data as List).map((e) => deserialize<_i14.Article>(e)).toList()
           as T;
     }
-    if (t == List<_i14.Categorie>) {
-      return (data as List).map((e) => deserialize<_i14.Categorie>(e)).toList()
+    if (t == List<_i15.Building>) {
+      return (data as List).map((e) => deserialize<_i15.Building>(e)).toList()
+          as T;
+    }
+    if (t == List<_i16.BTable>) {
+      return (data as List).map((e) => deserialize<_i16.BTable>(e)).toList()
+          as T;
+    }
+    if (t == List<_i17.Categorie>) {
+      return (data as List).map((e) => deserialize<_i17.Categorie>(e)).toList()
+          as T;
+    }
+    if (t == List<_i18.Order>) {
+      return (data as List).map((e) => deserialize<_i18.Order>(e)).toList()
           as T;
     }
     try {
@@ -423,6 +643,9 @@ class Protocol extends _i1.SerializationManagerServer {
       _i8.TableStatus => 'TableStatus',
       _i9.Categorie => 'Categorie',
       _i10.Greeting => 'Greeting',
+      _i11.Order => 'Order',
+      _i12.OrderItem => 'OrderItem',
+      _i13.OrderStatus => 'OrderStatus',
       _ => null,
     };
   }
@@ -449,6 +672,12 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'Categorie';
       case _i10.Greeting():
         return 'Greeting';
+      case _i11.Order():
+        return 'Order';
+      case _i12.OrderItem():
+        return 'OrderItem';
+      case _i13.OrderStatus():
+        return 'OrderStatus';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -488,6 +717,15 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_i10.Greeting>(data['data']);
+    }
+    if (dataClassName == 'Order') {
+      return deserialize<_i11.Order>(data['data']);
+    }
+    if (dataClassName == 'OrderItem') {
+      return deserialize<_i12.OrderItem>(data['data']);
+    }
+    if (dataClassName == 'OrderStatus') {
+      return deserialize<_i13.OrderStatus>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -533,6 +771,10 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i7.BTable.t;
       case _i9.Categorie:
         return _i9.Categorie.t;
+      case _i11.Order:
+        return _i11.Order.t;
+      case _i12.OrderItem:
+        return _i12.OrderItem.t;
     }
     return null;
   }

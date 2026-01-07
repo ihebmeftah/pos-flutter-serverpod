@@ -5,4 +5,4 @@ fields:
   number: int
   seatsMax: int,default=4
   status: TableStatus,default=available,
-  buildingId: int?, relation(parent=building), scope=serverOnly
+  buildingId: int?, relation(parent=building),required

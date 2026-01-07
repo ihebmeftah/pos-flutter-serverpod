@@ -22,7 +22,9 @@ import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
     as _i7;
 import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i8;
 import 'package:pos_client/src/protocol/greetings/greeting.dart' as _i9;
-import 'protocol.dart' as _i10;
+import 'package:pos_client/src/protocol/order/order.dart' as _i10;
+import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i11;
+import 'protocol.dart' as _i12;
 
 /// {@category Endpoint}
 class EndpointArticle extends _i1.EndpointRef {
@@ -373,6 +375,78 @@ class EndpointGreeting extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointOrder extends _i1.EndpointRef {
+  EndpointOrder(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'order';
+
+  _i2.Future<List<_i10.Order>> getOrders(
+    int? buildingId,
+    _i11.OrderStatus? orderStatus,
+  ) => caller.callServerEndpoint<List<_i10.Order>>(
+    'order',
+    'getOrders',
+    {
+      'buildingId': buildingId,
+      'orderStatus': orderStatus,
+    },
+  );
+
+  _i2.Future<_i10.Order> getOrderById(int id) =>
+      caller.callServerEndpoint<_i10.Order>(
+        'order',
+        'getOrderById',
+        {'id': id},
+      );
+
+  _i2.Future<_i10.Order> createOrder(_i10.Order order) =>
+      caller.callServerEndpoint<_i10.Order>(
+        'order',
+        'createOrder',
+        {'order': order},
+      );
+
+  _i2.Future<_i10.Order> payItem(
+    int orderId,
+    int orderItemId,
+  ) => caller.callServerEndpoint<_i10.Order>(
+    'order',
+    'payItem',
+    {
+      'orderId': orderId,
+      'orderItemId': orderItemId,
+    },
+  );
+
+  _i2.Future<_i10.Order> payAllItems(int orderId) =>
+      caller.callServerEndpoint<_i10.Order>(
+        'order',
+        'payAllItems',
+        {'orderId': orderId},
+      );
+
+  _i2.Future<_i10.Order> getOrderCurrOfTable(int tableId) =>
+      caller.callServerEndpoint<_i10.Order>(
+        'order',
+        'getOrderCurrOfTable',
+        {'tableId': tableId},
+      );
+
+  _i2.Future<List<_i10.Order>> getOrdersOfTable(
+    int tableId,
+    _i11.OrderStatus? orderStatus,
+  ) => caller.callServerEndpoint<List<_i10.Order>>(
+    'order',
+    'getOrdersOfTable',
+    {
+      'tableId': tableId,
+      'orderStatus': orderStatus,
+    },
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i4.Caller(client);
@@ -404,7 +478,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i10.Protocol(),
+         _i12.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -420,6 +494,7 @@ class Client extends _i1.ServerpodClientShared {
     buildingTables = EndpointBuildingTables(this);
     categorie = EndpointCategorie(this);
     greeting = EndpointGreeting(this);
+    order = EndpointOrder(this);
     modules = Modules(this);
   }
 
@@ -437,6 +512,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointGreeting greeting;
 
+  late final EndpointOrder order;
+
   late final Modules modules;
 
   @override
@@ -448,6 +525,7 @@ class Client extends _i1.ServerpodClientShared {
     'buildingTables': buildingTables,
     'categorie': categorie,
     'greeting': greeting,
+    'order': order,
   };
 
   @override
