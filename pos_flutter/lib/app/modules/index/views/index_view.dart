@@ -6,8 +6,10 @@ import 'package:pos_flutter/app/modules/inventory/views/inventory_view.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
 import '../../../../config/serverpod_client.dart';
+import '../../../data/local/local_storage.dart';
 import '../../../routes/app_pages.dart';
 import '../../home/views/home_view.dart';
+import '../../order/controllers/pass_order_controller.dart';
 import '../../order/views/order_view.dart';
 import '../../tables/views/tables_view.dart';
 import '../controllers/index_controller.dart';
@@ -17,49 +19,72 @@ class IndexView extends GetView<IndexController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('POS Flutter'),
-        centerTitle: true,
-      ),
-      drawer: Drawer(
-        child: controller.obx(
-          (s) => Column(
-            children: [
-              UserAccountsDrawerHeader(
-                currentAccountPicture: CircleAvatar(),
-                accountName: Text(
-                  '${controller.userProfile.fullName}',
-                ),
-                accountEmail: Text(
-                  '${controller.userProfile.email}',
-                ),
-              ),
-              if (!Get.find<ServerpodClient>().userScopes!.contains("none"))
-                ListTile(
-                  leading: Icon(Icons.place),
-                  title: Text('Buildings'),
-                  onTap: () => Get.offAllNamed(Routes.BUILDINGS),
-                ),
-              if (!Get.find<ServerpodClient>().userScopes!.contains("none"))
-                ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Staff'),
-                  onTap: () {},
-                ),
-              Spacer(),
-              SafeArea(
-                child: ListTile(
-                  textColor: Colors.red,
-                  iconColor: Colors.red,
-                  leading: Icon(Icons.logout),
-                  title: Text('Logout'),
-                  onTap: ServerpodClient.instance.auth.signOutAllDevices,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Get.toNamed(Routes.PASS_ORDER),
+        child: GetBuilder<PassOrderController>(
+          id: "table",
+          builder: (passOrderCtr) {
+            return Badge(
+              isLabelVisible: passOrderCtr.table != null,
+              label: Text("!", style: TextStyle(color: Colors.white)),
+              child: SvgPicture.asset(
+                "assets/images/svg/order.svg",
+                colorFilter: ColorFilter.mode(
+                  controller.currBnb == 1
+                      ? Theme.of(
+                          context,
+                        ).bottomNavigationBarTheme.selectedItemColor!
+                      : Theme.of(
+                          context,
+                        ).bottomNavigationBarTheme.unselectedItemColor!,
+                  BlendMode.srcIn,
                 ),
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
+      drawer: GetBuilder<IndexController>(
+        builder: (ctr) {
+          return controller.status.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Drawer(
+                  child: Column(
+                    children: [
+                      UserAccountsDrawerHeader(
+                        currentAccountPicture: CircleAvatar(),
+                        accountName: Text('${controller.userProfile.fullName}'),
+                        accountEmail: Text('${controller.userProfile.email}'),
+                      ),
+                      if (!Get.find<ServerpodClient>().userScopes!.contains(
+                        "none",
+                      ))
+                        ListTile(
+                          leading: Icon(Icons.place),
+                          title: Text('Buildings'),
+                          onTap: () => Get.offAllNamed(Routes.BUILDINGS),
+                        ),
+                      Spacer(),
+                      SafeArea(
+                        child: ListTile(
+                          textColor: Colors.red,
+                          iconColor: Colors.red,
+                          leading: Icon(Icons.logout),
+                          title: Text('Logout'),
+                          onTap: () async {
+                            await LocalStorage().clear();
+                            await ServerpodClient.instance.auth
+                                .signOutAllDevices();
+                            Get.offAllNamed(Routes.AUTHENTIFICATION);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+        },
+      ),
+      appBar: AppBar(),
       bottomNavigationBar: GetBuilder<IndexController>(
         id: "bottomNavigationBar",
         builder: (_) {
@@ -68,7 +93,7 @@ class IndexView extends GetView<IndexController> {
                 ? [
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
-                        "assets/images/svg/order.svg",
+                        "assets/images/svg/table.svg",
                         colorFilter: ColorFilter.mode(
                           controller.currBnb == 0
                               ? Theme.of(
@@ -80,8 +105,9 @@ class IndexView extends GetView<IndexController> {
                           BlendMode.srcIn,
                         ),
                       ),
-                      label: 'Orders',
+                      label: 'Tables',
                     ),
+
                     BottomNavigationBarItem(
                       icon: GestureDetector(
                         onTap: () {},
@@ -94,7 +120,7 @@ class IndexView extends GetView<IndexController> {
                     ),
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
-                        "assets/images/svg/table.svg",
+                        "assets/images/svg/order.svg",
                         colorFilter: ColorFilter.mode(
                           controller.currBnb == 2
                               ? Theme.of(
@@ -106,7 +132,7 @@ class IndexView extends GetView<IndexController> {
                           BlendMode.srcIn,
                         ),
                       ),
-                      label: 'Tables',
+                      label: 'Orders',
                     ),
                   ]
                 : [
@@ -126,9 +152,10 @@ class IndexView extends GetView<IndexController> {
                       ),
                       label: 'Dashboard',
                     ),
+
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
-                        "assets/images/svg/order.svg",
+                        "assets/images/svg/inventory.svg",
                         colorFilter: ColorFilter.mode(
                           controller.currBnb == 1
                               ? Theme.of(
@@ -140,11 +167,12 @@ class IndexView extends GetView<IndexController> {
                           BlendMode.srcIn,
                         ),
                       ),
-                      label: 'Orders',
+                      label: 'Inventory',
                     ),
+
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
-                        "assets/images/svg/inventory.svg",
+                        "assets/images/svg/table.svg",
                         colorFilter: ColorFilter.mode(
                           controller.currBnb == 2
                               ? Theme.of(
@@ -156,11 +184,12 @@ class IndexView extends GetView<IndexController> {
                           BlendMode.srcIn,
                         ),
                       ),
-                      label: 'Inventory',
+                      label: 'Tables',
                     ),
+
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
-                        "assets/images/svg/table.svg",
+                        "assets/images/svg/order.svg",
                         colorFilter: ColorFilter.mode(
                           controller.currBnb == 3
                               ? Theme.of(
@@ -172,7 +201,7 @@ class IndexView extends GetView<IndexController> {
                           BlendMode.srcIn,
                         ),
                       ),
-                      label: 'Tables',
+                      label: 'Orders',
                     ),
                   ],
             currentIndex: controller.currBnb,
@@ -180,13 +209,15 @@ class IndexView extends GetView<IndexController> {
           );
         },
       ),
-      body: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        onPageChanged: controller.changeBnbContent,
-        controller: controller.pageVCtr,
-        children: Get.find<ServerpodClient>().userScopes!.contains("none")
-            ? [OrderView(), TablesView()]
-            : [HomeView(), OrderView(), InventoryView(), TablesView()],
+      body: controller.obx(
+        (s) => PageView(
+          physics: NeverScrollableScrollPhysics(),
+          onPageChanged: controller.changeBnbContent,
+          controller: controller.pageVCtr,
+          children: Get.find<ServerpodClient>().userScopes!.contains("none")
+              ? [TablesView(), OrderView()]
+              : [HomeView(), InventoryView(), TablesView(), OrderView()],
+        ),
       ),
     );
   }
