@@ -31,12 +31,17 @@ class EndpointArticle extends _i1.EndpointRef {
   @override
   String get name => 'article';
 
-  _i2.Future<List<_i3.Article>> getArticles(int buildingId) =>
-      caller.callServerEndpoint<List<_i3.Article>>(
-        'article',
-        'getArticles',
-        {'buildingId': buildingId},
-      );
+  _i2.Future<List<_i3.Article>> getArticles(
+    int buildingId, {
+    int? categoryId,
+  }) => caller.callServerEndpoint<List<_i3.Article>>(
+    'article',
+    'getArticles',
+    {
+      'buildingId': buildingId,
+      'categoryId': categoryId,
+    },
+  );
 
   _i2.Future<_i3.Article> createArticle({
     required _i3.Article article,

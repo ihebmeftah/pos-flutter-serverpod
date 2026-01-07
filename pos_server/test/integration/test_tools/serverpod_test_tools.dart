@@ -195,8 +195,9 @@ class _ArticleEndpoint {
 
   _i3.Future<List<_i4.Article>> getArticles(
     _i1.TestSessionBuilder sessionBuilder,
-    int buildingId,
-  ) async {
+    int buildingId, {
+    int? categoryId,
+  }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
@@ -208,7 +209,10 @@ class _ArticleEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'article',
           methodName: 'getArticles',
-          parameters: _i1.testObjectToJson({'buildingId': buildingId}),
+          parameters: _i1.testObjectToJson({
+            'buildingId': buildingId,
+            'categoryId': categoryId,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =

@@ -6,15 +6,31 @@ class ArticleEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  Future<List<Article>> getArticles(Session session, int buildingId) async {
-    List<Article> articles = await Article.db.find(
+  Future<List<Article>> getArticles(
+    Session session,
+    int buildingId, {
+    int? categoryId,
+  }) async {
+    if (categoryId != null) {
+      return await Article.db.find(
+        session,
+        include: Article.include(
+          categorie: Categorie.include(),
+        ),
+        where: (a) =>
+            a.categorie.buildingId.equals(buildingId) &
+            a.categorie.id.equals(
+              categoryId,
+            ),
+      );
+    }
+    return await Article.db.find(
       session,
       include: Article.include(
         categorie: Categorie.include(),
       ),
       where: (a) => a.categorie.buildingId.equals(buildingId),
     );
-    return articles;
   }
 
   Future<Article> createArticle(

@@ -85,6 +85,11 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<int>(),
               nullable: false,
             ),
+            'categoryId': _i1.ParameterDescription(
+              name: 'categoryId',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -94,6 +99,7 @@ class Endpoints extends _i1.EndpointDispatch {
                   (endpoints['article'] as _i2.ArticleEndpoint).getArticles(
                     session,
                     params['buildingId'],
+                    categoryId: params['categoryId'],
                   ),
         ),
         'createArticle': _i1.MethodConnector(
