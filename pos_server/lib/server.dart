@@ -18,8 +18,7 @@ void run(List<String> args) async {
   // Token managers will be used to validate and issue authentication keys,
   // and the identity providers will be the authentication options available for users.
   pod.initializeAuthServices(
-    authUsersConfig: AuthUsersConfig(
-    ),
+    authUsersConfig: AuthUsersConfig(),
     tokenManagerBuilders: [
       // Use JWT for authentication keys towards the server.
       JwtConfigFromPasswords(),

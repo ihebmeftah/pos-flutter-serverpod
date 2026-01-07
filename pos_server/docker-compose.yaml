@@ -7,17 +7,9 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: pos
-      POSTGRES_PASSWORD: "YrvPBXQ9uhEkhHSAuY_aZq-mkCW7x7pl"
+      POSTGRES_PASSWORD: "mk-X2ZSMeN2ULpsTW1m7dpQmfq-9g7r2"
     volumes:
       - pos_data:/var/lib/postgresql/data
-
-  redis:
-    image: redis:6.2.6
-    ports:
-      - "8091:6379"
-    command: redis-server --requirepass "FYUXhdBcLwOrKPX--wxuYCFQNgSAE1_R"
-    environment:
-      - REDIS_REPLICATION_MODE=master
 
   pg-admin:
     container_name: pgadmin
@@ -30,7 +22,14 @@ services:
       - "5050:5050"
     volumes:
       - pgadmin-data:/var/lib/pgadmin
-  
+  redis:
+    image: redis:6.2.6
+    ports:
+      - "8091:6379"
+    command: redis-server --requirepass "rIzWk5dkx8ZIt2amKImcgtq4oamWHw7Z"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
   # Test services
   postgres_test:
     image: pgvector/pgvector:pg16
@@ -39,7 +38,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: pos_test
-      POSTGRES_PASSWORD: "DntKCEm3cVOo9s9M6zWod1rMeHVIEGb_"
+      POSTGRES_PASSWORD: "8HdVLiLaAboM2tuQdjp2j_bVURau_1gP"
     volumes:
       - pos_test_data:/var/lib/postgresql/data
 
@@ -47,7 +46,7 @@ services:
     image: redis:6.2.6
     ports:
       - "9091:6379"
-    command: redis-server --requirepass "PCW6GGZXHVCqGAX-A3Vd605vzD6StSTy"
+    command: redis-server --requirepass "7FW9nm9YWIdgetbCcaE-ugbYK-GKo1zH"
     environment:
       - REDIS_REPLICATION_MODE=master
 

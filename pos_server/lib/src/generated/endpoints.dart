@@ -15,11 +15,12 @@ import '../auth/email_idp_endpoint.dart' as _i2;
 import '../auth/jwt_refresh_endpoint.dart' as _i3;
 import '../buildings/building_endpoint.dart' as _i4;
 import '../buildings_tables/building_tables_endpoint.dart' as _i5;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i6;
+import '../greetings/greeting_endpoint.dart' as _i6;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i7;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i7;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i8;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i9;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -47,6 +48,12 @@ class Endpoints extends _i1.EndpointDispatch {
         ..initialize(
           server,
           'buildingTables',
+          null,
+        ),
+      'greeting': _i6.GreetingEndpoint()
+        ..initialize(
+          server,
+          'greeting',
           null,
         ),
     };
@@ -273,7 +280,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'building': _i1.ParameterDescription(
               name: 'building',
-              type: _i1.getType<_i6.Building>(),
+              type: _i1.getType<_i7.Building>(),
               nullable: false,
             ),
           },
@@ -347,9 +354,33 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i7.Endpoints()
+    connectors['greeting'] = _i1.EndpointConnector(
+      name: 'greeting',
+      endpoint: endpoints['greeting']!,
+      methodConnectors: {
+        'hello': _i1.MethodConnector(
+          name: 'hello',
+          params: {
+            'name': _i1.ParameterDescription(
+              name: 'name',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['greeting'] as _i6.GreetingEndpoint).hello(
+                session,
+                params['name'],
+              ),
+        ),
+      },
+    );
+    modules['serverpod_auth_idp'] = _i8.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i8.Endpoints()
+    modules['serverpod_auth_core'] = _i9.Endpoints()
       ..initializeEndpoints(server);
   }
 }

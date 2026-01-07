@@ -15,3 +15,5 @@ building:
 buildingTables:
   - getTables:
   - createTables:
+greeting:
+  - hello:

@@ -174,6 +174,13 @@ class BTableUpdateTable extends _i1.UpdateTable<BTableTable> {
     value,
   );
 
+  _i1.ColumnValue<_i2.TableStatus, _i2.TableStatus> status(
+    _i2.TableStatus value,
+  ) => _i1.ColumnValue(
+    table.status,
+    value,
+  );
+
   _i1.ColumnValue<int, int> buildingId(int? value) => _i1.ColumnValue(
     table.buildingId,
     value,
@@ -192,6 +199,12 @@ class BTableTable extends _i1.Table<int?> {
       this,
       hasDefault: true,
     );
+    status = _i1.ColumnEnum(
+      'status',
+      this,
+      _i1.EnumSerialization.byName,
+      hasDefault: true,
+    );
     buildingId = _i1.ColumnInt(
       'buildingId',
       this,
@@ -205,6 +218,8 @@ class BTableTable extends _i1.Table<int?> {
 
   late final _i1.ColumnInt seatsMax;
 
+  late final _i1.ColumnEnum<_i2.TableStatus> status;
+
   late final _i1.ColumnInt buildingId;
 
   @override
@@ -212,6 +227,7 @@ class BTableTable extends _i1.Table<int?> {
     id,
     number,
     seatsMax,
+    status,
     buildingId,
   ];
 }

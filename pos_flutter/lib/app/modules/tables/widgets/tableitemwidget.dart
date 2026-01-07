@@ -9,7 +9,6 @@ class TableItemWidget extends StatelessWidget {
   final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
-    print('table seats max: ${table.toJson()}');
     ({int top, int left, int right, int bottom}) seats;
     seats = getSeatsSepration(table);
     return InkWell(
@@ -109,7 +108,7 @@ class TableItemWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              table.number.toString(),
+                              "№${table.number}",
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,

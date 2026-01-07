@@ -19,12 +19,14 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'buildings/building.dart' as _i5;
 import 'buildings_tables/building_tables.dart' as _i6;
 import 'buildings_tables/table_status_enum.dart' as _i7;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i8;
+import 'greetings/greeting.dart' as _i8;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i9;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
-    as _i9;
+    as _i10;
 export 'buildings/building.dart';
 export 'buildings_tables/building_tables.dart';
 export 'buildings_tables/table_status_enum.dart';
+export 'greetings/greeting.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -59,6 +61,13 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: false,
           dartType: 'int',
           columnDefault: '4',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:TableStatus',
+          columnDefault: '\'available\'::text',
         ),
         _i2.ColumnDefinition(
           name: 'buildingId',
@@ -217,6 +226,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i7.TableStatus) {
       return _i7.TableStatus.fromJson(data) as T;
     }
+    if (t == _i8.Greeting) {
+      return _i8.Greeting.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i5.Building?>()) {
       return (data != null ? _i5.Building.fromJson(data) : null) as T;
     }
@@ -226,12 +238,15 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i7.TableStatus?>()) {
       return (data != null ? _i7.TableStatus.fromJson(data) : null) as T;
     }
-    if (t == List<_i8.Building>) {
-      return (data as List).map((e) => deserialize<_i8.Building>(e)).toList()
+    if (t == _i1.getType<_i8.Greeting?>()) {
+      return (data != null ? _i8.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == List<_i9.Building>) {
+      return (data as List).map((e) => deserialize<_i9.Building>(e)).toList()
           as T;
     }
-    if (t == List<_i9.BTable>) {
-      return (data as List).map((e) => deserialize<_i9.BTable>(e)).toList()
+    if (t == List<_i10.BTable>) {
+      return (data as List).map((e) => deserialize<_i10.BTable>(e)).toList()
           as T;
     }
     try {
@@ -251,6 +266,7 @@ class Protocol extends _i1.SerializationManagerServer {
       _i5.Building => 'Building',
       _i6.BTable => 'BTable',
       _i7.TableStatus => 'TableStatus',
+      _i8.Greeting => 'Greeting',
       _ => null,
     };
   }
@@ -271,6 +287,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'BTable';
       case _i7.TableStatus():
         return 'TableStatus';
+      case _i8.Greeting():
+        return 'Greeting';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -301,6 +319,9 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (dataClassName == 'TableStatus') {
       return deserialize<_i7.TableStatus>(data['data']);
+    }
+    if (dataClassName == 'Greeting') {
+      return deserialize<_i8.Greeting>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);

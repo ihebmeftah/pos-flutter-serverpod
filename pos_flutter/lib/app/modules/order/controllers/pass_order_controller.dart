@@ -6,8 +6,8 @@ class PassOrderController extends GetxController with StateMixin {
   void setTable([BTable? t]) async {
     if (t == table || t == null) {
       table = null;
-     // if (currOrder != null) currOrder = null;
-     // selectedArticles.clear();
+      // if (currOrder != null) currOrder = null;
+      // selectedArticles.clear();
       update(['table', 'selectedArticles']);
       change(null, status: RxStatus.empty());
       if (Get.isBottomSheetOpen == true) {

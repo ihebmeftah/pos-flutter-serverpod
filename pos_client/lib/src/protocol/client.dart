@@ -19,7 +19,8 @@ import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
 import 'package:pos_client/src/protocol/buildings/building.dart' as _i5;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
     as _i6;
-import 'protocol.dart' as _i7;
+import 'package:pos_client/src/protocol/greetings/greeting.dart' as _i7;
+import 'protocol.dart' as _i8;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -293,6 +294,24 @@ class EndpointBuildingTables extends _i2.EndpointRef {
   );
 }
 
+/// This is an example endpoint that returns a greeting message through
+/// its [hello] method.
+/// {@category Endpoint}
+class EndpointGreeting extends _i2.EndpointRef {
+  EndpointGreeting(_i2.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'greeting';
+
+  /// Returns a personalized greeting message: "Hello {name}".
+  _i3.Future<_i7.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i7.Greeting>(
+        'greeting',
+        'hello',
+        {'name': name},
+      );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i1.Caller(client);
@@ -324,7 +343,7 @@ class Client extends _i2.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i7.Protocol(),
+         _i8.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -337,6 +356,7 @@ class Client extends _i2.ServerpodClientShared {
     jwtRefresh = EndpointJwtRefresh(this);
     building = EndpointBuilding(this);
     buildingTables = EndpointBuildingTables(this);
+    greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
 
@@ -348,6 +368,8 @@ class Client extends _i2.ServerpodClientShared {
 
   late final EndpointBuildingTables buildingTables;
 
+  late final EndpointGreeting greeting;
+
   late final Modules modules;
 
   @override
@@ -356,6 +378,7 @@ class Client extends _i2.ServerpodClientShared {
     'jwtRefresh': jwtRefresh,
     'building': building,
     'buildingTables': buildingTables,
+    'greeting': greeting,
   };
 
   @override

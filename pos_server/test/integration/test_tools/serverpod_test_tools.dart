@@ -20,6 +20,7 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'package:pos_server/src/generated/buildings/building.dart' as _i5;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
     as _i6;
+import 'package:pos_server/src/generated/greetings/greeting.dart' as _i7;
 import 'package:pos_server/src/generated/protocol.dart';
 import 'package:pos_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -134,6 +135,8 @@ class TestEndpoints {
   late final _BuildingEndpoint building;
 
   late final _BuildingTablesEndpoint buildingTables;
+
+  late final _GreetingEndpoint greeting;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -156,6 +159,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     buildingTables = _BuildingTablesEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    greeting = _GreetingEndpoint(
       endpoints,
       serializationManager,
     );
@@ -625,6 +632,48 @@ class _BuildingTablesEndpoint {
                   _localCallContext.arguments,
                 )
                 as _i3.Future<List<_i6.BTable>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _GreetingEndpoint {
+  _GreetingEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i7.Greeting> hello(
+    _i1.TestSessionBuilder sessionBuilder,
+    String name,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'greeting',
+            method: 'hello',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'greeting',
+          methodName: 'hello',
+          parameters: _i1.testObjectToJson({'name': name}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i7.Greeting>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

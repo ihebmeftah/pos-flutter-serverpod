@@ -593,9 +593,9 @@ ALTER TABLE ONLY "serverpod_auth_core_session"
 -- MIGRATION VERSION FOR pos
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('pos', '20251226173135017', now())
+    VALUES ('pos', '20260107125326223', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20251226173135017', "timestamp" = now();
+    DO UPDATE SET "version" = '20260107125326223', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod

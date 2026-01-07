@@ -4,5 +4,5 @@ fields:
   ### The number of the building.
   number: int
   seatsMax: int,default=4
-  status: TableStatus,default=available,!persist
+  status: TableStatus,default=available,
   buildingId: int?, relation(parent=building), scope=serverOnly

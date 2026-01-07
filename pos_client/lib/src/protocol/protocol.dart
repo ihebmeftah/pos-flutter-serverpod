@@ -14,16 +14,18 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'buildings/building.dart' as _i2;
 import 'buildings_tables/building_tables.dart' as _i3;
 import 'buildings_tables/table_status_enum.dart' as _i4;
-import 'package:pos_client/src/protocol/buildings/building.dart' as _i5;
+import 'greetings/greeting.dart' as _i5;
+import 'package:pos_client/src/protocol/buildings/building.dart' as _i6;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
-    as _i6;
-import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i7;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i8;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i9;
 export 'buildings/building.dart';
 export 'buildings_tables/building_tables.dart';
 export 'buildings_tables/table_status_enum.dart';
+export 'greetings/greeting.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -69,6 +71,9 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i4.TableStatus) {
       return _i4.TableStatus.fromJson(data) as T;
     }
+    if (t == _i5.Greeting) {
+      return _i5.Greeting.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i2.Building?>()) {
       return (data != null ? _i2.Building.fromJson(data) : null) as T;
     }
@@ -78,19 +83,22 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i4.TableStatus?>()) {
       return (data != null ? _i4.TableStatus.fromJson(data) : null) as T;
     }
-    if (t == List<_i5.Building>) {
-      return (data as List).map((e) => deserialize<_i5.Building>(e)).toList()
+    if (t == _i1.getType<_i5.Greeting?>()) {
+      return (data != null ? _i5.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == List<_i6.Building>) {
+      return (data as List).map((e) => deserialize<_i6.Building>(e)).toList()
           as T;
     }
-    if (t == List<_i6.BTable>) {
-      return (data as List).map((e) => deserialize<_i6.BTable>(e)).toList()
+    if (t == List<_i7.BTable>) {
+      return (data as List).map((e) => deserialize<_i7.BTable>(e)).toList()
           as T;
     }
-    try {
-      return _i7.Protocol().deserialize<T>(data, t);
-    } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
       return _i8.Protocol().deserialize<T>(data, t);
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _i9.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -100,6 +108,7 @@ class Protocol extends _i1.SerializationManager {
       _i2.Building => 'Building',
       _i3.BTable => 'BTable',
       _i4.TableStatus => 'TableStatus',
+      _i5.Greeting => 'Greeting',
       _ => null,
     };
   }
@@ -120,12 +129,14 @@ class Protocol extends _i1.SerializationManager {
         return 'BTable';
       case _i4.TableStatus():
         return 'TableStatus';
+      case _i5.Greeting():
+        return 'Greeting';
     }
-    className = _i7.Protocol().getClassNameForObject(data);
+    className = _i8.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i8.Protocol().getClassNameForObject(data);
+    className = _i9.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -147,13 +158,16 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'TableStatus') {
       return deserialize<_i4.TableStatus>(data['data']);
     }
+    if (dataClassName == 'Greeting') {
+      return deserialize<_i5.Greeting>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i7.Protocol().deserializeByClassName(data);
+      return _i8.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i8.Protocol().deserializeByClassName(data);
+      return _i9.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
