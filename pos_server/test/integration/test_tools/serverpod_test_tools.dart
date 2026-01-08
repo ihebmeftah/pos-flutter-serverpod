@@ -973,6 +973,7 @@ class _OrderEndpoint {
     _i1.TestSessionBuilder sessionBuilder,
     int orderId,
     int orderItemId,
+    int buildingId,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -988,6 +989,7 @@ class _OrderEndpoint {
           parameters: _i1.testObjectToJson({
             'orderId': orderId,
             'orderItemId': orderItemId,
+            'buildingId': buildingId,
           }),
           serializationManager: _serializationManager,
         );
@@ -1007,6 +1009,7 @@ class _OrderEndpoint {
   _i3.Future<_i10.Order> payAllItems(
     _i1.TestSessionBuilder sessionBuilder,
     int orderId,
+    int buildingId,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1019,7 +1022,10 @@ class _OrderEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'order',
           methodName: 'payAllItems',
-          parameters: _i1.testObjectToJson({'orderId': orderId}),
+          parameters: _i1.testObjectToJson({
+            'orderId': orderId,
+            'buildingId': buildingId,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =
@@ -1099,5 +1105,69 @@ class _OrderEndpoint {
         await _localUniqueSession.close();
       }
     });
+  }
+
+  _i3.Stream<_i10.Order> streamCreateOrder(
+    _i1.TestSessionBuilder sessionBuilder,
+    int buildingId,
+  ) {
+    var _localTestStreamManager = _i1.TestStreamManager<_i10.Order>();
+    _i1.callStreamFunctionAndHandleExceptions(
+      () async {
+        var _localUniqueSession =
+            (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+              endpoint: 'order',
+              method: 'streamCreateOrder',
+            );
+        var _localCallContext = await _endpointDispatch
+            .getMethodStreamCallContext(
+              createSessionCallback: (_) => _localUniqueSession,
+              endpointPath: 'order',
+              methodName: 'streamCreateOrder',
+              arguments: {'buildingId': buildingId},
+              requestedInputStreams: [],
+              serializationManager: _serializationManager,
+            );
+        await _localTestStreamManager.callStreamMethod(
+          _localCallContext,
+          _localUniqueSession,
+          {},
+        );
+      },
+      _localTestStreamManager.outputStreamController,
+    );
+    return _localTestStreamManager.outputStreamController.stream;
+  }
+
+  _i3.Stream<_i10.Order> streamUpdateOrder(
+    _i1.TestSessionBuilder sessionBuilder,
+    int buildingId,
+  ) {
+    var _localTestStreamManager = _i1.TestStreamManager<_i10.Order>();
+    _i1.callStreamFunctionAndHandleExceptions(
+      () async {
+        var _localUniqueSession =
+            (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+              endpoint: 'order',
+              method: 'streamUpdateOrder',
+            );
+        var _localCallContext = await _endpointDispatch
+            .getMethodStreamCallContext(
+              createSessionCallback: (_) => _localUniqueSession,
+              endpointPath: 'order',
+              methodName: 'streamUpdateOrder',
+              arguments: {'buildingId': buildingId},
+              requestedInputStreams: [],
+              serializationManager: _serializationManager,
+            );
+        await _localTestStreamManager.callStreamMethod(
+          _localCallContext,
+          _localUniqueSession,
+          {},
+        );
+      },
+      _localTestStreamManager.outputStreamController,
+    );
+    return _localTestStreamManager.outputStreamController.stream;
   }
 }

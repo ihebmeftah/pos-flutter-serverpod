@@ -94,10 +94,19 @@ class OrderEndpoint extends Endpoint {
       orderItem,
     );
     await Order.db.attach.items(session, orderCreated, itemsCreated);
+    await session.messages.postMessage(
+      'order_created-${building.id!}',
+      orderCreated,
+    );
     return orderCreated;
   }
 
-  Future<Order> payItem(Session session, int orderId, int orderItemId) async {
+  Future<Order> payItem(
+    Session session,
+    int orderId,
+    int orderItemId,
+    int buildingId,
+  ) async {
     Order order = await getOrderById(session, orderId);
     OrderItem? item = order.items!.firstWhere(
       (item) => item.id == orderItemId,
@@ -109,10 +118,18 @@ class OrderEndpoint extends Endpoint {
     }
     order.updatedAt = DateTime.now();
     await OrderItem.db.updateRow(session, item);
+    await session.messages.postMessage(
+      'order_updated-$buildingId',
+      order,
+    );
     return await Order.db.updateRow(session, order);
   }
 
-  Future<Order> payAllItems(Session session, int orderId) async {
+  Future<Order> payAllItems(
+    Session session,
+    int orderId,
+    int buildingId,
+  ) async {
     Order order = await getOrderById(session, orderId);
     for (OrderItem item in order.items!) {
       item.payed = true;
@@ -121,6 +138,10 @@ class OrderEndpoint extends Endpoint {
     order.status = OrderStatus.payed;
     order.updatedAt = DateTime.now();
     order.closedbyId = session.authenticated!.authUserId;
+    await session.messages.postMessage(
+      'order_updated-$buildingId',
+      order,
+    );
     return await Order.db.updateRow(session, order);
   }
 
@@ -190,5 +211,23 @@ class OrderEndpoint extends Endpoint {
       return TableStatus.occupied;
     }
     return TableStatus.available;
+  }
+
+  Stream<Order> streamCreateOrder(Session session, int buildingId) async* {
+    Stream<Order> msgStream = session.messages.createStream<Order>(
+      'order_created-$buildingId',
+    );
+    await for (var message in msgStream) {
+      yield message;
+    }
+  }
+
+  Stream<Order> streamUpdateOrder(Session session, int buildingId) async* {
+    Stream<Order> msgStream = session.messages.createStream<Order>(
+      'order_updated-$buildingId',
+    );
+    await for (var message in msgStream) {
+      yield message;
+    }
   }
 }

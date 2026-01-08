@@ -3,9 +3,6 @@ import 'package:get/get.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
-import '../../order/controllers/order_controller.dart';
-import '../../tables/controllers/tables_controller.dart';
-
 class IndexController extends GetxController with StateMixin<UserProfileModel> {
   late UserProfileModel userProfile;
   @override
@@ -29,25 +26,9 @@ class IndexController extends GetxController with StateMixin<UserProfileModel> {
 
   void changeBnbContent(int index) {
     if (index != currBnb) {
-      if (Get.find<ServerpodClient>().userScopes!.contains("none") &&
-          index == 1) {
-        return;
-      }
       currBnb = index;
       pageVCtr.jumpToPage(index);
       update(["bottomNavigationBar"]);
-      if ((Get.find<ServerpodClient>().userScopes!.contains("admin") &&
-          index != 3)) {
-        Get.delete<TablesController>();
-      } else {
-        Get.put<TablesController>(TablesController());
-      }
-      if (Get.find<ServerpodClient>().userScopes!.contains("admin") &&
-          index != 1) {
-        Get.delete<OrderController>();
-      } else {
-        Get.put<OrderController>(OrderController());
-      }
     }
   }
 }

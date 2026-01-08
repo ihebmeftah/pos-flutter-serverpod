@@ -586,6 +586,11 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<int>(),
               nullable: false,
             ),
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
           },
           call:
               (
@@ -595,6 +600,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 session,
                 params['orderId'],
                 params['orderItemId'],
+                params['buildingId'],
               ),
         ),
         'payAllItems': _i1.MethodConnector(
@@ -602,6 +608,11 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'orderId': _i1.ParameterDescription(
               name: 'orderId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
               type: _i1.getType<int>(),
               nullable: false,
             ),
@@ -613,6 +624,7 @@ class Endpoints extends _i1.EndpointDispatch {
               ) async => (endpoints['order'] as _i9.OrderEndpoint).payAllItems(
                 session,
                 params['orderId'],
+                params['buildingId'],
               ),
         ),
         'getOrderCurrOfTable': _i1.MethodConnector(
@@ -658,6 +670,48 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['tableId'],
                     params['orderStatus'],
                   ),
+        ),
+        'streamCreateOrder': _i1.MethodStreamConnector(
+          name: 'streamCreateOrder',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          streamParams: {},
+          returnType: _i1.MethodStreamReturnType.streamType,
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['order'] as _i9.OrderEndpoint).streamCreateOrder(
+                session,
+                params['buildingId'],
+              ),
+        ),
+        'streamUpdateOrder': _i1.MethodStreamConnector(
+          name: 'streamUpdateOrder',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          streamParams: {},
+          returnType: _i1.MethodStreamReturnType.streamType,
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['order'] as _i9.OrderEndpoint).streamUpdateOrder(
+                session,
+                params['buildingId'],
+              ),
         ),
       },
     );

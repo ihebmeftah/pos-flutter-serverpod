@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../components/appemptyscreen.dart';
 import '../controllers/order_details_controller.dart';
+import '../widgets/order_amount_widget.dart';
 
 class OrderDetailsView extends GetView<OrderDetailsController> {
   const OrderDetailsView({super.key});
@@ -225,6 +226,7 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                 label: Text("Append new items"),
                 icon: Icon(Icons.add),
               ),
+              OrderAmountWidget(order: controller.order!),
             ],
           ),
         ),

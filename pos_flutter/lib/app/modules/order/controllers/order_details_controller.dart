@@ -3,14 +3,12 @@ import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 
-import '../../tables/controllers/tables_controller.dart';
-import 'order_controller.dart';
+import '../../../data/local/local_storage.dart';
 
 class OrderDetailsController extends GetxController with StateMixin {
   String get id => Get.parameters['id']!;
   String? get from => Get.parameters['from'];
   Order? order;
-  //final orderHistory = <History>[].obs;
 
   @override
   void onInit() {
@@ -36,7 +34,6 @@ class OrderDetailsController extends GetxController with StateMixin {
           int.parse(id),
         );
       }
-      getOrderHistory();
       if (order == null) {
         change(null, status: RxStatus.empty());
       } else {
@@ -47,48 +44,20 @@ class OrderDetailsController extends GetxController with StateMixin {
     }
   }
 
-  Future<void> getOrderHistory() async {
-    try {
-      //  orderHistory.value = await HistoryApi().getOrderHistory(order?.id ?? id);
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to load order history',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
-  }
-
   Future<void> payForItem(OrderItem item) async {
     try {
-      final updatedItem = await ServerpodClient.instance.order.payItem(
+      order = await ServerpodClient.instance.order.payItem(
         order!.id!,
         item.id!,
+        LocalStorage().building!.id!,
       );
-      order!.items!.firstWhere((i) => i.id == updatedItem.id).payed = true;
-      update([item.id!, "pay"]);
-      if (order!.items!.every((item) => item.payed)) {
-        order!.status = OrderStatus.payed;
-        order!.btable!.status = TableStatus.available;
-        order!.closedby = updatedItem.closedby;
-        order!.closedbyId = updatedItem.closedbyId;
-        if (Get.isRegistered<TablesController>()) {
-          Get.find<TablesController>().updateTable(order!.btable!);
-        }
-        // update(['table-status', 'order-status']);
-        change(order, status: RxStatus.success());
-      }
-      if (Get.isRegistered<OrderController>()) {
-        Get.find<OrderController>().onInit();
-      }
+      change(order, status: RxStatus.success());
       Get.snackbar(
         'Payment Processed',
         'Payment for ${item.article.name} has been processed',
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-      getOrderHistory();
     } catch (e) {
       Get.snackbar(
         'Payment Error',
@@ -101,20 +70,16 @@ class OrderDetailsController extends GetxController with StateMixin {
 
   Future<void> payAllItems() async {
     try {
-      order = await ServerpodClient.instance.order.payAllItems(order!.id!);
-      if (Get.isRegistered<OrderController>()) {
-        Get.find<OrderController>().onInit();
-      }
-      if (Get.isRegistered<TablesController>()) {
-        Get.find<TablesController>().updateTable(order!.btable!);
-      }
+      order = await ServerpodClient.instance.order.payAllItems(
+        order!.id!,
+        LocalStorage().building!.id!,
+      );
       Get.snackbar(
         'Payment Processed',
         'All items have been paid',
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-      getOrderHistory();
       change(order, status: RxStatus.success());
     } catch (e) {
       Get.snackbar(

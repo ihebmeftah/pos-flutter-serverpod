@@ -411,21 +411,28 @@ class EndpointOrder extends _i1.EndpointRef {
   _i2.Future<_i10.Order> payItem(
     int orderId,
     int orderItemId,
+    int buildingId,
   ) => caller.callServerEndpoint<_i10.Order>(
     'order',
     'payItem',
     {
       'orderId': orderId,
       'orderItemId': orderItemId,
+      'buildingId': buildingId,
     },
   );
 
-  _i2.Future<_i10.Order> payAllItems(int orderId) =>
-      caller.callServerEndpoint<_i10.Order>(
-        'order',
-        'payAllItems',
-        {'orderId': orderId},
-      );
+  _i2.Future<_i10.Order> payAllItems(
+    int orderId,
+    int buildingId,
+  ) => caller.callServerEndpoint<_i10.Order>(
+    'order',
+    'payAllItems',
+    {
+      'orderId': orderId,
+      'buildingId': buildingId,
+    },
+  );
 
   _i2.Future<_i10.Order> getOrderCurrOfTable(int tableId) =>
       caller.callServerEndpoint<_i10.Order>(
@@ -445,6 +452,22 @@ class EndpointOrder extends _i1.EndpointRef {
       'orderStatus': orderStatus,
     },
   );
+
+  _i2.Stream<_i10.Order> streamCreateOrder(int buildingId) =>
+      caller.callStreamingServerEndpoint<_i2.Stream<_i10.Order>, _i10.Order>(
+        'order',
+        'streamCreateOrder',
+        {'buildingId': buildingId},
+        {},
+      );
+
+  _i2.Stream<_i10.Order> streamUpdateOrder(int buildingId) =>
+      caller.callStreamingServerEndpoint<_i2.Stream<_i10.Order>, _i10.Order>(
+        'order',
+        'streamUpdateOrder',
+        {'buildingId': buildingId},
+        {},
+      );
 }
 
 class Modules {

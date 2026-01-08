@@ -31,3 +31,5 @@ order:
   - payAllItems:
   - getOrderCurrOfTable:
   - getOrdersOfTable:
+  - streamCreateOrder:
+  - streamUpdateOrder:
