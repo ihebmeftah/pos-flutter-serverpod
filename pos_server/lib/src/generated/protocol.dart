@@ -369,7 +369,7 @@ class Protocol extends _i1.SerializationManagerServer {
         _i2.ForeignKeyDefinition(
           constraintName: 'order_items_fk_0',
           columns: ['passedById'],
-          referenceTable: 'serverpod_auth_core_user',
+          referenceTable: 'serverpod_auth_core_profile',
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
@@ -452,8 +452,8 @@ class Protocol extends _i1.SerializationManagerServer {
         _i2.ColumnDefinition(
           name: 'closedbyId',
           columnType: _i2.ColumnType.uuid,
-          isNullable: false,
-          dartType: 'UuidValue',
+          isNullable: true,
+          dartType: 'UuidValue?',
         ),
       ],
       foreignKeys: [
@@ -470,7 +470,7 @@ class Protocol extends _i1.SerializationManagerServer {
         _i2.ForeignKeyDefinition(
           constraintName: 'orders_fk_1',
           columns: ['passedById'],
-          referenceTable: 'serverpod_auth_core_user',
+          referenceTable: 'serverpod_auth_core_profile',
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
@@ -480,7 +480,7 @@ class Protocol extends _i1.SerializationManagerServer {
         _i2.ForeignKeyDefinition(
           constraintName: 'orders_fk_2',
           columns: ['closedbyId'],
-          referenceTable: 'serverpod_auth_core_user',
+          referenceTable: 'serverpod_auth_core_profile',
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,

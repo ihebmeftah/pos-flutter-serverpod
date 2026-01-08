@@ -282,7 +282,7 @@ class _EmailIdpEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i5.UserProfileModel> getUserProfile(
+  _i3.Future<_i5.UserProfile> getUserProfile(
     _i1.TestSessionBuilder sessionBuilder,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
@@ -304,7 +304,7 @@ class _EmailIdpEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i5.UserProfileModel>);
+                as _i3.Future<_i5.UserProfile>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

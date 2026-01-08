@@ -29,7 +29,7 @@ abstract class OrderItem implements _i1.SerializableModel {
     int? id,
     required _i2.Article article,
     required _i1.UuidValue passedById,
-    _i3.AuthUser? passedBy,
+    _i3.UserProfile? passedBy,
     bool? payed,
   }) = _OrderItemImpl;
 
@@ -44,7 +44,7 @@ abstract class OrderItem implements _i1.SerializableModel {
       ),
       passedBy: jsonSerialization['passedBy'] == null
           ? null
-          : _i4.Protocol().deserialize<_i3.AuthUser>(
+          : _i4.Protocol().deserialize<_i3.UserProfile>(
               jsonSerialization['passedBy'],
             ),
       payed: jsonSerialization['payed'] as bool,
@@ -60,7 +60,7 @@ abstract class OrderItem implements _i1.SerializableModel {
 
   _i1.UuidValue passedById;
 
-  _i3.AuthUser? passedBy;
+  _i3.UserProfile? passedBy;
 
   bool payed;
 
@@ -71,7 +71,7 @@ abstract class OrderItem implements _i1.SerializableModel {
     int? id,
     _i2.Article? article,
     _i1.UuidValue? passedById,
-    _i3.AuthUser? passedBy,
+    _i3.UserProfile? passedBy,
     bool? payed,
   });
   @override
@@ -99,7 +99,7 @@ class _OrderItemImpl extends OrderItem {
     int? id,
     required _i2.Article article,
     required _i1.UuidValue passedById,
-    _i3.AuthUser? passedBy,
+    _i3.UserProfile? passedBy,
     bool? payed,
   }) : super._(
          id: id,
@@ -124,7 +124,7 @@ class _OrderItemImpl extends OrderItem {
       id: id is int? ? id : this.id,
       article: article ?? this.article.copyWith(),
       passedById: passedById ?? this.passedById,
-      passedBy: passedBy is _i3.AuthUser?
+      passedBy: passedBy is _i3.UserProfile?
           ? passedBy
           : this.passedBy?.copyWith(),
       payed: payed ?? this.payed,

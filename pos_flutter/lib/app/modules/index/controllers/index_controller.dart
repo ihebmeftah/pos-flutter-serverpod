@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
-class IndexController extends GetxController with StateMixin<UserProfileModel> {
-  late UserProfileModel userProfile;
+class IndexController extends GetxController with StateMixin<UserProfile> {
+  late UserProfile userProfile;
   @override
   void onInit() {
     getUserProfile();
@@ -15,6 +15,7 @@ class IndexController extends GetxController with StateMixin<UserProfileModel> {
     try {
       change(null, status: RxStatus.loading());
       userProfile = await ServerpodClient.instance.emailIdp.getUserProfile();
+      print('User Profile: ${userProfile.toJson()}');
       change(userProfile, status: RxStatus.success());
     } catch (e) {
       change(null, status: RxStatus.error(e.toString()));

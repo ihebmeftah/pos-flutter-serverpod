@@ -49,17 +49,51 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
           child: Column(
             spacing: 10,
             children: [
-              /*   GetBuilder<OrderDetailsController>(
-                id: 'table-status',
-                builder: (controller) {
-                  return Text(
-                    controller.order!.table.status.name.capitalize!,
+              Row(
+                children: [
+                  Text(
+                    "Table Number : ",
                     style: context.textTheme.displaySmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                  );
-                },
-              ), */
+                  ),
+                  GetBuilder<OrderDetailsController>(
+                    id: 'table-status',
+                    builder: (controller) {
+                      return Text(
+                        controller.order!.btable!.number.toString(),
+                        style: context.textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+
+              Row(
+                children: [
+                  Text(
+                    "Status : ",
+                    style: context.textTheme.displaySmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  GetBuilder<OrderDetailsController>(
+                    id: 'table-status',
+                    builder: (controller) {
+                      return Text(
+                        controller.order!.btable!.status.name.capitalize!,
+                        style: context.textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
 
               /// Order items details
               Row(
@@ -140,7 +174,7 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                                         ],
                                       ),
                                       Text(
-                                        "Passed by: ${'${controller.order!.items![index].passedBy!.id}'}",
+                                        "Passed by: ${'${controller.order!.items![index].passedBy!.fullName}'}",
                                       ),
                                     ],
                                   ),

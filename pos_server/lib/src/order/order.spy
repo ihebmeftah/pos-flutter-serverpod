@@ -5,6 +5,6 @@ fields:
   createdAt: DateTime, default=now
   updatedAt: DateTime?,
   btable: BTable?, relation,required
-  passedBy: module:serverpod_auth_core:AuthUser?, relation,
-  closedby: module:serverpod_auth_core:AuthUser?, relation
+  passedBy:  module:serverpod_auth_core:UserProfile?,relation,
+  closedby:  module:serverpod_auth_core:UserProfile?,relation(optional)
   items: List<OrderItem>?, relation

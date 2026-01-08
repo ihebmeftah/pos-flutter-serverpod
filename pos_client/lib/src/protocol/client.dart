@@ -68,8 +68,8 @@ class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
   @override
   String get name => 'emailIdp';
 
-  _i2.Future<_i5.UserProfileModel> getUserProfile() =>
-      caller.callServerEndpoint<_i5.UserProfileModel>(
+  _i2.Future<_i5.UserProfile> getUserProfile() =>
+      caller.callServerEndpoint<_i5.UserProfile>(
         'emailIdp',
         'getUserProfile',
         {},

@@ -6,17 +6,21 @@ import 'package:serverpod_auth_idp_server/providers/email.dart';
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
-  Future<UserProfileModel> getUserProfile(Session session) async {
+  Future<UserProfile> getUserProfile(Session session) async {
     await AuthServices.instance.authUsers.update(
       session,
       authUserId: session.authenticated!.authUserId,
       scopes: {Scope.admin},
     );
-    UserProfileModel userProfile = await AuthServices.instance.userProfiles
-        .findUserProfileByUserId(
-          session,
-          session.authenticated!.authUserId,
-        );
+    final userProfile = await UserProfile.db.findFirstRow(
+      session,
+      where: (t) => t.authUserId.equals(session.authenticated!.authUserId),
+    );
+    if (userProfile == null) {
+      throw Exception(
+        'User profile for auth user id ${session.authenticated!.authUserId} not found',
+      );
+    }
     return userProfile;
   }
 }

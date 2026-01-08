@@ -33,7 +33,7 @@ abstract class OrderItem
     int? id,
     required _i2.Article article,
     required _i1.UuidValue passedById,
-    _i3.AuthUser? passedBy,
+    _i3.UserProfile? passedBy,
     bool? payed,
   }) = _OrderItemImpl;
 
@@ -48,7 +48,7 @@ abstract class OrderItem
       ),
       passedBy: jsonSerialization['passedBy'] == null
           ? null
-          : _i4.Protocol().deserialize<_i3.AuthUser>(
+          : _i4.Protocol().deserialize<_i3.UserProfile>(
               jsonSerialization['passedBy'],
             ),
       payed: jsonSerialization['payed'] as bool,
@@ -67,7 +67,7 @@ abstract class OrderItem
 
   _i1.UuidValue passedById;
 
-  _i3.AuthUser? passedBy;
+  _i3.UserProfile? passedBy;
 
   bool payed;
 
@@ -83,7 +83,7 @@ abstract class OrderItem
     int? id,
     _i2.Article? article,
     _i1.UuidValue? passedById,
-    _i3.AuthUser? passedBy,
+    _i3.UserProfile? passedBy,
     bool? payed,
   });
   @override
@@ -112,7 +112,7 @@ abstract class OrderItem
     };
   }
 
-  static OrderItemInclude include({_i3.AuthUserInclude? passedBy}) {
+  static OrderItemInclude include({_i3.UserProfileInclude? passedBy}) {
     return OrderItemInclude._(passedBy: passedBy);
   }
 
@@ -149,7 +149,7 @@ class _OrderItemImpl extends OrderItem {
     int? id,
     required _i2.Article article,
     required _i1.UuidValue passedById,
-    _i3.AuthUser? passedBy,
+    _i3.UserProfile? passedBy,
     bool? payed,
   }) : super._(
          id: id,
@@ -174,7 +174,7 @@ class _OrderItemImpl extends OrderItem {
       id: id is int? ? id : this.id,
       article: article ?? this.article.copyWith(),
       passedById: passedById ?? this.passedById,
-      passedBy: passedBy is _i3.AuthUser?
+      passedBy: passedBy is _i3.UserProfile?
           ? passedBy
           : this.passedBy?.copyWith(),
       payed: payed ?? this.payed,
@@ -188,7 +188,7 @@ class OrderItemImplicit extends _OrderItemImpl {
     int? id,
     required _i2.Article article,
     required _i1.UuidValue passedById,
-    _i3.AuthUser? passedBy,
+    _i3.UserProfile? passedBy,
     bool? payed,
     int? $_ordersItemsOrdersId,
   }) : _ordersItemsOrdersId = $_ordersItemsOrdersId,
@@ -274,21 +274,21 @@ class OrderItemTable extends _i1.Table<int?> {
 
   late final _i1.ColumnUuid passedById;
 
-  _i3.AuthUserTable? _passedBy;
+  _i3.UserProfileTable? _passedBy;
 
   late final _i1.ColumnBool payed;
 
   late final _i1.ColumnInt $_ordersItemsOrdersId;
 
-  _i3.AuthUserTable get passedBy {
+  _i3.UserProfileTable get passedBy {
     if (_passedBy != null) return _passedBy!;
     _passedBy = _i1.createRelationTable(
       relationFieldName: 'passedBy',
       field: OrderItem.t.passedById,
-      foreignField: _i3.AuthUser.t.id,
+      foreignField: _i3.UserProfile.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i3.AuthUserTable(tableRelation: foreignTableRelation),
+          _i3.UserProfileTable(tableRelation: foreignTableRelation),
     );
     return _passedBy!;
   }
@@ -320,11 +320,11 @@ class OrderItemTable extends _i1.Table<int?> {
 }
 
 class OrderItemInclude extends _i1.IncludeObject {
-  OrderItemInclude._({_i3.AuthUserInclude? passedBy}) {
+  OrderItemInclude._({_i3.UserProfileInclude? passedBy}) {
     _passedBy = passedBy;
   }
 
-  _i3.AuthUserInclude? _passedBy;
+  _i3.UserProfileInclude? _passedBy;
 
   @override
   Map<String, _i1.Include?> get includes => {'passedBy': _passedBy};
@@ -617,12 +617,12 @@ class OrderItemRepository {
 class OrderItemAttachRowRepository {
   const OrderItemAttachRowRepository._();
 
-  /// Creates a relation between the given [OrderItem] and [AuthUser]
-  /// by setting the [OrderItem]'s foreign key `passedById` to refer to the [AuthUser].
+  /// Creates a relation between the given [OrderItem] and [UserProfile]
+  /// by setting the [OrderItem]'s foreign key `passedById` to refer to the [UserProfile].
   Future<void> passedBy(
     _i1.Session session,
     OrderItem orderItem,
-    _i3.AuthUser passedBy, {
+    _i3.UserProfile passedBy, {
     _i1.Transaction? transaction,
   }) async {
     if (orderItem.id == null) {

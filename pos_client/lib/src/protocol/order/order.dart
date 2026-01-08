@@ -28,7 +28,7 @@ abstract class Order implements _i1.SerializableModel {
     required this.btable,
     required this.passedById,
     this.passedBy,
-    required this.closedbyId,
+    this.closedbyId,
     this.closedby,
     this.items,
   }) : status = status ?? _i2.OrderStatus.progress,
@@ -42,9 +42,9 @@ abstract class Order implements _i1.SerializableModel {
     required int btableId,
     required _i3.BTable? btable,
     required _i1.UuidValue passedById,
-    _i4.AuthUser? passedBy,
-    required _i1.UuidValue closedbyId,
-    _i4.AuthUser? closedby,
+    _i4.UserProfile? passedBy,
+    _i1.UuidValue? closedbyId,
+    _i4.UserProfile? closedby,
     List<_i5.OrderItem>? items,
   }) = _OrderImpl;
 
@@ -67,15 +67,17 @@ abstract class Order implements _i1.SerializableModel {
       ),
       passedBy: jsonSerialization['passedBy'] == null
           ? null
-          : _i6.Protocol().deserialize<_i4.AuthUser>(
+          : _i6.Protocol().deserialize<_i4.UserProfile>(
               jsonSerialization['passedBy'],
             ),
-      closedbyId: _i1.UuidValueJsonExtension.fromJson(
-        jsonSerialization['closedbyId'],
-      ),
+      closedbyId: jsonSerialization['closedbyId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['closedbyId'],
+            ),
       closedby: jsonSerialization['closedby'] == null
           ? null
-          : _i6.Protocol().deserialize<_i4.AuthUser>(
+          : _i6.Protocol().deserialize<_i4.UserProfile>(
               jsonSerialization['closedby'],
             ),
       items: jsonSerialization['items'] == null
@@ -103,11 +105,11 @@ abstract class Order implements _i1.SerializableModel {
 
   _i1.UuidValue passedById;
 
-  _i4.AuthUser? passedBy;
+  _i4.UserProfile? passedBy;
 
-  _i1.UuidValue closedbyId;
+  _i1.UuidValue? closedbyId;
 
-  _i4.AuthUser? closedby;
+  _i4.UserProfile? closedby;
 
   List<_i5.OrderItem>? items;
 
@@ -122,9 +124,9 @@ abstract class Order implements _i1.SerializableModel {
     int? btableId,
     _i3.BTable? btable,
     _i1.UuidValue? passedById,
-    _i4.AuthUser? passedBy,
+    _i4.UserProfile? passedBy,
     _i1.UuidValue? closedbyId,
-    _i4.AuthUser? closedby,
+    _i4.UserProfile? closedby,
     List<_i5.OrderItem>? items,
   });
   @override
@@ -139,7 +141,7 @@ abstract class Order implements _i1.SerializableModel {
       if (btable != null) 'btable': btable?.toJson(),
       'passedById': passedById.toJson(),
       if (passedBy != null) 'passedBy': passedBy?.toJson(),
-      'closedbyId': closedbyId.toJson(),
+      if (closedbyId != null) 'closedbyId': closedbyId?.toJson(),
       if (closedby != null) 'closedby': closedby?.toJson(),
       if (items != null) 'items': items?.toJson(valueToJson: (v) => v.toJson()),
     };
@@ -162,9 +164,9 @@ class _OrderImpl extends Order {
     required int btableId,
     required _i3.BTable? btable,
     required _i1.UuidValue passedById,
-    _i4.AuthUser? passedBy,
-    required _i1.UuidValue closedbyId,
-    _i4.AuthUser? closedby,
+    _i4.UserProfile? passedBy,
+    _i1.UuidValue? closedbyId,
+    _i4.UserProfile? closedby,
     List<_i5.OrderItem>? items,
   }) : super._(
          id: id,
@@ -193,7 +195,7 @@ class _OrderImpl extends Order {
     Object? btable = _Undefined,
     _i1.UuidValue? passedById,
     Object? passedBy = _Undefined,
-    _i1.UuidValue? closedbyId,
+    Object? closedbyId = _Undefined,
     Object? closedby = _Undefined,
     Object? items = _Undefined,
   }) {
@@ -205,11 +207,11 @@ class _OrderImpl extends Order {
       btableId: btableId ?? this.btableId,
       btable: btable is _i3.BTable? ? btable : this.btable?.copyWith(),
       passedById: passedById ?? this.passedById,
-      passedBy: passedBy is _i4.AuthUser?
+      passedBy: passedBy is _i4.UserProfile?
           ? passedBy
           : this.passedBy?.copyWith(),
-      closedbyId: closedbyId ?? this.closedbyId,
-      closedby: closedby is _i4.AuthUser?
+      closedbyId: closedbyId is _i1.UuidValue? ? closedbyId : this.closedbyId,
+      closedby: closedby is _i4.UserProfile?
           ? closedby
           : this.closedby?.copyWith(),
       items: items is List<_i5.OrderItem>?

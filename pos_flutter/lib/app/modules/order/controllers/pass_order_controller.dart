@@ -103,14 +103,13 @@ class PassOrderController extends GetxController with StateMixin {
 
   Order get orderDto => Order(
     btableId: table!.id!,
-    passedById: Get.find<IndexController>().userProfile.authUserId,
-    closedbyId: Get.find<IndexController>().userProfile.authUserId,
     btable: table,
+    passedById: Get.find<IndexController>().userProfile.id!,
     items: selectedArticles
         .map(
           (article) => OrderItem(
             article: article,
-            passedById: Get.find<IndexController>().userProfile.authUserId,
+            passedById: Get.find<IndexController>().userProfile.id!,
           ),
         )
         .toList(),

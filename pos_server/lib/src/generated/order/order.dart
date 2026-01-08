@@ -30,7 +30,7 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required this.btable,
     required this.passedById,
     this.passedBy,
-    required this.closedbyId,
+    this.closedbyId,
     this.closedby,
     this.items,
   }) : status = status ?? _i2.OrderStatus.progress,
@@ -44,9 +44,9 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required int btableId,
     required _i3.BTable? btable,
     required _i1.UuidValue passedById,
-    _i4.AuthUser? passedBy,
-    required _i1.UuidValue closedbyId,
-    _i4.AuthUser? closedby,
+    _i4.UserProfile? passedBy,
+    _i1.UuidValue? closedbyId,
+    _i4.UserProfile? closedby,
     List<_i5.OrderItem>? items,
   }) = _OrderImpl;
 
@@ -69,15 +69,17 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       ),
       passedBy: jsonSerialization['passedBy'] == null
           ? null
-          : _i6.Protocol().deserialize<_i4.AuthUser>(
+          : _i6.Protocol().deserialize<_i4.UserProfile>(
               jsonSerialization['passedBy'],
             ),
-      closedbyId: _i1.UuidValueJsonExtension.fromJson(
-        jsonSerialization['closedbyId'],
-      ),
+      closedbyId: jsonSerialization['closedbyId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['closedbyId'],
+            ),
       closedby: jsonSerialization['closedby'] == null
           ? null
-          : _i6.Protocol().deserialize<_i4.AuthUser>(
+          : _i6.Protocol().deserialize<_i4.UserProfile>(
               jsonSerialization['closedby'],
             ),
       items: jsonSerialization['items'] == null
@@ -107,11 +109,11 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   _i1.UuidValue passedById;
 
-  _i4.AuthUser? passedBy;
+  _i4.UserProfile? passedBy;
 
-  _i1.UuidValue closedbyId;
+  _i1.UuidValue? closedbyId;
 
-  _i4.AuthUser? closedby;
+  _i4.UserProfile? closedby;
 
   List<_i5.OrderItem>? items;
 
@@ -129,9 +131,9 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     int? btableId,
     _i3.BTable? btable,
     _i1.UuidValue? passedById,
-    _i4.AuthUser? passedBy,
+    _i4.UserProfile? passedBy,
     _i1.UuidValue? closedbyId,
-    _i4.AuthUser? closedby,
+    _i4.UserProfile? closedby,
     List<_i5.OrderItem>? items,
   });
   @override
@@ -146,7 +148,7 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       if (btable != null) 'btable': btable?.toJson(),
       'passedById': passedById.toJson(),
       if (passedBy != null) 'passedBy': passedBy?.toJson(),
-      'closedbyId': closedbyId.toJson(),
+      if (closedbyId != null) 'closedbyId': closedbyId?.toJson(),
       if (closedby != null) 'closedby': closedby?.toJson(),
       if (items != null) 'items': items?.toJson(valueToJson: (v) => v.toJson()),
     };
@@ -164,7 +166,7 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       if (btable != null) 'btable': btable?.toJsonForProtocol(),
       'passedById': passedById.toJson(),
       if (passedBy != null) 'passedBy': passedBy?.toJsonForProtocol(),
-      'closedbyId': closedbyId.toJson(),
+      if (closedbyId != null) 'closedbyId': closedbyId?.toJson(),
       if (closedby != null) 'closedby': closedby?.toJsonForProtocol(),
       if (items != null)
         'items': items?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
@@ -173,8 +175,8 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   static OrderInclude include({
     _i3.BTableInclude? btable,
-    _i4.AuthUserInclude? passedBy,
-    _i4.AuthUserInclude? closedby,
+    _i4.UserProfileInclude? passedBy,
+    _i4.UserProfileInclude? closedby,
     _i5.OrderItemIncludeList? items,
   }) {
     return OrderInclude._(
@@ -222,9 +224,9 @@ class _OrderImpl extends Order {
     required int btableId,
     required _i3.BTable? btable,
     required _i1.UuidValue passedById,
-    _i4.AuthUser? passedBy,
-    required _i1.UuidValue closedbyId,
-    _i4.AuthUser? closedby,
+    _i4.UserProfile? passedBy,
+    _i1.UuidValue? closedbyId,
+    _i4.UserProfile? closedby,
     List<_i5.OrderItem>? items,
   }) : super._(
          id: id,
@@ -253,7 +255,7 @@ class _OrderImpl extends Order {
     Object? btable = _Undefined,
     _i1.UuidValue? passedById,
     Object? passedBy = _Undefined,
-    _i1.UuidValue? closedbyId,
+    Object? closedbyId = _Undefined,
     Object? closedby = _Undefined,
     Object? items = _Undefined,
   }) {
@@ -265,11 +267,11 @@ class _OrderImpl extends Order {
       btableId: btableId ?? this.btableId,
       btable: btable is _i3.BTable? ? btable : this.btable?.copyWith(),
       passedById: passedById ?? this.passedById,
-      passedBy: passedBy is _i4.AuthUser?
+      passedBy: passedBy is _i4.UserProfile?
           ? passedBy
           : this.passedBy?.copyWith(),
-      closedbyId: closedbyId ?? this.closedbyId,
-      closedby: closedby is _i4.AuthUser?
+      closedbyId: closedbyId is _i1.UuidValue? ? closedbyId : this.closedbyId,
+      closedby: closedby is _i4.UserProfile?
           ? closedby
           : this.closedby?.copyWith(),
       items: items is List<_i5.OrderItem>?
@@ -314,7 +316,7 @@ class OrderUpdateTable extends _i1.UpdateTable<OrderTable> {
   );
 
   _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> closedbyId(
-    _i1.UuidValue value,
+    _i1.UuidValue? value,
   ) => _i1.ColumnValue(
     table.closedbyId,
     value,
@@ -367,11 +369,11 @@ class OrderTable extends _i1.Table<int?> {
 
   late final _i1.ColumnUuid passedById;
 
-  _i4.AuthUserTable? _passedBy;
+  _i4.UserProfileTable? _passedBy;
 
   late final _i1.ColumnUuid closedbyId;
 
-  _i4.AuthUserTable? _closedby;
+  _i4.UserProfileTable? _closedby;
 
   _i5.OrderItemTable? ___items;
 
@@ -390,28 +392,28 @@ class OrderTable extends _i1.Table<int?> {
     return _btable!;
   }
 
-  _i4.AuthUserTable get passedBy {
+  _i4.UserProfileTable get passedBy {
     if (_passedBy != null) return _passedBy!;
     _passedBy = _i1.createRelationTable(
       relationFieldName: 'passedBy',
       field: Order.t.passedById,
-      foreignField: _i4.AuthUser.t.id,
+      foreignField: _i4.UserProfile.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i4.AuthUserTable(tableRelation: foreignTableRelation),
+          _i4.UserProfileTable(tableRelation: foreignTableRelation),
     );
     return _passedBy!;
   }
 
-  _i4.AuthUserTable get closedby {
+  _i4.UserProfileTable get closedby {
     if (_closedby != null) return _closedby!;
     _closedby = _i1.createRelationTable(
       relationFieldName: 'closedby',
       field: Order.t.closedbyId,
-      foreignField: _i4.AuthUser.t.id,
+      foreignField: _i4.UserProfile.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i4.AuthUserTable(tableRelation: foreignTableRelation),
+          _i4.UserProfileTable(tableRelation: foreignTableRelation),
     );
     return _closedby!;
   }
@@ -480,8 +482,8 @@ class OrderTable extends _i1.Table<int?> {
 class OrderInclude extends _i1.IncludeObject {
   OrderInclude._({
     _i3.BTableInclude? btable,
-    _i4.AuthUserInclude? passedBy,
-    _i4.AuthUserInclude? closedby,
+    _i4.UserProfileInclude? passedBy,
+    _i4.UserProfileInclude? closedby,
     _i5.OrderItemIncludeList? items,
   }) {
     _btable = btable;
@@ -492,9 +494,9 @@ class OrderInclude extends _i1.IncludeObject {
 
   _i3.BTableInclude? _btable;
 
-  _i4.AuthUserInclude? _passedBy;
+  _i4.UserProfileInclude? _passedBy;
 
-  _i4.AuthUserInclude? _closedby;
+  _i4.UserProfileInclude? _closedby;
 
   _i5.OrderItemIncludeList? _items;
 
@@ -857,12 +859,12 @@ class OrderAttachRowRepository {
     );
   }
 
-  /// Creates a relation between the given [Order] and [AuthUser]
-  /// by setting the [Order]'s foreign key `passedById` to refer to the [AuthUser].
+  /// Creates a relation between the given [Order] and [UserProfile]
+  /// by setting the [Order]'s foreign key `passedById` to refer to the [UserProfile].
   Future<void> passedBy(
     _i1.Session session,
     Order order,
-    _i4.AuthUser passedBy, {
+    _i4.UserProfile passedBy, {
     _i1.Transaction? transaction,
   }) async {
     if (order.id == null) {
@@ -880,12 +882,12 @@ class OrderAttachRowRepository {
     );
   }
 
-  /// Creates a relation between the given [Order] and [AuthUser]
-  /// by setting the [Order]'s foreign key `closedbyId` to refer to the [AuthUser].
+  /// Creates a relation between the given [Order] and [UserProfile]
+  /// by setting the [Order]'s foreign key `closedbyId` to refer to the [UserProfile].
   Future<void> closedby(
     _i1.Session session,
     Order order,
-    _i4.AuthUser closedby, {
+    _i4.UserProfile closedby, {
     _i1.Transaction? transaction,
   }) async {
     if (order.id == null) {
@@ -965,6 +967,28 @@ class OrderDetachRepository {
 
 class OrderDetachRowRepository {
   const OrderDetachRowRepository._();
+
+  /// Detaches the relation between this [Order] and the [UserProfile] set in `closedby`
+  /// by setting the [Order]'s foreign key `closedbyId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> closedby(
+    _i1.Session session,
+    Order order, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (order.id == null) {
+      throw ArgumentError.notNull('order.id');
+    }
+
+    var $order = order.copyWith(closedbyId: null);
+    await session.db.updateRow<Order>(
+      $order,
+      columns: [Order.t.closedbyId],
+      transaction: transaction,
+    );
+  }
 
   /// Detaches the relation between this [Order] and the given [OrderItem]
   /// by setting the [OrderItem]'s foreign key `_ordersItemsOrdersId` to `null`.

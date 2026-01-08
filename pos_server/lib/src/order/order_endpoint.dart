@@ -1,4 +1,5 @@
 import 'package:pos_server/src/article/article_endpoint.dart';
+import 'package:pos_server/src/auth/email_idp_endpoint.dart';
 import 'package:pos_server/src/buildings/building_endpoint.dart';
 import 'package:pos_server/src/buildings_tables/building_tables_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
@@ -40,11 +41,11 @@ class OrderEndpoint extends Endpoint {
       session,
       where: (t) => t.id.equals(id),
       include: Order.include(
-        passedBy: AuthUser.include(),
+        passedBy: UserProfile.include(),
         btable: BTable.include(),
         items: OrderItem.includeList(
           include: OrderItem.include(
-            passedBy: AuthUser.include(),
+            passedBy: UserProfile.include(),
           ),
         ),
       ),
@@ -79,12 +80,10 @@ class OrderEndpoint extends Endpoint {
         item.article.id!,
         building.id!,
       );
-      item.passedById = session.authenticated!.authUserId;
       orderItem.add(item);
     }
 
     order.status = OrderStatus.progress;
-    order.passedById = session.authenticated!.authUserId;
     Order orderCreated = await Order.db.insertRow(
       session,
       order,
@@ -114,7 +113,10 @@ class OrderEndpoint extends Endpoint {
     item.payed = true;
     if (!order.items!.any((i) => i.payed == false)) {
       order.status = OrderStatus.payed;
-      order.closedbyId = session.authenticated!.authUserId;
+      final UserProfile userProfile = await EmailIdpEndpoint().getUserProfile(
+        session,
+      );
+      order.closedbyId = userProfile.id!;
     }
     order.updatedAt = DateTime.now();
     await OrderItem.db.updateRow(session, item);
@@ -130,14 +132,17 @@ class OrderEndpoint extends Endpoint {
     int orderId,
     int buildingId,
   ) async {
+    final profile = await EmailIdpEndpoint().getUserProfile(session);
     Order order = await getOrderById(session, orderId);
     for (OrderItem item in order.items!) {
-      item.payed = true;
-      await OrderItem.db.updateRow(session, item);
+      if (!item.payed) {
+        item.payed = true;
+        await OrderItem.db.updateRow(session, item);
+      }
     }
     order.status = OrderStatus.payed;
     order.updatedAt = DateTime.now();
-    order.closedbyId = session.authenticated!.authUserId;
+    order.closedbyId = profile.id!;
     await session.messages.postMessage(
       'order_updated-$buildingId',
       order,
@@ -155,11 +160,11 @@ class OrderEndpoint extends Endpoint {
       where: (t) =>
           t.btableId.equals(table.id) & t.status.equals(OrderStatus.progress),
       include: Order.include(
-        passedBy: AuthUser.include(),
+        passedBy: UserProfile.include(),
         btable: BTable.include(),
         items: OrderItem.includeList(
           include: OrderItem.include(
-            passedBy: AuthUser.include(),
+            passedBy: UserProfile.include(),
           ),
         ),
       ),
