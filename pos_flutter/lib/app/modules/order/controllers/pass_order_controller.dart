@@ -8,7 +8,6 @@ import 'package:pos_flutter/config/serverpod_client.dart';
 
 import '../../../data/local/local_storage.dart';
 import '../../../routes/app_pages.dart';
-import '../../tables/controllers/tables_controller.dart';
 import 'order_controller.dart';
 
 class PassOrderController extends GetxController with StateMixin {
@@ -122,9 +121,9 @@ class PassOrderController extends GetxController with StateMixin {
       final passedOrder = await ServerpodClient.instance.order.createOrder(
         orderDto,
       );
-      if (Get.isRegistered<TablesController>()) {
+      /*  if (Get.isRegistered<TablesController>()) {
         Get.find<TablesController>().updateTable(passedOrder.btable!);
-      }
+      }*/
       Get.offAndToNamed("${Routes.ORDER_DETAILS}/${passedOrder.id!}");
       Get.snackbar(
         "Success",

@@ -40,14 +40,14 @@ class TablesController extends GetxController with StateMixin<List<BTable>> {
     }
   }
 
-  void updateTable(BTable table) {
+  /* void updateTable(BTable table) {
     final index = tables.indexWhere((t) => t.id == table.id);
     if (index != -1) {
       tables[index] = table;
       update([table.id!]);
     }
   }
-
+*/
   void generateTablePdfQrcode() async {
     final pdf = pw.Document();
     pdf.addPage(
