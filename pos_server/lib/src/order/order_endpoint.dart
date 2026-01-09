@@ -22,6 +22,7 @@ class OrderEndpoint extends Endpoint {
             t.status.equals(orderStatus),
         include: Order.include(
           btable: BTable.include(),
+          passedBy: UserProfile.include(),
           items: OrderItem.includeList(),
         ),
       );
@@ -31,6 +32,7 @@ class OrderEndpoint extends Endpoint {
       where: (t) => t.btable.buildingId.equals(buildingId),
       include: Order.include(
         btable: BTable.include(),
+        passedBy: UserProfile.include(),
         items: OrderItem.includeList(),
       ),
     );

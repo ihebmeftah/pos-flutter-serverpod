@@ -82,23 +82,32 @@ class OrderView extends GetView<OrderController> {
                                 ),
 
                                 title: Row(
+                                  spacing: 5,
                                   children: [
                                     Text(
-                                      '#${order.id}',
+                                      'REF - ${order.id}',
                                       style: context.textTheme.titleLarge
                                           ?.copyWith(
                                             fontWeight: FontWeight.bold,
                                           ),
                                     ),
-                                    Spacer(),
-                                    Row(
-                                      spacing: 5,
-                                      children: [
-                                        Icon(Icons.shopping_cart, size: 16),
-                                        Text(
-                                          '${order.items!.length} item${order.items!.length > 1 ? 's' : ''}',
-                                        ),
-                                      ],
+                                    Text(
+                                      'By - ${order.passedBy!.fullName}',
+                                      style: context.textTheme.titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                isThreeLine: false,
+                                trailing: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  spacing: 5,
+                                  children: [
+                                    Icon(Icons.shopping_cart, size: 16),
+                                    Text(
+                                      '${order.items!.length} item${order.items!.length > 1 ? 's' : ''}',
                                     ),
                                   ],
                                 ),

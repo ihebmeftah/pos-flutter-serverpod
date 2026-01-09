@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/components/appbeatuifulcard.dart';
 
 import '../../../components/appemptyscreen.dart';
 import '../controllers/order_details_controller.dart';
@@ -12,29 +13,19 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: GetBuilder<OrderDetailsController>(
-          builder: (ctr) {
-            return ctr.status.isSuccess
-                ? Text(
-                    ctr.order!.btable!.number.toString(),
-                    style: context.textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                : Row(
-                    spacing: 5,
-                    children: [
-                      Icon(
-                        Icons.receipt_long,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const Text(
-                        'Order Details',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  );
-          },
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 5,
+          children: [
+            Icon(
+              Icons.receipt_long,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const Text(
+              'Order Details',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -50,64 +41,51 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
             spacing: 10,
             children: [
               Row(
+                spacing: 10,
                 children: [
-                  Text(
-                    "Table Number : ",
-                    style: context.textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.brown.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        spacing: 10,
+                        children: [
+                          AppBeautifullCard(child: Icon(Icons.table_bar)),
+                          Text(
+                            "Table No ${controller.order!.btable!.number}",
+                            style: context.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.brown.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  GetBuilder<OrderDetailsController>(
-                    id: 'table-status',
-                    builder: (controller) {
-                      return Text(
-                        controller.order!.btable!.number.toString(),
-                        style: context.textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
 
-              Row(
-                children: [
-                  Text(
-                    "Status : ",
-                    style: context.textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  GetBuilder<OrderDetailsController>(
-                    id: 'table-status',
-                    builder: (controller) {
-                      return Text(
-                        controller.order!.btable!.status.name.capitalize!,
-                        style: context.textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-
-              /// Order items details
-              Row(
-                spacing: 5,
-                children: [
-                  Icon(
-                    Icons.shopping_cart,
-                    color: Theme.of(context).colorScheme.primary,
-                    size: 24,
-                  ),
-                  Text(
-                    'Order Items (${controller.order!.items!.length})',
-                    style: context.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.brown.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        spacing: 10,
+                        children: [
+                          AppBeautifullCard(child: Icon(Icons.receipt_long)),
+                          Text(
+                            "${controller.order!.status.name.capitalize}",
+                            style: context.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.brown.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -121,10 +99,23 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                     return GetBuilder<OrderDetailsController>(
                       id: controller.order!.items![index].id,
                       builder: (_) {
-                        return Card(
+                        return Container(
                           margin: const EdgeInsets.only(bottom: 12),
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: switch (controller
+                                  .order!
+                                  .items![index]
+                                  .payed) {
+                                true => Colors.green,
+                                _ => Colors.orange,
+                              },
+                            ),
+                            color:
+                                switch (controller.order!.items![index].payed) {
+                                  true => Colors.green,
+                                  _ => Colors.orange,
+                                }.shade50,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Padding(
@@ -138,38 +129,50 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        spacing: 5,
+                                        spacing: 8,
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Icon(
-                                            Icons.fastfood,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.primary,
+                                          AppBeautifullCard(
+                                            child: Icon(Icons.fastfood),
                                           ),
-                                          Text(
-                                            controller
-                                                .order!
-                                                .items![index]
-                                                .article
-                                                .name,
-                                            style: context.textTheme.titleMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                          ),
-                                          Text(
-                                            '${controller.order!.items![index].article.price.toStringAsFixed(2)} DT',
-                                            style: context.textTheme.titleMedium
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(
-                                                    context,
-                                                  ).colorScheme.primary,
-                                                ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                controller
+                                                    .order!
+                                                    .items![index]
+                                                    .article
+                                                    .name
+                                                    .capitalize!,
+                                                style: context
+                                                    .textTheme
+                                                    .titleMedium
+                                                    ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                              ),
+                                              Text(
+                                                '${controller.order!.items![index].article.price.toStringAsFixed(2)} DT',
+                                                style: context
+                                                    .textTheme
+                                                    .titleMedium
+                                                    ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).colorScheme.primary,
+                                                    ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),

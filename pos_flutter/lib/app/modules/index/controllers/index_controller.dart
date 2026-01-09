@@ -15,7 +15,6 @@ class IndexController extends GetxController with StateMixin<UserProfile> {
     try {
       change(null, status: RxStatus.loading());
       userProfile = await ServerpodClient.instance.emailIdp.getUserProfile();
-      print('User Profile: ${userProfile.toJson()}');
       change(userProfile, status: RxStatus.success());
     } catch (e) {
       change(null, status: RxStatus.error(e.toString()));

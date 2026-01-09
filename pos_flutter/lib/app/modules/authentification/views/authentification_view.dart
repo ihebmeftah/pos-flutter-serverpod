@@ -77,7 +77,7 @@ class AuthentificationView extends GetView<AuthentificationController> {
                 ),
                 const SizedBox(height: 16),
 
-                // Google Login Button
+                /*    // Google Login Button
                 _SocialLoginButton(
                   label: 'Continue with Google',
                   icon: Icons.g_mobiledata,
@@ -96,7 +96,7 @@ class AuthentificationView extends GetView<AuthentificationController> {
                   textColor: Colors.white,
                   onPressed: controller.onFacebookLogin,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 32), */
 
                 // Terms and Privacy
                 Text(
