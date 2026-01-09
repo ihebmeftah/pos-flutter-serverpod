@@ -10,10 +10,14 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
     await AuthServices.instance.authUsers.update(
       session,
       authUserId: session.authenticated!.authUserId,
-      scopes: {Scope.admin},
+      scopes: {Scope("admin")},
     );
     final userProfile = await UserProfile.db.findFirstRow(
       session,
+      include: UserProfile.include(
+        authUser: AuthUser.include(),
+        image: UserProfileImage.include(),
+      ),
       where: (t) => t.authUserId.equals(session.authenticated!.authUserId),
     );
     if (userProfile == null) {

@@ -121,7 +121,7 @@ class _SocialLoginButton extends StatelessWidget {
   final IconData icon;
   final Color backgroundColor;
   final Color textColor;
-  final Color? borderColor;
+ // final Color? borderColor;
   final VoidCallback onPressed;
 
   const _SocialLoginButton({
@@ -129,7 +129,7 @@ class _SocialLoginButton extends StatelessWidget {
     required this.icon,
     required this.backgroundColor,
     required this.textColor,
-    this.borderColor,
+  //  this.borderColor,
     required this.onPressed,
   });
 
@@ -147,9 +147,9 @@ class _SocialLoginButton extends StatelessWidget {
           shadowColor: Colors.black26,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: borderColor != null
+            side: /*borderColor != null
                 ? BorderSide(color: borderColor!, width: 1)
-                : BorderSide.none,
+                : */BorderSide.none,
           ),
         ),
         child: Row(

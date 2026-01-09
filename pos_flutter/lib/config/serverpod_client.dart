@@ -21,16 +21,11 @@ class ServerpodClient extends GetxService {
       ..authSessionManager = FlutterAuthSessionManager();
     await _client.auth.initialize();
     _client.auth.authInfoListenable.addListener(() {
-      print(_client.auth.authInfo?.scopeNames);
       if (!_client.auth.isAuthenticated) {
         Get.offAllNamed(Routes.AUTHENTIFICATION);
       }
     });
-    print(_client.auth.authInfo?.scopeNames);
     return this;
   }
 
-  Set<String>? get userScopes {
-    return instance.auth.authInfo?.scopeNames;
-  }
 }

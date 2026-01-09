@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/components/appbeatuifulcard.dart';
 
 import '../../../components/appemptyscreen.dart';
@@ -40,9 +41,22 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
           child: Column(
             spacing: 10,
             children: [
+              // Order started by user info
+              if (controller.order!.passedBy != null)
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.green.shade700,
+                    backgroundColor: Colors.green.shade50,
+                  ),
+                  onPressed: () {},
+                  child: Text(
+                    'Started by: ${controller.order!.passedBy!.fullName ?? controller.order!.passedBy!.email}',
+                  ),
+                ),
               Row(
                 spacing: 10,
                 children: [
+                  /// Table Number
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.all(10),
@@ -66,6 +80,7 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                     ),
                   ),
 
+                  ///Order status
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.all(8),
@@ -251,19 +266,37 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                   },
                 ),
               ),
-              OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  fixedSize: Size(Get.width, 50),
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.brown),
-                    borderRadius: BorderRadius.circular(12),
+
+              /// Append new items button
+              if (controller.order!.status != OrderStatus.payed)
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    fixedSize: Size(Get.width, 50),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.brown),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () {},
+                  label: Text("Append new items"),
+                  icon: Icon(Icons.add),
+                ),
+
+              /// Order amount (PAID/REMAINING items)
+              OrderAmountWidget(order: controller.order!),
+
+              /// Order closed by user info
+              if (controller.order!.closedby != null)
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.red.shade700,
+                    backgroundColor: Colors.red.shade50,
+                  ),
+                  onPressed: () {},
+                  child: Text(
+                    'Closed by: ${controller.order!.closedby!.fullName ?? controller.order!.closedby!.email}',
                   ),
                 ),
-                onPressed: () {},
-                label: Text("Append new items"),
-                icon: Icon(Icons.add),
-              ),
-              OrderAmountWidget(order: controller.order!),
             ],
           ),
         ),

@@ -44,6 +44,7 @@ class OrderEndpoint extends Endpoint {
       where: (t) => t.id.equals(id),
       include: Order.include(
         passedBy: UserProfile.include(),
+        closedby: UserProfile.include(),
         btable: BTable.include(),
         items: OrderItem.includeList(
           include: OrderItem.include(

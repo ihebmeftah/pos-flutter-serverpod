@@ -56,8 +56,8 @@ class IndexView extends GetView<IndexController> {
                         accountName: Text('${controller.userProfile.fullName}'),
                         accountEmail: Text('${controller.userProfile.email}'),
                       ),
-                      if (!Get.find<ServerpodClient>().userScopes!.contains(
-                        "none",
+                      if (!Get.find<IndexController>().scope.contains(
+                        "employer",
                       ))
                         ListTile(
                           leading: Icon(Icons.place),
@@ -89,7 +89,7 @@ class IndexView extends GetView<IndexController> {
         id: "bottomNavigationBar",
         builder: (_) {
           return BottomNavigationBar(
-            items: (Get.find<ServerpodClient>().userScopes!.contains("none"))
+            items: (Get.find<IndexController>().scope.contains("employer"))
                 ? [
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
@@ -214,7 +214,7 @@ class IndexView extends GetView<IndexController> {
           physics: NeverScrollableScrollPhysics(),
           onPageChanged: controller.changeBnbContent,
           controller: controller.pageVCtr,
-          children: Get.find<ServerpodClient>().userScopes!.contains("none")
+          children: Get.find<IndexController>().scope.contains("employer")
               ? [TablesView(), OrderView()]
               : [HomeView(), InventoryView(), TablesView(), OrderView()],
         ),
