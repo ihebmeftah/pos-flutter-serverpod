@@ -143,13 +143,6 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: '4',
         ),
         _i2.ColumnDefinition(
-          name: 'status',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'protocol:TableStatus',
-          columnDefault: '\'available\'::text',
-        ),
-        _i2.ColumnDefinition(
           name: 'buildingId',
           columnType: _i2.ColumnType.bigint,
           isNullable: true,

@@ -92,7 +92,7 @@ class OrderView extends GetView<OrderController> {
                                           ),
                                     ),
                                     Text(
-                                      'By - ${order.passedBy!.fullName}',
+                                      'By - ${order.passedBy!.fullName ?? order.passedBy!.email}',
                                       style: context.textTheme.titleLarge
                                           ?.copyWith(
                                             fontWeight: FontWeight.bold,

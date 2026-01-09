@@ -18,10 +18,9 @@ abstract class BTable implements _i1.SerializableModel {
     this.id,
     required this.number,
     int? seatsMax,
-    _i2.TableStatus? status,
+    this.status,
     required this.buildingId,
-  }) : seatsMax = seatsMax ?? 4,
-       status = status ?? _i2.TableStatus.available;
+  }) : seatsMax = seatsMax ?? 4;
 
   factory BTable({
     int? id,
@@ -36,7 +35,9 @@ abstract class BTable implements _i1.SerializableModel {
       id: jsonSerialization['id'] as int?,
       number: jsonSerialization['number'] as int,
       seatsMax: jsonSerialization['seatsMax'] as int,
-      status: _i2.TableStatus.fromJson((jsonSerialization['status'] as String)),
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i2.TableStatus.fromJson((jsonSerialization['status'] as String)),
       buildingId: jsonSerialization['buildingId'] as int?,
     );
   }
@@ -51,7 +52,7 @@ abstract class BTable implements _i1.SerializableModel {
 
   int seatsMax;
 
-  _i2.TableStatus status;
+  _i2.TableStatus? status;
 
   int? buildingId;
 
@@ -72,7 +73,7 @@ abstract class BTable implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'number': number,
       'seatsMax': seatsMax,
-      'status': status.toJson(),
+      if (status != null) 'status': status?.toJson(),
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -108,14 +109,14 @@ class _BTableImpl extends BTable {
     Object? id = _Undefined,
     int? number,
     int? seatsMax,
-    _i2.TableStatus? status,
+    Object? status = _Undefined,
     Object? buildingId = _Undefined,
   }) {
     return BTable(
       id: id is int? ? id : this.id,
       number: number ?? this.number,
       seatsMax: seatsMax ?? this.seatsMax,
-      status: status ?? this.status,
+      status: status is _i2.TableStatus? ? status : this.status,
       buildingId: buildingId is int? ? buildingId : this.buildingId,
     );
   }

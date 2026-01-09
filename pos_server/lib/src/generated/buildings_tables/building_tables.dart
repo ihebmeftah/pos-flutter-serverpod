@@ -18,10 +18,9 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     this.id,
     required this.number,
     int? seatsMax,
-    _i2.TableStatus? status,
+    this.status,
     required this.buildingId,
-  }) : seatsMax = seatsMax ?? 4,
-       status = status ?? _i2.TableStatus.available;
+  }) : seatsMax = seatsMax ?? 4;
 
   factory BTable({
     int? id,
@@ -36,7 +35,9 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       id: jsonSerialization['id'] as int?,
       number: jsonSerialization['number'] as int,
       seatsMax: jsonSerialization['seatsMax'] as int,
-      status: _i2.TableStatus.fromJson((jsonSerialization['status'] as String)),
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i2.TableStatus.fromJson((jsonSerialization['status'] as String)),
       buildingId: jsonSerialization['buildingId'] as int?,
     );
   }
@@ -53,7 +54,7 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   int seatsMax;
 
-  _i2.TableStatus status;
+  _i2.TableStatus? status;
 
   int? buildingId;
 
@@ -77,7 +78,7 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       if (id != null) 'id': id,
       'number': number,
       'seatsMax': seatsMax,
-      'status': status.toJson(),
+      if (status != null) 'status': status?.toJson(),
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -89,7 +90,7 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       if (id != null) 'id': id,
       'number': number,
       'seatsMax': seatsMax,
-      'status': status.toJson(),
+      if (status != null) 'status': status?.toJson(),
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -149,14 +150,14 @@ class _BTableImpl extends BTable {
     Object? id = _Undefined,
     int? number,
     int? seatsMax,
-    _i2.TableStatus? status,
+    Object? status = _Undefined,
     Object? buildingId = _Undefined,
   }) {
     return BTable(
       id: id is int? ? id : this.id,
       number: number ?? this.number,
       seatsMax: seatsMax ?? this.seatsMax,
-      status: status ?? this.status,
+      status: status is _i2.TableStatus? ? status : this.status,
       buildingId: buildingId is int? ? buildingId : this.buildingId,
     );
   }
@@ -172,13 +173,6 @@ class BTableUpdateTable extends _i1.UpdateTable<BTableTable> {
 
   _i1.ColumnValue<int, int> seatsMax(int value) => _i1.ColumnValue(
     table.seatsMax,
-    value,
-  );
-
-  _i1.ColumnValue<_i2.TableStatus, _i2.TableStatus> status(
-    _i2.TableStatus value,
-  ) => _i1.ColumnValue(
-    table.status,
     value,
   );
 
@@ -200,12 +194,6 @@ class BTableTable extends _i1.Table<int?> {
       this,
       hasDefault: true,
     );
-    status = _i1.ColumnEnum(
-      'status',
-      this,
-      _i1.EnumSerialization.byName,
-      hasDefault: true,
-    );
     buildingId = _i1.ColumnInt(
       'buildingId',
       this,
@@ -219,8 +207,6 @@ class BTableTable extends _i1.Table<int?> {
 
   late final _i1.ColumnInt seatsMax;
 
-  late final _i1.ColumnEnum<_i2.TableStatus> status;
-
   late final _i1.ColumnInt buildingId;
 
   @override
@@ -228,7 +214,6 @@ class BTableTable extends _i1.Table<int?> {
     id,
     number,
     seatsMax,
-    status,
     buildingId,
   ];
 }

@@ -70,6 +70,7 @@ class TablesView extends GetView<TablesController> {
                             passOrderCtr.setTable(controller.tables[index]);
                             return;
                           }
+
                           bottomSheet(
                             onConfirm: () {
                               Get.back();
@@ -124,7 +125,7 @@ class TablesView extends GetView<TablesController> {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        "${controller.tables[index].status.name.capitalize}",
+                                        "${controller.tables[index].status?.name.capitalize}",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w600,
