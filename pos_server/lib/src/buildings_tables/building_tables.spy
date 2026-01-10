@@ -4,5 +4,5 @@ fields:
   ### The number of the building.
   number: int
   seatsMax: int,default=4
-  status: TableStatus?,!persist
+  status: TableStatus?,!persist ### This field is not persisted in the database.
   buildingId: int?, relation(parent=building),required

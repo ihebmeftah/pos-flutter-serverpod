@@ -21,16 +21,18 @@ import '../modules/categorie/views/categorie_form_view.dart';
 import '../modules/categorie/views/categorie_view.dart';
 import '../modules/employer/bindings/employer_binding.dart';
 import '../modules/employer/bindings/employer_details_binding.dart';
-import '../modules/employer/views/employer_details_view.dart';
 import '../modules/employer/bindings/form_employer_binding.dart';
-import '../modules/employer/views/form_employer_view.dart';
+import '../modules/employer/views/employer_details_view.dart';
 import '../modules/employer/views/employer_view.dart';
+import '../modules/employer/views/form_employer_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/index/bindings/index_binding.dart';
 import '../modules/index/views/index_view.dart';
 import '../modules/inventory/bindings/inventory_binding.dart';
 import '../modules/inventory/views/inventory_view.dart';
+import '../modules/notfound/bindings/notfound_binding.dart';
+import '../modules/notfound/views/notfound_view.dart';
 import '../modules/order/bindings/order_binding.dart';
 import '../modules/order/bindings/order_details_binding.dart';
 import '../modules/order/bindings/pass_order_binding.dart';
@@ -47,12 +49,8 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
+  /// Admin and Employer have access to this routes
   static final routes = [
-    GetPage(
-      name: _Paths.HOME,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
-    ),
     GetPage(
       name: _Paths.AUTHENTIFICATION,
       page: () => const AuthentificationView(),
@@ -69,29 +67,6 @@ class AppPages {
           page: () => const LoginView(),
           binding: LoginBinding(),
         ),
-      ],
-    ),
-    GetPage(
-      name: _Paths.BUILDINGS,
-      page: () => const BuildingsView(),
-      binding: BuildingsBinding(),
-      children: [
-        GetPage(
-          name: _Paths.FORM_BUILDING,
-          page: () => const FormBuildingView(),
-          binding: FormBuildingBinding(),
-        ),
-      ],
-    ),
-    GetPage(
-      name: _Paths.INDEX,
-      page: () => const IndexView(),
-      bindings: [
-        IndexBinding(),
-        InventoryBinding(),
-        HomeBinding(),
-        TablesBinding(),
-        OrderBinding(),
       ],
     ),
     GetPage(
@@ -116,29 +91,54 @@ class AppPages {
         ),
       ],
     ),
+  ];
+
+  static final adminRoutes = [
+    GetPage(
+      name: _Paths.INDEX,
+      page: () => const IndexView(),
+      bindings: [
+        IndexBinding(),
+        InventoryBinding(),
+        HomeBinding(),
+        TablesBinding(),
+        OrderBinding(),
+      ],
+    ),
+    GetPage(
+      name: _Paths.HOME,
+      page: () => const HomeView(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.BUILDINGS,
+      page: () => const BuildingsView(),
+      binding: BuildingsBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORM_BUILDING,
+      page: () => const FormBuildingView(),
+      binding: FormBuildingBinding(),
+    ),
     GetPage(
       name: _Paths.TABLES,
       page: () => const TablesView(),
       binding: TablesBinding(),
-      children: [
-        GetPage(
-          name: _Paths.FORM_TABLE,
-          page: () => const FormTableView(),
-          binding: FormTableBinding(),
-        ),
-      ],
+    ),
+    GetPage(
+      name: _Paths.FORM_TABLE,
+      page: () => const FormTableView(),
+      binding: FormTableBinding(),
     ),
     GetPage(
       name: _Paths.ARTICLE,
       page: () => const ArticleView(),
       binding: ArticleBinding(),
-      children: [
-        GetPage(
-          name: _Paths.ARTICLE_FORM,
-          page: () => const ArticleFormView(),
-          binding: ArticleFormBinding(),
-        ),
-      ],
+    ),
+    GetPage(
+      name: _Paths.ARTICLE_FORM,
+      page: () => const ArticleFormView(),
+      binding: ArticleFormBinding(),
     ),
     GetPage(
       name: _Paths.INVENTORY,
@@ -149,13 +149,11 @@ class AppPages {
       name: _Paths.CATEGORIE,
       page: () => const CategorieView(),
       binding: CategorieBinding(),
-      children: [
-        GetPage(
-          name: _Paths.CATEGORIE_FORM,
-          page: () => const CategorieFormView(),
-          binding: CategorieFormBinding(),
-        ),
-      ],
+    ),
+    GetPage(
+      name: _Paths.CATEGORIE_FORM,
+      page: () => const CategorieFormView(),
+      binding: CategorieFormBinding(),
     ),
     GetPage(
       name: _Paths.EMPLOYER,
@@ -163,16 +161,49 @@ class AppPages {
       binding: EmployerBinding(),
       children: [
         GetPage(
-          name: _Paths.FORM_EMPLOYER,
-          page: () => const FormEmployerView(),
-          binding: FormEmployerBinding(),
-        ),
-        GetPage(
           name: "${_Paths.EMPLOYER_DETAILS}/:id",
           page: () => const EmployerDetailsView(),
           binding: EmployerDetailsBinding(),
         ),
       ],
     ),
+    GetPage(
+      name: _Paths.FORM_EMPLOYER,
+      page: () => const FormEmployerView(),
+      binding: FormEmployerBinding(),
+    ),
   ];
+
+  static final employerRoutes = [
+    GetPage(
+      name: _Paths.INDEX,
+      page: () => const IndexView(),
+      bindings: [
+        IndexBinding(),
+        TablesBinding(),
+        OrderBinding(),
+      ],
+    ),
+    GetPage(
+      name: _Paths.TABLES,
+      page: () => const TablesView(),
+      binding: TablesBinding(),
+    ),
+    GetPage(
+      name: _Paths.ARTICLE,
+      page: () => const ArticleView(),
+      binding: ArticleBinding(),
+    ),
+    GetPage(
+      name: _Paths.CATEGORIE,
+      page: () => const CategorieView(),
+      binding: CategorieBinding(),
+    ),
+  ];
+
+  static final unknownRoute = GetPage(
+    name: _Paths.NOTFOUND,
+    page: () => const NotfoundView(),
+    binding: NotfoundBinding(),
+  );
 }

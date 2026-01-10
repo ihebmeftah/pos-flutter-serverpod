@@ -1,8 +1,12 @@
 import 'package:pos_server/src/generated/protocol.dart';
+import 'package:pos_server/src/helpers/authorizations_helpers.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
 class EmployerEndpoint extends Endpoint {
+  @override
+  bool get requireLogin => true;
+
   /// Get employers by buildingId
   /// Identifier can be a[buildingId]
   /// Returns list of [Employer]
@@ -11,6 +15,7 @@ class EmployerEndpoint extends Endpoint {
     Session session,
     int buildingId,
   ) async {
+    await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
     return await Employer.db.find(
       session,
       include: Employer.include(userProfile: UserProfile.include()),

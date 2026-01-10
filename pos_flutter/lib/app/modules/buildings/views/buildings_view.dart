@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/components/apperrorscreen.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart'
     show LocalStorage;
 
@@ -69,6 +70,7 @@ class BuildingsView extends GetView<BuildingsController> {
           },
         ),
         onEmpty: Appemptyscreen(),
+        onError: (error) => AppErrorScreen(message: error),
       ),
     );
   }

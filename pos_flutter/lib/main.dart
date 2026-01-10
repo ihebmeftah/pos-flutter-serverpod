@@ -15,9 +15,13 @@ void main() async {
     GetMaterialApp(
       title: "POS",
       theme: AppTheme().light,
+      unknownRoute: AppPages.unknownRoute,
       debugShowCheckedModeBanner: false,
       darkTheme: AppTheme().dark,
       themeMode: ThemeMode.light,
+onInit: () {
+    
+},
       initialRoute: Routes.AUTHENTIFICATION,
       getPages: AppPages.routes,
       builder: (context, child) {

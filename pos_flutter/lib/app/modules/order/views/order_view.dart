@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../components/apperrorscreen.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/order_controller.dart';
 
@@ -139,6 +140,7 @@ class OrderView extends GetView<OrderController> {
               ),
             ),
           ),
+          onError: (error) => AppErrorScreen(message: error),
         ),
       ),
     );

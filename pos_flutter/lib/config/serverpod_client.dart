@@ -22,6 +22,7 @@ class ServerpodClient extends GetxService {
       ..authSessionManager = FlutterAuthSessionManager();
     await _client.auth.initialize();
     _client.auth.authInfoListenable.addListener(() async {
+      handleRoutePermission();
       if (!_client.auth.isAuthenticated) {
         Get.offAllNamed(Routes.AUTHENTIFICATION);
       } else if (_client.auth.isAuthenticated) {
@@ -36,6 +37,19 @@ class ServerpodClient extends GetxService {
         }
       }
     });
+    handleRoutePermission();
     return this;
+  }
+
+  void handleRoutePermission() {
+    if (!_client.auth.isAuthenticated) {
+      Get.routeTree.routes.assignAll(AppPages.routes);
+      return;
+    }
+    if (_client.auth.authInfo!.scopeNames.contains('employer')) {
+      Get.routeTree.addRoutes(AppPages.employerRoutes);
+    } else {
+      Get.routeTree.addRoutes(AppPages.adminRoutes);
+    }
   }
 }

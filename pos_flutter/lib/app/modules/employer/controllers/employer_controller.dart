@@ -24,6 +24,8 @@ class EmployerController extends GetxController with StateMixin {
       } else {
         change([], status: RxStatus.empty());
       }
+    } on AppException catch (e) {
+      change([], status: RxStatus.error(e.message));
     } catch (e) {
       change([], status: RxStatus.error('Failed to load employers: $e'));
     }

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
@@ -8,7 +6,13 @@ import 'package:pos_flutter/app/modules/article/controllers/article_controller.d
 
 import '../../../../config/serverpod_client.dart';
 
-class ArticleFormController extends GetxController {
+class ArticleFormController extends GetxController with StateMixin {
+  @override
+  void onInit() {
+    change(null, status: RxStatus.success());
+    super.onInit();
+  }
+
   final artFormKey = GlobalKey<FormState>();
   final name = TextEditingController(),
       description = TextEditingController(),
@@ -31,8 +35,10 @@ class ArticleFormController extends GetxController {
         Get.find<ArticleController>().getArticles();
         Get.back();
       }
+    } on AppException catch (e) {
+      change([], status: RxStatus.error(e.message));
     } catch (e) {
-      log("Error creating article: $e");
+      change([], status: RxStatus.error("Failed to create article"));
     }
   }
 

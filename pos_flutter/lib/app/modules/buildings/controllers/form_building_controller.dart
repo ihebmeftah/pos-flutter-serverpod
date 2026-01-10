@@ -5,7 +5,7 @@ import 'package:pos_flutter/app/modules/buildings/controllers/buildings_controll
 
 import '../../../../config/serverpod_client.dart';
 
-class FormBuildingController extends GetxController {
+class FormBuildingController extends GetxController with StateMixin {
   final addFormkey = GlobalKey<FormState>();
   DateTime openingTime = DateTime.now();
   DateTime closingTime = DateTime.now().add(const Duration(hours: 14));
@@ -17,6 +17,11 @@ class FormBuildingController extends GetxController {
       closing = TextEditingController(
         text: TimeOfDay(hour: 23, minute: 00).format(Get.context!),
       );
+  @override
+  void onInit() {
+    change(null, status: RxStatus.success());
+    super.onInit();
+  }
 
   Building get addDto => Building(
     name: name.text,
@@ -29,12 +34,16 @@ class FormBuildingController extends GetxController {
   Future<void> addBuilding() async {
     try {
       if (addFormkey.currentState!.validate()) {
+        change(null, status: RxStatus.loading());
         await ServerpodClient.instance.building.createBuilding(
           addDto,
         );
         Get.find<BuildingsController>().onInit();
         Get.back();
       }
+      change(null, status: RxStatus.success());
+    } on AppException catch (e) {
+      change(null, status: RxStatus.error(e.message));
     } catch (e) {
       Get.snackbar(
         "Error",

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../components/appemptyscreen.dart';
+import '../../../components/apperrorscreen.dart';
 import '../../../themes/apptheme.dart';
 import '../controllers/employer_details_controller.dart';
 
@@ -264,6 +265,7 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
         },
         onLoading: const Center(child: CircularProgressIndicator()),
         onEmpty: Appemptyscreen(),
+        onError: (error) => AppErrorScreen(message: error),
       ),
     );
   }

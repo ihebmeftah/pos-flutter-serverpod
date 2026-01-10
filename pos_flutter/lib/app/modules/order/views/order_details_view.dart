@@ -5,6 +5,7 @@ import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/components/appbeatuifulcard.dart';
 
 import '../../../components/appemptyscreen.dart';
+import '../../../components/apperrorscreen.dart';
 import '../controllers/order_details_controller.dart';
 import '../widgets/order_amount_widget.dart';
 
@@ -301,6 +302,7 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
           ),
         ),
         onEmpty: const Appemptyscreen(),
+        onError: (error) => AppErrorScreen(message: error),
       ),
     );
   }

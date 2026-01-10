@@ -1,0 +1,8 @@
+enum: ExceptionType
+serialized: byName
+values:
+  - Unauthorized
+  - NotFound
+  - BadRequest
+  - Conflict
+  - Forbidden

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/components/apperrorscreen.dart';
 
 import '../../../components/appformfield.dart';
 import '../controllers/form_building_controller.dart';
@@ -11,87 +12,90 @@ class FormBuildingView extends GetView<FormBuildingController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Building View'), centerTitle: true),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
-              child: Form(
-                key: controller.addFormkey,
-                child: Column(
-                  spacing: 20,
-                  children: [
-                    //        FileuploadView(uploadType: UploadType.image),
-                    AppFormField.label(
-                      label: "Building Name",
-                      hint: "Enter building name",
-                      ctr: controller.name,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Name is required";
-                        }
-                        return null;
-                      },
-                    ),
-                    AppFormField.label(
-                      label: "Building Location",
-                      hint: "Enter building location",
-                      ctr: controller.location,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Location is required";
-                        }
-                        return null;
-                      },
-                    ),
-                    Row(
-                      spacing: 20,
-                      children: [
-                        Expanded(
-                          child: AppFormField.label(
-                            readOnly: true,
-                            onTap: controller.pickOpeningTime,
-                            label: "Opening Time",
-                            hint: "Pick opening time",
-                            ctr: controller.opening,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Opening time is required";
-                              }
-                              return null;
-                            },
+      body: controller.obx(
+        (s) => Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: controller.addFormkey,
+                  child: Column(
+                    spacing: 20,
+                    children: [
+                      //        FileuploadView(uploadType: UploadType.image),
+                      AppFormField.label(
+                        label: "Building Name",
+                        hint: "Enter building name",
+                        ctr: controller.name,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Name is required";
+                          }
+                          return null;
+                        },
+                      ),
+                      AppFormField.label(
+                        label: "Building Location",
+                        hint: "Enter building location",
+                        ctr: controller.location,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Location is required";
+                          }
+                          return null;
+                        },
+                      ),
+                      Row(
+                        spacing: 20,
+                        children: [
+                          Expanded(
+                            child: AppFormField.label(
+                              readOnly: true,
+                              onTap: controller.pickOpeningTime,
+                              label: "Opening Time",
+                              hint: "Pick opening time",
+                              ctr: controller.opening,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Opening time is required";
+                                }
+                                return null;
+                              },
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: AppFormField.label(
-                            readOnly: true,
-                            onTap: controller.pickClosingTime,
-                            label: "Closing Time",
-                            hint: "Pick closing time",
-                            ctr: controller.closing,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Closing time is required";
-                              }
-                              return null;
-                            },
+                          Expanded(
+                            child: AppFormField.label(
+                              readOnly: true,
+                              onTap: controller.pickClosingTime,
+                              label: "Closing Time",
+                              hint: "Pick closing time",
+                              ctr: controller.closing,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Closing time is required";
+                                }
+                                return null;
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    //    FileuploadView(),
-                  ],
+                        ],
+                      ),
+                      //    FileuploadView(),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          SafeArea(
-            child: ElevatedButton(
-              onPressed: controller.addBuilding,
-              child: const Text("Add Building"),
+            SafeArea(
+              child: ElevatedButton(
+                onPressed: controller.addBuilding,
+                child: const Text("Add Building"),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+        onError: (error) => AppErrorScreen(message: error),
       ),
     );
   }

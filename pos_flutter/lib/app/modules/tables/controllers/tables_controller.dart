@@ -35,6 +35,8 @@ class TablesController extends GetxController with StateMixin<List<BTable>> {
       } else {
         change(tables, status: RxStatus.success());
       }
+    } on AppException catch (e) {
+      change([], status: RxStatus.error(e.message));
     } catch (e) {
       change([], status: RxStatus.error('Failed to load tables'));
     }

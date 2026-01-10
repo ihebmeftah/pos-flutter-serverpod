@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../components/apperrorscreen.dart';
 import '../../../components/appformfield.dart';
 import '../controllers/form_table_controller.dart';
 
@@ -10,11 +11,11 @@ class FormTableView extends GetView<FormTableController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('TableFormView'), centerTitle: true),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: controller.obx(
-          (s) => Column(
+      appBar: AppBar(title: const Text('Create Tables'), centerTitle: true),
+      body: controller.obx(
+        (s) => SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
             spacing: 10,
             children: [
               ...List.generate(
@@ -109,6 +110,7 @@ class FormTableView extends GetView<FormTableController> {
             ],
           ),
         ),
+        onError: (e) => AppErrorScreen(message: e),
       ),
     );
   }

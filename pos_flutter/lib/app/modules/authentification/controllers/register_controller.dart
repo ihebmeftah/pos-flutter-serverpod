@@ -82,6 +82,7 @@ class RegisterController extends GetxController with StateMixin {
       _emailAuthController.passwordController.text = password.text;
       await _emailAuthController.finishRegistration();
     } catch (e) {
+      print(e);
       Get.snackbar(
         'Error',
         'Verification failed',

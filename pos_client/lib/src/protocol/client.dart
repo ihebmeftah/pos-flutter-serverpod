@@ -33,6 +33,11 @@ class EndpointArticle extends _i1.EndpointRef {
   @override
   String get name => 'article';
 
+  /// Get Articles by building id
+  /// required [buildingId] buildingId The id of the building
+  /// optional [categoryId] The id of the category
+  /// Returns a list of [Article] articles
+  /// allow for all type of users (admin, employee, customer)
   _i2.Future<List<_i3.Article>> getArticles(
     int buildingId, {
     int? categoryId,
@@ -45,6 +50,11 @@ class EndpointArticle extends _i1.EndpointRef {
     },
   );
 
+  /// Create new article
+  /// required [article] The article to create
+  /// required [buildingId] buildingId The id of the building
+  /// Returns the created [Article] article
+  /// allow for admin users only
   _i2.Future<_i3.Article> createArticle({
     required _i3.Article article,
     required int buildingId,
@@ -286,6 +296,12 @@ class EndpointUsers extends _i1.EndpointRef {
   @override
   String get name => 'users';
 
+  /// Create new employer account
+  /// required [userProfileData] The user profile data
+  /// required [password] The password for the account
+  /// required [buildingId] buildingId The id of the building
+  /// Returns the created [Employer] employer account
+  /// allow for admin users only
   _i2.Future<_i6.Employer> createEmployerAccount(
     _i5.UserProfileData userProfileData,
     String password,
@@ -308,9 +324,11 @@ class EndpointBuilding extends _i1.EndpointRef {
   @override
   String get name => 'building';
 
-  /// Deletes the file at [path].
-  /// Throws an [IOError] if the file could not be found. Throws a
-  /// [PermissionError] if the file is present but could not be deleted.
+  /// Get all buildings
+  /// If current user is admin user, return only buildings created by the user
+  /// else current user is customer, return all buildings
+  /// Returns a list of [Building] buildings
+  /// allow for all type of users (admin, customer)
   _i2.Future<List<_i7.Building>> getAllBuildings() =>
       caller.callServerEndpoint<List<_i7.Building>>(
         'building',
@@ -318,6 +336,9 @@ class EndpointBuilding extends _i1.EndpointRef {
         {},
       );
 
+  /// Create new building for the admin
+  /// Returns  [Building] building
+  /// allowed only for admins
   _i2.Future<_i7.Building> createBuilding(_i7.Building building) =>
       caller.callServerEndpoint<_i7.Building>(
         'building',
@@ -326,6 +347,8 @@ class EndpointBuilding extends _i1.EndpointRef {
       );
 }
 
+/// Building Tables Endpoint
+/// All Endpoint required login
 /// {@category Endpoint}
 class EndpointBuildingTables extends _i1.EndpointRef {
   EndpointBuildingTables(_i1.EndpointCaller caller) : super(caller);
@@ -333,6 +356,10 @@ class EndpointBuildingTables extends _i1.EndpointRef {
   @override
   String get name => 'buildingTables';
 
+  /// Get all tables for a building
+  /// required [buildingId] buildingId The id of the building
+  /// Returns a list of [BTable] tables
+  /// allow for all type of users (admin, employee, customer)
   _i2.Future<List<_i8.BTable>> getTables(int buildingId) =>
       caller.callServerEndpoint<List<_i8.BTable>>(
         'buildingTables',
@@ -340,6 +367,12 @@ class EndpointBuildingTables extends _i1.EndpointRef {
         {'buildingId': buildingId},
       );
 
+  /// Create multiple tables for a building
+  /// required [nbtables] number of tables to create
+  /// required [seatsMax] maximum number of seats per table
+  /// required [buildingId] buildingId The id of the building
+  /// Returns a list of created [BTable] tables
+  /// allow for admin users only
   _i2.Future<List<_i8.BTable>> createTables({
     required int nbtables,
     required int seatsMax,
@@ -353,6 +386,23 @@ class EndpointBuildingTables extends _i1.EndpointRef {
       'buildingId': buildingId,
     },
   );
+
+  /// Get a table by its id
+  /// required [tableId] The id of the table
+  /// optional [buildingId] The id of the building
+  /// Returns the [BTable] table
+  /// allow for all type of users (admin, employee, customer)
+  _i2.Future<_i8.BTable> getTableById(
+    int tableId, [
+    int? buildingId,
+  ]) => caller.callServerEndpoint<_i8.BTable>(
+    'buildingTables',
+    'getTableById',
+    {
+      'tableId': tableId,
+      'buildingId': buildingId,
+    },
+  );
 }
 
 /// {@category Endpoint}
@@ -362,6 +412,10 @@ class EndpointCategorie extends _i1.EndpointRef {
   @override
   String get name => 'categorie';
 
+  /// Get all categories for a building
+  /// required [buildingId] buildingId The id of the building
+  /// Returns a list of [Categorie] categories
+  /// allow for all type of users (admin, employee, customer)
   _i2.Future<List<_i9.Categorie>> getCategories(int buildingId) =>
       caller.callServerEndpoint<List<_i9.Categorie>>(
         'categorie',
@@ -369,6 +423,11 @@ class EndpointCategorie extends _i1.EndpointRef {
         {'buildingId': buildingId},
       );
 
+  /// Create new categorie
+  /// required [categorie] The categorie to create
+  /// required [buildingId] buildingId The id of the building
+  /// Returns the created [Categorie] categorie
+  /// allow for admin users only
   _i2.Future<_i9.Categorie> createCategorie({
     required _i9.Categorie categorie,
     required int buildingId,

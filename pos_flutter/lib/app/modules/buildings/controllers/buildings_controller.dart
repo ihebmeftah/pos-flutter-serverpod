@@ -19,8 +19,8 @@ class BuildingsController extends GetxController
       } else {
         change(buildings, status: RxStatus.success());
       }
-    } on ServerpodClientForbidden {
-      change(null, status: RxStatus.error('🚨 Access denied'));
+    } on AppException catch (e) {
+      change(null, status: RxStatus.error(e.message));
     } catch (e) {
       change(null, status: RxStatus.error('Failed to load buildings'));
     }

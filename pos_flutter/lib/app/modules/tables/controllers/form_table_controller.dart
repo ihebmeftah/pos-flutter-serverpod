@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/modules/tables/controllers/tables_controller.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
@@ -40,6 +41,8 @@ class FormTableController extends GetxController
       }
       Get.back();
       Get.find<TablesController>().getTabels();
+    } on AppException catch (e) {
+      change([], status: RxStatus.error(e.message));
     } catch (e) {
       change([], status: RxStatus.error('Failed to create tables'));
     }

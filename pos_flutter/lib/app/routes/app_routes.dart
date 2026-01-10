@@ -10,22 +10,23 @@ abstract class Routes {
   static const REGISTER = _Paths.AUTHENTIFICATION + _Paths.REGISTER;
   static const LOGIN = _Paths.AUTHENTIFICATION + _Paths.LOGIN;
   static const BUILDINGS = _Paths.BUILDINGS;
-  static const FORM_BUILDING = _Paths.BUILDINGS + _Paths.FORM_BUILDING;
+  static const FORM_BUILDING = _Paths.FORM_BUILDING;
   static const INDEX = _Paths.INDEX;
   static const ORDER = _Paths.ORDER;
   static const TABLES = _Paths.TABLES;
   static const PASS_ORDER = _Paths.ORDER + _Paths.PASS_ORDER;
   static const ORDER_DETAILS = _Paths.ORDER + _Paths.ORDER_DETAILS;
   static const ORDERS_TABLES = _Paths.ORDER + _Paths.TABLES;
-  static const FORM_TABLE = _Paths.TABLES + _Paths.FORM_TABLE;
+  static const FORM_TABLE = _Paths.FORM_TABLE;
   static const ARTICLE = _Paths.ARTICLE;
   static const INVENTORY = _Paths.INVENTORY;
   static const CATEGORIE = _Paths.CATEGORIE;
-  static const CATEGORIE_FORM = _Paths.CATEGORIE + _Paths.CATEGORIE_FORM;
-  static const ARTICLE_FORM = _Paths.ARTICLE + _Paths.ARTICLE_FORM;
+  static const CATEGORIE_FORM = _Paths.CATEGORIE_FORM;
+  static const ARTICLE_FORM = _Paths.ARTICLE_FORM;
   static const EMPLOYER = _Paths.EMPLOYER;
-  static const FORM_EMPLOYER = _Paths.EMPLOYER + _Paths.FORM_EMPLOYER;
+  static const FORM_EMPLOYER = _Paths.FORM_EMPLOYER;
   static const EMPLOYER_DETAILS = _Paths.EMPLOYER + _Paths.EMPLOYER_DETAILS;
+  static const NOTFOUND = _Paths.NOTFOUND;
 }
 
 abstract class _Paths {
@@ -50,4 +51,5 @@ abstract class _Paths {
   static const EMPLOYER = '/employer';
   static const FORM_EMPLOYER = '/form-employer';
   static const EMPLOYER_DETAILS = '/employer-details';
+  static const NOTFOUND = '/404';
 }

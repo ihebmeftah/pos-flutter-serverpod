@@ -17,26 +17,30 @@ import 'buildings_tables/building_tables.dart' as _i4;
 import 'buildings_tables/table_status_enum.dart' as _i5;
 import 'cateogrie/categorie.dart' as _i6;
 import 'employer/employer.dart' as _i7;
-import 'order/order.dart' as _i8;
-import 'order/order_item.dart' as _i9;
-import 'order/order_status_enum.dart' as _i10;
-import 'package:pos_client/src/protocol/article/article.dart' as _i11;
-import 'package:pos_client/src/protocol/buildings/building.dart' as _i12;
+import 'exceptions/endpoint_exceptions.dart' as _i8;
+import 'exceptions/exceptiont_enums.dart' as _i9;
+import 'order/order.dart' as _i10;
+import 'order/order_item.dart' as _i11;
+import 'order/order_status_enum.dart' as _i12;
+import 'package:pos_client/src/protocol/article/article.dart' as _i13;
+import 'package:pos_client/src/protocol/buildings/building.dart' as _i14;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
-    as _i13;
-import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i14;
-import 'package:pos_client/src/protocol/employer/employer.dart' as _i15;
-import 'package:pos_client/src/protocol/order/order.dart' as _i16;
+    as _i15;
+import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i16;
+import 'package:pos_client/src/protocol/employer/employer.dart' as _i17;
+import 'package:pos_client/src/protocol/order/order.dart' as _i18;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i17;
+    as _i19;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i18;
+    as _i20;
 export 'article/article.dart';
 export 'buildings/building.dart';
 export 'buildings_tables/building_tables.dart';
 export 'buildings_tables/table_status_enum.dart';
 export 'cateogrie/categorie.dart';
 export 'employer/employer.dart';
+export 'exceptions/endpoint_exceptions.dart';
+export 'exceptions/exceptiont_enums.dart';
 export 'order/order.dart';
 export 'order/order_item.dart';
 export 'order/order_status_enum.dart';
@@ -94,14 +98,20 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i7.Employer) {
       return _i7.Employer.fromJson(data) as T;
     }
-    if (t == _i8.Order) {
-      return _i8.Order.fromJson(data) as T;
+    if (t == _i8.AppException) {
+      return _i8.AppException.fromJson(data) as T;
     }
-    if (t == _i9.OrderItem) {
-      return _i9.OrderItem.fromJson(data) as T;
+    if (t == _i9.ExceptionType) {
+      return _i9.ExceptionType.fromJson(data) as T;
     }
-    if (t == _i10.OrderStatus) {
-      return _i10.OrderStatus.fromJson(data) as T;
+    if (t == _i10.Order) {
+      return _i10.Order.fromJson(data) as T;
+    }
+    if (t == _i11.OrderItem) {
+      return _i11.OrderItem.fromJson(data) as T;
+    }
+    if (t == _i12.OrderStatus) {
+      return _i12.OrderStatus.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.Article?>()) {
       return (data != null ? _i2.Article.fromJson(data) : null) as T;
@@ -121,56 +131,62 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i7.Employer?>()) {
       return (data != null ? _i7.Employer.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i8.Order?>()) {
-      return (data != null ? _i8.Order.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i8.AppException?>()) {
+      return (data != null ? _i8.AppException.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i9.OrderItem?>()) {
-      return (data != null ? _i9.OrderItem.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i9.ExceptionType?>()) {
+      return (data != null ? _i9.ExceptionType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i10.OrderStatus?>()) {
-      return (data != null ? _i10.OrderStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i10.Order?>()) {
+      return (data != null ? _i10.Order.fromJson(data) : null) as T;
     }
-    if (t == List<_i9.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i9.OrderItem>(e)).toList()
+    if (t == _i1.getType<_i11.OrderItem?>()) {
+      return (data != null ? _i11.OrderItem.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i12.OrderStatus?>()) {
+      return (data != null ? _i12.OrderStatus.fromJson(data) : null) as T;
+    }
+    if (t == List<_i11.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i11.OrderItem>(e)).toList()
           as T;
     }
-    if (t == _i1.getType<List<_i9.OrderItem>?>()) {
+    if (t == _i1.getType<List<_i11.OrderItem>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i9.OrderItem>(e))
+                    .map((e) => deserialize<_i11.OrderItem>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i11.Article>) {
-      return (data as List).map((e) => deserialize<_i11.Article>(e)).toList()
+    if (t == List<_i13.Article>) {
+      return (data as List).map((e) => deserialize<_i13.Article>(e)).toList()
           as T;
     }
-    if (t == List<_i12.Building>) {
-      return (data as List).map((e) => deserialize<_i12.Building>(e)).toList()
+    if (t == List<_i14.Building>) {
+      return (data as List).map((e) => deserialize<_i14.Building>(e)).toList()
           as T;
     }
-    if (t == List<_i13.BTable>) {
-      return (data as List).map((e) => deserialize<_i13.BTable>(e)).toList()
+    if (t == List<_i15.BTable>) {
+      return (data as List).map((e) => deserialize<_i15.BTable>(e)).toList()
           as T;
     }
-    if (t == List<_i14.Categorie>) {
-      return (data as List).map((e) => deserialize<_i14.Categorie>(e)).toList()
+    if (t == List<_i16.Categorie>) {
+      return (data as List).map((e) => deserialize<_i16.Categorie>(e)).toList()
           as T;
     }
-    if (t == List<_i15.Employer>) {
-      return (data as List).map((e) => deserialize<_i15.Employer>(e)).toList()
+    if (t == List<_i17.Employer>) {
+      return (data as List).map((e) => deserialize<_i17.Employer>(e)).toList()
           as T;
     }
-    if (t == List<_i16.Order>) {
-      return (data as List).map((e) => deserialize<_i16.Order>(e)).toList()
+    if (t == List<_i18.Order>) {
+      return (data as List).map((e) => deserialize<_i18.Order>(e)).toList()
           as T;
     }
     try {
-      return _i17.Protocol().deserialize<T>(data, t);
+      return _i19.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
-      return _i18.Protocol().deserialize<T>(data, t);
+      return _i20.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -183,9 +199,11 @@ class Protocol extends _i1.SerializationManager {
       _i5.TableStatus => 'TableStatus',
       _i6.Categorie => 'Categorie',
       _i7.Employer => 'Employer',
-      _i8.Order => 'Order',
-      _i9.OrderItem => 'OrderItem',
-      _i10.OrderStatus => 'OrderStatus',
+      _i8.AppException => 'AppException',
+      _i9.ExceptionType => 'ExceptionType',
+      _i10.Order => 'Order',
+      _i11.OrderItem => 'OrderItem',
+      _i12.OrderStatus => 'OrderStatus',
       _ => null,
     };
   }
@@ -212,18 +230,22 @@ class Protocol extends _i1.SerializationManager {
         return 'Categorie';
       case _i7.Employer():
         return 'Employer';
-      case _i8.Order():
+      case _i8.AppException():
+        return 'AppException';
+      case _i9.ExceptionType():
+        return 'ExceptionType';
+      case _i10.Order():
         return 'Order';
-      case _i9.OrderItem():
+      case _i11.OrderItem():
         return 'OrderItem';
-      case _i10.OrderStatus():
+      case _i12.OrderStatus():
         return 'OrderStatus';
     }
-    className = _i17.Protocol().getClassNameForObject(data);
+    className = _i19.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i18.Protocol().getClassNameForObject(data);
+    className = _i20.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -254,22 +276,28 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'Employer') {
       return deserialize<_i7.Employer>(data['data']);
     }
+    if (dataClassName == 'AppException') {
+      return deserialize<_i8.AppException>(data['data']);
+    }
+    if (dataClassName == 'ExceptionType') {
+      return deserialize<_i9.ExceptionType>(data['data']);
+    }
     if (dataClassName == 'Order') {
-      return deserialize<_i8.Order>(data['data']);
+      return deserialize<_i10.Order>(data['data']);
     }
     if (dataClassName == 'OrderItem') {
-      return deserialize<_i9.OrderItem>(data['data']);
+      return deserialize<_i11.OrderItem>(data['data']);
     }
     if (dataClassName == 'OrderStatus') {
-      return deserialize<_i10.OrderStatus>(data['data']);
+      return deserialize<_i12.OrderStatus>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i17.Protocol().deserializeByClassName(data);
+      return _i19.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i18.Protocol().deserializeByClassName(data);
+      return _i20.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
@@ -284,10 +312,10 @@ class Protocol extends _i1.SerializationManager {
       return null;
     }
     try {
-      return _i17.Protocol().mapRecordToJson(record);
+      return _i19.Protocol().mapRecordToJson(record);
     } catch (_) {}
     try {
-      return _i18.Protocol().mapRecordToJson(record);
+      return _i20.Protocol().mapRecordToJson(record);
     } catch (_) {}
     throw Exception('Unsupported record type ${record.runtimeType}');
   }

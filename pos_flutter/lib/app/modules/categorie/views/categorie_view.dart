@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../components/appemptyscreen.dart';
+import '../../../components/apperrorscreen.dart';
 import '../../../routes/app_pages.dart';
 import '../../../themes/apptheme.dart';
 import '../controllers/categorie_controller.dart';
@@ -140,6 +141,7 @@ class CategorieView extends GetView<CategorieController> {
           ),
         ),
         onEmpty: const Appemptyscreen(),
+        onError: (error) => AppErrorScreen(message: error),
       ),
     );
   }

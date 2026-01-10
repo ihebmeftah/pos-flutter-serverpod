@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/components/apperrorscreen.dart';
 
 import '../../../components/appemptyscreen.dart';
 import '../../../routes/app_pages.dart';
@@ -87,6 +88,7 @@ class ArticleView extends GetView<ArticleController> {
             ),
           ),
         ),
+        onError: (error) => AppErrorScreen(message: error),
         onEmpty: controller.categoryId != null
             ? Center(
                 child: Text('No articles found for this category'),

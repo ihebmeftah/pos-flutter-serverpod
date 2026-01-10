@@ -1,3 +1,4 @@
+import 'package:pos_server/src/helpers/authorizations_helpers.dart';
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
@@ -6,6 +7,11 @@ class ArticleEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
+  /// Get Articles by building id
+  /// required [buildingId] buildingId The id of the building
+  /// optional [categoryId] The id of the category
+  /// Returns a list of [Article] articles
+  /// allow for all type of users (admin, employee, customer)
   Future<List<Article>> getArticles(
     Session session,
     int buildingId, {
@@ -33,11 +39,17 @@ class ArticleEndpoint extends Endpoint {
     );
   }
 
+  /// Create new article
+  /// required [article] The article to create
+  /// required [buildingId] buildingId The id of the building
+  /// Returns the created [Article] article
+  /// allow for admin users only
   Future<Article> createArticle(
     Session session, {
     required Article article,
     required int buildingId,
   }) async {
+    await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
     final existe = await Article.db.findFirstRow(
       session,
       where: (a) =>
