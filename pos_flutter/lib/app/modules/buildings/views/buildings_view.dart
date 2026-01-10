@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:pos_flutter/app/components/apperrorscreen.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart'
     show LocalStorage;
+import 'package:pos_flutter/config/serverpod_client.dart';
+import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
 import '../../../components/appbottomsheet.dart';
 import '../../../components/appemptyscreen.dart';
@@ -19,7 +21,13 @@ class BuildingsView extends GetView<BuildingsController> {
         onPressed: () => Get.toNamed(Routes.FORM_BUILDING),
         child: const Icon(Icons.add),
       ),
-      appBar: AppBar(title: const Text('Your Buildings')),
+      appBar: AppBar(
+        title: const Text('Your Buildings'),
+        leading: IconButton(
+          onPressed: ServerpodClient.instance.auth.signOutAllDevices,
+          icon: Icon(Icons.logout),
+        ),
+      ),
       body: controller.obx(
         (state) => ListView.builder(
           itemCount: state?.length ?? 0,
