@@ -23,6 +23,9 @@ abstract class Routes {
   static const CATEGORIE = _Paths.CATEGORIE;
   static const CATEGORIE_FORM = _Paths.CATEGORIE + _Paths.CATEGORIE_FORM;
   static const ARTICLE_FORM = _Paths.ARTICLE + _Paths.ARTICLE_FORM;
+  static const EMPLOYER = _Paths.EMPLOYER;
+  static const FORM_EMPLOYER = _Paths.EMPLOYER + _Paths.FORM_EMPLOYER;
+  static const EMPLOYER_DETAILS = _Paths.EMPLOYER + _Paths.EMPLOYER_DETAILS;
 }
 
 abstract class _Paths {
@@ -44,4 +47,7 @@ abstract class _Paths {
   static const CATEGORIE = '/categorie';
   static const CATEGORIE_FORM = '/categorie-form';
   static const ARTICLE_FORM = '/article-form';
+  static const EMPLOYER = '/employer';
+  static const FORM_EMPLOYER = '/form-employer';
+  static const EMPLOYER_DETAILS = '/employer-details';
 }

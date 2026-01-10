@@ -51,10 +51,12 @@ abstract class Order implements _i1.SerializableModel {
   factory Order.fromJson(Map<String, dynamic> jsonSerialization) {
     return Order(
       id: jsonSerialization['id'] as int?,
-      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       updatedAt: jsonSerialization['updatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),

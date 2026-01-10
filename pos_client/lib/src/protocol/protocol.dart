@@ -16,7 +16,7 @@ import 'buildings/building.dart' as _i3;
 import 'buildings_tables/building_tables.dart' as _i4;
 import 'buildings_tables/table_status_enum.dart' as _i5;
 import 'cateogrie/categorie.dart' as _i6;
-import 'greetings/greeting.dart' as _i7;
+import 'employer/employer.dart' as _i7;
 import 'order/order.dart' as _i8;
 import 'order/order_item.dart' as _i9;
 import 'order/order_status_enum.dart' as _i10;
@@ -25,17 +25,18 @@ import 'package:pos_client/src/protocol/buildings/building.dart' as _i12;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
     as _i13;
 import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i14;
-import 'package:pos_client/src/protocol/order/order.dart' as _i15;
+import 'package:pos_client/src/protocol/employer/employer.dart' as _i15;
+import 'package:pos_client/src/protocol/order/order.dart' as _i16;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i16;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i17;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i18;
 export 'article/article.dart';
 export 'buildings/building.dart';
 export 'buildings_tables/building_tables.dart';
 export 'buildings_tables/table_status_enum.dart';
 export 'cateogrie/categorie.dart';
-export 'greetings/greeting.dart';
+export 'employer/employer.dart';
 export 'order/order.dart';
 export 'order/order_item.dart';
 export 'order/order_status_enum.dart';
@@ -90,8 +91,8 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i6.Categorie) {
       return _i6.Categorie.fromJson(data) as T;
     }
-    if (t == _i7.Greeting) {
-      return _i7.Greeting.fromJson(data) as T;
+    if (t == _i7.Employer) {
+      return _i7.Employer.fromJson(data) as T;
     }
     if (t == _i8.Order) {
       return _i8.Order.fromJson(data) as T;
@@ -117,8 +118,8 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i6.Categorie?>()) {
       return (data != null ? _i6.Categorie.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i7.Greeting?>()) {
-      return (data != null ? _i7.Greeting.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i7.Employer?>()) {
+      return (data != null ? _i7.Employer.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i8.Order?>()) {
       return (data != null ? _i8.Order.fromJson(data) : null) as T;
@@ -157,15 +158,19 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i14.Categorie>(e)).toList()
           as T;
     }
-    if (t == List<_i15.Order>) {
-      return (data as List).map((e) => deserialize<_i15.Order>(e)).toList()
+    if (t == List<_i15.Employer>) {
+      return (data as List).map((e) => deserialize<_i15.Employer>(e)).toList()
+          as T;
+    }
+    if (t == List<_i16.Order>) {
+      return (data as List).map((e) => deserialize<_i16.Order>(e)).toList()
           as T;
     }
     try {
-      return _i16.Protocol().deserialize<T>(data, t);
+      return _i17.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
-      return _i17.Protocol().deserialize<T>(data, t);
+      return _i18.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -177,7 +182,7 @@ class Protocol extends _i1.SerializationManager {
       _i4.BTable => 'BTable',
       _i5.TableStatus => 'TableStatus',
       _i6.Categorie => 'Categorie',
-      _i7.Greeting => 'Greeting',
+      _i7.Employer => 'Employer',
       _i8.Order => 'Order',
       _i9.OrderItem => 'OrderItem',
       _i10.OrderStatus => 'OrderStatus',
@@ -205,8 +210,8 @@ class Protocol extends _i1.SerializationManager {
         return 'TableStatus';
       case _i6.Categorie():
         return 'Categorie';
-      case _i7.Greeting():
-        return 'Greeting';
+      case _i7.Employer():
+        return 'Employer';
       case _i8.Order():
         return 'Order';
       case _i9.OrderItem():
@@ -214,11 +219,11 @@ class Protocol extends _i1.SerializationManager {
       case _i10.OrderStatus():
         return 'OrderStatus';
     }
-    className = _i16.Protocol().getClassNameForObject(data);
+    className = _i17.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i17.Protocol().getClassNameForObject(data);
+    className = _i18.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -246,8 +251,8 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'Categorie') {
       return deserialize<_i6.Categorie>(data['data']);
     }
-    if (dataClassName == 'Greeting') {
-      return deserialize<_i7.Greeting>(data['data']);
+    if (dataClassName == 'Employer') {
+      return deserialize<_i7.Employer>(data['data']);
     }
     if (dataClassName == 'Order') {
       return deserialize<_i8.Order>(data['data']);
@@ -260,12 +265,30 @@ class Protocol extends _i1.SerializationManager {
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i16.Protocol().deserializeByClassName(data);
+      return _i17.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i17.Protocol().deserializeByClassName(data);
+      return _i18.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
+  }
+
+  /// Maps any `Record`s known to this [Protocol] to their JSON representation
+  ///
+  /// Throws in case the record type is not known.
+  ///
+  /// This method will return `null` (only) for `null` inputs.
+  Map<String, dynamic>? mapRecordToJson(Record? record) {
+    if (record == null) {
+      return null;
+    }
+    try {
+      return _i17.Protocol().mapRecordToJson(record);
+    } catch (_) {}
+    try {
+      return _i18.Protocol().mapRecordToJson(record);
+    } catch (_) {}
+    throw Exception('Unsupported record type ${record.runtimeType}');
   }
 }

@@ -7,11 +7,6 @@ import 'package:serverpod_auth_idp_server/providers/email.dart';
 /// on the client.
 class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
   Future<UserProfile> getUserProfile(Session session) async {
-    await AuthServices.instance.authUsers.update(
-      session,
-      authUserId: session.authenticated!.authUserId,
-      scopes: {Scope("admin")},
-    );
     final userProfile = await UserProfile.db.findFirstRow(
       session,
       include: UserProfile.include(

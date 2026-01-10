@@ -12,6 +12,8 @@ emailIdp:
   - finishPasswordReset:
 jwtRefresh:
   - refreshAccessToken:
+users:
+  - createEmployerAccount:
 building:
   - getAllBuildings:
   - createBuilding:
@@ -21,8 +23,9 @@ buildingTables:
 categorie:
   - getCategories:
   - createCategorie:
-greeting:
-  - hello:
+employer:
+  - getEmployers:
+  - getEmployerByIdentifier:
 order:
   - getOrders:
   - getOrderById:

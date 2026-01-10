@@ -17,11 +17,11 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i4;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i5;
-import 'package:pos_client/src/protocol/buildings/building.dart' as _i6;
+import 'package:pos_client/src/protocol/employer/employer.dart' as _i6;
+import 'package:pos_client/src/protocol/buildings/building.dart' as _i7;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
-    as _i7;
-import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i8;
-import 'package:pos_client/src/protocol/greetings/greeting.dart' as _i9;
+    as _i8;
+import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i9;
 import 'package:pos_client/src/protocol/order/order.dart' as _i10;
 import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i11;
 import 'protocol.dart' as _i12;
@@ -280,21 +280,46 @@ class EndpointJwtRefresh extends _i5.EndpointRefreshJwtTokens {
 }
 
 /// {@category Endpoint}
+class EndpointUsers extends _i1.EndpointRef {
+  EndpointUsers(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'users';
+
+  _i2.Future<_i6.Employer> createEmployerAccount(
+    _i5.UserProfileData userProfileData,
+    String password,
+    int buildingId,
+  ) => caller.callServerEndpoint<_i6.Employer>(
+    'users',
+    'createEmployerAccount',
+    {
+      'userProfileData': userProfileData,
+      'password': password,
+      'buildingId': buildingId,
+    },
+  );
+}
+
+/// {@category Endpoint}
 class EndpointBuilding extends _i1.EndpointRef {
   EndpointBuilding(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'building';
 
-  _i2.Future<List<_i6.Building>> getAllBuildings() =>
-      caller.callServerEndpoint<List<_i6.Building>>(
+  /// Deletes the file at [path].
+  /// Throws an [IOError] if the file could not be found. Throws a
+  /// [PermissionError] if the file is present but could not be deleted.
+  _i2.Future<List<_i7.Building>> getAllBuildings() =>
+      caller.callServerEndpoint<List<_i7.Building>>(
         'building',
         'getAllBuildings',
         {},
       );
 
-  _i2.Future<_i6.Building> createBuilding(_i6.Building building) =>
-      caller.callServerEndpoint<_i6.Building>(
+  _i2.Future<_i7.Building> createBuilding(_i7.Building building) =>
+      caller.callServerEndpoint<_i7.Building>(
         'building',
         'createBuilding',
         {'building': building},
@@ -308,18 +333,18 @@ class EndpointBuildingTables extends _i1.EndpointRef {
   @override
   String get name => 'buildingTables';
 
-  _i2.Future<List<_i7.BTable>> getTables(int buildingId) =>
-      caller.callServerEndpoint<List<_i7.BTable>>(
+  _i2.Future<List<_i8.BTable>> getTables(int buildingId) =>
+      caller.callServerEndpoint<List<_i8.BTable>>(
         'buildingTables',
         'getTables',
         {'buildingId': buildingId},
       );
 
-  _i2.Future<List<_i7.BTable>> createTables({
+  _i2.Future<List<_i8.BTable>> createTables({
     required int nbtables,
     required int seatsMax,
     required int buildingId,
-  }) => caller.callServerEndpoint<List<_i7.BTable>>(
+  }) => caller.callServerEndpoint<List<_i8.BTable>>(
     'buildingTables',
     'createTables',
     {
@@ -337,17 +362,17 @@ class EndpointCategorie extends _i1.EndpointRef {
   @override
   String get name => 'categorie';
 
-  _i2.Future<List<_i8.Categorie>> getCategories(int buildingId) =>
-      caller.callServerEndpoint<List<_i8.Categorie>>(
+  _i2.Future<List<_i9.Categorie>> getCategories(int buildingId) =>
+      caller.callServerEndpoint<List<_i9.Categorie>>(
         'categorie',
         'getCategories',
         {'buildingId': buildingId},
       );
 
-  _i2.Future<_i8.Categorie> createCategorie({
-    required _i8.Categorie categorie,
+  _i2.Future<_i9.Categorie> createCategorie({
+    required _i9.Categorie categorie,
     required int buildingId,
-  }) => caller.callServerEndpoint<_i8.Categorie>(
+  }) => caller.callServerEndpoint<_i9.Categorie>(
     'categorie',
     'createCategorie',
     {
@@ -357,21 +382,33 @@ class EndpointCategorie extends _i1.EndpointRef {
   );
 }
 
-/// This is an example endpoint that returns a greeting message through
-/// its [hello] method.
 /// {@category Endpoint}
-class EndpointGreeting extends _i1.EndpointRef {
-  EndpointGreeting(_i1.EndpointCaller caller) : super(caller);
+class EndpointEmployer extends _i1.EndpointRef {
+  EndpointEmployer(_i1.EndpointCaller caller) : super(caller);
 
   @override
-  String get name => 'greeting';
+  String get name => 'employer';
 
-  /// Returns a personalized greeting message: "Hello {name}".
-  _i2.Future<_i9.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i9.Greeting>(
-        'greeting',
-        'hello',
-        {'name': name},
+  /// Get employers by buildingId
+  /// Identifier can be a[buildingId]
+  /// Returns list of [Employer]
+  /// This enpoint need login and allowed only for admin
+  _i2.Future<List<_i6.Employer>> getEmployers(int buildingId) =>
+      caller.callServerEndpoint<List<_i6.Employer>>(
+        'employer',
+        'getEmployers',
+        {'buildingId': buildingId},
+      );
+
+  /// Get employer by identifier
+  /// Identifier can be a[authId] or [UserProfileId]
+  /// Returns [Employer] if found else throws exception
+  /// This enpoint need login and allowed for all users
+  _i2.Future<_i6.Employer> getEmployerByIdentifier(_i1.UuidValue identifier) =>
+      caller.callServerEndpoint<_i6.Employer>(
+        'employer',
+        'getEmployerByIdentifier',
+        {'identifier': identifier},
       );
 }
 
@@ -513,10 +550,11 @@ class Client extends _i1.ServerpodClientShared {
     article = EndpointArticle(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    users = EndpointUsers(this);
     building = EndpointBuilding(this);
     buildingTables = EndpointBuildingTables(this);
     categorie = EndpointCategorie(this);
-    greeting = EndpointGreeting(this);
+    employer = EndpointEmployer(this);
     order = EndpointOrder(this);
     modules = Modules(this);
   }
@@ -527,13 +565,15 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointJwtRefresh jwtRefresh;
 
+  late final EndpointUsers users;
+
   late final EndpointBuilding building;
 
   late final EndpointBuildingTables buildingTables;
 
   late final EndpointCategorie categorie;
 
-  late final EndpointGreeting greeting;
+  late final EndpointEmployer employer;
 
   late final EndpointOrder order;
 
@@ -544,10 +584,11 @@ class Client extends _i1.ServerpodClientShared {
     'article': article,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'users': users,
     'building': building,
     'buildingTables': buildingTables,
     'categorie': categorie,
-    'greeting': greeting,
+    'employer': employer,
     'order': order,
   };
 

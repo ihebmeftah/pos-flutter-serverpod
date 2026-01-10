@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_flutter/app/modules/authentification/controllers/authentification_controller.dart';
 
-import '../../../routes/app_pages.dart';
-
 class LoginController extends GetxController {
   final _emailAuthController =
       Get.find<AuthentificationController>().emailAuthController;
@@ -21,17 +19,6 @@ class LoginController extends GetxController {
     try {
       if (loginformKey.currentState!.validate()) {
         await _emailAuthController.login();
-        if (_emailAuthController.isAuthenticated) {
-          Get.offAllNamed(Routes.INDEX);
-        } else {
-          Get.snackbar(
-            'Login Failed',
-            'Invalid email or password',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
-        }
       }
     } catch (e) {
       Get.snackbar(

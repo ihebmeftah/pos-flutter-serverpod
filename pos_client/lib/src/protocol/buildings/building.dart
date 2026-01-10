@@ -42,7 +42,7 @@ abstract class Building implements _i1.SerializableModel {
       closingTime: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['closingTime'],
       ),
-      tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool,
+      tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool?,
     );
   }
 

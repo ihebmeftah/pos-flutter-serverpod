@@ -1,0 +1,10 @@
+class: Employer
+table: employers
+fields:
+  userProfile: module:serverpod_auth_core:UserProfile?, relation, required
+  building: Building?, relation(onDelete=cascade)
+
+indexes:
+  employer_profile_idx:
+    fields: userProfileId
+    unique: true

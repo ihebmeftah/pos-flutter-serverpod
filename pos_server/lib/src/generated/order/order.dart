@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -53,10 +52,12 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   factory Order.fromJson(Map<String, dynamic> jsonSerialization) {
     return Order(
       id: jsonSerialization['id'] as int?,
-      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       updatedAt: jsonSerialization['updatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),

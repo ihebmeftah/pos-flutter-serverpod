@@ -34,7 +34,7 @@ abstract class BTable implements _i1.SerializableModel {
     return BTable(
       id: jsonSerialization['id'] as int?,
       number: jsonSerialization['number'] as int,
-      seatsMax: jsonSerialization['seatsMax'] as int,
+      seatsMax: jsonSerialization['seatsMax'] as int?,
       status: jsonSerialization['status'] == null
           ? null
           : _i2.TableStatus.fromJson((jsonSerialization['status'] as String)),

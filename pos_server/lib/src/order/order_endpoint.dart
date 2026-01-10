@@ -9,6 +9,7 @@ import 'package:serverpod_auth_idp_server/core.dart';
 class OrderEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
+  
   Future<List<Order>> getOrders(
     Session session,
     int? buildingId,

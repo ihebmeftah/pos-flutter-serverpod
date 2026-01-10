@@ -21,7 +21,7 @@ import 'buildings/building.dart' as _i6;
 import 'buildings_tables/building_tables.dart' as _i7;
 import 'buildings_tables/table_status_enum.dart' as _i8;
 import 'cateogrie/categorie.dart' as _i9;
-import 'greetings/greeting.dart' as _i10;
+import 'employer/employer.dart' as _i10;
 import 'order/order.dart' as _i11;
 import 'order/order_item.dart' as _i12;
 import 'order/order_status_enum.dart' as _i13;
@@ -30,13 +30,14 @@ import 'package:pos_server/src/generated/buildings/building.dart' as _i15;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
     as _i16;
 import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i17;
-import 'package:pos_server/src/generated/order/order.dart' as _i18;
+import 'package:pos_server/src/generated/employer/employer.dart' as _i18;
+import 'package:pos_server/src/generated/order/order.dart' as _i19;
 export 'article/article.dart';
 export 'buildings/building.dart';
 export 'buildings_tables/building_tables.dart';
 export 'buildings_tables/table_status_enum.dart';
 export 'cateogrie/categorie.dart';
-export 'greetings/greeting.dart';
+export 'employer/employer.dart';
 export 'order/order.dart';
 export 'order/order_item.dart';
 export 'order/order_status_enum.dart';
@@ -320,6 +321,84 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'employers',
+      dartName: 'Employer',
+      schema: 'public',
+      module: 'pos',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'employers_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userProfileId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'buildingId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'employers_fk_0',
+          columns: ['userProfileId'],
+          referenceTable: 'serverpod_auth_core_profile',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'employers_fk_1',
+          columns: ['buildingId'],
+          referenceTable: 'building',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'employers_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'employer_profile_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userProfileId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'order_items',
       dartName: 'OrderItem',
       schema: 'public',
@@ -545,8 +624,8 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i9.Categorie) {
       return _i9.Categorie.fromJson(data) as T;
     }
-    if (t == _i10.Greeting) {
-      return _i10.Greeting.fromJson(data) as T;
+    if (t == _i10.Employer) {
+      return _i10.Employer.fromJson(data) as T;
     }
     if (t == _i11.Order) {
       return _i11.Order.fromJson(data) as T;
@@ -572,8 +651,8 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i9.Categorie?>()) {
       return (data != null ? _i9.Categorie.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i10.Greeting?>()) {
-      return (data != null ? _i10.Greeting.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i10.Employer?>()) {
+      return (data != null ? _i10.Employer.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i11.Order?>()) {
       return (data != null ? _i11.Order.fromJson(data) : null) as T;
@@ -612,8 +691,12 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data as List).map((e) => deserialize<_i17.Categorie>(e)).toList()
           as T;
     }
-    if (t == List<_i18.Order>) {
-      return (data as List).map((e) => deserialize<_i18.Order>(e)).toList()
+    if (t == List<_i18.Employer>) {
+      return (data as List).map((e) => deserialize<_i18.Employer>(e)).toList()
+          as T;
+    }
+    if (t == List<_i19.Order>) {
+      return (data as List).map((e) => deserialize<_i19.Order>(e)).toList()
           as T;
     }
     try {
@@ -635,7 +718,7 @@ class Protocol extends _i1.SerializationManagerServer {
       _i7.BTable => 'BTable',
       _i8.TableStatus => 'TableStatus',
       _i9.Categorie => 'Categorie',
-      _i10.Greeting => 'Greeting',
+      _i10.Employer => 'Employer',
       _i11.Order => 'Order',
       _i12.OrderItem => 'OrderItem',
       _i13.OrderStatus => 'OrderStatus',
@@ -663,8 +746,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'TableStatus';
       case _i9.Categorie():
         return 'Categorie';
-      case _i10.Greeting():
-        return 'Greeting';
+      case _i10.Employer():
+        return 'Employer';
       case _i11.Order():
         return 'Order';
       case _i12.OrderItem():
@@ -708,8 +791,8 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Categorie') {
       return deserialize<_i9.Categorie>(data['data']);
     }
-    if (dataClassName == 'Greeting') {
-      return deserialize<_i10.Greeting>(data['data']);
+    if (dataClassName == 'Employer') {
+      return deserialize<_i10.Employer>(data['data']);
     }
     if (dataClassName == 'Order') {
       return deserialize<_i11.Order>(data['data']);
@@ -764,6 +847,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i7.BTable.t;
       case _i9.Categorie:
         return _i9.Categorie.t;
+      case _i10.Employer:
+        return _i10.Employer.t;
       case _i11.Order:
         return _i11.Order.t;
       case _i12.OrderItem:
@@ -778,4 +863,22 @@ class Protocol extends _i1.SerializationManagerServer {
 
   @override
   String getModuleName() => 'pos';
+
+  /// Maps any `Record`s known to this [Protocol] to their JSON representation
+  ///
+  /// Throws in case the record type is not known.
+  ///
+  /// This method will return `null` (only) for `null` inputs.
+  Map<String, dynamic>? mapRecordToJson(Record? record) {
+    if (record == null) {
+      return null;
+    }
+    try {
+      return _i3.Protocol().mapRecordToJson(record);
+    } catch (_) {}
+    try {
+      return _i4.Protocol().mapRecordToJson(record);
+    } catch (_) {}
+    throw Exception('Unsupported record type ${record.runtimeType}');
+  }
 }

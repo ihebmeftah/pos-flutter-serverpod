@@ -4,6 +4,9 @@ import 'package:serverpod_auth_idp_server/core.dart';
 import '../generated/buildings/building.dart';
 
 class BuildingEndpoint extends Endpoint {
+  /// Deletes the file at [path].
+  /// Throws an [IOError] if the file could not be found. Throws a
+  /// [PermissionError] if the file is present but could not be deleted.
   Future<List<Building>> getAllBuildings(Session session) async {
     if (session.isUserSignedIn) {
       return await Building.db.find(

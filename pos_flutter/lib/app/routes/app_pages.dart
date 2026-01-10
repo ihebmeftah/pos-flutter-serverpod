@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 
 import '../middleware/logged_middleware.dart';
+import '../modules/article/bindings/article_binding.dart';
 import '../modules/article/bindings/article_form_binding.dart';
 import '../modules/article/views/article_form_view.dart';
-import '../modules/article/bindings/article_binding.dart';
 import '../modules/article/views/article_view.dart';
 import '../modules/authentification/bindings/authentification_binding.dart';
 import '../modules/authentification/bindings/login_binding.dart';
@@ -19,6 +19,12 @@ import '../modules/categorie/bindings/categorie_binding.dart';
 import '../modules/categorie/bindings/categorie_form_binding.dart';
 import '../modules/categorie/views/categorie_form_view.dart';
 import '../modules/categorie/views/categorie_view.dart';
+import '../modules/employer/bindings/employer_binding.dart';
+import '../modules/employer/bindings/employer_details_binding.dart';
+import '../modules/employer/views/employer_details_view.dart';
+import '../modules/employer/bindings/form_employer_binding.dart';
+import '../modules/employer/views/form_employer_view.dart';
+import '../modules/employer/views/employer_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/index/bindings/index_binding.dart';
@@ -26,8 +32,8 @@ import '../modules/index/views/index_view.dart';
 import '../modules/inventory/bindings/inventory_binding.dart';
 import '../modules/inventory/views/inventory_view.dart';
 import '../modules/order/bindings/order_binding.dart';
-import '../modules/order/bindings/pass_order_binding.dart';
 import '../modules/order/bindings/order_details_binding.dart';
+import '../modules/order/bindings/pass_order_binding.dart';
 import '../modules/order/views/order_details_view.dart';
 import '../modules/order/views/order_view.dart';
 import '../modules/order/views/pass_order_view.dart';
@@ -148,6 +154,23 @@ class AppPages {
           name: _Paths.CATEGORIE_FORM,
           page: () => const CategorieFormView(),
           binding: CategorieFormBinding(),
+        ),
+      ],
+    ),
+    GetPage(
+      name: _Paths.EMPLOYER,
+      page: () => const EmployerView(),
+      binding: EmployerBinding(),
+      children: [
+        GetPage(
+          name: _Paths.FORM_EMPLOYER,
+          page: () => const FormEmployerView(),
+          binding: FormEmployerBinding(),
+        ),
+        GetPage(
+          name: "${_Paths.EMPLOYER_DETAILS}/:id",
+          page: () => const EmployerDetailsView(),
+          binding: EmployerDetailsBinding(),
         ),
       ],
     ),

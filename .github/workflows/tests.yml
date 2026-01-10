@@ -10,16 +10,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      VERSION: '3.1.1'
-      SERVERPOD_PASSWORD_database: '8HdVLiLaAboM2tuQdjp2j_bVURau_1gP'
-      SERVERPOD_PASSWORD_redis: '7FW9nm9YWIdgetbCcaE-ugbYK-GKo1zH'
+      VERSION: "3.2.0"
+      SERVERPOD_PASSWORD_database: "8HdVLiLaAboM2tuQdjp2j_bVURau_1gP"
+      SERVERPOD_PASSWORD_redis: "7FW9nm9YWIdgetbCcaE-ugbYK-GKo1zH"
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.8'
+          flutter-version: "3.32.8"
 
       - name: Start containers
         working-directory: pos_server

@@ -50,7 +50,7 @@ abstract class Building
           : _i1.UuidValueJsonExtension.fromJson(
               jsonSerialization['authUserId'],
             ),
-      tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool,
+      tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool?,
     );
   }
 

@@ -47,7 +47,7 @@ abstract class OrderItem implements _i1.SerializableModel {
           : _i4.Protocol().deserialize<_i3.UserProfile>(
               jsonSerialization['passedBy'],
             ),
-      payed: jsonSerialization['payed'] as bool,
+      payed: jsonSerialization['payed'] as bool?,
     );
   }
 

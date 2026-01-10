@@ -102,7 +102,6 @@ class TablesController extends GetxController with StateMixin<List<BTable>> {
       '${directory.path}/"tables"_${LocalStorage().building!.name}.pdf',
     );
     await file.writeAsBytes(pdfDoc);
-    print('PDF saved to ${file.path}');
     await Printing.sharePdf(
       bytes: pdfDoc,
       filename: '${tables}_${LocalStorage().building!.name}.pdf',
