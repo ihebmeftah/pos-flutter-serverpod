@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/modules/index/controllers/index_controller.dart';
 import 'package:pos_flutter/app/routes/app_pages.dart';
 
 import '../../../components/appbottomsheet.dart';
@@ -27,11 +28,12 @@ class TablesView extends GetView<TablesController> {
           (_) => Column(
             spacing: 5,
             children: [
-              TextButton.icon(
-                onPressed: controller.generateTablePdfQrcode,
-                label: const Text('Generate Tables QR Code'),
-                icon: const Icon(Icons.qr_code),
-              ),
+              if (Get.find<IndexController>().scope.contains("admin"))
+                TextButton.icon(
+                  onPressed: controller.generateTablePdfQrcode,
+                  label: const Text('Generate Tables QR Code'),
+                  icon: const Icon(Icons.qr_code),
+                ),
               Row(
                 spacing: 20,
                 mainAxisAlignment: MainAxisAlignment.center,

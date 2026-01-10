@@ -277,7 +277,7 @@ class IndexView extends GetView<IndexController> {
           onPageChanged: controller.changeBnbContent,
           controller: controller.pageVCtr,
           children: Get.find<IndexController>().scope.contains("employer")
-              ? [TablesView(), OrderView()]
+              ? [TablesView(), SizedBox(), OrderView()]
               : [HomeView(), InventoryView(), TablesView(), OrderView()],
         ),
       ),
