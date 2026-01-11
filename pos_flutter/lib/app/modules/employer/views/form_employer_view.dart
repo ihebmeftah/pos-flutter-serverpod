@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/appdropdown.dart';
+import 'package:pos_flutter/app/modules/access/controllers/access_controller.dart';
 
 import '../../../components/apperrorscreen.dart';
 import '../../../components/appformfield.dart';
@@ -58,7 +61,31 @@ class FormEmployerView extends GetView<FormEmployerController> {
                       return null;
                     },
                   ),
-
+                  GetBuilder<AccessController>(
+                    init: AccessController(),
+                    builder: (ctr) {
+                      return GetBuilder<FormEmployerController>(
+                        id: "accessDropdown",
+                        builder: (_) {
+                          return AppDropdown<Access>.label(
+                            onDelete: controller.removeAccess,
+                            selectedItem: controller.selectedAccess,
+                            items: ctr.access
+                                .map(
+                                  (e) => DropdownMenuItem<Access>(
+                                    value: e,
+                                    child: Text(e.name.capitalize!),
+                                  ),
+                                )
+                                .toList(),
+                            label: "Access",
+                            hint: "Select access",
+                            onChanged: controller.selectAccess,
+                          );
+                        },
+                      );
+                    },
+                  ),
                   const Spacer(),
                   ElevatedButton(
                     onPressed: controller.createEmployyer,

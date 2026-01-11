@@ -18,7 +18,7 @@ class FormEmployerController extends GetxController with StateMixin {
       email = TextEditingController(),
       password = TextEditingController(),
       phone = TextEditingController();
-
+  Access? selectedAccess;
   UserProfileData get profileDto => UserProfileData(
     fullName: fname.text,
     email: email.text,
@@ -32,6 +32,7 @@ class FormEmployerController extends GetxController with StateMixin {
               profileDto,
               password.text,
               LocalStorage().building!.id!,
+              selectedAccess?.id,
             );
         Get.find<EmployerController>().getEmployers();
         Get.back(result: employer);
@@ -42,5 +43,15 @@ class FormEmployerController extends GetxController with StateMixin {
     } catch (e) {
       Get.snackbar('Error', 'Failed to create employer: $e');
     }
+  }
+
+  void selectAccess(Access? access) {
+    selectedAccess = access;
+    update(["accessDropdown"]);
+  }
+
+  void removeAccess() {
+    selectedAccess = null;
+    update(["accessDropdown"]);
   }
 }

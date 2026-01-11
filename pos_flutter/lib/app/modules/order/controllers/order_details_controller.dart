@@ -58,6 +58,17 @@ class OrderDetailsController extends GetxController with StateMixin {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
+    } on AppException catch (e) {
+      if (e.errorType == ExceptionType.Forbidden) {
+        Get.snackbar(
+          'Payment Error',
+          'Only employers with access can process item payments',
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      change(order, status: RxStatus.error(e.message));
     } catch (e) {
       Get.snackbar(
         'Payment Error',
@@ -81,6 +92,17 @@ class OrderDetailsController extends GetxController with StateMixin {
         colorText: Colors.white,
       );
       change(order, status: RxStatus.success());
+    } on AppException catch (e) {
+      if (e.errorType == ExceptionType.Forbidden) {
+        Get.snackbar(
+          'Payment Error',
+          'Only employers with access can pay for all items in the order',
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+        );
+        return;
+      }
+      change(order, status: RxStatus.error(e.message));
     } catch (e) {
       Get.snackbar(
         'Payment Error',

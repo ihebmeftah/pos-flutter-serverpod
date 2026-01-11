@@ -9,6 +9,7 @@ void bottomSheet({
 }) => Get.bottomSheet(
   Container(
     width: double.infinity,
+    height: Get.height * 0.95,
     padding: const EdgeInsets.all(20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,5 +40,6 @@ void bottomSheet({
       ],
     ),
   ),
+  isScrollControlled: true,
   backgroundColor: Colors.white,
 );

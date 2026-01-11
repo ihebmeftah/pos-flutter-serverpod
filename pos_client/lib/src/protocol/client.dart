@@ -12,19 +12,68 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:pos_client/src/protocol/article/article.dart' as _i3;
+import 'package:pos_client/src/protocol/access/access.dart' as _i3;
+import 'package:pos_client/src/protocol/employer/employer.dart' as _i4;
+import 'package:pos_client/src/protocol/article/article.dart' as _i5;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i4;
+    as _i6;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i5;
-import 'package:pos_client/src/protocol/employer/employer.dart' as _i6;
-import 'package:pos_client/src/protocol/buildings/building.dart' as _i7;
+    as _i7;
+import 'package:pos_client/src/protocol/buildings/building.dart' as _i8;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
-    as _i8;
-import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i9;
-import 'package:pos_client/src/protocol/order/order.dart' as _i10;
-import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i11;
-import 'protocol.dart' as _i12;
+    as _i9;
+import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i10;
+import 'package:pos_client/src/protocol/order/order.dart' as _i11;
+import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i12;
+import 'protocol.dart' as _i13;
+
+/// {@category Endpoint}
+class EndpointAccess extends _i1.EndpointRef {
+  EndpointAccess(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'access';
+
+  _i2.Future<_i3.Access> createAccess(_i3.Access access) =>
+      caller.callServerEndpoint<_i3.Access>(
+        'access',
+        'createAccess',
+        {'access': access},
+      );
+
+  _i2.Future<List<_i3.Access>> getAllAccesses(int buildingId) =>
+      caller.callServerEndpoint<List<_i3.Access>>(
+        'access',
+        'getAllAccesses',
+        {'buildingId': buildingId},
+      );
+
+  _i2.Future<_i3.Access> getAccessById(int accessId) =>
+      caller.callServerEndpoint<_i3.Access>(
+        'access',
+        'getAccessById',
+        {'accessId': accessId},
+      );
+
+  _i2.Future<_i3.Access> deleteAccess(int accessId) =>
+      caller.callServerEndpoint<_i3.Access>(
+        'access',
+        'deleteAccess',
+        {'accessId': accessId},
+      );
+
+  _i2.Future<_i4.Employer> assignAccessToEmployer(
+    int employerId,
+    int accessId,
+  ) => caller.callServerEndpoint<_i4.Employer>(
+    'access',
+    'assignAccessToEmployer',
+    {
+      'employerId': employerId,
+      'accessId': accessId,
+    },
+  );
+}
 
 /// {@category Endpoint}
 class EndpointArticle extends _i1.EndpointRef {
@@ -38,10 +87,10 @@ class EndpointArticle extends _i1.EndpointRef {
   /// optional [categoryId] The id of the category
   /// Returns a list of [Article] articles
   /// allow for all type of users (admin, employee, customer)
-  _i2.Future<List<_i3.Article>> getArticles(
+  _i2.Future<List<_i5.Article>> getArticles(
     int buildingId, {
     int? categoryId,
-  }) => caller.callServerEndpoint<List<_i3.Article>>(
+  }) => caller.callServerEndpoint<List<_i5.Article>>(
     'article',
     'getArticles',
     {
@@ -55,10 +104,10 @@ class EndpointArticle extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// Returns the created [Article] article
   /// allow for admin users only
-  _i2.Future<_i3.Article> createArticle({
-    required _i3.Article article,
+  _i2.Future<_i5.Article> createArticle({
+    required _i5.Article article,
     required int buildingId,
-  }) => caller.callServerEndpoint<_i3.Article>(
+  }) => caller.callServerEndpoint<_i5.Article>(
     'article',
     'createArticle',
     {
@@ -72,14 +121,14 @@ class EndpointArticle extends _i1.EndpointRef {
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 /// {@category Endpoint}
-class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
+class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
   EndpointEmailIdp(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'emailIdp';
 
-  _i2.Future<_i5.UserProfile> getUserProfile() =>
-      caller.callServerEndpoint<_i5.UserProfile>(
+  _i2.Future<_i7.UserProfile> getUserProfile() =>
+      caller.callServerEndpoint<_i7.UserProfile>(
         'emailIdp',
         'getUserProfile',
         {},
@@ -95,10 +144,10 @@ class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i2.Future<_i5.AuthSuccess> login({
+  _i2.Future<_i7.AuthSuccess> login({
     required String email,
     required String password,
-  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
     'emailIdp',
     'login',
     {
@@ -163,10 +212,10 @@ class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
   ///
   /// Returns a session for the newly created user.
   @override
-  _i2.Future<_i5.AuthSuccess> finishRegistration({
+  _i2.Future<_i7.AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
-  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
     'emailIdp',
     'finishRegistration',
     {
@@ -254,7 +303,7 @@ class EndpointEmailIdp extends _i4.EndpointEmailIdpBase {
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
 /// is made available on the server and enables automatic token refresh on the client.
 /// {@category Endpoint}
-class EndpointJwtRefresh extends _i5.EndpointRefreshJwtTokens {
+class EndpointJwtRefresh extends _i7.EndpointRefreshJwtTokens {
   EndpointJwtRefresh(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -279,9 +328,9 @@ class EndpointJwtRefresh extends _i5.EndpointRefreshJwtTokens {
   /// This endpoint is unauthenticated, meaning the client won't include any
   /// authentication information with the call.
   @override
-  _i2.Future<_i5.AuthSuccess> refreshAccessToken({
+  _i2.Future<_i7.AuthSuccess> refreshAccessToken({
     required String refreshToken,
-  }) => caller.callServerEndpoint<_i5.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
     'jwtRefresh',
     'refreshAccessToken',
     {'refreshToken': refreshToken},
@@ -302,17 +351,19 @@ class EndpointUsers extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// Returns the created [Employer] employer account
   /// allow for admin users only
-  _i2.Future<_i6.Employer> createEmployerAccount(
-    _i5.UserProfileData userProfileData,
+  _i2.Future<_i4.Employer> createEmployerAccount(
+    _i7.UserProfileData userProfileData,
     String password,
     int buildingId,
-  ) => caller.callServerEndpoint<_i6.Employer>(
+    int? accessId,
+  ) => caller.callServerEndpoint<_i4.Employer>(
     'users',
     'createEmployerAccount',
     {
       'userProfileData': userProfileData,
       'password': password,
       'buildingId': buildingId,
+      'accessId': accessId,
     },
   );
 }
@@ -329,8 +380,8 @@ class EndpointBuilding extends _i1.EndpointRef {
   /// else current user is customer, return all buildings
   /// Returns a list of [Building] buildings
   /// allow for all type of users (admin, customer)
-  _i2.Future<List<_i7.Building>> getAllBuildings() =>
-      caller.callServerEndpoint<List<_i7.Building>>(
+  _i2.Future<List<_i8.Building>> getAllBuildings() =>
+      caller.callServerEndpoint<List<_i8.Building>>(
         'building',
         'getAllBuildings',
         {},
@@ -339,8 +390,8 @@ class EndpointBuilding extends _i1.EndpointRef {
   /// Create new building for the admin
   /// Returns  [Building] building
   /// allowed only for admins
-  _i2.Future<_i7.Building> createBuilding(_i7.Building building) =>
-      caller.callServerEndpoint<_i7.Building>(
+  _i2.Future<_i8.Building> createBuilding(_i8.Building building) =>
+      caller.callServerEndpoint<_i8.Building>(
         'building',
         'createBuilding',
         {'building': building},
@@ -360,8 +411,8 @@ class EndpointBuildingTables extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// Returns a list of [BTable] tables
   /// allow for all type of users (admin, employee, customer)
-  _i2.Future<List<_i8.BTable>> getTables(int buildingId) =>
-      caller.callServerEndpoint<List<_i8.BTable>>(
+  _i2.Future<List<_i9.BTable>> getTables(int buildingId) =>
+      caller.callServerEndpoint<List<_i9.BTable>>(
         'buildingTables',
         'getTables',
         {'buildingId': buildingId},
@@ -373,11 +424,11 @@ class EndpointBuildingTables extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// Returns a list of created [BTable] tables
   /// allow for admin users only
-  _i2.Future<List<_i8.BTable>> createTables({
+  _i2.Future<List<_i9.BTable>> createTables({
     required int nbtables,
     required int seatsMax,
     required int buildingId,
-  }) => caller.callServerEndpoint<List<_i8.BTable>>(
+  }) => caller.callServerEndpoint<List<_i9.BTable>>(
     'buildingTables',
     'createTables',
     {
@@ -392,10 +443,10 @@ class EndpointBuildingTables extends _i1.EndpointRef {
   /// optional [buildingId] The id of the building
   /// Returns the [BTable] table
   /// allow for all type of users (admin, employee, customer)
-  _i2.Future<_i8.BTable> getTableById(
+  _i2.Future<_i9.BTable> getTableById(
     int tableId, [
     int? buildingId,
-  ]) => caller.callServerEndpoint<_i8.BTable>(
+  ]) => caller.callServerEndpoint<_i9.BTable>(
     'buildingTables',
     'getTableById',
     {
@@ -416,8 +467,8 @@ class EndpointCategorie extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// Returns a list of [Categorie] categories
   /// allow for all type of users (admin, employee, customer)
-  _i2.Future<List<_i9.Categorie>> getCategories(int buildingId) =>
-      caller.callServerEndpoint<List<_i9.Categorie>>(
+  _i2.Future<List<_i10.Categorie>> getCategories(int buildingId) =>
+      caller.callServerEndpoint<List<_i10.Categorie>>(
         'categorie',
         'getCategories',
         {'buildingId': buildingId},
@@ -428,10 +479,10 @@ class EndpointCategorie extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// Returns the created [Categorie] categorie
   /// allow for admin users only
-  _i2.Future<_i9.Categorie> createCategorie({
-    required _i9.Categorie categorie,
+  _i2.Future<_i10.Categorie> createCategorie({
+    required _i10.Categorie categorie,
     required int buildingId,
-  }) => caller.callServerEndpoint<_i9.Categorie>(
+  }) => caller.callServerEndpoint<_i10.Categorie>(
     'categorie',
     'createCategorie',
     {
@@ -452,8 +503,8 @@ class EndpointEmployer extends _i1.EndpointRef {
   /// Identifier can be a[buildingId]
   /// Returns list of [Employer]
   /// This enpoint need login and allowed only for admin
-  _i2.Future<List<_i6.Employer>> getEmployers(int buildingId) =>
-      caller.callServerEndpoint<List<_i6.Employer>>(
+  _i2.Future<List<_i4.Employer>> getEmployers(int buildingId) =>
+      caller.callServerEndpoint<List<_i4.Employer>>(
         'employer',
         'getEmployers',
         {'buildingId': buildingId},
@@ -463,8 +514,8 @@ class EndpointEmployer extends _i1.EndpointRef {
   /// Identifier can be a[authId] or [UserProfileId]
   /// Returns [Employer] if found else throws exception
   /// This enpoint need login and allowed for all users
-  _i2.Future<_i6.Employer> getEmployerByIdentifier(_i1.UuidValue identifier) =>
-      caller.callServerEndpoint<_i6.Employer>(
+  _i2.Future<_i4.Employer> getEmployerByIdentifier(_i1.UuidValue identifier) =>
+      caller.callServerEndpoint<_i4.Employer>(
         'employer',
         'getEmployerByIdentifier',
         {'identifier': identifier},
@@ -478,10 +529,10 @@ class EndpointOrder extends _i1.EndpointRef {
   @override
   String get name => 'order';
 
-  _i2.Future<List<_i10.Order>> getOrders(
+  _i2.Future<List<_i11.Order>> getOrders(
     int? buildingId,
-    _i11.OrderStatus? orderStatus,
-  ) => caller.callServerEndpoint<List<_i10.Order>>(
+    _i12.OrderStatus? orderStatus,
+  ) => caller.callServerEndpoint<List<_i11.Order>>(
     'order',
     'getOrders',
     {
@@ -490,25 +541,32 @@ class EndpointOrder extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<_i10.Order> getOrderById(int id) =>
-      caller.callServerEndpoint<_i10.Order>(
+  _i2.Future<_i11.Order> getOrderById(int id) =>
+      caller.callServerEndpoint<_i11.Order>(
         'order',
         'getOrderById',
         {'id': id},
       );
 
-  _i2.Future<_i10.Order> createOrder(_i10.Order order) =>
-      caller.callServerEndpoint<_i10.Order>(
+  /// Create a new order
+  /// Parameters:
+  /// - [order]: The order to be created
+  /// Returns:
+  /// - The created order
+  /// Only employer allowed for this endpoint
+  /// Employer should have access to order creation
+  _i2.Future<_i11.Order> createOrder(_i11.Order order) =>
+      caller.callServerEndpoint<_i11.Order>(
         'order',
         'createOrder',
         {'order': order},
       );
 
-  _i2.Future<_i10.Order> payItem(
+  _i2.Future<_i11.Order> payItem(
     int orderId,
     int orderItemId,
     int buildingId,
-  ) => caller.callServerEndpoint<_i10.Order>(
+  ) => caller.callServerEndpoint<_i11.Order>(
     'order',
     'payItem',
     {
@@ -518,10 +576,10 @@ class EndpointOrder extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<_i10.Order> payAllItems(
+  _i2.Future<_i11.Order> payAllItems(
     int orderId,
     int buildingId,
-  ) => caller.callServerEndpoint<_i10.Order>(
+  ) => caller.callServerEndpoint<_i11.Order>(
     'order',
     'payAllItems',
     {
@@ -530,17 +588,17 @@ class EndpointOrder extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<_i10.Order> getOrderCurrOfTable(int tableId) =>
-      caller.callServerEndpoint<_i10.Order>(
+  _i2.Future<_i11.Order> getOrderCurrOfTable(int tableId) =>
+      caller.callServerEndpoint<_i11.Order>(
         'order',
         'getOrderCurrOfTable',
         {'tableId': tableId},
       );
 
-  _i2.Future<List<_i10.Order>> getOrdersOfTable(
+  _i2.Future<List<_i11.Order>> getOrdersOfTable(
     int tableId,
-    _i11.OrderStatus? orderStatus,
-  ) => caller.callServerEndpoint<List<_i10.Order>>(
+    _i12.OrderStatus? orderStatus,
+  ) => caller.callServerEndpoint<List<_i11.Order>>(
     'order',
     'getOrdersOfTable',
     {
@@ -549,16 +607,16 @@ class EndpointOrder extends _i1.EndpointRef {
     },
   );
 
-  _i2.Stream<_i10.Order> streamCreateOrder(int buildingId) =>
-      caller.callStreamingServerEndpoint<_i2.Stream<_i10.Order>, _i10.Order>(
+  _i2.Stream<_i11.Order> streamCreateOrder(int buildingId) =>
+      caller.callStreamingServerEndpoint<_i2.Stream<_i11.Order>, _i11.Order>(
         'order',
         'streamCreateOrder',
         {'buildingId': buildingId},
         {},
       );
 
-  _i2.Stream<_i10.Order> streamUpdateOrder(int buildingId) =>
-      caller.callStreamingServerEndpoint<_i2.Stream<_i10.Order>, _i10.Order>(
+  _i2.Stream<_i11.Order> streamUpdateOrder(int buildingId) =>
+      caller.callStreamingServerEndpoint<_i2.Stream<_i11.Order>, _i11.Order>(
         'order',
         'streamUpdateOrder',
         {'buildingId': buildingId},
@@ -568,13 +626,13 @@ class EndpointOrder extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    serverpod_auth_idp = _i4.Caller(client);
-    serverpod_auth_core = _i5.Caller(client);
+    serverpod_auth_idp = _i6.Caller(client);
+    serverpod_auth_core = _i7.Caller(client);
   }
 
-  late final _i4.Caller serverpod_auth_idp;
+  late final _i6.Caller serverpod_auth_idp;
 
-  late final _i5.Caller serverpod_auth_core;
+  late final _i7.Caller serverpod_auth_core;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -597,7 +655,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i12.Protocol(),
+         _i13.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -606,6 +664,7 @@ class Client extends _i1.ServerpodClientShared {
          disconnectStreamsOnLostInternetConnection:
              disconnectStreamsOnLostInternetConnection,
        ) {
+    access = EndpointAccess(this);
     article = EndpointArticle(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
@@ -617,6 +676,8 @@ class Client extends _i1.ServerpodClientShared {
     order = EndpointOrder(this);
     modules = Modules(this);
   }
+
+  late final EndpointAccess access;
 
   late final EndpointArticle article;
 
@@ -640,6 +701,7 @@ class Client extends _i1.ServerpodClientShared {
 
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
+    'access': access,
     'article': article,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,

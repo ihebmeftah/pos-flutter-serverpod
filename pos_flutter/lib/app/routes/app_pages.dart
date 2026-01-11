@@ -1,6 +1,10 @@
 import 'package:get/get.dart';
 
 import '../middleware/logged_middleware.dart';
+import '../modules/access/bindings/access_binding.dart';
+import '../modules/access/bindings/access_form_binding.dart';
+import '../modules/access/views/access_form_view.dart';
+import '../modules/access/views/access_view.dart';
 import '../modules/article/bindings/article_binding.dart';
 import '../modules/article/bindings/article_form_binding.dart';
 import '../modules/article/views/article_form_view.dart';
@@ -171,6 +175,16 @@ class AppPages {
       name: _Paths.FORM_EMPLOYER,
       page: () => const FormEmployerView(),
       binding: FormEmployerBinding(),
+    ),
+    GetPage(
+      name: _Paths.ACCESS,
+      page: () => const AccessView(),
+      binding: AccessBinding(),
+    ),
+    GetPage(
+      name: _Paths.ACCESS_FORM,
+      page: () => const AccessFormView(),
+      binding: AccessFormBinding(),
     ),
   ];
 

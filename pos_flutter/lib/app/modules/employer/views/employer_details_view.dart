@@ -120,9 +120,7 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                employer.userProfile!.authUser!.scopeNames
-                                    .join(', ')
-                                    .toUpperCase(),
+                                "${employer.userProfile!.authUser!.scopeNames.join(', ').toUpperCase()} - ${employer.access?.name != null ? employer.access!.name.toUpperCase() : "No Access"}",
                                 style: Theme.of(context).textTheme.labelMedium
                                     ?.copyWith(
                                       color: AppTheme().primary,

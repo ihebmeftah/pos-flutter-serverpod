@@ -14,7 +14,8 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i2;
 import '../buildings/building.dart' as _i3;
-import 'package:pos_client/src/protocol/protocol.dart' as _i4;
+import '../access/access.dart' as _i4;
+import 'package:pos_client/src/protocol/protocol.dart' as _i5;
 
 abstract class Employer implements _i1.SerializableModel {
   Employer._({
@@ -23,6 +24,8 @@ abstract class Employer implements _i1.SerializableModel {
     required this.userProfile,
     required this.buildingId,
     this.building,
+    this.accessId,
+    this.access,
   });
 
   factory Employer({
@@ -31,6 +34,8 @@ abstract class Employer implements _i1.SerializableModel {
     required _i2.UserProfile? userProfile,
     required int buildingId,
     _i3.Building? building,
+    int? accessId,
+    _i4.Access? access,
   }) = _EmployerImpl;
 
   factory Employer.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -41,15 +46,19 @@ abstract class Employer implements _i1.SerializableModel {
       ),
       userProfile: jsonSerialization['userProfile'] == null
           ? null
-          : _i4.Protocol().deserialize<_i2.UserProfile>(
+          : _i5.Protocol().deserialize<_i2.UserProfile>(
               jsonSerialization['userProfile'],
             ),
       buildingId: jsonSerialization['buildingId'] as int,
       building: jsonSerialization['building'] == null
           ? null
-          : _i4.Protocol().deserialize<_i3.Building>(
+          : _i5.Protocol().deserialize<_i3.Building>(
               jsonSerialization['building'],
             ),
+      accessId: jsonSerialization['accessId'] as int?,
+      access: jsonSerialization['access'] == null
+          ? null
+          : _i5.Protocol().deserialize<_i4.Access>(jsonSerialization['access']),
     );
   }
 
@@ -66,6 +75,10 @@ abstract class Employer implements _i1.SerializableModel {
 
   _i3.Building? building;
 
+  int? accessId;
+
+  _i4.Access? access;
+
   /// Returns a shallow copy of this [Employer]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -75,6 +88,8 @@ abstract class Employer implements _i1.SerializableModel {
     _i2.UserProfile? userProfile,
     int? buildingId,
     _i3.Building? building,
+    int? accessId,
+    _i4.Access? access,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -85,6 +100,8 @@ abstract class Employer implements _i1.SerializableModel {
       if (userProfile != null) 'userProfile': userProfile?.toJson(),
       'buildingId': buildingId,
       if (building != null) 'building': building?.toJson(),
+      if (accessId != null) 'accessId': accessId,
+      if (access != null) 'access': access?.toJson(),
     };
   }
 
@@ -103,12 +120,16 @@ class _EmployerImpl extends Employer {
     required _i2.UserProfile? userProfile,
     required int buildingId,
     _i3.Building? building,
+    int? accessId,
+    _i4.Access? access,
   }) : super._(
          id: id,
          userProfileId: userProfileId,
          userProfile: userProfile,
          buildingId: buildingId,
          building: building,
+         accessId: accessId,
+         access: access,
        );
 
   /// Returns a shallow copy of this [Employer]
@@ -121,6 +142,8 @@ class _EmployerImpl extends Employer {
     Object? userProfile = _Undefined,
     int? buildingId,
     Object? building = _Undefined,
+    Object? accessId = _Undefined,
+    Object? access = _Undefined,
   }) {
     return Employer(
       id: id is int? ? id : this.id,
@@ -132,6 +155,8 @@ class _EmployerImpl extends Employer {
       building: building is _i3.Building?
           ? building
           : this.building?.copyWith(),
+      accessId: accessId is int? ? accessId : this.accessId,
+      access: access is _i4.Access? ? access : this.access?.copyWith(),
     );
   }
 }

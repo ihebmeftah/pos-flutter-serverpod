@@ -22,19 +22,20 @@ class ServerpodClient extends GetxService {
       ..authSessionManager = FlutterAuthSessionManager();
     await _client.auth.initialize();
     _client.auth.authInfoListenable.addListener(() async {
-      print("Auth info changed: ${_client.auth.isAuthenticated}");
       handleRoutePermission();
       if (!_client.auth.isAuthenticated) {
         Get.offAllNamed(Routes.AUTHENTIFICATION);
       } else if (_client.auth.isAuthenticated) {
-        if (_client.auth.authInfo!.scopeNames.contains('employer')) {
-          final employer = await _client.employer.getEmployerByIdentifier(
-            _client.auth.authInfo!.authUserId,
-          );
-          await LocalStorage().saveBuilding(employer.building!);
-          Get.offAllNamed(Routes.INDEX);
-        } else {
-          Get.offAllNamed(Routes.BUILDINGS);
+        if (Get.currentRoute.contains(Routes.AUTHENTIFICATION)) {
+          if (_client.auth.authInfo!.scopeNames.contains('employer')) {
+            final employer = await _client.employer.getEmployerByIdentifier(
+              _client.auth.authInfo!.authUserId,
+            );
+            await LocalStorage().saveBuilding(employer.building!);
+            Get.offAllNamed(Routes.INDEX);
+          } else {
+            Get.offAllNamed(Routes.BUILDINGS);
+          }
         }
       }
     });

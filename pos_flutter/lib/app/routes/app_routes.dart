@@ -27,6 +27,8 @@ abstract class Routes {
   static const FORM_EMPLOYER = _Paths.FORM_EMPLOYER;
   static const EMPLOYER_DETAILS = _Paths.EMPLOYER + _Paths.EMPLOYER_DETAILS;
   static const NOTFOUND = _Paths.NOTFOUND;
+  static const ACCESS = _Paths.ACCESS;
+  static const ACCESS_FORM = _Paths.ACCESS_FORM;
 }
 
 abstract class _Paths {
@@ -52,4 +54,6 @@ abstract class _Paths {
   static const FORM_EMPLOYER = '/form-employer';
   static const EMPLOYER_DETAILS = '/employer-details';
   static const NOTFOUND = '/404';
+  static const ACCESS = '/access';
+  static const ACCESS_FORM = '/access-form';
 }

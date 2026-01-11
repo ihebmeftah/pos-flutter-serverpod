@@ -15,7 +15,8 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i2;
 import '../buildings/building.dart' as _i3;
-import 'package:pos_server/src/generated/protocol.dart' as _i4;
+import '../access/access.dart' as _i4;
+import 'package:pos_server/src/generated/protocol.dart' as _i5;
 
 abstract class Employer
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
@@ -25,6 +26,8 @@ abstract class Employer
     required this.userProfile,
     required this.buildingId,
     this.building,
+    this.accessId,
+    this.access,
   });
 
   factory Employer({
@@ -33,6 +36,8 @@ abstract class Employer
     required _i2.UserProfile? userProfile,
     required int buildingId,
     _i3.Building? building,
+    int? accessId,
+    _i4.Access? access,
   }) = _EmployerImpl;
 
   factory Employer.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -43,15 +48,19 @@ abstract class Employer
       ),
       userProfile: jsonSerialization['userProfile'] == null
           ? null
-          : _i4.Protocol().deserialize<_i2.UserProfile>(
+          : _i5.Protocol().deserialize<_i2.UserProfile>(
               jsonSerialization['userProfile'],
             ),
       buildingId: jsonSerialization['buildingId'] as int,
       building: jsonSerialization['building'] == null
           ? null
-          : _i4.Protocol().deserialize<_i3.Building>(
+          : _i5.Protocol().deserialize<_i3.Building>(
               jsonSerialization['building'],
             ),
+      accessId: jsonSerialization['accessId'] as int?,
+      access: jsonSerialization['access'] == null
+          ? null
+          : _i5.Protocol().deserialize<_i4.Access>(jsonSerialization['access']),
     );
   }
 
@@ -70,6 +79,10 @@ abstract class Employer
 
   _i3.Building? building;
 
+  int? accessId;
+
+  _i4.Access? access;
+
   @override
   _i1.Table<int?> get table => t;
 
@@ -82,6 +95,8 @@ abstract class Employer
     _i2.UserProfile? userProfile,
     int? buildingId,
     _i3.Building? building,
+    int? accessId,
+    _i4.Access? access,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -92,6 +107,8 @@ abstract class Employer
       if (userProfile != null) 'userProfile': userProfile?.toJson(),
       'buildingId': buildingId,
       if (building != null) 'building': building?.toJson(),
+      if (accessId != null) 'accessId': accessId,
+      if (access != null) 'access': access?.toJson(),
     };
   }
 
@@ -104,16 +121,20 @@ abstract class Employer
       if (userProfile != null) 'userProfile': userProfile?.toJsonForProtocol(),
       'buildingId': buildingId,
       if (building != null) 'building': building?.toJsonForProtocol(),
+      if (accessId != null) 'accessId': accessId,
+      if (access != null) 'access': access?.toJsonForProtocol(),
     };
   }
 
   static EmployerInclude include({
     _i2.UserProfileInclude? userProfile,
     _i3.BuildingInclude? building,
+    _i4.AccessInclude? access,
   }) {
     return EmployerInclude._(
       userProfile: userProfile,
       building: building,
+      access: access,
     );
   }
 
@@ -152,12 +173,16 @@ class _EmployerImpl extends Employer {
     required _i2.UserProfile? userProfile,
     required int buildingId,
     _i3.Building? building,
+    int? accessId,
+    _i4.Access? access,
   }) : super._(
          id: id,
          userProfileId: userProfileId,
          userProfile: userProfile,
          buildingId: buildingId,
          building: building,
+         accessId: accessId,
+         access: access,
        );
 
   /// Returns a shallow copy of this [Employer]
@@ -170,6 +195,8 @@ class _EmployerImpl extends Employer {
     Object? userProfile = _Undefined,
     int? buildingId,
     Object? building = _Undefined,
+    Object? accessId = _Undefined,
+    Object? access = _Undefined,
   }) {
     return Employer(
       id: id is int? ? id : this.id,
@@ -181,6 +208,8 @@ class _EmployerImpl extends Employer {
       building: building is _i3.Building?
           ? building
           : this.building?.copyWith(),
+      accessId: accessId is int? ? accessId : this.accessId,
+      access: access is _i4.Access? ? access : this.access?.copyWith(),
     );
   }
 }
@@ -199,6 +228,11 @@ class EmployerUpdateTable extends _i1.UpdateTable<EmployerTable> {
     table.buildingId,
     value,
   );
+
+  _i1.ColumnValue<int, int> accessId(int? value) => _i1.ColumnValue(
+    table.accessId,
+    value,
+  );
 }
 
 class EmployerTable extends _i1.Table<int?> {
@@ -212,6 +246,10 @@ class EmployerTable extends _i1.Table<int?> {
       'buildingId',
       this,
     );
+    accessId = _i1.ColumnInt(
+      'accessId',
+      this,
+    );
   }
 
   late final EmployerUpdateTable updateTable;
@@ -223,6 +261,10 @@ class EmployerTable extends _i1.Table<int?> {
   late final _i1.ColumnInt buildingId;
 
   _i3.BuildingTable? _building;
+
+  late final _i1.ColumnInt accessId;
+
+  _i4.AccessTable? _access;
 
   _i2.UserProfileTable get userProfile {
     if (_userProfile != null) return _userProfile!;
@@ -250,11 +292,25 @@ class EmployerTable extends _i1.Table<int?> {
     return _building!;
   }
 
+  _i4.AccessTable get access {
+    if (_access != null) return _access!;
+    _access = _i1.createRelationTable(
+      relationFieldName: 'access',
+      field: Employer.t.accessId,
+      foreignField: _i4.Access.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i4.AccessTable(tableRelation: foreignTableRelation),
+    );
+    return _access!;
+  }
+
   @override
   List<_i1.Column> get columns => [
     id,
     userProfileId,
     buildingId,
+    accessId,
   ];
 
   @override
@@ -265,6 +321,9 @@ class EmployerTable extends _i1.Table<int?> {
     if (relationField == 'building') {
       return building;
     }
+    if (relationField == 'access') {
+      return access;
+    }
     return null;
   }
 }
@@ -273,19 +332,24 @@ class EmployerInclude extends _i1.IncludeObject {
   EmployerInclude._({
     _i2.UserProfileInclude? userProfile,
     _i3.BuildingInclude? building,
+    _i4.AccessInclude? access,
   }) {
     _userProfile = userProfile;
     _building = building;
+    _access = access;
   }
 
   _i2.UserProfileInclude? _userProfile;
 
   _i3.BuildingInclude? _building;
 
+  _i4.AccessInclude? _access;
+
   @override
   Map<String, _i1.Include?> get includes => {
     'userProfile': _userProfile,
     'building': _building,
+    'access': _access,
   };
 
   @override
@@ -316,6 +380,8 @@ class EmployerRepository {
   const EmployerRepository._();
 
   final attachRow = const EmployerAttachRowRepository._();
+
+  final detachRow = const EmployerDetachRowRepository._();
 
   /// Returns a list of [Employer]s matching the given query parameters.
   ///
@@ -618,6 +684,55 @@ class EmployerAttachRowRepository {
     await session.db.updateRow<Employer>(
       $employer,
       columns: [Employer.t.buildingId],
+      transaction: transaction,
+    );
+  }
+
+  /// Creates a relation between the given [Employer] and [Access]
+  /// by setting the [Employer]'s foreign key `accessId` to refer to the [Access].
+  Future<void> access(
+    _i1.Session session,
+    Employer employer,
+    _i4.Access access, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (employer.id == null) {
+      throw ArgumentError.notNull('employer.id');
+    }
+    if (access.id == null) {
+      throw ArgumentError.notNull('access.id');
+    }
+
+    var $employer = employer.copyWith(accessId: access.id);
+    await session.db.updateRow<Employer>(
+      $employer,
+      columns: [Employer.t.accessId],
+      transaction: transaction,
+    );
+  }
+}
+
+class EmployerDetachRowRepository {
+  const EmployerDetachRowRepository._();
+
+  /// Detaches the relation between this [Employer] and the [Access] set in `access`
+  /// by setting the [Employer]'s foreign key `accessId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> access(
+    _i1.Session session,
+    Employer employer, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (employer.id == null) {
+      throw ArgumentError.notNull('employer.id');
+    }
+
+    var $employer = employer.copyWith(accessId: null);
+    await session.db.updateRow<Employer>(
+      $employer,
+      columns: [Employer.t.accessId],
       transaction: transaction,
     );
   }

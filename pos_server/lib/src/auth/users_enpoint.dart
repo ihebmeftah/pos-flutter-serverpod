@@ -1,4 +1,3 @@
-import 'package:pos_server/src/buildings/building_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
 import 'package:pos_server/src/helpers/authorizations_helpers.dart';
 import 'package:serverpod/serverpod.dart';
@@ -20,12 +19,9 @@ class UsersEndpoint extends Endpoint {
     UserProfileData userProfileData,
     String password,
     int buildingId,
+    int? accessId,
   ) async {
     await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
-    final building = await BuildingEndpoint().getBuildingById(
-      session,
-      buildingId,
-    );
     final emailIdp = AuthServices.instance.emailIdp;
     final authUser = await AuthServices.instance.authUsers.create(
       session,
@@ -52,7 +48,7 @@ class UsersEndpoint extends Endpoint {
         userProfileId: userProfile.id!,
         userProfile: userProfile,
         buildingId: buildingId,
-        building: building,
+        accessId: accessId,
       ),
     );
   }

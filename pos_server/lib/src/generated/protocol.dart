@@ -16,24 +16,27 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _i3;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
-import 'article/article.dart' as _i5;
-import 'buildings/building.dart' as _i6;
-import 'buildings_tables/building_tables.dart' as _i7;
-import 'buildings_tables/table_status_enum.dart' as _i8;
-import 'cateogrie/categorie.dart' as _i9;
-import 'employer/employer.dart' as _i10;
-import 'exceptions/endpoint_exceptions.dart' as _i11;
-import 'exceptions/exceptiont_enums.dart' as _i12;
-import 'order/order.dart' as _i13;
-import 'order/order_item.dart' as _i14;
-import 'order/order_status_enum.dart' as _i15;
-import 'package:pos_server/src/generated/article/article.dart' as _i16;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i17;
+import 'access/access.dart' as _i5;
+import 'article/article.dart' as _i6;
+import 'buildings/building.dart' as _i7;
+import 'buildings_tables/building_tables.dart' as _i8;
+import 'buildings_tables/table_status_enum.dart' as _i9;
+import 'cateogrie/categorie.dart' as _i10;
+import 'employer/employer.dart' as _i11;
+import 'exceptions/endpoint_exceptions.dart' as _i12;
+import 'exceptions/exceptiont_enums.dart' as _i13;
+import 'order/order.dart' as _i14;
+import 'order/order_item.dart' as _i15;
+import 'order/order_status_enum.dart' as _i16;
+import 'package:pos_server/src/generated/access/access.dart' as _i17;
+import 'package:pos_server/src/generated/article/article.dart' as _i18;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i19;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
-    as _i18;
-import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i19;
-import 'package:pos_server/src/generated/employer/employer.dart' as _i20;
-import 'package:pos_server/src/generated/order/order.dart' as _i21;
+    as _i20;
+import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i21;
+import 'package:pos_server/src/generated/employer/employer.dart' as _i22;
+import 'package:pos_server/src/generated/order/order.dart' as _i23;
+export 'access/access.dart';
 export 'article/article.dart';
 export 'buildings/building.dart';
 export 'buildings_tables/building_tables.dart';
@@ -54,6 +57,99 @@ class Protocol extends _i1.SerializationManagerServer {
   static final Protocol _instance = Protocol._();
 
   static final List<_i2.TableDefinition> targetTableDefinitions = [
+    _i2.TableDefinition(
+      name: 'access',
+      dartName: 'Access',
+      schema: 'public',
+      module: 'pos',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'access_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'name',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'orderCreation',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'orderCreationNotif',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'orderPayment',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'orderItemsPayment',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'buildingId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'access_fk_0',
+          columns: ['buildingId'],
+          referenceTable: 'building',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'access_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'company_name_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'name',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
     _i2.TableDefinition(
       name: 'article',
       dartName: 'Article',
@@ -349,6 +445,12 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: false,
           dartType: 'int',
         ),
+        _i2.ColumnDefinition(
+          name: 'accessId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
       ],
       foreignKeys: [
         _i2.ForeignKeyDefinition(
@@ -369,6 +471,16 @@ class Protocol extends _i1.SerializationManagerServer {
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
           onDelete: _i2.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'employers_fk_2',
+          columns: ['accessId'],
+          referenceTable: 'access',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.setNull,
           matchType: null,
         ),
       ],
@@ -613,106 +725,116 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
 
-    if (t == _i5.Article) {
-      return _i5.Article.fromJson(data) as T;
+    if (t == _i5.Access) {
+      return _i5.Access.fromJson(data) as T;
     }
-    if (t == _i6.Building) {
-      return _i6.Building.fromJson(data) as T;
+    if (t == _i6.Article) {
+      return _i6.Article.fromJson(data) as T;
     }
-    if (t == _i7.BTable) {
-      return _i7.BTable.fromJson(data) as T;
+    if (t == _i7.Building) {
+      return _i7.Building.fromJson(data) as T;
     }
-    if (t == _i8.TableStatus) {
-      return _i8.TableStatus.fromJson(data) as T;
+    if (t == _i8.BTable) {
+      return _i8.BTable.fromJson(data) as T;
     }
-    if (t == _i9.Categorie) {
-      return _i9.Categorie.fromJson(data) as T;
+    if (t == _i9.TableStatus) {
+      return _i9.TableStatus.fromJson(data) as T;
     }
-    if (t == _i10.Employer) {
-      return _i10.Employer.fromJson(data) as T;
+    if (t == _i10.Categorie) {
+      return _i10.Categorie.fromJson(data) as T;
     }
-    if (t == _i11.AppException) {
-      return _i11.AppException.fromJson(data) as T;
+    if (t == _i11.Employer) {
+      return _i11.Employer.fromJson(data) as T;
     }
-    if (t == _i12.ExceptionType) {
-      return _i12.ExceptionType.fromJson(data) as T;
+    if (t == _i12.AppException) {
+      return _i12.AppException.fromJson(data) as T;
     }
-    if (t == _i13.Order) {
-      return _i13.Order.fromJson(data) as T;
+    if (t == _i13.ExceptionType) {
+      return _i13.ExceptionType.fromJson(data) as T;
     }
-    if (t == _i14.OrderItem) {
-      return _i14.OrderItem.fromJson(data) as T;
+    if (t == _i14.Order) {
+      return _i14.Order.fromJson(data) as T;
     }
-    if (t == _i15.OrderStatus) {
-      return _i15.OrderStatus.fromJson(data) as T;
+    if (t == _i15.OrderItem) {
+      return _i15.OrderItem.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i5.Article?>()) {
-      return (data != null ? _i5.Article.fromJson(data) : null) as T;
+    if (t == _i16.OrderStatus) {
+      return _i16.OrderStatus.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i6.Building?>()) {
-      return (data != null ? _i6.Building.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i5.Access?>()) {
+      return (data != null ? _i5.Access.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i7.BTable?>()) {
-      return (data != null ? _i7.BTable.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i6.Article?>()) {
+      return (data != null ? _i6.Article.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i8.TableStatus?>()) {
-      return (data != null ? _i8.TableStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i7.Building?>()) {
+      return (data != null ? _i7.Building.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i9.Categorie?>()) {
-      return (data != null ? _i9.Categorie.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i8.BTable?>()) {
+      return (data != null ? _i8.BTable.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i10.Employer?>()) {
-      return (data != null ? _i10.Employer.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i9.TableStatus?>()) {
+      return (data != null ? _i9.TableStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i11.AppException?>()) {
-      return (data != null ? _i11.AppException.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i10.Categorie?>()) {
+      return (data != null ? _i10.Categorie.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i12.ExceptionType?>()) {
-      return (data != null ? _i12.ExceptionType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.Employer?>()) {
+      return (data != null ? _i11.Employer.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i13.Order?>()) {
-      return (data != null ? _i13.Order.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.AppException?>()) {
+      return (data != null ? _i12.AppException.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i14.OrderItem?>()) {
-      return (data != null ? _i14.OrderItem.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i13.ExceptionType?>()) {
+      return (data != null ? _i13.ExceptionType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i15.OrderStatus?>()) {
-      return (data != null ? _i15.OrderStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.Order?>()) {
+      return (data != null ? _i14.Order.fromJson(data) : null) as T;
     }
-    if (t == List<_i14.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i14.OrderItem>(e)).toList()
+    if (t == _i1.getType<_i15.OrderItem?>()) {
+      return (data != null ? _i15.OrderItem.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i16.OrderStatus?>()) {
+      return (data != null ? _i16.OrderStatus.fromJson(data) : null) as T;
+    }
+    if (t == List<_i15.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i15.OrderItem>(e)).toList()
           as T;
     }
-    if (t == _i1.getType<List<_i14.OrderItem>?>()) {
+    if (t == _i1.getType<List<_i15.OrderItem>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i14.OrderItem>(e))
+                    .map((e) => deserialize<_i15.OrderItem>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i16.Article>) {
-      return (data as List).map((e) => deserialize<_i16.Article>(e)).toList()
+    if (t == List<_i17.Access>) {
+      return (data as List).map((e) => deserialize<_i17.Access>(e)).toList()
           as T;
     }
-    if (t == List<_i17.Building>) {
-      return (data as List).map((e) => deserialize<_i17.Building>(e)).toList()
+    if (t == List<_i18.Article>) {
+      return (data as List).map((e) => deserialize<_i18.Article>(e)).toList()
           as T;
     }
-    if (t == List<_i18.BTable>) {
-      return (data as List).map((e) => deserialize<_i18.BTable>(e)).toList()
+    if (t == List<_i19.Building>) {
+      return (data as List).map((e) => deserialize<_i19.Building>(e)).toList()
           as T;
     }
-    if (t == List<_i19.Categorie>) {
-      return (data as List).map((e) => deserialize<_i19.Categorie>(e)).toList()
+    if (t == List<_i20.BTable>) {
+      return (data as List).map((e) => deserialize<_i20.BTable>(e)).toList()
           as T;
     }
-    if (t == List<_i20.Employer>) {
-      return (data as List).map((e) => deserialize<_i20.Employer>(e)).toList()
+    if (t == List<_i21.Categorie>) {
+      return (data as List).map((e) => deserialize<_i21.Categorie>(e)).toList()
           as T;
     }
-    if (t == List<_i21.Order>) {
-      return (data as List).map((e) => deserialize<_i21.Order>(e)).toList()
+    if (t == List<_i22.Employer>) {
+      return (data as List).map((e) => deserialize<_i22.Employer>(e)).toList()
+          as T;
+    }
+    if (t == List<_i23.Order>) {
+      return (data as List).map((e) => deserialize<_i23.Order>(e)).toList()
           as T;
     }
     try {
@@ -729,17 +851,18 @@ class Protocol extends _i1.SerializationManagerServer {
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
-      _i5.Article => 'Article',
-      _i6.Building => 'Building',
-      _i7.BTable => 'BTable',
-      _i8.TableStatus => 'TableStatus',
-      _i9.Categorie => 'Categorie',
-      _i10.Employer => 'Employer',
-      _i11.AppException => 'AppException',
-      _i12.ExceptionType => 'ExceptionType',
-      _i13.Order => 'Order',
-      _i14.OrderItem => 'OrderItem',
-      _i15.OrderStatus => 'OrderStatus',
+      _i5.Access => 'Access',
+      _i6.Article => 'Article',
+      _i7.Building => 'Building',
+      _i8.BTable => 'BTable',
+      _i9.TableStatus => 'TableStatus',
+      _i10.Categorie => 'Categorie',
+      _i11.Employer => 'Employer',
+      _i12.AppException => 'AppException',
+      _i13.ExceptionType => 'ExceptionType',
+      _i14.Order => 'Order',
+      _i15.OrderItem => 'OrderItem',
+      _i16.OrderStatus => 'OrderStatus',
       _ => null,
     };
   }
@@ -754,27 +877,29 @@ class Protocol extends _i1.SerializationManagerServer {
     }
 
     switch (data) {
-      case _i5.Article():
+      case _i5.Access():
+        return 'Access';
+      case _i6.Article():
         return 'Article';
-      case _i6.Building():
+      case _i7.Building():
         return 'Building';
-      case _i7.BTable():
+      case _i8.BTable():
         return 'BTable';
-      case _i8.TableStatus():
+      case _i9.TableStatus():
         return 'TableStatus';
-      case _i9.Categorie():
+      case _i10.Categorie():
         return 'Categorie';
-      case _i10.Employer():
+      case _i11.Employer():
         return 'Employer';
-      case _i11.AppException():
+      case _i12.AppException():
         return 'AppException';
-      case _i12.ExceptionType():
+      case _i13.ExceptionType():
         return 'ExceptionType';
-      case _i13.Order():
+      case _i14.Order():
         return 'Order';
-      case _i14.OrderItem():
+      case _i15.OrderItem():
         return 'OrderItem';
-      case _i15.OrderStatus():
+      case _i16.OrderStatus():
         return 'OrderStatus';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -798,38 +923,41 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
+    if (dataClassName == 'Access') {
+      return deserialize<_i5.Access>(data['data']);
+    }
     if (dataClassName == 'Article') {
-      return deserialize<_i5.Article>(data['data']);
+      return deserialize<_i6.Article>(data['data']);
     }
     if (dataClassName == 'Building') {
-      return deserialize<_i6.Building>(data['data']);
+      return deserialize<_i7.Building>(data['data']);
     }
     if (dataClassName == 'BTable') {
-      return deserialize<_i7.BTable>(data['data']);
+      return deserialize<_i8.BTable>(data['data']);
     }
     if (dataClassName == 'TableStatus') {
-      return deserialize<_i8.TableStatus>(data['data']);
+      return deserialize<_i9.TableStatus>(data['data']);
     }
     if (dataClassName == 'Categorie') {
-      return deserialize<_i9.Categorie>(data['data']);
+      return deserialize<_i10.Categorie>(data['data']);
     }
     if (dataClassName == 'Employer') {
-      return deserialize<_i10.Employer>(data['data']);
+      return deserialize<_i11.Employer>(data['data']);
     }
     if (dataClassName == 'AppException') {
-      return deserialize<_i11.AppException>(data['data']);
+      return deserialize<_i12.AppException>(data['data']);
     }
     if (dataClassName == 'ExceptionType') {
-      return deserialize<_i12.ExceptionType>(data['data']);
+      return deserialize<_i13.ExceptionType>(data['data']);
     }
     if (dataClassName == 'Order') {
-      return deserialize<_i13.Order>(data['data']);
+      return deserialize<_i14.Order>(data['data']);
     }
     if (dataClassName == 'OrderItem') {
-      return deserialize<_i14.OrderItem>(data['data']);
+      return deserialize<_i15.OrderItem>(data['data']);
     }
     if (dataClassName == 'OrderStatus') {
-      return deserialize<_i15.OrderStatus>(data['data']);
+      return deserialize<_i16.OrderStatus>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -867,20 +995,22 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
     switch (t) {
-      case _i5.Article:
-        return _i5.Article.t;
-      case _i6.Building:
-        return _i6.Building.t;
-      case _i7.BTable:
-        return _i7.BTable.t;
-      case _i9.Categorie:
-        return _i9.Categorie.t;
-      case _i10.Employer:
-        return _i10.Employer.t;
-      case _i13.Order:
-        return _i13.Order.t;
-      case _i14.OrderItem:
-        return _i14.OrderItem.t;
+      case _i5.Access:
+        return _i5.Access.t;
+      case _i6.Article:
+        return _i6.Article.t;
+      case _i7.Building:
+        return _i7.Building.t;
+      case _i8.BTable:
+        return _i8.BTable.t;
+      case _i10.Categorie:
+        return _i10.Categorie.t;
+      case _i11.Employer:
+        return _i11.Employer.t;
+      case _i14.Order:
+        return _i14.Order.t;
+      case _i15.OrderItem:
+        return _i15.OrderItem.t;
     }
     return null;
   }

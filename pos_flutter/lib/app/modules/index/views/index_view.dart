@@ -77,6 +77,14 @@ class IndexView extends GetView<IndexController> {
                           title: Text('Employers'),
                           onTap: () => Get.toNamed(Routes.EMPLOYER),
                         ),
+                      if (Get.find<IndexController>().scope.contains(
+                        "admin",
+                      ))
+                        ListTile(
+                          leading: Icon(Icons.security),
+                          title: Text('Accesses'),
+                          onTap: () => Get.toNamed(Routes.ACCESS),
+                        ),
                       Spacer(),
                       SafeArea(
                         child: ListTile(

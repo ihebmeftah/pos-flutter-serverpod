@@ -1,15 +1,15 @@
 import 'package:pos_server/src/article/article_endpoint.dart';
-import 'package:pos_server/src/auth/email_idp_endpoint.dart';
-import 'package:pos_server/src/buildings/building_endpoint.dart';
 import 'package:pos_server/src/buildings_tables/building_tables_endpoint.dart';
+import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
+import 'package:pos_server/src/helpers/authorizations_helpers.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import 'package:serverpod_auth_idp_server/core.dart';
 
 class OrderEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
-  
+
   Future<List<Order>> getOrders(
     Session session,
     int? buildingId,
@@ -60,33 +60,45 @@ class OrderEndpoint extends Endpoint {
     return order;
   }
 
+  /// Create a new order
+  /// Parameters:
+  /// - [order]: The order to be created
+  /// Returns:
+  /// - The created order
+  /// Only employer allowed for this endpoint
+  /// Employer should have access to order creation
   Future<Order> createOrder(
     Session session,
     Order order,
   ) async {
-    Building building = await BuildingEndpoint().getBuildingById(
+    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
+    final employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
-      order.btable!.buildingId!,
+      session.authenticated!.authUserId,
     );
-    await BuildingTablesEndpoint().getTableById(
-      session,
-      order.btable!.id!,
-      building.id!,
-    );
-
-    if (order.items == null || order.items!.isEmpty) {
-      throw Exception('Order must have at least one item');
+    if (employer.access != null && employer.access?.orderCreation == false) {
+      throw AppException(
+        errorType: ExceptionType.Forbidden,
+        message: 'You don\'t have access to create orders',
+      );
     }
+    if (order.items == null || order.items!.isEmpty) {
+      throw AppException(
+        errorType: ExceptionType.BadRequest,
+        message: 'Order must have at least one item',
+      );
+    }
+    await checkTableHaveOrder(session, order.btableId);
     List<OrderItem> orderItem = [];
     for (OrderItem item in order.items!) {
       await ArticleEndpoint().getArticleById(
         session,
         item.article.id!,
-        building.id!,
+        order.btable!.buildingId!,
       );
+      item.passedById = employer.userProfileId;
       orderItem.add(item);
     }
-
     order.status = OrderStatus.progress;
     Order orderCreated = await Order.db.insertRow(
       session,
@@ -98,7 +110,7 @@ class OrderEndpoint extends Endpoint {
     );
     await Order.db.attach.items(session, orderCreated, itemsCreated);
     await session.messages.postMessage(
-      'order_created-${building.id!}',
+      'order_created-${order.btable!.buildingId!}',
       orderCreated,
     );
     return orderCreated;
@@ -110,17 +122,26 @@ class OrderEndpoint extends Endpoint {
     int orderItemId,
     int buildingId,
   ) async {
+    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
     Order order = await getOrderById(session, orderId);
+    final employer = await EmployerEndpoint().getEmployerByIdentifier(
+      session,
+      session.authenticated!.authUserId,
+    );
+    if (employer.access != null &&
+        employer.access?.orderItemsPayment == false) {
+      throw AppException(
+        errorType: ExceptionType.Forbidden,
+        message: 'You don\'t have access to pay order items',
+      );
+    }
     OrderItem? item = order.items!.firstWhere(
       (item) => item.id == orderItemId,
     );
     item.payed = true;
     if (!order.items!.any((i) => i.payed == false)) {
       order.status = OrderStatus.payed;
-      final UserProfile userProfile = await EmailIdpEndpoint().getUserProfile(
-        session,
-      );
-      order.closedbyId = userProfile.id!;
+      order.closedbyId = employer.userProfileId;
     }
     order.updatedAt = DateTime.now();
     await OrderItem.db.updateRow(session, item);
@@ -136,8 +157,19 @@ class OrderEndpoint extends Endpoint {
     int orderId,
     int buildingId,
   ) async {
-    final profile = await EmailIdpEndpoint().getUserProfile(session);
+    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
     Order order = await getOrderById(session, orderId);
+    final employer = await EmployerEndpoint().getEmployerByIdentifier(
+      session,
+      session.authenticated!.authUserId,
+    );
+    if (employer.access != null &&
+        employer.access?.orderItemsPayment == false) {
+      throw AppException(
+        errorType: ExceptionType.Forbidden,
+        message: 'You don\'t have access to pay order items',
+      );
+    }
     for (OrderItem item in order.items!) {
       if (!item.payed) {
         item.payed = true;
@@ -146,7 +178,7 @@ class OrderEndpoint extends Endpoint {
     }
     order.status = OrderStatus.payed;
     order.updatedAt = DateTime.now();
-    order.closedbyId = profile.id!;
+    order.closedbyId = employer.userProfileId;
     await session.messages.postMessage(
       'order_updated-$buildingId',
       order,
@@ -155,6 +187,10 @@ class OrderEndpoint extends Endpoint {
   }
 
   Future<Order> getOrderCurrOfTable(Session session, int tableId) async {
+    await AuthorizationsHelpers().requiredScopes(session, [
+      "admin",
+      "employer",
+    ]);
     BTable table = await BuildingTablesEndpoint().getTableById(
       session,
       tableId,
@@ -184,6 +220,10 @@ class OrderEndpoint extends Endpoint {
     int tableId,
     OrderStatus? orderStatus,
   ) async {
+    await AuthorizationsHelpers().requiredScopes(session, [
+      "admin",
+      "employer",
+    ]);
     BTable table = await BuildingTablesEndpoint().getTableById(
       session,
       tableId,

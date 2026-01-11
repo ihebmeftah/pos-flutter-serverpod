@@ -1,0 +1,90 @@
+{
+  "__className__": "serverpod.DatabaseMigration",
+  "actions": [
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "alterTable",
+      "alterTable": {
+        "__className__": "serverpod.TableMigration",
+        "name": "access",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [
+          "orderCreationNotif",
+          "orderPaymentNotif",
+          "orderItemsPaymentNotif"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"orderCreationNotif\" of table \"access\" will be dropped.",
+            "table": "access",
+            "columns": [
+              "orderCreationNotif"
+            ],
+            "destrucive": true
+          },
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"orderPaymentNotif\" of table \"access\" will be dropped.",
+            "table": "access",
+            "columns": [
+              "orderPaymentNotif"
+            ],
+            "destrucive": true
+          },
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"orderItemsPaymentNotif\" of table \"access\" will be dropped.",
+            "table": "access",
+            "columns": [
+              "orderItemsPaymentNotif"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"orderCreationNotif\" of table \"access\" will be dropped.",
+      "table": "access",
+      "columns": [
+        "orderCreationNotif"
+      ],
+      "destrucive": true
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"orderPaymentNotif\" of table \"access\" will be dropped.",
+      "table": "access",
+      "columns": [
+        "orderPaymentNotif"
+      ],
+      "destrucive": true
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"orderItemsPaymentNotif\" of table \"access\" will be dropped.",
+      "table": "access",
+      "columns": [
+        "orderItemsPaymentNotif"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

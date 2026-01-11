@@ -18,7 +18,10 @@ class EmployerEndpoint extends Endpoint {
     await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
     return await Employer.db.find(
       session,
-      include: Employer.include(userProfile: UserProfile.include()),
+      include: Employer.include(
+        userProfile: UserProfile.include(),
+        access: Access.include(),
+      ),
       where: (t) => t.buildingId.equals(buildingId),
     );
   }
@@ -36,6 +39,7 @@ class EmployerEndpoint extends Endpoint {
       include: Employer.include(
         userProfile: UserProfile.include(authUser: AuthUser.include()),
         building: Building.include(),
+        access: Access.include(),
       ),
       where: (t) =>
           t.userProfile.authUserId.equals(identifier) |

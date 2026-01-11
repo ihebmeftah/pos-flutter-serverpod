@@ -1,3 +1,9 @@
+access:
+  - createAccess:
+  - getAllAccesses:
+  - getAccessById:
+  - deleteAccess:
+  - assignAccessToEmployer:
 article:
   - getArticles:
   - createArticle:

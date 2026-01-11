@@ -1,3 +1,4 @@
+import 'package:pos_server/src/access/access_endpoint.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
@@ -35,7 +36,35 @@ class BuildingEndpoint extends Endpoint {
   Future<Building> createBuilding(Session session, Building building) async {
     await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
     building.authUserId = session.authenticated?.authUserId;
-    return await Building.db.insertRow(session, building);
+    final createdBuilding = await Building.db.insertRow(session, building);
+
+    /// Create default access for the building
+    final defaultAccess = [
+      Access(
+        name: 'waiter',
+        orderCreation: true,
+        orderPayment: false,
+        orderItemsPayment: false,
+        buildingId: createdBuilding.id!,
+      ),
+      Access(
+        name: 'cashier',
+        orderCreation: false,
+        orderPayment: true,
+        orderItemsPayment: true,
+        buildingId: createdBuilding.id!,
+      ),
+      Access(
+        name: 'barista',
+        orderCreation: false,
+        orderPayment: false,
+        orderItemsPayment: false,
+        orderCreationNotif: true,
+        buildingId: createdBuilding.id!,
+      ),
+    ];
+    await AccessEndpoint().createListAccess(session, defaultAccess);
+    return createdBuilding;
   }
 
   /// Get a building by id

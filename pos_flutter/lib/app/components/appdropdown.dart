@@ -14,6 +14,7 @@ class AppDropdown<T> extends StatelessWidget {
     this.isOutsideLabel = false,
     this.maxLines,
     required this.items,
+    this.onDelete,
   });
   const AppDropdown.label({
     super.key,
@@ -26,6 +27,7 @@ class AppDropdown<T> extends StatelessWidget {
     this.isOutsideLabel = true,
     this.maxLines,
     required this.items,
+    this.onDelete,
   }) : assert(
          isOutsideLabel == true || label != null,
          "If isOutsideLabel is false, label must not be null",
@@ -36,7 +38,7 @@ class AppDropdown<T> extends StatelessWidget {
   final FormFieldValidator<T>? validator;
   final ValueChanged<T?>? onChanged;
   final int? maxLines;
-  final VoidCallback? onTap;
+  final VoidCallback? onTap, onDelete;
   final List<DropdownMenuItem<T>> items;
   final T? selectedItem;
 
@@ -48,6 +50,9 @@ class AppDropdown<T> extends StatelessWidget {
       children: [
         if (isOutsideLabel && label != null) AppLabel(label: label),
         DropdownButtonFormField<T>(
+          icon: selectedItem == null || onDelete == null
+              ? null
+              : IconButton(onPressed: onDelete, icon: Icon(Icons.clear)),
           isExpanded: true,
           initialValue: selectedItem,
           items: items,

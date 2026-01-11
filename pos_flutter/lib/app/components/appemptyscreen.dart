@@ -20,9 +20,9 @@ class Appemptyscreen extends StatelessWidget {
     if (Get.currentRoute == route || Get.currentRoute == Routes.BUILDINGS) {
       return () => Get.toNamed(Routes.FORM_BUILDING);
     }
-    /*if (Get.currentRoute == route || Get.currentRoute == Routes.STAFF) {
-      return () => Get.toNamed(Routes.STAFF_FORM);
-    }*/
+    if (Get.currentRoute == route || Get.currentRoute == Routes.EMPLOYER) {
+      return () => Get.toNamed(Routes.FORM_EMPLOYER);
+    }
     if ((Get.currentRoute == Routes.INDEX && route == Routes.ARTICLE) ||
         Get.currentRoute == Routes.ARTICLE) {
       return () => Get.toNamed(Routes.ARTICLE_FORM);
@@ -42,9 +42,9 @@ class Appemptyscreen extends StatelessWidget {
     if (Get.currentRoute == route || Get.currentRoute == Routes.BUILDINGS) {
       return "You don't have any buildings yet.";
     }
-    /*  if (Get.currentRoute == route || Get.currentRoute == Routes.STAFF) {
-      return "You don't have any staff yet.";
-    }*/
+    if (Get.currentRoute == route || Get.currentRoute == Routes.EMPLOYER) {
+      return "You don't have any employers yet.";
+    }
     if ((Get.currentRoute == Routes.INDEX && route == Routes.ARTICLE) ||
         Get.currentRoute == Routes.ARTICLE) {
       return "Your building has no articles yet.";

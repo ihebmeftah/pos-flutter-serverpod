@@ -21,7 +21,6 @@ class LoginController extends GetxController {
         await _emailAuthController.login();
       }
     } catch (e) {
-      print(e);
       Get.snackbar(
         'Login Error',
         e.toString(),

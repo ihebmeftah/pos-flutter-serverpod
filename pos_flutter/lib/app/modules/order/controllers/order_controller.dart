@@ -15,7 +15,14 @@ class OrderController extends GetxController with StateMixin {
       .order
       .streamCreateOrder(LocalStorage().building!.id!)
       .listen((order) {
-        print('New order received: ${order.toJson()}');
+        // TODO: Handle order/table update [without send requests]
+        Get.snackbar(
+          "New order",
+          "A new order need your attention",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Get.theme.primaryColorLight,
+          colorText: Get.theme.primaryColorDark,
+        );
         Get.find<OrderController>().getOrders();
         Get.find<TablesController>().getTabels();
       });
@@ -24,7 +31,7 @@ class OrderController extends GetxController with StateMixin {
       .order
       .streamUpdateOrder(LocalStorage().building!.id!)
       .listen((order) {
-        print('Updated order received: ${order.toJson()}');
+        // TODO: Handle order/table update [without send requests]
         Get.find<OrderController>().getOrders();
         Get.find<TablesController>().getTabels();
         if (Get.isRegistered<OrderDetailsController>()) {

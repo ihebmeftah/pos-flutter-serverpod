@@ -90,6 +90,16 @@ class PassOrderController extends GetxController with StateMixin {
         Get.find<OrderController>().onInit();
       }
       reset();
+    } on AppException catch (e) {
+      if (e.errorType == ExceptionType.Forbidden) {
+        Get.snackbar(
+          'Payment Error',
+          'Only employers with access can pass orders',
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+        );
+        return;
+      }
     } catch (e) {
       Get.snackbar(
         "Error",
