@@ -7,9 +7,3 @@ fields:
   orderPayment: bool
   orderItemsPayment: bool
   buildingId: int?, relation(parent=building),required
-
-
-indexes:
-  company_name_idx:
-    fields: name
-    unique: true

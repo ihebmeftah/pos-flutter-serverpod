@@ -19,7 +19,9 @@ class AccessEndpoint extends Endpoint {
   ) async {
     final existingAccess = await Access.db.findFirstRow(
       session,
-      where: (t) => t.name.inSet(access.map((e) => e.name).toSet()),
+      where: (t) =>
+          t.name.inSet(access.map((e) => e.name).toSet()) &
+          t.buildingId.inSet(access.map((e) => e.buildingId!).toSet()),
     );
     if (existingAccess != null) {
       throw AppException(
@@ -34,7 +36,7 @@ class AccessEndpoint extends Endpoint {
   Future<void> checkAccessExist(Session session, Access access) async {
     final existingAccess = await Access.db.findFirstRow(
       session,
-      where: (t) => t.name.equals(access.name),
+      where: (t) => t.name.ilike(access.name),
     );
     if (existingAccess != null) {
       throw AppException(

@@ -33,7 +33,7 @@ class CategorieEndpoint extends Endpoint {
     final existe = await Categorie.db.findFirstRow(
       session,
       where: (c) =>
-          c.name.equals(categorie.name) & c.buildingId.equals(buildingId),
+          c.name.ilike(categorie.name) & c.buildingId.equals(buildingId),
     );
     if (existe != null) throw Exception('Categorie already exists');
     categorie.buildingId = buildingId;

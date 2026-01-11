@@ -19,10 +19,12 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20.0),
             child: Column(
+              spacing: 20,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Profile Card
+                /*             /// Profile Card
                 Container(
+                  height: 350,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -36,7 +38,7 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                   ),
                   child: Column(
                     children: [
-                      // Header with gradient background
+                      /// Header with gradient background
                       Container(
                         height: 150,
                         decoration: BoxDecoration(
@@ -54,7 +56,8 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                           ),
                         ),
                       ),
-                      // Profile Avatar (overlapping)
+
+                      /// Profile Avatar (overlapping)
                       Transform.translate(
                         offset: const Offset(0, -50),
                         child: Column(
@@ -88,7 +91,8 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            // Name
+
+                            /// Name
                             Text(
                               '${employer.userProfile!.fullName}',
                               style: Theme.of(context).textTheme.headlineMedium
@@ -136,6 +140,89 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                 ),
                 const SizedBox(height: 24),
                 // Contact Information Card
+                */
+                // Account Information Card
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.account_circle,
+                            color: AppTheme().primary,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Account Information',
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.person_outline,
+                        label: 'Full Name',
+                        value: (employer.userProfile!.fullName).toString(),
+                      ),
+                      const Divider(height: 32),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.badge_outlined,
+                        label: 'Roles',
+                        value:
+                            (employer.userProfile!.authUser!.scopeNames
+                                    .join(', ')
+                                    .toUpperCase())
+                                .toString(),
+                      ),
+                      const Divider(height: 32),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.vpn_key_outlined,
+                        label: 'Access',
+                        value: (employer.access?.name ?? 'No Access Assigned'),
+                      ),
+                      const Divider(height: 32),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.pin_outlined,
+                        label: 'Employer ID',
+                        value: (employer.id ?? 'N/A').toString(),
+                      ),
+                      const Divider(height: 32),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.pin_outlined,
+                        label: 'Profile ID',
+                        value: (employer.userProfileId).toString(),
+                      ),
+                      const Divider(height: 32),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.pin_outlined,
+                        label: 'Auth User ID',
+                        value: (employer.userProfile!.authUserId).toString(),
+                      ),
+                    ],
+                  ),
+                ),
+
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -190,70 +277,6 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                           value: employer.building!.name,
                         ),
                       ],
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Account Information Card
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.account_circle,
-                            color: AppTheme().primary,
-                            size: 24,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Account Information',
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      _buildInfoRow(
-                        context,
-                        icon: Icons.perm_identity,
-                        label: 'Employer ID',
-                        value: (employer.id ?? 'N/A').toString(),
-                      ),
-                      _buildInfoRow(
-                        context,
-                        icon: Icons.perm_identity,
-                        label: 'Profile ID',
-                        value: (employer.userProfileId).toString(),
-                      ),
-                      _buildInfoRow(
-                        context,
-                        icon: Icons.perm_identity,
-                        label: 'Auth User ID',
-                        value: (employer.userProfile!.authUserId).toString(),
-                      ),
-                      const Divider(height: 32),
-                      _buildInfoRow(
-                        context,
-                        icon: Icons.work,
-                        label: 'Role',
-                        value: employer.userProfile!.authUser!.scopeNames.join(
-                          ', ',
-                        ),
-                      ),
                     ],
                   ),
                 ),

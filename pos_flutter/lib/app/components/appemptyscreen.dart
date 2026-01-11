@@ -34,7 +34,9 @@ class Appemptyscreen extends StatelessWidget {
     if (Get.currentRoute == route || Get.currentRoute == Routes.CATEGORIE) {
       return () => Get.toNamed(Routes.CATEGORIE_FORM);
     }
-
+    if (Get.currentRoute == route || Get.currentRoute == Routes.ACCESS) {
+      return () => Get.toNamed(Routes.ACCESS_FORM);
+    }
     return null;
   }
 
@@ -63,6 +65,9 @@ class Appemptyscreen extends StatelessWidget {
     if (Get.currentRoute == route ||
         Get.currentRoute.contains(Routes.ORDER_DETAILS)) {
       return "This order has no details yet.";
+    }
+    if (Get.currentRoute == route || Get.currentRoute.contains(Routes.ACCESS)) {
+      return "Your building has no access levels yet.";
     }
     return "";
   }

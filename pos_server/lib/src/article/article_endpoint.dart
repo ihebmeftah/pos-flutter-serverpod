@@ -53,7 +53,7 @@ class ArticleEndpoint extends Endpoint {
     final existe = await Article.db.findFirstRow(
       session,
       where: (a) =>
-          a.name.equals(article.name) &
+          a.name.ilike(article.name) &
           a.categorie.buildingId.equals(buildingId),
     );
     if (existe != null) throw Exception('Article already exists');

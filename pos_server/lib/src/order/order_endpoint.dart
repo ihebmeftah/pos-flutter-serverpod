@@ -4,6 +4,7 @@ import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
 import 'package:pos_server/src/helpers/authorizations_helpers.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
+import 'package:serverpod/serverpod.dart' as s;
 import 'package:serverpod_auth_idp_server/core.dart';
 
 class OrderEndpoint extends Endpoint {
@@ -18,6 +19,10 @@ class OrderEndpoint extends Endpoint {
     if (orderStatus != null) {
       return await Order.db.find(
         session,
+        orderByList: (k) => [
+          s.Order(column: k.createdAt, orderDescending: true),
+          s.Order(column: k.status, orderDescending: true),
+        ],
         where: (t) =>
             t.btable.buildingId.equals(buildingId) &
             t.status.equals(orderStatus),
@@ -30,6 +35,10 @@ class OrderEndpoint extends Endpoint {
     }
     return await Order.db.find(
       session,
+      orderByList: (k) => [
+        s.Order(column: k.createdAt, orderDescending: true),
+        s.Order(column: k.status, orderDescending: true),
+      ],
       where: (t) => t.btable.buildingId.equals(buildingId),
       include: Order.include(
         btable: BTable.include(),
