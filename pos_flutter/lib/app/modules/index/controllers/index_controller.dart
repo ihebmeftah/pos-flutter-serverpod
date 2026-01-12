@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/modules/order/controllers/order_controller.dart';
+import 'package:pos_flutter/app/modules/tables/controllers/tables_controller.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
@@ -32,6 +34,31 @@ class IndexController extends GetxController with StateMixin<UserProfile> {
       currBnb = index;
       pageVCtr.jumpToPage(index);
       update(["bottomNavigationBar"]);
+    }
+    if (scope.contains("admin")) {
+      if (index != 3) {
+        Get.delete<OrderController>();
+      } else if (index == 3) {
+        Get.put<OrderController>(OrderController());
+      }
+      if (index != 2) {
+        Get.delete<TablesController>();
+      } else if (index == 2) {
+        Get.put<TablesController>(TablesController());
+      }
+    } else {
+      if (scope.contains("employer")) {
+        if (index != 2) {
+          Get.delete<OrderController>();
+        } else if (index == 2) {
+          Get.put<OrderController>(OrderController());
+        }
+        if (index != 0) {
+          Get.delete<TablesController>();
+        } else if (index == 0) {
+          Get.put<TablesController>(TablesController());
+        }
+      }
     }
   }
 }

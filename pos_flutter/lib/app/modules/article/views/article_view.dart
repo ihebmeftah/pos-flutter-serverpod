@@ -65,6 +65,7 @@ class ArticleView extends GetView<ArticleController> {
                       Text(
                         controller.articles[index].name.capitalizeFirst!,
                         style: context.theme.textTheme.titleMedium,
+                        maxLines: 1,
                       ),
                       Text(
                         controller.articles[index].categorie!.name,

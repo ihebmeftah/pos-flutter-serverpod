@@ -17,7 +17,7 @@ class ArticleFormView extends GetView<ArticleFormController> {
       appBar: AppBar(title: const Text('Create Article')),
       body: controller.obx(
         (_) {
-          return Padding(
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(20.0),
             child: Form(
               key: controller.artFormKey,
@@ -92,7 +92,6 @@ class ArticleFormView extends GetView<ArticleFormController> {
                     minLines: 3,
                     ctr: controller.description,
                   ),
-                  Spacer(),
                   ElevatedButton(
                     onPressed: controller.createArticle,
                     child: const Text("Add Article"),

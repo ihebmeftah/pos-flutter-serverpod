@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_flutter/app/components/apperrorscreen.dart';
-import 'package:pos_flutter/app/data/local/local_storage.dart'
-    show LocalStorage;
+import 'package:pos_flutter/app/extensions/datetime.extension.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
@@ -30,17 +29,21 @@ class BuildingsView extends GetView<BuildingsController> {
       ),
       body: controller.obx(
         (state) => ListView.builder(
+          padding: const EdgeInsets.all(10),
           itemCount: state?.length ?? 0,
           itemBuilder: (context, index) {
             final building = state![index];
             return ListTile(
               onTap: () async {
                 bottomSheet(
+                  onConfirm: () => controller.consult(index),
+                  confirmeButtonText: "Consult",
                   children: [
                     Text(
                       "Building: ${building.name}",
                       style: context.textTheme.titleLarge,
                     ),
+
                     /*     if (building.photos != null)
                       SizedBox(
                         height: 200,
@@ -65,13 +68,10 @@ class BuildingsView extends GetView<BuildingsController> {
               ),
               title: Text(building.name),
               subtitle: Text(
-                '${building.address} ${building.openingTime} - ${building.closingTime}',
+                '${building.address} ${building.openingTime.toTimeOnly} - ${building.closingTime.toTimeOnly}',
               ),
               trailing: TextButton(
-                onPressed: () async {
-                  await LocalStorage().saveBuilding(building);
-                  Get.offAllNamed(Routes.INDEX);
-                },
+                onPressed: () => controller.consult(index),
                 child: Text("Consult"),
               ),
             );

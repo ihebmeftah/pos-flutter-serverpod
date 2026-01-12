@@ -101,12 +101,22 @@ class PassOrderView extends GetView<PassOrderController> {
                                                 .selectedArticleWithOcc[index]
                                                 .occurrence
                                                 .toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14,
+                                            ),
                                           ),
                                           title: Text(
                                             controller
                                                 .selectedArticleWithOcc[index]
                                                 .article
-                                                .name,
+                                                .name
+                                                .capitalize!,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
                                           ),
                                           subtitle: Text(
                                             "${controller.selectedArticleWithOcc[index].article.price} DT",
@@ -155,12 +165,12 @@ class PassOrderView extends GetView<PassOrderController> {
                   ),
                 ),
               ),
-              AppFormField.label(
+              /*   AppFormField.label(
                 maxLines: 4,
                 minLines: 1,
                 label: "Notes",
                 hint: "Add any notes for the order here...",
-              ),
+              ),*/
               Column(
                 spacing: 10,
                 crossAxisAlignment: CrossAxisAlignment.start,

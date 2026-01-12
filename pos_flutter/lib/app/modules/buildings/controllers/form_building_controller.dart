@@ -11,12 +11,10 @@ class FormBuildingController extends GetxController with StateMixin {
   DateTime closingTime = DateTime.now().add(const Duration(hours: 14));
   final name = TextEditingController(),
       location = TextEditingController(),
-      opening = TextEditingController(
-        text: TimeOfDay(hour: 07, minute: 00).format(Get.context!),
-      ),
-      closing = TextEditingController(
-        text: TimeOfDay(hour: 23, minute: 00).format(Get.context!),
-      );
+      opening = TextEditingController(),
+      closing = TextEditingController();
+  bool tableMultiOrder = false;
+
   @override
   void onInit() {
     change(null, status: RxStatus.success());
@@ -29,8 +27,13 @@ class FormBuildingController extends GetxController with StateMixin {
     openingTime: openingTime,
     closingTime: closingTime,
     //   dbName: name.text.toLowerCase().replaceAll(' ', '_'),
-    tableMultiOrder: false,
+    tableMultiOrder: tableMultiOrder,
   );
+  void changeTableMultiOrder(bool? t) {
+    tableMultiOrder = t!;
+    update(['tableMultiOrder']);
+  }
+
   Future<void> addBuilding() async {
     try {
       if (addFormkey.currentState!.validate()) {

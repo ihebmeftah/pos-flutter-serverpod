@@ -72,7 +72,6 @@ class TablesView extends GetView<TablesController> {
                             passOrderCtr.setTable(controller.tables[index]);
                             return;
                           }
-
                           bottomSheet(
                             onConfirm: () {
                               Get.back();
@@ -146,9 +145,7 @@ class TablesView extends GetView<TablesController> {
                                   ),
                                 ),
 
-                              if (LocalStorage().building!.tableMultiOrder &&
-                                  controller.tables[index].status ==
-                                      TableStatus.occupied)
+                              if (LocalStorage().building!.tableMultiOrder)
                                 ListTile(
                                   title: Text('Consult table orders'),
                                   onTap: () => Get.toNamed(

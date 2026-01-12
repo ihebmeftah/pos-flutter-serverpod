@@ -17,7 +17,7 @@ class FormEmployerView extends GetView<FormEmployerController> {
       appBar: AppBar(title: const Text('Add Employer'), centerTitle: true),
       body: controller.obx(
         (_) {
-          return Padding(
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(20.0),
             child: Form(
               key: controller.formKey,
@@ -86,7 +86,6 @@ class FormEmployerView extends GetView<FormEmployerController> {
                       );
                     },
                   ),
-                  const Spacer(),
                   ElevatedButton(
                     onPressed: controller.createEmployyer,
                     child: const Text("Add Employer"),

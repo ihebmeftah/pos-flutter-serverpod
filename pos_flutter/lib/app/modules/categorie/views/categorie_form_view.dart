@@ -11,9 +11,9 @@ class CategorieFormView extends GetView<CategorieFormController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('add categorie')),
+      appBar: AppBar(title: const Text('Create categorie')),
       body: controller.obx(
-        (s) => Padding(
+        (s) => SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Form(
             key: controller.catFormKey,
@@ -38,7 +38,6 @@ class CategorieFormView extends GetView<CategorieFormController> {
                   minLines: 3,
                   ctr: controller.descController,
                 ),
-                Spacer(),
                 ElevatedButton(
                   onPressed: controller.craeteCategory,
                   child: const Text("Add Category"),

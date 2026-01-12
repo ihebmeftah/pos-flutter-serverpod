@@ -30,7 +30,7 @@ class FormTableController extends GetxController
 
   Future<void> createTables() async {
     try {
-      if (tables.isEmpty) return;
+      if (tables.isEmpty || status.isLoading) return;
       change(tables, status: RxStatus.loading());
       for (CreateTableViewModel t in tables) {
         await ServerpodClient.instance.buildingTables.createTables(

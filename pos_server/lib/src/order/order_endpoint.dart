@@ -1,5 +1,4 @@
 import 'package:pos_server/src/article/article_endpoint.dart';
-import 'package:pos_server/src/buildings_tables/building_tables_endpoint.dart';
 import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
 import 'package:pos_server/src/helpers/authorizations_helpers.dart';
@@ -200,14 +199,10 @@ class OrderEndpoint extends Endpoint {
       "admin",
       "employer",
     ]);
-    BTable table = await BuildingTablesEndpoint().getTableById(
-      session,
-      tableId,
-    );
     Order? order = await Order.db.findFirstRow(
       session,
       where: (t) =>
-          t.btableId.equals(table.id) & t.status.equals(OrderStatus.progress),
+          t.btableId.equals(tableId) & t.status.equals(OrderStatus.progress),
       include: Order.include(
         passedBy: UserProfile.include(),
         btable: BTable.include(),
@@ -219,7 +214,11 @@ class OrderEndpoint extends Endpoint {
       ),
     );
     if (order == null) {
-      throw Exception('No active order for table id $tableId');
+      throw AppException(
+        errorType: ExceptionType.NotFound,
+        message:
+            'No existing order in progress for table ${order?.btable?.number}',
+      );
     }
     return order;
   }
@@ -233,25 +232,22 @@ class OrderEndpoint extends Endpoint {
       "admin",
       "employer",
     ]);
-    BTable table = await BuildingTablesEndpoint().getTableById(
-      session,
-      tableId,
-    );
     if (orderStatus != null) {
       return await Order.db.find(
         session,
-        where: (t) =>
-            t.btableId.equals(table.id) & t.status.equals(orderStatus),
+        where: (t) => t.btableId.equals(tableId) & t.status.equals(orderStatus),
         include: Order.include(
           btable: BTable.include(),
+          passedBy: UserProfile.include(),
           items: OrderItem.includeList(),
         ),
       );
     }
     return await Order.db.find(
       session,
-      where: (t) => t.btableId.equals(table.id),
+      where: (t) => t.btableId.equals(tableId),
       include: Order.include(
+        passedBy: UserProfile.include(),
         btable: BTable.include(),
         items: OrderItem.includeList(),
       ),

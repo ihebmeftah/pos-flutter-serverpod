@@ -26,7 +26,6 @@ building:
 buildingTables:
   - getTables:
   - createTables:
-  - getTableById:
 categorie:
   - getCategories:
   - createCategorie:

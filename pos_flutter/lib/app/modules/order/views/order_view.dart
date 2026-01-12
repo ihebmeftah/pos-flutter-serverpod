@@ -14,13 +14,11 @@ class OrderView extends GetView<OrderController> {
       length: 3,
       initialIndex: controller.currentTabIndex,
       child: Scaffold(
-        /*  appBar:
-            (Get.find<IndexController>().currBnb != 2 &&
-                  Get.find<ServerpodClient>().userScopes!.contains("admin")) ||
-                (Get.find<IndexController>().currBnb != 0 &&
-                   Get.find<ServerpodClient>().userScopes!.contains("none"))
-            ? null
-            : AppBar(title: const Text('Orders'), centerTitle: true),*/
+        appBar:
+            controller.tableId != null &&
+                Get.currentRoute.contains(Routes.ORDERS_TABLES)
+            ? AppBar(title: const Text('Orders'), centerTitle: true)
+            : null,
         body: controller.obx(
           (state) => RefreshIndicator(
             onRefresh: controller.getOrders,

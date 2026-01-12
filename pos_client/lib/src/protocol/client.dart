@@ -437,23 +437,6 @@ class EndpointBuildingTables extends _i1.EndpointRef {
       'buildingId': buildingId,
     },
   );
-
-  /// Get a table by its id
-  /// required [tableId] The id of the table
-  /// optional [buildingId] The id of the building
-  /// Returns the [BTable] table
-  /// allow for all type of users (admin, employee, customer)
-  _i2.Future<_i9.BTable> getTableById(
-    int tableId, [
-    int? buildingId,
-  ]) => caller.callServerEndpoint<_i9.BTable>(
-    'buildingTables',
-    'getTableById',
-    {
-      'tableId': tableId,
-      'buildingId': buildingId,
-    },
-  );
 }
 
 /// {@category Endpoint}

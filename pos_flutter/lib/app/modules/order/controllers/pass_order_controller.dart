@@ -77,6 +77,7 @@ class PassOrderController extends GetxController with StateMixin {
 
   void passOrder() async {
     try {
+      if (status.isLoading) return;
       if (currOrder == null && table!.status == TableStatus.available) {
         await createOrder();
       } else {

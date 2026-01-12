@@ -19,6 +19,7 @@ class OrderController extends GetxController with StateMixin {
         Get.snackbar(
           "New order",
           "A new order need your attention",
+          
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Get.theme.primaryColorLight,
           colorText: Get.theme.primaryColorDark,

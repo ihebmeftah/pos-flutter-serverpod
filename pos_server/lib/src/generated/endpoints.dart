@@ -598,32 +598,6 @@ class Endpoints extends _i1.EndpointDispatch {
                         buildingId: params['buildingId'],
                       ),
         ),
-        'getTableById': _i1.MethodConnector(
-          name: 'getTableById',
-          params: {
-            'tableId': _i1.ParameterDescription(
-              name: 'tableId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-            'buildingId': _i1.ParameterDescription(
-              name: 'buildingId',
-              type: _i1.getType<int?>(),
-              nullable: true,
-            ),
-          },
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async =>
-                  (endpoints['buildingTables'] as _i8.BuildingTablesEndpoint)
-                      .getTableById(
-                        session,
-                        params['tableId'],
-                        params['buildingId'],
-                      ),
-        ),
       },
     );
     connectors['categorie'] = _i1.EndpointConnector(

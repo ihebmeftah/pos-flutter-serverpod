@@ -59,40 +59,4 @@ class BuildingTablesEndpoint extends Endpoint {
       bTables,
     );
   }
-
-  /// Get a table by its id
-  /// required [tableId] The id of the table
-  /// optional [buildingId] The id of the building
-  /// Returns the [BTable] table
-  /// allow for all type of users (admin, employee, customer)
-  Future<BTable> getTableById(
-    Session session,
-    int tableId, [
-    int? buildingId,
-  ]) async {
-    if (buildingId != null) {
-      BTable? table = await BTable.db.findFirstRow(
-        session,
-        where: (t) => t.id.equals(tableId) & t.buildingId.equals(buildingId),
-      );
-      if (table == null) {
-        throw AppException(
-          message: 'Table with id $tableId not found',
-          errorType: ExceptionType.NotFound,
-        );
-      }
-      return table;
-    }
-    BTable? table = await BTable.db.findFirstRow(
-      session,
-      where: (t) => t.id.equals(tableId) & t.buildingId.equals(buildingId),
-    );
-    if (table == null) {
-      throw AppException(
-        errorType: ExceptionType.NotFound,
-        message: 'Table with id $tableId not found',
-      );
-    }
-    return table;
-  }
 }

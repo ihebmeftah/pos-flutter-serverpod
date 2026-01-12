@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class AppFormField extends StatelessWidget {
@@ -54,6 +53,9 @@ class AppFormField extends StatelessWidget {
       children: [
         if (isOutsideLabel && label != null) AppLabel(label: label),
         TextFormField(
+          onTapOutside: (_) {
+            FocusScope.of(context).unfocus();
+          },
           keyboardType: isNumeric
               ? TextInputType.numberWithOptions(decimal: true)
               : TextInputType.text,
