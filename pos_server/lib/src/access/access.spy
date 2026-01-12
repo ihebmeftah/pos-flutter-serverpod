@@ -6,4 +6,5 @@ fields:
   orderCreationNotif: bool, default=true
   orderPayment: bool
   orderItemsPayment: bool
+  appendItems: bool, default=false
   buildingId: int?, relation(parent=building),required

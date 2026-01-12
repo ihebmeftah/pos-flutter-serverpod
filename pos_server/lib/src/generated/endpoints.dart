@@ -29,8 +29,9 @@ import 'package:pos_server/src/generated/buildings/building.dart' as _i15;
 import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i16;
 import 'package:pos_server/src/generated/order/order_status_enum.dart' as _i17;
 import 'package:pos_server/src/generated/order/order.dart' as _i18;
+import 'package:pos_server/src/generated/order/order_item.dart' as _i19;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i19;
+    as _i20;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -759,6 +760,31 @@ class Endpoints extends _i1.EndpointDispatch {
                 params['order'],
               ),
         ),
+        'appendItemsToOrder': _i1.MethodConnector(
+          name: 'appendItemsToOrder',
+          params: {
+            'orderId': _i1.ParameterDescription(
+              name: 'orderId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'orderItems': _i1.ParameterDescription(
+              name: 'orderItems',
+              type: _i1.getType<List<_i19.OrderItem>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['order'] as _i11.OrderEndpoint).appendItemsToOrder(
+                    session,
+                    params['orderId'],
+                    params['orderItems'],
+                  ),
+        ),
         'payItem': _i1.MethodConnector(
           name: 'payItem',
           params: {
@@ -878,6 +904,28 @@ class Endpoints extends _i1.EndpointDispatch {
                 params['buildingId'],
               ),
         ),
+        'streamAppendItemsOrder': _i1.MethodStreamConnector(
+          name: 'streamAppendItemsOrder',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          streamParams: {},
+          returnType: _i1.MethodStreamReturnType.streamType,
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['order'] as _i11.OrderEndpoint)
+                  .streamAppendItemsOrder(
+                    session,
+                    params['buildingId'],
+                  ),
+        ),
         'streamUpdateOrder': _i1.MethodStreamConnector(
           name: 'streamUpdateOrder',
           params: {
@@ -901,7 +949,7 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i19.Endpoints()
+    modules['serverpod_auth_idp'] = _i20.Endpoints()
       ..initializeEndpoints(server);
     modules['serverpod_auth_core'] = _i14.Endpoints()
       ..initializeEndpoints(server);

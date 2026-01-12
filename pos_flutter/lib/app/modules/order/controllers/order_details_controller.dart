@@ -39,6 +39,12 @@ class OrderDetailsController extends GetxController with StateMixin {
       } else {
         change(order, status: RxStatus.success());
       }
+    } on AppException catch (e) {
+      if (e.errorType == ExceptionType.NotFound) {
+        change(null, status: RxStatus.empty());
+        return;
+      }
+      change(null, status: RxStatus.error(e.message));
     } catch (e) {
       change(null, status: RxStatus.error('Failed to load order'));
     }
@@ -111,15 +117,6 @@ class OrderDetailsController extends GetxController with StateMixin {
         colorText: Colors.white,
       );
     }
-  }
-
-  void addNewItem() {
-    Get.snackbar(
-      'Add Item',
-      'Feature to add new items will be implemented',
-      backgroundColor: Colors.blue,
-      colorText: Colors.white,
-    );
   }
 
   void closeOrder() {

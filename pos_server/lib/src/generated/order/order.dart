@@ -424,7 +424,7 @@ class OrderTable extends _i1.Table<int?> {
     ___items = _i1.createRelationTable(
       relationFieldName: '__items',
       field: Order.t.id,
-      foreignField: _i5.OrderItem.t.$_ordersItemsOrdersId,
+      foreignField: _i5.OrderItem.t.orderId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
           _i5.OrderItemTable(tableRelation: foreignTableRelation),
@@ -437,7 +437,7 @@ class OrderTable extends _i1.Table<int?> {
     var relationTable = _i1.createRelationTable(
       relationFieldName: 'items',
       field: Order.t.id,
-      foreignField: _i5.OrderItem.t.$_ordersItemsOrdersId,
+      foreignField: _i5.OrderItem.t.orderId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
           _i5.OrderItemTable(tableRelation: foreignTableRelation),
@@ -804,7 +804,7 @@ class OrderAttachRepository {
   const OrderAttachRepository._();
 
   /// Creates a relation between this [Order] and the given [OrderItem]s
-  /// by setting each [OrderItem]'s foreign key `_ordersItemsOrdersId` to refer to this [Order].
+  /// by setting each [OrderItem]'s foreign key `orderId` to refer to this [Order].
   Future<void> items(
     _i1.Session session,
     Order order,
@@ -819,16 +819,11 @@ class OrderAttachRepository {
     }
 
     var $orderItem = orderItem
-        .map(
-          (e) => _i5.OrderItemImplicit(
-            e,
-            $_ordersItemsOrdersId: order.id,
-          ),
-        )
+        .map((e) => e.copyWith(orderId: order.id))
         .toList();
     await session.db.update<_i5.OrderItem>(
       $orderItem,
-      columns: [_i5.OrderItem.t.$_ordersItemsOrdersId],
+      columns: [_i5.OrderItem.t.orderId],
       transaction: transaction,
     );
   }
@@ -907,7 +902,7 @@ class OrderAttachRowRepository {
   }
 
   /// Creates a relation between this [Order] and the given [OrderItem]
-  /// by setting the [OrderItem]'s foreign key `_ordersItemsOrdersId` to refer to this [Order].
+  /// by setting the [OrderItem]'s foreign key `orderId` to refer to this [Order].
   Future<void> items(
     _i1.Session session,
     Order order,
@@ -921,13 +916,10 @@ class OrderAttachRowRepository {
       throw ArgumentError.notNull('order.id');
     }
 
-    var $orderItem = _i5.OrderItemImplicit(
-      orderItem,
-      $_ordersItemsOrdersId: order.id,
-    );
+    var $orderItem = orderItem.copyWith(orderId: order.id);
     await session.db.updateRow<_i5.OrderItem>(
       $orderItem,
-      columns: [_i5.OrderItem.t.$_ordersItemsOrdersId],
+      columns: [_i5.OrderItem.t.orderId],
       transaction: transaction,
     );
   }
@@ -937,7 +929,7 @@ class OrderDetachRepository {
   const OrderDetachRepository._();
 
   /// Detaches the relation between this [Order] and the given [OrderItem]
-  /// by setting the [OrderItem]'s foreign key `_ordersItemsOrdersId` to `null`.
+  /// by setting the [OrderItem]'s foreign key `orderId` to `null`.
   ///
   /// This removes the association between the two models without deleting
   /// the related record.
@@ -950,17 +942,10 @@ class OrderDetachRepository {
       throw ArgumentError.notNull('orderItem.id');
     }
 
-    var $orderItem = orderItem
-        .map(
-          (e) => _i5.OrderItemImplicit(
-            e,
-            $_ordersItemsOrdersId: null,
-          ),
-        )
-        .toList();
+    var $orderItem = orderItem.map((e) => e.copyWith(orderId: null)).toList();
     await session.db.update<_i5.OrderItem>(
       $orderItem,
-      columns: [_i5.OrderItem.t.$_ordersItemsOrdersId],
+      columns: [_i5.OrderItem.t.orderId],
       transaction: transaction,
     );
   }
@@ -992,7 +977,7 @@ class OrderDetachRowRepository {
   }
 
   /// Detaches the relation between this [Order] and the given [OrderItem]
-  /// by setting the [OrderItem]'s foreign key `_ordersItemsOrdersId` to `null`.
+  /// by setting the [OrderItem]'s foreign key `orderId` to `null`.
   ///
   /// This removes the association between the two models without deleting
   /// the related record.
@@ -1005,13 +990,10 @@ class OrderDetachRowRepository {
       throw ArgumentError.notNull('orderItem.id');
     }
 
-    var $orderItem = _i5.OrderItemImplicit(
-      orderItem,
-      $_ordersItemsOrdersId: null,
-    );
+    var $orderItem = orderItem.copyWith(orderId: null);
     await session.db.updateRow<_i5.OrderItem>(
       $orderItem,
-      columns: [_i5.OrderItem.t.$_ordersItemsOrdersId],
+      columns: [_i5.OrderItem.t.orderId],
       transaction: transaction,
     );
   }

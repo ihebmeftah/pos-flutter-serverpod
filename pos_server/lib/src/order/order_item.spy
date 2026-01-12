@@ -4,4 +4,4 @@ fields:
     article: Article
     passedBy:  module:serverpod_auth_core:UserProfile?, relation
     payed: bool, default=false
-    
+    orderId: int?, relation(name=order_items, parent=orders,onDelete=cascade),scope=serverOnly

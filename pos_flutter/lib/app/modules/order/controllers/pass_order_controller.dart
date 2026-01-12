@@ -95,7 +95,7 @@ class PassOrderController extends GetxController with StateMixin {
       if (e.errorType == ExceptionType.Forbidden) {
         Get.snackbar(
           'Payment Error',
-          'Only employers with access can pass orders',
+          e.message,
           backgroundColor: Colors.orange,
           colorText: Colors.white,
         );
@@ -119,6 +119,7 @@ class PassOrderController extends GetxController with StateMixin {
     items: selectedArticles
         .map(
           (article) => OrderItem(
+            id: null,
             article: article,
             passedById: Get.find<IndexController>().userProfile.id!,
           ),
@@ -149,11 +150,10 @@ class PassOrderController extends GetxController with StateMixin {
 
   Future<void> appendItemToOrder() async {
     try {
-      //? Create add new item when tabe occupied and have order
-      /*await OrderApi().addItemsToOrder(
-        orderId: currOrder!.id!,
-        articlesIds: selectedArticles.map((a) => a.id).toList(),
-      );*/
+      await ServerpodClient.instance.order.appendItemsToOrder(
+        currOrder!.id!,
+        orderDto.items!,
+      );
       Get.offAndToNamed("${Routes.ORDER_DETAILS}/${currOrder!.id!}");
       Get.snackbar(
         "Success",

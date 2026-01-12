@@ -20,8 +20,10 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     bool? orderCreationNotif,
     required this.orderPayment,
     required this.orderItemsPayment,
+    bool? appendItems,
     required this.buildingId,
-  }) : orderCreationNotif = orderCreationNotif ?? true;
+  }) : orderCreationNotif = orderCreationNotif ?? true,
+       appendItems = appendItems ?? false;
 
   factory Access({
     int? id,
@@ -30,6 +32,7 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     bool? orderCreationNotif,
     required bool orderPayment,
     required bool orderItemsPayment,
+    bool? appendItems,
     required int? buildingId,
   }) = _AccessImpl;
 
@@ -41,6 +44,7 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       orderCreationNotif: jsonSerialization['orderCreationNotif'] as bool?,
       orderPayment: jsonSerialization['orderPayment'] as bool,
       orderItemsPayment: jsonSerialization['orderItemsPayment'] as bool,
+      appendItems: jsonSerialization['appendItems'] as bool?,
       buildingId: jsonSerialization['buildingId'] as int?,
     );
   }
@@ -62,6 +66,8 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   bool orderItemsPayment;
 
+  bool appendItems;
+
   int? buildingId;
 
   @override
@@ -77,6 +83,7 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     bool? orderCreationNotif,
     bool? orderPayment,
     bool? orderItemsPayment,
+    bool? appendItems,
     int? buildingId,
   });
   @override
@@ -89,6 +96,7 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       'orderCreationNotif': orderCreationNotif,
       'orderPayment': orderPayment,
       'orderItemsPayment': orderItemsPayment,
+      'appendItems': appendItems,
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -103,6 +111,7 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       'orderCreationNotif': orderCreationNotif,
       'orderPayment': orderPayment,
       'orderItemsPayment': orderItemsPayment,
+      'appendItems': appendItems,
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -147,6 +156,7 @@ class _AccessImpl extends Access {
     bool? orderCreationNotif,
     required bool orderPayment,
     required bool orderItemsPayment,
+    bool? appendItems,
     required int? buildingId,
   }) : super._(
          id: id,
@@ -155,6 +165,7 @@ class _AccessImpl extends Access {
          orderCreationNotif: orderCreationNotif,
          orderPayment: orderPayment,
          orderItemsPayment: orderItemsPayment,
+         appendItems: appendItems,
          buildingId: buildingId,
        );
 
@@ -169,6 +180,7 @@ class _AccessImpl extends Access {
     bool? orderCreationNotif,
     bool? orderPayment,
     bool? orderItemsPayment,
+    bool? appendItems,
     Object? buildingId = _Undefined,
   }) {
     return Access(
@@ -178,6 +190,7 @@ class _AccessImpl extends Access {
       orderCreationNotif: orderCreationNotif ?? this.orderCreationNotif,
       orderPayment: orderPayment ?? this.orderPayment,
       orderItemsPayment: orderItemsPayment ?? this.orderItemsPayment,
+      appendItems: appendItems ?? this.appendItems,
       buildingId: buildingId is int? ? buildingId : this.buildingId,
     );
   }
@@ -211,6 +224,11 @@ class AccessUpdateTable extends _i1.UpdateTable<AccessTable> {
     value,
   );
 
+  _i1.ColumnValue<bool, bool> appendItems(bool value) => _i1.ColumnValue(
+    table.appendItems,
+    value,
+  );
+
   _i1.ColumnValue<int, int> buildingId(int? value) => _i1.ColumnValue(
     table.buildingId,
     value,
@@ -241,6 +259,11 @@ class AccessTable extends _i1.Table<int?> {
       'orderItemsPayment',
       this,
     );
+    appendItems = _i1.ColumnBool(
+      'appendItems',
+      this,
+      hasDefault: true,
+    );
     buildingId = _i1.ColumnInt(
       'buildingId',
       this,
@@ -259,6 +282,8 @@ class AccessTable extends _i1.Table<int?> {
 
   late final _i1.ColumnBool orderItemsPayment;
 
+  late final _i1.ColumnBool appendItems;
+
   late final _i1.ColumnInt buildingId;
 
   @override
@@ -269,6 +294,7 @@ class AccessTable extends _i1.Table<int?> {
     orderCreationNotif,
     orderPayment,
     orderItemsPayment,
+    appendItems,
     buildingId,
   ];
 }

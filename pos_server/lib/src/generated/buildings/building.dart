@@ -22,7 +22,9 @@ abstract class Building
     required this.closingTime,
     required this.authUserId,
     bool? tableMultiOrder,
-  }) : tableMultiOrder = tableMultiOrder ?? false;
+    bool? allowAppendingItemsToOrder,
+  }) : tableMultiOrder = tableMultiOrder ?? false,
+       allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true;
 
   factory Building({
     int? id,
@@ -32,6 +34,7 @@ abstract class Building
     required DateTime closingTime,
     required _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
+    bool? allowAppendingItemsToOrder,
   }) = _BuildingImpl;
 
   factory Building.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -51,6 +54,8 @@ abstract class Building
               jsonSerialization['authUserId'],
             ),
       tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool?,
+      allowAppendingItemsToOrder:
+          jsonSerialization['allowAppendingItemsToOrder'] as bool?,
     );
   }
 
@@ -79,6 +84,9 @@ abstract class Building
   /// Indicates whether the building supports multiple orders per table.
   bool tableMultiOrder;
 
+  /// Indicates whether items can be appended to an existing order.
+  bool allowAppendingItemsToOrder;
+
   @override
   _i1.Table<int?> get table => t;
 
@@ -93,6 +101,7 @@ abstract class Building
     DateTime? closingTime,
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
+    bool? allowAppendingItemsToOrder,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -105,6 +114,7 @@ abstract class Building
       'closingTime': closingTime.toJson(),
       if (authUserId != null) 'authUserId': authUserId?.toJson(),
       'tableMultiOrder': tableMultiOrder,
+      'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
     };
   }
 
@@ -118,6 +128,7 @@ abstract class Building
       'openingTime': openingTime.toJson(),
       'closingTime': closingTime.toJson(),
       'tableMultiOrder': tableMultiOrder,
+      'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
     };
   }
 
@@ -162,6 +173,7 @@ class _BuildingImpl extends Building {
     required DateTime closingTime,
     required _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
+    bool? allowAppendingItemsToOrder,
   }) : super._(
          id: id,
          name: name,
@@ -170,6 +182,7 @@ class _BuildingImpl extends Building {
          closingTime: closingTime,
          authUserId: authUserId,
          tableMultiOrder: tableMultiOrder,
+         allowAppendingItemsToOrder: allowAppendingItemsToOrder,
        );
 
   /// Returns a shallow copy of this [Building]
@@ -184,6 +197,7 @@ class _BuildingImpl extends Building {
     DateTime? closingTime,
     Object? authUserId = _Undefined,
     bool? tableMultiOrder,
+    bool? allowAppendingItemsToOrder,
   }) {
     return Building(
       id: id is int? ? id : this.id,
@@ -193,6 +207,8 @@ class _BuildingImpl extends Building {
       closingTime: closingTime ?? this.closingTime,
       authUserId: authUserId is _i1.UuidValue? ? authUserId : this.authUserId,
       tableMultiOrder: tableMultiOrder ?? this.tableMultiOrder,
+      allowAppendingItemsToOrder:
+          allowAppendingItemsToOrder ?? this.allowAppendingItemsToOrder,
     );
   }
 }
@@ -233,6 +249,12 @@ class BuildingUpdateTable extends _i1.UpdateTable<BuildingTable> {
     table.tableMultiOrder,
     value,
   );
+
+  _i1.ColumnValue<bool, bool> allowAppendingItemsToOrder(bool value) =>
+      _i1.ColumnValue(
+        table.allowAppendingItemsToOrder,
+        value,
+      );
 }
 
 class BuildingTable extends _i1.Table<int?> {
@@ -263,6 +285,11 @@ class BuildingTable extends _i1.Table<int?> {
       this,
       hasDefault: true,
     );
+    allowAppendingItemsToOrder = _i1.ColumnBool(
+      'allowAppendingItemsToOrder',
+      this,
+      hasDefault: true,
+    );
   }
 
   late final BuildingUpdateTable updateTable;
@@ -285,6 +312,9 @@ class BuildingTable extends _i1.Table<int?> {
   /// Indicates whether the building supports multiple orders per table.
   late final _i1.ColumnBool tableMultiOrder;
 
+  /// Indicates whether items can be appended to an existing order.
+  late final _i1.ColumnBool allowAppendingItemsToOrder;
+
   @override
   List<_i1.Column> get columns => [
     id,
@@ -294,6 +324,7 @@ class BuildingTable extends _i1.Table<int?> {
     closingTime,
     authUserId,
     tableMultiOrder,
+    allowAppendingItemsToOrder,
   ];
 }
 

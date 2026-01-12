@@ -36,6 +36,7 @@ import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
 import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i21;
 import 'package:pos_server/src/generated/employer/employer.dart' as _i22;
 import 'package:pos_server/src/generated/order/order.dart' as _i23;
+import 'package:pos_server/src/generated/order/order_item.dart' as _i24;
 export 'access/access.dart';
 export 'article/article.dart';
 export 'buildings/building.dart';
@@ -100,6 +101,13 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.boolean,
           isNullable: false,
           dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'appendItems',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
         ),
         _i2.ColumnDefinition(
           name: 'buildingId',
@@ -315,6 +323,13 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: false,
           dartType: 'bool',
           columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'allowAppendingItemsToOrder',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
         ),
       ],
       foreignKeys: [
@@ -534,7 +549,7 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'false',
         ),
         _i2.ColumnDefinition(
-          name: '_ordersItemsOrdersId',
+          name: 'orderId',
           columnType: _i2.ColumnType.bigint,
           isNullable: true,
           dartType: 'int?',
@@ -553,12 +568,12 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ForeignKeyDefinition(
           constraintName: 'order_items_fk_1',
-          columns: ['_ordersItemsOrdersId'],
+          columns: ['orderId'],
           referenceTable: 'orders',
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
-          onDelete: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
           matchType: null,
         ),
       ],
@@ -639,7 +654,7 @@ class Protocol extends _i1.SerializationManagerServer {
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
-          onDelete: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
           matchType: null,
         ),
         _i2.ForeignKeyDefinition(
@@ -822,6 +837,10 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (t == List<_i23.Order>) {
       return (data as List).map((e) => deserialize<_i23.Order>(e)).toList()
+          as T;
+    }
+    if (t == List<_i24.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i24.OrderItem>(e)).toList()
           as T;
     }
     try {

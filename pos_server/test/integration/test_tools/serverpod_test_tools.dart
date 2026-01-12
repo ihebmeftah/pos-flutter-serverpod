@@ -25,6 +25,7 @@ import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
 import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i10;
 import 'package:pos_server/src/generated/order/order.dart' as _i11;
 import 'package:pos_server/src/generated/order/order_status_enum.dart' as _i12;
+import 'package:pos_server/src/generated/order/order_item.dart' as _i13;
 import 'package:pos_server/src/generated/protocol.dart';
 import 'package:pos_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -1232,6 +1233,41 @@ class _OrderEndpoint {
     });
   }
 
+  _i3.Future<_i11.Order> appendItemsToOrder(
+    _i1.TestSessionBuilder sessionBuilder,
+    int orderId,
+    List<_i13.OrderItem> orderItems,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'order',
+            method: 'appendItemsToOrder',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'order',
+          methodName: 'appendItemsToOrder',
+          parameters: _i1.testObjectToJson({
+            'orderId': orderId,
+            'orderItems': orderItems,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i11.Order>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _i3.Future<_i11.Order> payItem(
     _i1.TestSessionBuilder sessionBuilder,
     int orderId,
@@ -1387,6 +1423,38 @@ class _OrderEndpoint {
               createSessionCallback: (_) => _localUniqueSession,
               endpointPath: 'order',
               methodName: 'streamCreateOrder',
+              arguments: {'buildingId': buildingId},
+              requestedInputStreams: [],
+              serializationManager: _serializationManager,
+            );
+        await _localTestStreamManager.callStreamMethod(
+          _localCallContext,
+          _localUniqueSession,
+          {},
+        );
+      },
+      _localTestStreamManager.outputStreamController,
+    );
+    return _localTestStreamManager.outputStreamController.stream;
+  }
+
+  _i3.Stream<_i11.Order> streamAppendItemsOrder(
+    _i1.TestSessionBuilder sessionBuilder,
+    int buildingId,
+  ) {
+    var _localTestStreamManager = _i1.TestStreamManager<_i11.Order>();
+    _i1.callStreamFunctionAndHandleExceptions(
+      () async {
+        var _localUniqueSession =
+            (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+              endpoint: 'order',
+              method: 'streamAppendItemsOrder',
+            );
+        var _localCallContext = await _endpointDispatch
+            .getMethodStreamCallContext(
+              createSessionCallback: (_) => _localUniqueSession,
+              endpointPath: 'order',
+              methodName: 'streamAppendItemsOrder',
               arguments: {'buildingId': buildingId},
               requestedInputStreams: [],
               serializationManager: _serializationManager,

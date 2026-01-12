@@ -1,4 +1,4 @@
-import 'package:pos_server/src/article/article_endpoint.dart';
+import 'package:pos_server/src/buildings/building_endpoint.dart';
 import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
 import 'package:pos_server/src/helpers/authorizations_helpers.dart';
@@ -79,7 +79,10 @@ class OrderEndpoint extends Endpoint {
     Session session,
     Order order,
   ) async {
+    /// Only employer allowed for this endpoint
     await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
+
+    /// Employer should have access to order creation
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,
@@ -90,23 +93,34 @@ class OrderEndpoint extends Endpoint {
         message: 'You don\'t have access to create orders',
       );
     }
+
+    /// Order must have at least one item
     if (order.items == null || order.items!.isEmpty) {
       throw AppException(
         errorType: ExceptionType.BadRequest,
         message: 'Order must have at least one item',
       );
     }
-    await checkTableHaveOrder(session, order.btableId);
-    List<OrderItem> orderItem = [];
-    for (OrderItem item in order.items!) {
-      await ArticleEndpoint().getArticleById(
+
+    /// Check if table allows multi orders
+    final building = await BuildingEndpoint().getBuildingById(
+      session,
+      order.btable!.buildingId!,
+    );
+    if (building.tableMultiOrder == false) {
+      final currentTableStatus = await checkTableHaveOrder(
         session,
-        item.article.id!,
-        order.btable!.buildingId!,
+        order.btableId,
       );
-      item.passedById = employer.userProfileId;
-      orderItem.add(item);
+      if (currentTableStatus == TableStatus.occupied) {
+        throw AppException(
+          errorType: ExceptionType.Forbidden,
+          message: 'Table ${order.btable!.number} already has an ongoing order',
+        );
+      }
     }
+
+    /// Create the order
     order.status = OrderStatus.progress;
     Order orderCreated = await Order.db.insertRow(
       session,
@@ -114,14 +128,101 @@ class OrderEndpoint extends Endpoint {
     );
     List<OrderItem> itemsCreated = await OrderItem.db.insert(
       session,
-      orderItem,
+      order.items!,
     );
+
+    /// Attach items to the order
     await Order.db.attach.items(session, orderCreated, itemsCreated);
+
+    /// Send message to notify about the new order
     await session.messages.postMessage(
       'order_created-${order.btable!.buildingId!}',
       orderCreated,
     );
     return orderCreated;
+  }
+
+  /// Append items to an existing order
+  /// Parameters:
+  /// - [orderId]: The id of the order to append items to
+  /// - [orderItems]: The list of items to append to the order
+  /// Returns:
+  /// - The updated order with the appended items
+  /// Employer should have access to append items
+  Future<Order> appendItemsToOrder(
+    Session session,
+    int orderId,
+    List<OrderItem> orderItems,
+  ) async {
+    session.log('Appending items to order ${orderItems.toString()}');
+
+    /// Only employer allowed for this endpoint
+    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
+
+    /// Employer should have access to append items
+    final employer = await EmployerEndpoint().getEmployerByIdentifier(
+      session,
+      session.authenticated!.authUserId,
+    );
+    if (employer.access != null && employer.access?.appendItems == false) {
+      throw AppException(
+        errorType: ExceptionType.Forbidden,
+        message: 'You don\'t have access to append items to orders',
+      );
+    }
+
+    /// Must provide at least one new item to append
+    if (orderItems.isEmpty) {
+      throw AppException(
+        errorType: ExceptionType.BadRequest,
+        message: 'You must provide at least one new item to append',
+      );
+    }
+
+    /// Get the order by id
+    Order order = await getOrderById(session, orderId);
+    if (order.status == OrderStatus.payed) {
+      throw AppException(
+        errorType: ExceptionType.Forbidden,
+        message: 'Cannot append items to a paid order',
+      );
+    }
+
+    /// Check if table allows appending items to order
+    final building = await BuildingEndpoint().getBuildingById(
+      session,
+      order.btable!.buildingId!,
+    );
+    if (building.allowAppendingItemsToOrder == false) {
+      throw AppException(
+        errorType: ExceptionType.Forbidden,
+        message: 'This building does not allow appending items to orders',
+      );
+    }
+
+    /// Insert new items to the database
+    final newOrderItems = await OrderItem.db.insert(
+      session,
+      orderItems,
+    );
+
+    /// Attach new items to the order
+    await Order.db.attach.items(session, order, newOrderItems);
+
+    /// Update the order's updatedAt field
+    order.updatedAt = DateTime.now();
+    final orderUpdated = await Order.db.updateRow(
+      session,
+      order,
+      columns: (t) => [t.updatedAt],
+    );
+
+    /// Send message to notify about the order update
+    await session.messages.postMessage(
+      'order_appendItems-${order.btable!.buildingId!}',
+      order,
+    );
+    return orderUpdated;
   }
 
   Future<Order> payItem(
@@ -270,6 +371,15 @@ class OrderEndpoint extends Endpoint {
   Stream<Order> streamCreateOrder(Session session, int buildingId) async* {
     Stream<Order> msgStream = session.messages.createStream<Order>(
       'order_created-$buildingId',
+    );
+    await for (var message in msgStream) {
+      yield message;
+    }
+  }
+
+  Stream<Order> streamAppendItemsOrder(Session session, int buildingId) async* {
+    Stream<Order> msgStream = session.messages.createStream<Order>(
+      'order_appendItems-$buildingId',
     );
     await for (var message in msgStream) {
       yield message;

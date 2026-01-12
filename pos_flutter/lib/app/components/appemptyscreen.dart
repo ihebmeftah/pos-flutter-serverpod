@@ -64,7 +64,7 @@ class Appemptyscreen extends StatelessWidget {
     }
     if (Get.currentRoute == route ||
         Get.currentRoute.contains(Routes.ORDER_DETAILS)) {
-      return "This order has no details yet.";
+      return "No details found it seems.";
     }
     if (Get.currentRoute == route || Get.currentRoute.contains(Routes.ACCESS)) {
       return "Your building has no access levels yet.";

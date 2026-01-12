@@ -20,7 +20,9 @@ abstract class Building implements _i1.SerializableModel {
     required this.openingTime,
     required this.closingTime,
     bool? tableMultiOrder,
-  }) : tableMultiOrder = tableMultiOrder ?? false;
+    bool? allowAppendingItemsToOrder,
+  }) : tableMultiOrder = tableMultiOrder ?? false,
+       allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true;
 
   factory Building({
     int? id,
@@ -29,6 +31,7 @@ abstract class Building implements _i1.SerializableModel {
     required DateTime openingTime,
     required DateTime closingTime,
     bool? tableMultiOrder,
+    bool? allowAppendingItemsToOrder,
   }) = _BuildingImpl;
 
   factory Building.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -43,6 +46,8 @@ abstract class Building implements _i1.SerializableModel {
         jsonSerialization['closingTime'],
       ),
       tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool?,
+      allowAppendingItemsToOrder:
+          jsonSerialization['allowAppendingItemsToOrder'] as bool?,
     );
   }
 
@@ -66,6 +71,9 @@ abstract class Building implements _i1.SerializableModel {
   /// Indicates whether the building supports multiple orders per table.
   bool tableMultiOrder;
 
+  /// Indicates whether items can be appended to an existing order.
+  bool allowAppendingItemsToOrder;
+
   /// Returns a shallow copy of this [Building]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -76,6 +84,7 @@ abstract class Building implements _i1.SerializableModel {
     DateTime? openingTime,
     DateTime? closingTime,
     bool? tableMultiOrder,
+    bool? allowAppendingItemsToOrder,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -87,6 +96,7 @@ abstract class Building implements _i1.SerializableModel {
       'openingTime': openingTime.toJson(),
       'closingTime': closingTime.toJson(),
       'tableMultiOrder': tableMultiOrder,
+      'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
     };
   }
 
@@ -106,6 +116,7 @@ class _BuildingImpl extends Building {
     required DateTime openingTime,
     required DateTime closingTime,
     bool? tableMultiOrder,
+    bool? allowAppendingItemsToOrder,
   }) : super._(
          id: id,
          name: name,
@@ -113,6 +124,7 @@ class _BuildingImpl extends Building {
          openingTime: openingTime,
          closingTime: closingTime,
          tableMultiOrder: tableMultiOrder,
+         allowAppendingItemsToOrder: allowAppendingItemsToOrder,
        );
 
   /// Returns a shallow copy of this [Building]
@@ -126,6 +138,7 @@ class _BuildingImpl extends Building {
     DateTime? openingTime,
     DateTime? closingTime,
     bool? tableMultiOrder,
+    bool? allowAppendingItemsToOrder,
   }) {
     return Building(
       id: id is int? ? id : this.id,
@@ -134,6 +147,8 @@ class _BuildingImpl extends Building {
       openingTime: openingTime ?? this.openingTime,
       closingTime: closingTime ?? this.closingTime,
       tableMultiOrder: tableMultiOrder ?? this.tableMultiOrder,
+      allowAppendingItemsToOrder:
+          allowAppendingItemsToOrder ?? this.allowAppendingItemsToOrder,
     );
   }
 }

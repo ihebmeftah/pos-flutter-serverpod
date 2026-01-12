@@ -25,7 +25,8 @@ import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
 import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i10;
 import 'package:pos_client/src/protocol/order/order.dart' as _i11;
 import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i12;
-import 'protocol.dart' as _i13;
+import 'package:pos_client/src/protocol/order/order_item.dart' as _i13;
+import 'protocol.dart' as _i14;
 
 /// {@category Endpoint}
 class EndpointAccess extends _i1.EndpointRef {
@@ -545,6 +546,25 @@ class EndpointOrder extends _i1.EndpointRef {
         {'order': order},
       );
 
+  /// Append items to an existing order
+  /// Parameters:
+  /// - [orderId]: The id of the order to append items to
+  /// - [orderItems]: The list of items to append to the order
+  /// Returns:
+  /// - The updated order with the appended items
+  /// Employer should have access to append items
+  _i2.Future<_i11.Order> appendItemsToOrder(
+    int orderId,
+    List<_i13.OrderItem> orderItems,
+  ) => caller.callServerEndpoint<_i11.Order>(
+    'order',
+    'appendItemsToOrder',
+    {
+      'orderId': orderId,
+      'orderItems': orderItems,
+    },
+  );
+
   _i2.Future<_i11.Order> payItem(
     int orderId,
     int orderItemId,
@@ -598,6 +618,14 @@ class EndpointOrder extends _i1.EndpointRef {
         {},
       );
 
+  _i2.Stream<_i11.Order> streamAppendItemsOrder(int buildingId) =>
+      caller.callStreamingServerEndpoint<_i2.Stream<_i11.Order>, _i11.Order>(
+        'order',
+        'streamAppendItemsOrder',
+        {'buildingId': buildingId},
+        {},
+      );
+
   _i2.Stream<_i11.Order> streamUpdateOrder(int buildingId) =>
       caller.callStreamingServerEndpoint<_i2.Stream<_i11.Order>, _i11.Order>(
         'order',
@@ -638,7 +666,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i13.Protocol(),
+         _i14.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,

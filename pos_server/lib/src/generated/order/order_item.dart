@@ -25,8 +25,8 @@ abstract class OrderItem
     required this.passedById,
     this.passedBy,
     bool? payed,
-  }) : payed = payed ?? false,
-       _ordersItemsOrdersId = null;
+    this.orderId,
+  }) : payed = payed ?? false;
 
   factory OrderItem({
     int? id,
@@ -34,10 +34,11 @@ abstract class OrderItem
     required _i1.UuidValue passedById,
     _i3.UserProfile? passedBy,
     bool? payed,
+    int? orderId,
   }) = _OrderItemImpl;
 
   factory OrderItem.fromJson(Map<String, dynamic> jsonSerialization) {
-    return OrderItemImplicit._(
+    return OrderItem(
       id: jsonSerialization['id'] as int?,
       article: _i4.Protocol().deserialize<_i2.Article>(
         jsonSerialization['article'],
@@ -51,7 +52,7 @@ abstract class OrderItem
               jsonSerialization['passedBy'],
             ),
       payed: jsonSerialization['payed'] as bool?,
-      $_ordersItemsOrdersId: jsonSerialization['_ordersItemsOrdersId'] as int?,
+      orderId: jsonSerialization['orderId'] as int?,
     );
   }
 
@@ -70,7 +71,7 @@ abstract class OrderItem
 
   bool payed;
 
-  final int? _ordersItemsOrdersId;
+  int? orderId;
 
   @override
   _i1.Table<int?> get table => t;
@@ -84,6 +85,7 @@ abstract class OrderItem
     _i1.UuidValue? passedById,
     _i3.UserProfile? passedBy,
     bool? payed,
+    int? orderId,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -94,8 +96,7 @@ abstract class OrderItem
       'passedById': passedById.toJson(),
       if (passedBy != null) 'passedBy': passedBy?.toJson(),
       'payed': payed,
-      if (_ordersItemsOrdersId != null)
-        '_ordersItemsOrdersId': _ordersItemsOrdersId,
+      if (orderId != null) 'orderId': orderId,
     };
   }
 
@@ -150,12 +151,14 @@ class _OrderItemImpl extends OrderItem {
     required _i1.UuidValue passedById,
     _i3.UserProfile? passedBy,
     bool? payed,
+    int? orderId,
   }) : super._(
          id: id,
          article: article,
          passedById: passedById,
          passedBy: passedBy,
          payed: payed,
+         orderId: orderId,
        );
 
   /// Returns a shallow copy of this [OrderItem]
@@ -168,8 +171,9 @@ class _OrderItemImpl extends OrderItem {
     _i1.UuidValue? passedById,
     Object? passedBy = _Undefined,
     bool? payed,
+    Object? orderId = _Undefined,
   }) {
-    return OrderItemImplicit._(
+    return OrderItem(
       id: id is int? ? id : this.id,
       article: article ?? this.article.copyWith(),
       passedById: passedById ?? this.passedById,
@@ -177,44 +181,9 @@ class _OrderItemImpl extends OrderItem {
           ? passedBy
           : this.passedBy?.copyWith(),
       payed: payed ?? this.payed,
-      $_ordersItemsOrdersId: this._ordersItemsOrdersId,
+      orderId: orderId is int? ? orderId : this.orderId,
     );
   }
-}
-
-class OrderItemImplicit extends _OrderItemImpl {
-  OrderItemImplicit._({
-    int? id,
-    required _i2.Article article,
-    required _i1.UuidValue passedById,
-    _i3.UserProfile? passedBy,
-    bool? payed,
-    int? $_ordersItemsOrdersId,
-  }) : _ordersItemsOrdersId = $_ordersItemsOrdersId,
-       super(
-         id: id,
-         article: article,
-         passedById: passedById,
-         passedBy: passedBy,
-         payed: payed,
-       );
-
-  factory OrderItemImplicit(
-    OrderItem orderItem, {
-    int? $_ordersItemsOrdersId,
-  }) {
-    return OrderItemImplicit._(
-      id: orderItem.id,
-      article: orderItem.article,
-      passedById: orderItem.passedById,
-      passedBy: orderItem.passedBy,
-      payed: orderItem.payed,
-      $_ordersItemsOrdersId: $_ordersItemsOrdersId,
-    );
-  }
-
-  @override
-  final int? _ordersItemsOrdersId;
 }
 
 class OrderItemUpdateTable extends _i1.UpdateTable<OrderItemTable> {
@@ -238,11 +207,10 @@ class OrderItemUpdateTable extends _i1.UpdateTable<OrderItemTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> $_ordersItemsOrdersId(int? value) =>
-      _i1.ColumnValue(
-        table.$_ordersItemsOrdersId,
-        value,
-      );
+  _i1.ColumnValue<int, int> orderId(int? value) => _i1.ColumnValue(
+    table.orderId,
+    value,
+  );
 }
 
 class OrderItemTable extends _i1.Table<int?> {
@@ -261,8 +229,8 @@ class OrderItemTable extends _i1.Table<int?> {
       this,
       hasDefault: true,
     );
-    $_ordersItemsOrdersId = _i1.ColumnInt(
-      '_ordersItemsOrdersId',
+    orderId = _i1.ColumnInt(
+      'orderId',
       this,
     );
   }
@@ -277,7 +245,7 @@ class OrderItemTable extends _i1.Table<int?> {
 
   late final _i1.ColumnBool payed;
 
-  late final _i1.ColumnInt $_ordersItemsOrdersId;
+  late final _i1.ColumnInt orderId;
 
   _i3.UserProfileTable get passedBy {
     if (_passedBy != null) return _passedBy!;
@@ -298,15 +266,7 @@ class OrderItemTable extends _i1.Table<int?> {
     article,
     passedById,
     payed,
-    $_ordersItemsOrdersId,
-  ];
-
-  @override
-  List<_i1.Column> get managedColumns => [
-    id,
-    article,
-    passedById,
-    payed,
+    orderId,
   ];
 
   @override
