@@ -9,6 +9,9 @@ article:
   - createArticle:
 emailIdp:
   - getUserProfile:
+  - loginReworked:
+  - registerReworked:
+  - verifyRegistrationCodeReworked:
   - login:
   - startRegistration:
   - verifyRegistrationCode:
@@ -18,8 +21,6 @@ emailIdp:
   - finishPasswordReset:
 jwtRefresh:
   - refreshAccessToken:
-users:
-  - createEmployerAccount:
 building:
   - getAllBuildings:
   - createBuilding:
@@ -30,6 +31,7 @@ categorie:
   - getCategories:
   - createCategorie:
 employer:
+  - createEmployerAccount:
   - getEmployers:
   - getEmployerByIdentifier:
 order:

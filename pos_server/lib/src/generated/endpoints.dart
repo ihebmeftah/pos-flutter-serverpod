@@ -15,18 +15,18 @@ import '../access/access_endpoint.dart' as _i2;
 import '../article/article_endpoint.dart' as _i3;
 import '../auth/email_idp_endpoint.dart' as _i4;
 import '../auth/jwt_refresh_endpoint.dart' as _i5;
-import '../auth/users_enpoint.dart' as _i6;
-import '../buildings/building_endpoint.dart' as _i7;
-import '../buildings_tables/building_tables_endpoint.dart' as _i8;
-import '../cateogrie/categorie_endpoint.dart' as _i9;
-import '../employer/employer_endpoint.dart' as _i10;
-import '../order/order_endpoint.dart' as _i11;
-import 'package:pos_server/src/generated/access/access.dart' as _i12;
-import 'package:pos_server/src/generated/article/article.dart' as _i13;
+import '../buildings/building_endpoint.dart' as _i6;
+import '../buildings_tables/building_tables_endpoint.dart' as _i7;
+import '../cateogrie/categorie_endpoint.dart' as _i8;
+import '../employer/employer_endpoint.dart' as _i9;
+import '../order/order_endpoint.dart' as _i10;
+import 'package:pos_server/src/generated/access/access.dart' as _i11;
+import 'package:pos_server/src/generated/article/article.dart' as _i12;
+import 'package:pos_server/src/generated/protocol.dart' as _i13;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i14;
+import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i15;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i14;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i15;
-import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i16;
+    as _i16;
 import 'package:pos_server/src/generated/order/order_status_enum.dart' as _i17;
 import 'package:pos_server/src/generated/order/order.dart' as _i18;
 import 'package:pos_server/src/generated/order/order_item.dart' as _i19;
@@ -61,37 +61,31 @@ class Endpoints extends _i1.EndpointDispatch {
           'jwtRefresh',
           null,
         ),
-      'users': _i6.UsersEndpoint()
-        ..initialize(
-          server,
-          'users',
-          null,
-        ),
-      'building': _i7.BuildingEndpoint()
+      'building': _i6.BuildingEndpoint()
         ..initialize(
           server,
           'building',
           null,
         ),
-      'buildingTables': _i8.BuildingTablesEndpoint()
+      'buildingTables': _i7.BuildingTablesEndpoint()
         ..initialize(
           server,
           'buildingTables',
           null,
         ),
-      'categorie': _i9.CategorieEndpoint()
+      'categorie': _i8.CategorieEndpoint()
         ..initialize(
           server,
           'categorie',
           null,
         ),
-      'employer': _i10.EmployerEndpoint()
+      'employer': _i9.EmployerEndpoint()
         ..initialize(
           server,
           'employer',
           null,
         ),
-      'order': _i11.OrderEndpoint()
+      'order': _i10.OrderEndpoint()
         ..initialize(
           server,
           'order',
@@ -107,7 +101,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'access': _i1.ParameterDescription(
               name: 'access',
-              type: _i1.getType<_i12.Access>(),
+              type: _i1.getType<_i11.Access>(),
               nullable: false,
             ),
           },
@@ -239,7 +233,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'article': _i1.ParameterDescription(
               name: 'article',
-              type: _i1.getType<_i13.Article>(),
+              type: _i1.getType<_i12.Article>(),
               nullable: false,
             ),
             'buildingId': _i1.ParameterDescription(
@@ -274,6 +268,82 @@ class Endpoints extends _i1.EndpointDispatch {
                 Map<String, dynamic> params,
               ) async => (endpoints['emailIdp'] as _i4.EmailIdpEndpoint)
                   .getUserProfile(session),
+        ),
+        'loginReworked': _i1.MethodConnector(
+          name: 'loginReworked',
+          params: {
+            'email': _i1.ParameterDescription(
+              name: 'email',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'password': _i1.ParameterDescription(
+              name: 'password',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i4.EmailIdpEndpoint)
+                  .loginReworked(
+                    session,
+                    email: params['email'],
+                    password: params['password'],
+                  )
+                  .then((record) => _i13.Protocol().mapRecordToJson(record)),
+        ),
+        'registerReworked': _i1.MethodConnector(
+          name: 'registerReworked',
+          params: {
+            'email': _i1.ParameterDescription(
+              name: 'email',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i4.EmailIdpEndpoint)
+                  .registerReworked(
+                    session,
+                    email: params['email'],
+                  ),
+        ),
+        'verifyRegistrationCodeReworked': _i1.MethodConnector(
+          name: 'verifyRegistrationCodeReworked',
+          params: {
+            'accountRequestId': _i1.ParameterDescription(
+              name: 'accountRequestId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'verificationCode': _i1.ParameterDescription(
+              name: 'verificationCode',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'password': _i1.ParameterDescription(
+              name: 'password',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _i4.EmailIdpEndpoint)
+                  .verifyRegistrationCodeReworked(
+                    session,
+                    accountRequestId: params['accountRequestId'],
+                    verificationCode: params['verificationCode'],
+                    password: params['password'],
+                  ),
         ),
         'login': _i1.MethodConnector(
           name: 'login',
@@ -465,49 +535,6 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    connectors['users'] = _i1.EndpointConnector(
-      name: 'users',
-      endpoint: endpoints['users']!,
-      methodConnectors: {
-        'createEmployerAccount': _i1.MethodConnector(
-          name: 'createEmployerAccount',
-          params: {
-            'userProfileData': _i1.ParameterDescription(
-              name: 'userProfileData',
-              type: _i1.getType<_i14.UserProfileData>(),
-              nullable: false,
-            ),
-            'password': _i1.ParameterDescription(
-              name: 'password',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'buildingId': _i1.ParameterDescription(
-              name: 'buildingId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-            'accessId': _i1.ParameterDescription(
-              name: 'accessId',
-              type: _i1.getType<int?>(),
-              nullable: true,
-            ),
-          },
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async => (endpoints['users'] as _i6.UsersEndpoint)
-                  .createEmployerAccount(
-                    session,
-                    params['userProfileData'],
-                    params['password'],
-                    params['buildingId'],
-                    params['accessId'],
-                  ),
-        ),
-      },
-    );
     connectors['building'] = _i1.EndpointConnector(
       name: 'building',
       endpoint: endpoints['building']!,
@@ -519,7 +546,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['building'] as _i7.BuildingEndpoint)
+              ) async => (endpoints['building'] as _i6.BuildingEndpoint)
                   .getAllBuildings(session),
         ),
         'createBuilding': _i1.MethodConnector(
@@ -527,7 +554,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'building': _i1.ParameterDescription(
               name: 'building',
-              type: _i1.getType<_i15.Building>(),
+              type: _i1.getType<_i14.Building>(),
               nullable: false,
             ),
           },
@@ -535,7 +562,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['building'] as _i7.BuildingEndpoint)
+              ) async => (endpoints['building'] as _i6.BuildingEndpoint)
                   .createBuilding(
                     session,
                     params['building'],
@@ -561,7 +588,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['buildingTables'] as _i8.BuildingTablesEndpoint)
+                  (endpoints['buildingTables'] as _i7.BuildingTablesEndpoint)
                       .getTables(
                         session,
                         params['buildingId'],
@@ -591,7 +618,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['buildingTables'] as _i8.BuildingTablesEndpoint)
+                  (endpoints['buildingTables'] as _i7.BuildingTablesEndpoint)
                       .createTables(
                         session,
                         nbtables: params['nbtables'],
@@ -618,7 +645,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['categorie'] as _i9.CategorieEndpoint)
+              ) async => (endpoints['categorie'] as _i8.CategorieEndpoint)
                   .getCategories(
                     session,
                     params['buildingId'],
@@ -629,7 +656,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'categorie': _i1.ParameterDescription(
               name: 'categorie',
-              type: _i1.getType<_i16.Categorie>(),
+              type: _i1.getType<_i15.Categorie>(),
               nullable: false,
             ),
             'buildingId': _i1.ParameterDescription(
@@ -642,7 +669,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['categorie'] as _i9.CategorieEndpoint)
+              ) async => (endpoints['categorie'] as _i8.CategorieEndpoint)
                   .createCategorie(
                     session,
                     categorie: params['categorie'],
@@ -655,6 +682,43 @@ class Endpoints extends _i1.EndpointDispatch {
       name: 'employer',
       endpoint: endpoints['employer']!,
       methodConnectors: {
+        'createEmployerAccount': _i1.MethodConnector(
+          name: 'createEmployerAccount',
+          params: {
+            'userProfileData': _i1.ParameterDescription(
+              name: 'userProfileData',
+              type: _i1.getType<_i16.UserProfileData>(),
+              nullable: false,
+            ),
+            'password': _i1.ParameterDescription(
+              name: 'password',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'accessId': _i1.ParameterDescription(
+              name: 'accessId',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['employer'] as _i9.EmployerEndpoint)
+                  .createEmployerAccount(
+                    session,
+                    params['userProfileData'],
+                    params['password'],
+                    params['buildingId'],
+                    params['accessId'],
+                  ),
+        ),
         'getEmployers': _i1.MethodConnector(
           name: 'getEmployers',
           params: {
@@ -669,7 +733,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['employer'] as _i10.EmployerEndpoint).getEmployers(
+                  (endpoints['employer'] as _i9.EmployerEndpoint).getEmployers(
                     session,
                     params['buildingId'],
                   ),
@@ -687,7 +751,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['employer'] as _i10.EmployerEndpoint)
+              ) async => (endpoints['employer'] as _i9.EmployerEndpoint)
                   .getEmployerByIdentifier(
                     session,
                     params['identifier'],
@@ -717,7 +781,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['order'] as _i11.OrderEndpoint).getOrders(
+              ) async => (endpoints['order'] as _i10.OrderEndpoint).getOrders(
                 session,
                 params['buildingId'],
                 params['orderStatus'],
@@ -737,7 +801,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['order'] as _i11.OrderEndpoint).getOrderById(
+                  (endpoints['order'] as _i10.OrderEndpoint).getOrderById(
                     session,
                     params['id'],
                   ),
@@ -755,7 +819,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['order'] as _i11.OrderEndpoint).createOrder(
+              ) async => (endpoints['order'] as _i10.OrderEndpoint).createOrder(
                 session,
                 params['order'],
               ),
@@ -779,7 +843,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['order'] as _i11.OrderEndpoint).appendItemsToOrder(
+                  (endpoints['order'] as _i10.OrderEndpoint).appendItemsToOrder(
                     session,
                     params['orderId'],
                     params['orderItems'],
@@ -808,7 +872,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['order'] as _i11.OrderEndpoint).payItem(
+              ) async => (endpoints['order'] as _i10.OrderEndpoint).payItem(
                 session,
                 params['orderId'],
                 params['orderItemId'],
@@ -833,7 +897,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['order'] as _i11.OrderEndpoint).payAllItems(
+              ) async => (endpoints['order'] as _i10.OrderEndpoint).payAllItems(
                 session,
                 params['orderId'],
                 params['buildingId'],
@@ -852,7 +916,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['order'] as _i11.OrderEndpoint)
+              ) async => (endpoints['order'] as _i10.OrderEndpoint)
                   .getOrderCurrOfTable(
                     session,
                     params['tableId'],
@@ -877,7 +941,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['order'] as _i11.OrderEndpoint).getOrdersOfTable(
+                  (endpoints['order'] as _i10.OrderEndpoint).getOrdersOfTable(
                     session,
                     params['tableId'],
                     params['orderStatus'],
@@ -899,7 +963,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
                 Map<String, Stream> streamParams,
-              ) => (endpoints['order'] as _i11.OrderEndpoint).streamCreateOrder(
+              ) => (endpoints['order'] as _i10.OrderEndpoint).streamCreateOrder(
                 session,
                 params['buildingId'],
               ),
@@ -920,7 +984,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
                 Map<String, Stream> streamParams,
-              ) => (endpoints['order'] as _i11.OrderEndpoint)
+              ) => (endpoints['order'] as _i10.OrderEndpoint)
                   .streamAppendItemsOrder(
                     session,
                     params['buildingId'],
@@ -942,7 +1006,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
                 Map<String, Stream> streamParams,
-              ) => (endpoints['order'] as _i11.OrderEndpoint).streamUpdateOrder(
+              ) => (endpoints['order'] as _i10.OrderEndpoint).streamUpdateOrder(
                 session,
                 params['buildingId'],
               ),
@@ -951,7 +1015,7 @@ class Endpoints extends _i1.EndpointDispatch {
     );
     modules['serverpod_auth_idp'] = _i20.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i14.Endpoints()
+    modules['serverpod_auth_core'] = _i16.Endpoints()
       ..initializeEndpoints(server);
   }
 }

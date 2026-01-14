@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'authentification_controller.dart';
+import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/config/serverpod_client.dart';
+import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
 class RegisterController extends GetxController with StateMixin {
   final registerFormKey = GlobalKey<FormState>();
-  final _emailAuthController =
-      Get.find<AuthentificationController>().emailAuthController;
-  TextEditingController get email => _emailAuthController.emailController;
 
+  TextEditingController email = .new();
   TextEditingController cpassword = .new();
   TextEditingController password = .new();
   TextEditingController fName = .new();
@@ -29,7 +29,11 @@ class RegisterController extends GetxController with StateMixin {
   void onRegister() async {
     try {
       if (registerFormKey.currentState!.validate()) {
-        await _emailAuthController.startRegistration();
+        UuidValue accountRequestId = await ServerpodClient.instance.emailIdp
+            .registerReworked(
+              email: email.text.trim(),
+            );
+        TextEditingController verifCodeController = .new();
         Get.bottomSheet(
           Container(
             padding: EdgeInsets.all(20),
@@ -40,12 +44,13 @@ class RegisterController extends GetxController with StateMixin {
               children: [
                 Text('Enter Verification Code'),
                 TextField(
-                  controller: _emailAuthController.verificationCodeController,
+                  controller: verifCodeController,
                   decoration: InputDecoration(labelText: 'Verification Code'),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _verifyCode,
+                  onPressed: () =>
+                      _verifyCode(verifCodeController.text, accountRequestId),
                   child: Text('Verify'),
                 ),
               ],
@@ -53,6 +58,16 @@ class RegisterController extends GetxController with StateMixin {
           ),
           backgroundColor: Colors.white,
           isScrollControlled: true,
+        );
+      }
+    } on AppException catch (e) {
+      if (e.errorType == ExceptionType.Conflict) {
+        Get.snackbar(
+          'Email already registered',
+          'The email you provided is already registered.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
         );
       }
     } catch (e) {
@@ -67,9 +82,9 @@ class RegisterController extends GetxController with StateMixin {
     }
   }
 
-  Future<void> _verifyCode() async {
+  Future<void> _verifyCode(String verifCode, UuidValue accountRequestId) async {
     try {
-      if (_emailAuthController.verificationCodeController.text.isEmpty) {
+      if (verifCode.isEmpty) {
         Get.snackbar(
           'Error',
           'Please enter the verification code',
@@ -78,9 +93,15 @@ class RegisterController extends GetxController with StateMixin {
         );
         return;
       }
-      await _emailAuthController.verifyRegistrationCode();
-      _emailAuthController.passwordController.text = password.text;
-      await _emailAuthController.finishRegistration();
+      final authSuccess = await ServerpodClient.instance.emailIdp
+          .verifyRegistrationCodeReworked(
+            verificationCode: verifCode,
+            accountRequestId: accountRequestId,
+            password: password.text,
+          );
+      await ServerpodClient.instance.emailIdp.client.auth.updateSignedInUser(
+        authSuccess,
+      );
     } catch (e) {
       Get.snackbar(
         'Error',

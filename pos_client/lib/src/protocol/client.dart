@@ -135,6 +135,45 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
         {},
       );
 
+  /// A reworked login method that returns an Employer on successful login.
+  /// If the logged-in user is an admin, it returns null.
+  _i2.Future<({_i7.AuthSuccess authSuccess, _i4.Employer? employer})>
+  loginReworked({
+    required String email,
+    required String password,
+  }) =>
+      caller.callServerEndpoint<
+        ({_i7.AuthSuccess authSuccess, _i4.Employer? employer})
+      >(
+        'emailIdp',
+        'loginReworked',
+        {
+          'email': email,
+          'password': password,
+        },
+      );
+
+  _i2.Future<_i1.UuidValue> registerReworked({required String email}) =>
+      caller.callServerEndpoint<_i1.UuidValue>(
+        'emailIdp',
+        'registerReworked',
+        {'email': email},
+      );
+
+  _i2.Future<_i7.AuthSuccess> verifyRegistrationCodeReworked({
+    required _i1.UuidValue accountRequestId,
+    required String verificationCode,
+    required String password,
+  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+    'emailIdp',
+    'verifyRegistrationCodeReworked',
+    {
+      'accountRequestId': accountRequestId,
+      'verificationCode': verificationCode,
+      'password': password,
+    },
+  );
+
   /// Logs in the user and returns a new session.
   ///
   /// Throws an [EmailAccountLoginException] in case of errors, with reason:
@@ -340,36 +379,6 @@ class EndpointJwtRefresh extends _i7.EndpointRefreshJwtTokens {
 }
 
 /// {@category Endpoint}
-class EndpointUsers extends _i1.EndpointRef {
-  EndpointUsers(_i1.EndpointCaller caller) : super(caller);
-
-  @override
-  String get name => 'users';
-
-  /// Create new employer account
-  /// required [userProfileData] The user profile data
-  /// required [password] The password for the account
-  /// required [buildingId] buildingId The id of the building
-  /// Returns the created [Employer] employer account
-  /// allow for admin users only
-  _i2.Future<_i4.Employer> createEmployerAccount(
-    _i7.UserProfileData userProfileData,
-    String password,
-    int buildingId,
-    int? accessId,
-  ) => caller.callServerEndpoint<_i4.Employer>(
-    'users',
-    'createEmployerAccount',
-    {
-      'userProfileData': userProfileData,
-      'password': password,
-      'buildingId': buildingId,
-      'accessId': accessId,
-    },
-  );
-}
-
-/// {@category Endpoint}
 class EndpointBuilding extends _i1.EndpointRef {
   EndpointBuilding(_i1.EndpointCaller caller) : super(caller);
 
@@ -482,6 +491,28 @@ class EndpointEmployer extends _i1.EndpointRef {
 
   @override
   String get name => 'employer';
+
+  /// Create new employer account
+  /// required [userProfileData] The user profile data
+  /// required [password] The password for the account
+  /// required [buildingId] buildingId The id of the building
+  /// Returns the created [Employer] employer account
+  /// allow for admin users only
+  _i2.Future<_i4.Employer> createEmployerAccount(
+    _i7.UserProfileData userProfileData,
+    String password,
+    int buildingId,
+    int? accessId,
+  ) => caller.callServerEndpoint<_i4.Employer>(
+    'employer',
+    'createEmployerAccount',
+    {
+      'userProfileData': userProfileData,
+      'password': password,
+      'buildingId': buildingId,
+      'accessId': accessId,
+    },
+  );
 
   /// Get employers by buildingId
   /// Identifier can be a[buildingId]
@@ -679,7 +710,6 @@ class Client extends _i1.ServerpodClientShared {
     article = EndpointArticle(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
-    users = EndpointUsers(this);
     building = EndpointBuilding(this);
     buildingTables = EndpointBuildingTables(this);
     categorie = EndpointCategorie(this);
@@ -695,8 +725,6 @@ class Client extends _i1.ServerpodClientShared {
   late final EndpointEmailIdp emailIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
-
-  late final EndpointUsers users;
 
   late final EndpointBuilding building;
 
@@ -716,7 +744,6 @@ class Client extends _i1.ServerpodClientShared {
     'article': article,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
-    'users': users,
     'building': building,
     'buildingTables': buildingTables,
     'categorie': categorie,

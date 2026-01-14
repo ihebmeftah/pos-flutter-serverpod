@@ -72,7 +72,7 @@ class LoginView extends GetView<LoginController> {
                     spacing: 16.0,
                     children: [
                       TextFormField(
-                        controller: controller.emailController,
+                        controller: controller.emailCtr,
                         decoration: InputDecoration(
                           labelText: 'Email/Username',
                           prefixIcon: const Icon(Icons.email),
@@ -89,7 +89,7 @@ class LoginView extends GetView<LoginController> {
                         id: 'obscurePassword',
                         builder: (_) {
                           return TextFormField(
-                            controller: controller.passwordController,
+                            controller: controller.passwordCtr,
                             decoration: InputDecoration(
                               labelText: 'Password',
                               prefixIcon: const Icon(

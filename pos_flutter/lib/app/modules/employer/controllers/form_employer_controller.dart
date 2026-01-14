@@ -27,7 +27,7 @@ class FormEmployerController extends GetxController with StateMixin {
   void createEmployyer() async {
     try {
       if (formKey.currentState!.validate()) {
-        final employer = await ServerpodClient.instance.users
+        final employer = await ServerpodClient.instance.employer
             .createEmployerAccount(
               profileDto,
               password.text,

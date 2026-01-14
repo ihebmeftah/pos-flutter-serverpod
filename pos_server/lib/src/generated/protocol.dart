@@ -30,11 +30,11 @@ import 'order/order_item.dart' as _i15;
 import 'order/order_status_enum.dart' as _i16;
 import 'package:pos_server/src/generated/access/access.dart' as _i17;
 import 'package:pos_server/src/generated/article/article.dart' as _i18;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i19;
+import 'package:pos_server/src/generated/employer/employer.dart' as _i19;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i20;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
-    as _i20;
-import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i21;
-import 'package:pos_server/src/generated/employer/employer.dart' as _i22;
+    as _i21;
+import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i22;
 import 'package:pos_server/src/generated/order/order.dart' as _i23;
 import 'package:pos_server/src/generated/order/order_item.dart' as _i24;
 export 'access/access.dart';
@@ -819,20 +819,35 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data as List).map((e) => deserialize<_i18.Article>(e)).toList()
           as T;
     }
-    if (t == List<_i19.Building>) {
-      return (data as List).map((e) => deserialize<_i19.Building>(e)).toList()
+    if (t ==
+        _i1
+            .getType<
+              ({_i4.AuthSuccess authSuccess, _i19.Employer? employer})
+            >()) {
+      return (
+            authSuccess: deserialize<_i4.AuthSuccess>(
+              ((data as Map)['n'] as Map)['authSuccess'],
+            ),
+            employer: ((data)['n'] as Map)['employer'] == null
+                ? null
+                : deserialize<_i19.Employer>(data['n']['employer']),
+          )
           as T;
     }
-    if (t == List<_i20.BTable>) {
-      return (data as List).map((e) => deserialize<_i20.BTable>(e)).toList()
+    if (t == List<_i20.Building>) {
+      return (data as List).map((e) => deserialize<_i20.Building>(e)).toList()
           as T;
     }
-    if (t == List<_i21.Categorie>) {
-      return (data as List).map((e) => deserialize<_i21.Categorie>(e)).toList()
+    if (t == List<_i21.BTable>) {
+      return (data as List).map((e) => deserialize<_i21.BTable>(e)).toList()
           as T;
     }
-    if (t == List<_i22.Employer>) {
-      return (data as List).map((e) => deserialize<_i22.Employer>(e)).toList()
+    if (t == List<_i22.Categorie>) {
+      return (data as List).map((e) => deserialize<_i22.Categorie>(e)).toList()
+          as T;
+    }
+    if (t == List<_i19.Employer>) {
+      return (data as List).map((e) => deserialize<_i19.Employer>(e)).toList()
           as T;
     }
     if (t == List<_i23.Order>) {
@@ -1037,6 +1052,14 @@ class Protocol extends _i1.SerializationManagerServer {
     if (record == null) {
       return null;
     }
+    if (record is ({_i4.AuthSuccess authSuccess, _i19.Employer? employer})) {
+      return {
+        "n": {
+          "authSuccess": record.authSuccess,
+          "employer": record.employer,
+        },
+      };
+    }
     try {
       return _i3.Protocol().mapRecordToJson(record);
     } catch (_) {}
@@ -1044,5 +1067,57 @@ class Protocol extends _i1.SerializationManagerServer {
       return _i4.Protocol().mapRecordToJson(record);
     } catch (_) {}
     throw Exception('Unsupported record type ${record.runtimeType}');
+  }
+
+  /// Maps container types (like [List], [Map], [Set]) containing
+  /// [Record]s or non-String-keyed [Map]s to their JSON representation.
+  ///
+  /// It should not be called for [SerializableModel] types. These
+  /// handle the "[Record] in container" mapping internally already.
+  ///
+  /// It is only supposed to be called from generated protocol code.
+  ///
+  /// Returns either a `List<dynamic>` (for List, Sets, and Maps with
+  /// non-String keys) or a `Map<String, dynamic>` in case the input was
+  /// a `Map<String, …>`.
+  Object? mapContainerToJson(Object obj) {
+    if (obj is! Iterable && obj is! Map) {
+      throw ArgumentError.value(
+        obj,
+        'obj',
+        'The object to serialize should be of type List, Map, or Set',
+      );
+    }
+
+    dynamic mapIfNeeded(Object? obj) {
+      return switch (obj) {
+        Record record => mapRecordToJson(record),
+        Iterable iterable => mapContainerToJson(iterable),
+        Map map => mapContainerToJson(map),
+        Object? value => value,
+      };
+    }
+
+    switch (obj) {
+      case Map<String, dynamic>():
+        return {
+          for (var entry in obj.entries) entry.key: mapIfNeeded(entry.value),
+        };
+      case Map():
+        return [
+          for (var entry in obj.entries)
+            {
+              'k': mapIfNeeded(entry.key),
+              'v': mapIfNeeded(entry.value),
+            },
+        ];
+
+      case Iterable():
+        return [
+          for (var e in obj) mapIfNeeded(e),
+        ];
+    }
+
+    return obj;
   }
 }

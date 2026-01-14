@@ -25,16 +25,16 @@ import 'order/order_item.dart' as _i12;
 import 'order/order_status_enum.dart' as _i13;
 import 'package:pos_client/src/protocol/access/access.dart' as _i14;
 import 'package:pos_client/src/protocol/article/article.dart' as _i15;
-import 'package:pos_client/src/protocol/buildings/building.dart' as _i16;
-import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
-    as _i17;
-import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i18;
-import 'package:pos_client/src/protocol/employer/employer.dart' as _i19;
-import 'package:pos_client/src/protocol/order/order.dart' as _i20;
-import 'package:pos_client/src/protocol/order/order_item.dart' as _i21;
-import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i22;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i16;
+import 'package:pos_client/src/protocol/employer/employer.dart' as _i17;
+import 'package:pos_client/src/protocol/buildings/building.dart' as _i18;
+import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
+    as _i19;
+import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i20;
+import 'package:pos_client/src/protocol/order/order.dart' as _i21;
+import 'package:pos_client/src/protocol/order/order_item.dart' as _i22;
+import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i23;
 export 'access/access.dart';
 export 'article/article.dart';
@@ -176,35 +176,50 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i15.Article>(e)).toList()
           as T;
     }
-    if (t == List<_i16.Building>) {
-      return (data as List).map((e) => deserialize<_i16.Building>(e)).toList()
+    if (t ==
+        _i1
+            .getType<
+              ({_i16.AuthSuccess authSuccess, _i17.Employer? employer})
+            >()) {
+      return (
+            authSuccess: deserialize<_i16.AuthSuccess>(
+              ((data as Map)['n'] as Map)['authSuccess'],
+            ),
+            employer: ((data)['n'] as Map)['employer'] == null
+                ? null
+                : deserialize<_i17.Employer>(data['n']['employer']),
+          )
           as T;
     }
-    if (t == List<_i17.BTable>) {
-      return (data as List).map((e) => deserialize<_i17.BTable>(e)).toList()
+    if (t == List<_i18.Building>) {
+      return (data as List).map((e) => deserialize<_i18.Building>(e)).toList()
           as T;
     }
-    if (t == List<_i18.Categorie>) {
-      return (data as List).map((e) => deserialize<_i18.Categorie>(e)).toList()
+    if (t == List<_i19.BTable>) {
+      return (data as List).map((e) => deserialize<_i19.BTable>(e)).toList()
           as T;
     }
-    if (t == List<_i19.Employer>) {
-      return (data as List).map((e) => deserialize<_i19.Employer>(e)).toList()
+    if (t == List<_i20.Categorie>) {
+      return (data as List).map((e) => deserialize<_i20.Categorie>(e)).toList()
           as T;
     }
-    if (t == List<_i20.Order>) {
-      return (data as List).map((e) => deserialize<_i20.Order>(e)).toList()
+    if (t == List<_i17.Employer>) {
+      return (data as List).map((e) => deserialize<_i17.Employer>(e)).toList()
           as T;
     }
-    if (t == List<_i21.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i21.OrderItem>(e)).toList()
+    if (t == List<_i21.Order>) {
+      return (data as List).map((e) => deserialize<_i21.Order>(e)).toList()
           as T;
     }
-    try {
-      return _i22.Protocol().deserialize<T>(data, t);
-    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    if (t == List<_i22.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i22.OrderItem>(e)).toList()
+          as T;
+    }
     try {
       return _i23.Protocol().deserialize<T>(data, t);
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _i16.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -262,11 +277,11 @@ class Protocol extends _i1.SerializationManager {
       case _i13.OrderStatus():
         return 'OrderStatus';
     }
-    className = _i22.Protocol().getClassNameForObject(data);
+    className = _i23.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i23.Protocol().getClassNameForObject(data);
+    className = _i16.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -317,11 +332,11 @@ class Protocol extends _i1.SerializationManager {
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i22.Protocol().deserializeByClassName(data);
+      return _i23.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i23.Protocol().deserializeByClassName(data);
+      return _i16.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
@@ -335,12 +350,72 @@ class Protocol extends _i1.SerializationManager {
     if (record == null) {
       return null;
     }
-    try {
-      return _i22.Protocol().mapRecordToJson(record);
-    } catch (_) {}
+    if (record is ({_i16.AuthSuccess authSuccess, _i17.Employer? employer})) {
+      return {
+        "n": {
+          "authSuccess": record.authSuccess,
+          "employer": record.employer,
+        },
+      };
+    }
     try {
       return _i23.Protocol().mapRecordToJson(record);
     } catch (_) {}
+    try {
+      return _i16.Protocol().mapRecordToJson(record);
+    } catch (_) {}
     throw Exception('Unsupported record type ${record.runtimeType}');
+  }
+
+  /// Maps container types (like [List], [Map], [Set]) containing
+  /// [Record]s or non-String-keyed [Map]s to their JSON representation.
+  ///
+  /// It should not be called for [SerializableModel] types. These
+  /// handle the "[Record] in container" mapping internally already.
+  ///
+  /// It is only supposed to be called from generated protocol code.
+  ///
+  /// Returns either a `List<dynamic>` (for List, Sets, and Maps with
+  /// non-String keys) or a `Map<String, dynamic>` in case the input was
+  /// a `Map<String, …>`.
+  Object? mapContainerToJson(Object obj) {
+    if (obj is! Iterable && obj is! Map) {
+      throw ArgumentError.value(
+        obj,
+        'obj',
+        'The object to serialize should be of type List, Map, or Set',
+      );
+    }
+
+    dynamic mapIfNeeded(Object? obj) {
+      return switch (obj) {
+        Record record => mapRecordToJson(record),
+        Iterable iterable => mapContainerToJson(iterable),
+        Map map => mapContainerToJson(map),
+        Object? value => value,
+      };
+    }
+
+    switch (obj) {
+      case Map<String, dynamic>():
+        return {
+          for (var entry in obj.entries) entry.key: mapIfNeeded(entry.value),
+        };
+      case Map():
+        return [
+          for (var entry in obj.entries)
+            {
+              'k': mapIfNeeded(entry.key),
+              'v': mapIfNeeded(entry.value),
+            },
+        ];
+
+      case Iterable():
+        return [
+          for (var e in obj) mapIfNeeded(e),
+        ];
+    }
+
+    return obj;
   }
 }
