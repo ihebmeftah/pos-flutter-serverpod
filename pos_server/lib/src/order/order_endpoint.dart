@@ -297,7 +297,7 @@ class OrderEndpoint extends Endpoint {
 
   Future<Order> getOrderCurrOfTable(Session session, int tableId) async {
     await AuthorizationsHelpers().requiredScopes(session, [
-      "admin",
+      "owner",
       "employer",
     ]);
     Order? order = await Order.db.findFirstRow(
@@ -330,7 +330,7 @@ class OrderEndpoint extends Endpoint {
     OrderStatus? orderStatus,
   ) async {
     await AuthorizationsHelpers().requiredScopes(session, [
-      "admin",
+      "owner",
       "employer",
     ]);
     if (orderStatus != null) {

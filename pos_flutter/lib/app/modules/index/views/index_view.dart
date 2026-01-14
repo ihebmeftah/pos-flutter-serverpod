@@ -78,7 +78,7 @@ class IndexView extends GetView<IndexController> {
                           onTap: () => Get.toNamed(Routes.EMPLOYER),
                         ),
                       if (Get.find<IndexController>().scope.contains(
-                        "admin",
+                        "owner",
                       ))
                         ListTile(
                           leading: Icon(Icons.security),

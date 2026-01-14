@@ -29,7 +29,7 @@ class CategorieEndpoint extends Endpoint {
     required Categorie categorie,
     required int buildingId,
   }) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
+    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
     final existe = await Categorie.db.findFirstRow(
       session,
       where: (c) =>

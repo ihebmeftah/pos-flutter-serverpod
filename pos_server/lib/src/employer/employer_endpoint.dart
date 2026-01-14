@@ -21,7 +21,7 @@ class EmployerEndpoint extends Endpoint {
     int buildingId,
     int? accessId,
   ) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
+    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
     final emailIdp = AuthServices.instance.emailIdp;
     return session.db.transaction<Employer>((transaction) async {
       final authUser = await AuthServices.instance.authUsers.create(
@@ -67,7 +67,7 @@ class EmployerEndpoint extends Endpoint {
     Session session,
     int buildingId,
   ) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
+    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
     return await Employer.db.find(
       session,
       include: Employer.include(

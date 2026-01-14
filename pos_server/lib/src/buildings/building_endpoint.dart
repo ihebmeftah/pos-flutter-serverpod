@@ -17,9 +17,9 @@ class BuildingEndpoint extends Endpoint {
   Future<List<Building>> getAllBuildings(Session session) async {
     final currentUserScope = await AuthorizationsHelpers().requiredScopes(
       session,
-      ["admin", "customer"],
+      ["owner", "customer"],
     );
-    if (currentUserScope.any((scope) => scope.name == "admin")) {
+    if (currentUserScope.any((scope) => scope.name == "owner")) {
       return await Building.db.find(
         session,
         where: (t) => t.authUserId.equals(
@@ -34,7 +34,7 @@ class BuildingEndpoint extends Endpoint {
   /// Returns  [Building] building
   /// allowed only for admins
   Future<Building> createBuilding(Session session, Building building) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
+    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
     building.authUserId = session.authenticated?.authUserId;
     final createdBuilding = await Building.db.insertRow(session, building);
 

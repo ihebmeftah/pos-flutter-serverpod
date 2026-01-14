@@ -28,7 +28,7 @@ class TablesView extends GetView<TablesController> {
           (_) => Column(
             spacing: 5,
             children: [
-              if (Get.find<IndexController>().scope.contains("admin"))
+              if (Get.find<IndexController>().scope.contains("owner"))
                 TextButton.icon(
                   onPressed: controller.generateTablePdfQrcode,
                   label: const Text('Generate Tables QR Code'),

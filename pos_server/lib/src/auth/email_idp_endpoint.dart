@@ -106,7 +106,7 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
       await AuthServices.instance.authUsers.update(
         session,
         authUserId: authSucessReg.authUserId,
-        scopes: {Scope("admin")},
+        scopes: {Scope("owner")},
       );
 
       /// Remove created token created in finishRegistration

@@ -39,7 +39,7 @@ class BuildingTablesEndpoint extends Endpoint {
     required int seatsMax,
     required int buildingId,
   }) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
+    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
     int total = await BTable.db.count(
       session,
       where: (t) => t.buildingId.equals(buildingId),

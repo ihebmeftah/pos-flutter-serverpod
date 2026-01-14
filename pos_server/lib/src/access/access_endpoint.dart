@@ -5,7 +5,7 @@ class AccessEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
   @override
-  Set<Scope> get requiredScopes => {Scope("admin")};
+  Set<Scope> get requiredScopes => {Scope("owner")};
 
   Future<Access> createAccess(Session session, Access access) async {
     await checkAccessExist(session, access);

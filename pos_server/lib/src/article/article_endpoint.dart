@@ -49,7 +49,7 @@ class ArticleEndpoint extends Endpoint {
     required Article article,
     required int buildingId,
   }) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["admin"]);
+    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
     final existe = await Article.db.findFirstRow(
       session,
       where: (a) =>

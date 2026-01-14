@@ -51,7 +51,7 @@ class IndexController extends GetxController with StateMixin<UserProfile> {
       pageVCtr.jumpToPage(index);
       update(["bottomNavigationBar"]);
     }
-    if (scope.contains("admin")) {
+    if (scope.contains("owner")) {
       if (index != 3) {
         Get.delete<OrderController>();
       } else if (index == 3) {
