@@ -20,16 +20,14 @@ class AuthorizationsHelpers {
     List<String> scopes,
   ) async {
     final currScope = session.authenticated!.scopes;
-    session.log("required scopes methode called");
-    session.log("required scopes: $scopes");
-    session.log("curr: $currScope");
     if (currScope.any(
           (scope) => scopes.contains(scope.name),
         ) ==
         false) {
       throw AppException(
         errorType: ExceptionType.Forbidden,
-        message: 'User not authorized to perform this action.',
+        message:
+            '${scopes.map((e) => e).join(', ')} not authorized to perform this action.',
       );
     }
     return currScope;
