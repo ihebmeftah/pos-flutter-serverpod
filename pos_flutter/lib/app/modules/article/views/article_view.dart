@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_flutter/app/components/apperrorscreen.dart';
+import 'package:pos_flutter/app/data/local/local_storage.dart';
+import 'package:pos_flutter/app/extensions/currency.extension.dart';
 
 import '../../../components/appemptyscreen.dart';
 import '../../../routes/app_pages.dart';
@@ -77,7 +79,7 @@ class ArticleView extends GetView<ArticleController> {
                   ),
                 ),
                 Text(
-                  "${controller.articles[index].price} DT",
+                  "${controller.articles[index].price} ${LocalStorage().building!.currencyCode.symbol}",
                   style: context.theme.textTheme.titleLarge,
                 ),
                 if (Get.previousRoute == Routes.PASS_ORDER ||
@@ -91,10 +93,15 @@ class ArticleView extends GetView<ArticleController> {
         ),
         onError: (error) => AppErrorScreen(message: error),
         onEmpty: controller.categoryId != null
-            ? Center(
-                child: Text('No articles found for this category'),
+            ? Appemptyscreen(
+                message: 'No articles found for this category',
               )
-            : Appemptyscreen(),
+            : Appemptyscreen(
+                message: 'No articles found',
+                pressText:
+                    'Click here or tap the + button in the top right corner to add an article',
+                onPressed: () => Get.toNamed(Routes.ARTICLE_FORM),
+              ),
       ),
     );
   }

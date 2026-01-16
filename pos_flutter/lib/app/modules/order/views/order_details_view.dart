@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/components/appbeatuifulcard.dart';
+import 'package:pos_flutter/app/extensions/status.extension.dart';
+import 'package:pos_flutter/app/modules/index/controllers/index_controller.dart';
 
 import '../../../components/appemptyscreen.dart';
 import '../../../components/apperrorscreen.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 import '../controllers/order_details_controller.dart';
-import '../widgets/order_amount_widget.dart';
+import '../widgets/order_item_status_buttons.dart';
 
 class OrderDetailsView extends GetView<OrderDetailsController> {
   const OrderDetailsView({super.key});
@@ -42,18 +46,7 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
           child: Column(
             spacing: 10,
             children: [
-              // Order started by user info
-              if (controller.order!.passedBy != null)
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.green.shade700,
-                    backgroundColor: Colors.green.shade50,
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    'Started by: ${controller.order!.passedBy!.fullName ?? controller.order!.passedBy!.email}',
-                  ),
-                ),
+              /// Order header details
               Row(
                 spacing: 10,
                 children: [
@@ -117,149 +110,98 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                       builder: (_) {
                         return Container(
                           margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: switch (controller
+                              color: controller
                                   .order!
                                   .items![index]
-                                  .payed) {
-                                true => Colors.green,
-                                _ => Colors.orange,
-                              },
+                                  .itemStatus
+                                  .color,
                             ),
-                            color:
-                                switch (controller.order!.items![index].payed) {
-                                  true => Colors.green,
-                                  _ => Colors.orange,
-                                }.shade50,
+                            color: controller
+                                .order!
+                                .items![index]
+                                .itemStatus
+                                .color50,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              spacing: 10,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        spacing: 8,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          AppBeautifullCard(
-                                            child: Icon(Icons.fastfood),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                controller
-                                                    .order!
-                                                    .items![index]
-                                                    .article
-                                                    .name
-                                                    .capitalize!,
-                                                style: context
-                                                    .textTheme
-                                                    .titleMedium
-                                                    ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                              ),
-                                              Text(
-                                                '${controller.order!.items![index].article.price.toStringAsFixed(2)} DT',
-                                                style: context
-                                                    .textTheme
-                                                    .titleMedium
-                                                    ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Theme.of(
-                                                        context,
-                                                      ).colorScheme.primary,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        "Passed by: ${'${controller.order!.items![index].passedBy!.fullName ?? controller.order!.items![index].passedBy!.email}'}",
-                                      ),
-                                    ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                spacing: 5,
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.restaurant,
+                                    color: controller
+                                        .order!
+                                        .items![index]
+                                        .itemStatus
+                                        .color700,
                                   ),
-                                ),
-                                Column(
-                                  children: [
-                                    Row(
-                                      spacing: 5,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          controller.order!.items![index].payed
-                                              ? Icons.check_circle
-                                              : Icons.schedule,
-                                          size: 16,
-                                          color:
-                                              controller
-                                                  .order!
-                                                  .items![index]
-                                                  .payed
-                                              ? Colors.green
-                                              : Colors.orange,
+                                  Text(
+                                    '${controller.order!.items![index].article.name.capitalize!} ${controller.order!.items![index].article.price.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
+                                    style: context.textTheme.titleLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: controller
+                                              .order!
+                                              .items![index]
+                                              .itemStatus
+                                              .color700,
                                         ),
-                                        Text(
-                                          controller.order!.items![index].payed
-                                              ? 'PAID'
-                                              : 'UNPAID',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color:
-                                                controller
-                                                    .order!
-                                                    .items![index]
-                                                    .payed
-                                                ? Colors.green[700]
-                                                : Colors.orange[700],
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
+                                  ),
+                                  Spacer(),
+                                  Icon(
+                                    (controller
+                                            .order!
+                                            .items![index]
+                                            .itemStatus
+                                            .isPaid)
+                                        ? Icons.check_circle
+                                        : Icons.schedule,
+                                    size: 16,
+                                    color:
+                                        (controller
+                                            .order!
+                                            .items![index]
+                                            .itemStatus
+                                            .isPaid)
+                                        ? Colors.green
+                                        : Colors.orange,
+                                  ),
+                                  Text(
+                                    (controller
+                                            .order!
+                                            .items![index]
+                                            .itemStatus
+                                            .isPaid)
+                                        ? 'PAID'
+                                        : 'UNPAID',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color:
+                                          (controller
+                                              .order!
+                                              .items![index]
+                                              .itemStatus
+                                              .isPaid)
+                                          ? Colors.green[700]
+                                          : Colors.orange[700],
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    if (!controller.order!.items![index].payed)
-                                      ElevatedButton(
-                                        onPressed: () => controller.payForItem(
-                                          controller.order!.items![index],
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.green,
-                                          foregroundColor: Colors.white,
-                                          padding: EdgeInsets.zero,
-                                          fixedSize: const Size(80, 30),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'Pay',
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                              OrderItemStatusButtons(
+                                orderItem: controller.order!.items![index],
+                                index: index,
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -268,36 +210,97 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                 ),
               ),
 
-              /// Append new items button
-              if (controller.order!.status != OrderStatus.payed)
-                OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    fixedSize: Size(Get.width, 50),
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.brown),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () {},
-                  label: Text("Append new items"),
-                  icon: Icon(Icons.add),
-                ),
-
               /// Order amount (PAID/REMAINING items)
-              OrderAmountWidget(order: controller.order!),
+              Column(
+                spacing: 10,
+                children: [
+                  ///  Total Amount, Paid Amount & Remaining Amount
+                  GetBuilder<OrderDetailsController>(
+                    id: "pay",
+                    builder: (ctr) {
+                      return Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.brown[50],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          spacing: 5,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Paid Amount',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                Text(
+                                  '${ctr.paidAmount.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                Text(
+                                  '|',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Text(
+                                  'Remaining',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                Text(
+                                  '${ctr.unpaidAmount.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
 
-              /// Order closed by user info
-              if (controller.order!.closedby != null)
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.red.shade700,
-                    backgroundColor: Colors.red.shade50,
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    'Closed by: ${controller.order!.closedby!.fullName ?? controller.order!.closedby!.email}',
-                  ),
-                ),
+                  /// Action Buttons
+                  if (controller.order!.status != OrderStatus.payed &&
+                      Get.find<IndexController>().scope.contains("employer"))
+                    ElevatedButton.icon(
+                      onPressed:
+                          (Get.find<IndexController>()
+                                  .currentUserAccess
+                                  ?.orderPayment ??
+                              true)
+                          ? Get.find<OrderDetailsController>().payAllItems
+                          : null,
+                      icon: const Icon(Icons.payment),
+                      label: GetBuilder<OrderDetailsController>(
+                        id: "pay",
+                        builder: (_) {
+                          return Text(
+                            'Pay \n(${Get.find<OrderDetailsController>().unpaidAmount.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol})',
+                          );
+                        },
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                ],
+              ),
             ],
           ),
         ),

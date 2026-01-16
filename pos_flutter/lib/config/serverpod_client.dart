@@ -38,6 +38,7 @@ class ServerpodClient extends GetxService {
     return this;
   }
 
+  /// Handle route permission based on user scope
   void handleRoutePermission() {
     if (_client.auth.isAuthenticated) {
       if (_client.auth.authInfo!.scopeNames.contains('employer')) {

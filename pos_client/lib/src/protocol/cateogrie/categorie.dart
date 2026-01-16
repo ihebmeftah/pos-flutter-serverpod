@@ -17,12 +17,14 @@ abstract class Categorie implements _i1.SerializableModel {
     this.id,
     required this.name,
     required this.description,
+    required this.buildingId,
   });
 
   factory Categorie({
     int? id,
     required String name,
     required String description,
+    required int? buildingId,
   }) = _CategorieImpl;
 
   factory Categorie.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -30,6 +32,7 @@ abstract class Categorie implements _i1.SerializableModel {
       id: jsonSerialization['id'] as int?,
       name: jsonSerialization['name'] as String,
       description: jsonSerialization['description'] as String,
+      buildingId: jsonSerialization['buildingId'] as int?,
     );
   }
 
@@ -42,6 +45,8 @@ abstract class Categorie implements _i1.SerializableModel {
 
   String description;
 
+  int? buildingId;
+
   /// Returns a shallow copy of this [Categorie]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -49,6 +54,7 @@ abstract class Categorie implements _i1.SerializableModel {
     int? id,
     String? name,
     String? description,
+    int? buildingId,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -57,6 +63,7 @@ abstract class Categorie implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'name': name,
       'description': description,
+      if (buildingId != null) 'buildingId': buildingId,
     };
   }
 
@@ -73,10 +80,12 @@ class _CategorieImpl extends Categorie {
     int? id,
     required String name,
     required String description,
+    required int? buildingId,
   }) : super._(
          id: id,
          name: name,
          description: description,
+         buildingId: buildingId,
        );
 
   /// Returns a shallow copy of this [Categorie]
@@ -87,11 +96,13 @@ class _CategorieImpl extends Categorie {
     Object? id = _Undefined,
     String? name,
     String? description,
+    Object? buildingId = _Undefined,
   }) {
     return Categorie(
       id: id is int? ? id : this.id,
       name: name ?? this.name,
       description: description ?? this.description,
+      buildingId: buildingId is int? ? buildingId : this.buildingId,
     );
   }
 }

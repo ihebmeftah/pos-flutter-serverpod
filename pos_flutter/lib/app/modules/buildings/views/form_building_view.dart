@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/appdropdown.dart';
 import 'package:pos_flutter/app/components/apperrorscreen.dart';
 
 import '../../../components/appformfield.dart';
@@ -11,7 +13,10 @@ class FormBuildingView extends GetView<FormBuildingController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Building View'), centerTitle: true),
+      appBar: AppBar(
+        title: Text(controller.id != null ? 'Edit Building' : 'Add Building'),
+        centerTitle: true,
+      ),
       body: controller.obx(
         (s) => SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
@@ -35,10 +40,47 @@ class FormBuildingView extends GetView<FormBuildingController> {
                 AppFormField.label(
                   label: "Building Location",
                   hint: "Enter building location",
+                  buildCounter:
+                      (
+                        context, {
+                        required int currentLength,
+                        required bool isFocused,
+                        required int? maxLength,
+                      }) {
+                        if (!isFocused) return null;
+                        return TextButton.icon(
+                          onPressed:
+                              controller.determinAddresBasedonCurrLocation,
+                          icon: Icon(Icons.location_on_outlined),
+                          label: Text(
+                            'Tap here to get location (building location)',
+                          ),
+                        );
+                      },
                   ctr: controller.location,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Location is required";
+                    }
+                    return null;
+                  },
+                ),
+                AppDropdown.label(
+                  selectedItem: controller.currencyCode,
+                  items: Currency.values
+                      .map(
+                        (e) => DropdownMenuItem<Currency>(
+                          value: e,
+                          child: Text(e.name),
+                        ),
+                      )
+                      .toList(),
+                  label: "Currency Code",
+                  hint: "Select currency code",
+                  onChanged: controller.changeCurrencyCode,
+                  validator: (value) {
+                    if (value == null) {
+                      return "Currency code is required";
                     }
                     return null;
                   },
@@ -91,11 +133,38 @@ class FormBuildingView extends GetView<FormBuildingController> {
                     );
                   },
                 ),
-
+                GetBuilder<FormBuildingController>(
+                  id: 'allowAppendingItemsToOrder',
+                  builder: (_) {
+                    return SwitchListTile.adaptive(
+                      title: const Text("Appending Items to Order"),
+                      subtitle: const Text(
+                        "Allow adding more items to an existing order",
+                      ),
+                      value: controller.allowAppendingItemsToOrder,
+                      onChanged: controller.changeAllowAppendingItemsToOrder,
+                    );
+                  },
+                ),
+                GetBuilder<FormBuildingController>(
+                  id: 'autoCloseOrdersAtClosingTime',
+                  builder: (_) {
+                    return SwitchListTile.adaptive(
+                      title: const Text("Close Orders"),
+                      subtitle: const Text(
+                        "Automatically close orders at closing time",
+                      ),
+                      value: controller.autoCloseOrdersAtClosingTime,
+                      onChanged: controller.changeAutoCloseOrdersAtClosingTime,
+                    );
+                  },
+                ),
                 //    FileuploadView(),
                 ElevatedButton(
                   onPressed: controller.addBuilding,
-                  child: const Text("Add Building"),
+                  child: Text(
+                    controller.id == null ? "Add Building" : "Update Building",
+                  ),
                 ),
               ],
             ),

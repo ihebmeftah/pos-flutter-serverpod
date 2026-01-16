@@ -14,18 +14,12 @@ import 'package:serverpod/serverpod.dart' as _i1;
 
 enum OrderStatus implements _i1.SerializableModel {
   progress,
-  ready,
-  delivred,
   payed;
 
   static OrderStatus fromJson(String name) {
     switch (name) {
       case 'progress':
         return OrderStatus.progress;
-      case 'ready':
-        return OrderStatus.ready;
-      case 'delivred':
-        return OrderStatus.delivred;
       case 'payed':
         return OrderStatus.payed;
       default:

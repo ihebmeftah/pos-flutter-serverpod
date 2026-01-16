@@ -2,9 +2,12 @@ class: Access
 table: access
 fields:
   name: String
+  consultAllOrders: bool,  ### false mean consult only his passed orders
   orderCreation: bool
-  orderCreationNotif: bool, default=true
+  orderCreationNotif: bool,
   orderPayment: bool
   orderItemsPayment: bool
-  appendItems: bool, default=false
+  appendItems: bool,
+  preparation: bool,
+  takeOrder: bool,
   buildingId: int?, relation(parent=building),required

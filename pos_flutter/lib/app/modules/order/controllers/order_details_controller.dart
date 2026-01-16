@@ -4,6 +4,7 @@ import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 
 import '../../../data/local/local_storage.dart';
+import '../../../extensions/status.extension.dart';
 
 class OrderDetailsController extends GetxController with StateMixin {
   String get id => Get.parameters['id']!;
@@ -19,7 +20,7 @@ class OrderDetailsController extends GetxController with StateMixin {
   num get totalPrice =>
       order!.items!.fold<num>(0.0, (sum, item) => sum + item.article.price);
   num get paidAmount => order!.items!
-      .where((item) => item.payed)
+      .where((item) => item.itemStatus.isPaid)
       .fold<num>(0.0, (sum, item) => sum + item.article.price);
   num get unpaidAmount => (totalPrice - paidAmount);
 
@@ -119,38 +120,22 @@ class OrderDetailsController extends GetxController with StateMixin {
     }
   }
 
-  void closeOrder() {
-    final hasUnpaidItems = order!.items!.any((item) => !item.payed);
-    Get.dialog(
-      AlertDialog(
-        title: Text(hasUnpaidItems ? 'Close Order' : 'Complete Order'),
-        content: Text(
-          hasUnpaidItems
-              ? 'This order has unpaid items. Are you sure you want to close it?'
-              : 'Mark this order as completed?',
-        ),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
-          ElevatedButton(
-            onPressed: () {
-              Get.back();
-              Get.back(); // Return to orders list
-              Get.snackbar(
-                'Order Updated',
-                hasUnpaidItems
-                    ? 'Order has been closed'
-                    : 'Order has been completed',
-                backgroundColor: Colors.blue,
-                colorText: Colors.white,
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: hasUnpaidItems ? Colors.orange : Colors.blue,
-            ),
-            child: Text(hasUnpaidItems ? 'Close' : 'Complete'),
-          ),
-        ],
-      ),
-    );
+  void changeOrderItemsStatus(int index, OrderItemStatus newStataus) async {
+    try {
+      final items = await ServerpodClient.instance.orderItem
+          .changeOrderItemsStatus(
+            [order!.items![index].id!],
+            newStataus,
+          );
+      order!.items![index] = items.first;
+      change(order, status: RxStatus.success());
+    } catch (e) {
+      Get.snackbar(
+        'Payment Error',
+        'Failed to change items status',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 }

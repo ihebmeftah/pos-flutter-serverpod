@@ -22,8 +22,6 @@ abstract class Order implements _i1.SerializableModel {
   Order._({
     this.id,
     _i2.OrderStatus? status,
-    DateTime? createdAt,
-    this.updatedAt,
     required this.btableId,
     required this.btable,
     required this.passedById,
@@ -31,14 +29,14 @@ abstract class Order implements _i1.SerializableModel {
     this.closedbyId,
     this.closedby,
     this.items,
+    DateTime? createdAt,
+    this.updatedAt,
   }) : status = status ?? _i2.OrderStatus.progress,
        createdAt = createdAt ?? DateTime.now();
 
   factory Order({
     int? id,
     _i2.OrderStatus? status,
-    DateTime? createdAt,
-    DateTime? updatedAt,
     required int btableId,
     required _i3.BTable? btable,
     required _i1.UuidValue passedById,
@@ -46,6 +44,8 @@ abstract class Order implements _i1.SerializableModel {
     _i1.UuidValue? closedbyId,
     _i4.UserProfile? closedby,
     List<_i5.OrderItem>? items,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) = _OrderImpl;
 
   factory Order.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -54,12 +54,6 @@ abstract class Order implements _i1.SerializableModel {
       status: jsonSerialization['status'] == null
           ? null
           : _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
-      createdAt: jsonSerialization['createdAt'] == null
-          ? null
-          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt: jsonSerialization['updatedAt'] == null
-          ? null
-          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       btableId: jsonSerialization['btableId'] as int,
       btable: jsonSerialization['btable'] == null
           ? null
@@ -87,6 +81,12 @@ abstract class Order implements _i1.SerializableModel {
           : _i6.Protocol().deserialize<List<_i5.OrderItem>>(
               jsonSerialization['items'],
             ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 
@@ -96,10 +96,6 @@ abstract class Order implements _i1.SerializableModel {
   int? id;
 
   _i2.OrderStatus status;
-
-  DateTime createdAt;
-
-  DateTime? updatedAt;
 
   int btableId;
 
@@ -115,14 +111,16 @@ abstract class Order implements _i1.SerializableModel {
 
   List<_i5.OrderItem>? items;
 
+  DateTime createdAt;
+
+  DateTime? updatedAt;
+
   /// Returns a shallow copy of this [Order]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Order copyWith({
     int? id,
     _i2.OrderStatus? status,
-    DateTime? createdAt,
-    DateTime? updatedAt,
     int? btableId,
     _i3.BTable? btable,
     _i1.UuidValue? passedById,
@@ -130,6 +128,8 @@ abstract class Order implements _i1.SerializableModel {
     _i1.UuidValue? closedbyId,
     _i4.UserProfile? closedby,
     List<_i5.OrderItem>? items,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -137,8 +137,6 @@ abstract class Order implements _i1.SerializableModel {
       '__className__': 'Order',
       if (id != null) 'id': id,
       'status': status.toJson(),
-      'createdAt': createdAt.toJson(),
-      if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
       'btableId': btableId,
       if (btable != null) 'btable': btable?.toJson(),
       'passedById': passedById.toJson(),
@@ -146,6 +144,8 @@ abstract class Order implements _i1.SerializableModel {
       if (closedbyId != null) 'closedbyId': closedbyId?.toJson(),
       if (closedby != null) 'closedby': closedby?.toJson(),
       if (items != null) 'items': items?.toJson(valueToJson: (v) => v.toJson()),
+      'createdAt': createdAt.toJson(),
+      if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
     };
   }
 
@@ -161,8 +161,6 @@ class _OrderImpl extends Order {
   _OrderImpl({
     int? id,
     _i2.OrderStatus? status,
-    DateTime? createdAt,
-    DateTime? updatedAt,
     required int btableId,
     required _i3.BTable? btable,
     required _i1.UuidValue passedById,
@@ -170,11 +168,11 @@ class _OrderImpl extends Order {
     _i1.UuidValue? closedbyId,
     _i4.UserProfile? closedby,
     List<_i5.OrderItem>? items,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) : super._(
          id: id,
          status: status,
-         createdAt: createdAt,
-         updatedAt: updatedAt,
          btableId: btableId,
          btable: btable,
          passedById: passedById,
@@ -182,6 +180,8 @@ class _OrderImpl extends Order {
          closedbyId: closedbyId,
          closedby: closedby,
          items: items,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
        );
 
   /// Returns a shallow copy of this [Order]
@@ -191,8 +191,6 @@ class _OrderImpl extends Order {
   Order copyWith({
     Object? id = _Undefined,
     _i2.OrderStatus? status,
-    DateTime? createdAt,
-    Object? updatedAt = _Undefined,
     int? btableId,
     Object? btable = _Undefined,
     _i1.UuidValue? passedById,
@@ -200,12 +198,12 @@ class _OrderImpl extends Order {
     Object? closedbyId = _Undefined,
     Object? closedby = _Undefined,
     Object? items = _Undefined,
+    DateTime? createdAt,
+    Object? updatedAt = _Undefined,
   }) {
     return Order(
       id: id is int? ? id : this.id,
       status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
       btableId: btableId ?? this.btableId,
       btable: btable is _i3.BTable? ? btable : this.btable?.copyWith(),
       passedById: passedById ?? this.passedById,
@@ -219,6 +217,8 @@ class _OrderImpl extends Order {
       items: items is List<_i5.OrderItem>?
           ? items
           : this.items?.map((e0) => e0.copyWith()).toList(),
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
     );
   }
 }

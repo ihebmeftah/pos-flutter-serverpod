@@ -4,9 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 
-import '../../../components/appemptyscreen.dart';
 import '../../../components/appformfield.dart';
 import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/pass_order_controller.dart';
 
@@ -62,10 +62,26 @@ class PassOrderView extends GetView<PassOrderController> {
                     id: "selectedArticles",
                     builder: (_) {
                       return controller.selectedArticles.isEmpty
-                          ? EmptyWidget(
-                              route: Routes.ARTICLE,
-                              press: () => Get.toNamed(Routes.ARTICLE),
-                              getText: "You haven't selected any items yet.",
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "No articles selected yet.",
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
+                                ),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: Theme.of(
+                                      context,
+                                    ).textTheme.titleMedium,
+                                  ),
+                                  onPressed: () => Get.toNamed(Routes.ARTICLE),
+                                  child: const Text("Select Articles"),
+                                ),
+                              ],
                             )
                           : Column(
                               spacing: 10,
@@ -119,7 +135,7 @@ class PassOrderView extends GetView<PassOrderController> {
                                             ),
                                           ),
                                           subtitle: Text(
-                                            "${controller.selectedArticleWithOcc[index].article.price} DT",
+                                            "${controller.selectedArticleWithOcc[index].article.price} ${LocalStorage().building!.currencyCode.symbol}",
                                           ),
                                         );
                                       },
@@ -206,7 +222,7 @@ class PassOrderView extends GetView<PassOrderController> {
                           id: "selectedArticles",
                           builder: (passOrderCtr) {
                             return Text(
-                              "${passOrderCtr.selectedArticles.fold<num>(0, (sum, article) => sum + article.price).toStringAsFixed(2)} DT",
+                              "${passOrderCtr.selectedArticles.fold<num>(0, (sum, article) => sum + article.price).toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}",
                               style: Theme.of(context).textTheme.displaySmall,
                             );
                           },

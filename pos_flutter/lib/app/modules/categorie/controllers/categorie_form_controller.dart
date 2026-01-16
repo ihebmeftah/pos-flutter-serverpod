@@ -12,6 +12,7 @@ class CategorieFormController extends GetxController with StateMixin {
   Categorie get categorieDto => Categorie(
     name: nameController.text,
     description: descController.text,
+    buildingId: LocalStorage().building!.id!,
   );
   @override
   void onInit() {

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../components/appemptyscreen.dart';
 import '../../../components/apperrorscreen.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/order_controller.dart';
 
@@ -47,7 +50,9 @@ class OrderView extends GetView<OrderController> {
                   ),
                   Expanded(
                     child: controller.orders.isEmpty
-                        ? const Center(child: Text('No orders found'))
+                        ? Appemptyscreen(
+                            message: 'No orders found',
+                          )
                         : ListView.separated(
                             itemCount: controller.orders.length,
                             separatorBuilder: (context, index) =>
@@ -121,7 +126,7 @@ class OrderView extends GetView<OrderController> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
-                                    "${order.status.name.toUpperCase()} - ${totalPrice.toStringAsFixed(2)} DT",
+                                    "${order.status.name.toUpperCase()} - ${totalPrice.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}",
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       color: Colors.white,

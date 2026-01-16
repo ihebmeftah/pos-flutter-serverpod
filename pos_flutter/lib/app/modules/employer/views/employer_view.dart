@@ -188,7 +188,12 @@ class EmployerView extends GetView<EmployerController> {
               );
             },
           ),
-          onEmpty: const Appemptyscreen(),
+          onEmpty: Appemptyscreen(
+            message: 'No employers found',
+            pressText:
+                'Click here or tap the + button in the top right corner to add an employer',
+            onPressed: () => Get.toNamed(Routes.FORM_EMPLOYER),
+          ),
           onError: (error) => AppErrorScreen(message: error),
         ),
       ),

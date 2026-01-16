@@ -10,8 +10,14 @@ fields:
   ### The time when the building closes.
   closingTime: DateTime
   ### The ID of the authenticated user associated with this building.
-  authUserId: UuidValue?, relation(parent=serverpod_auth_core_user), scope=serverOnly,required
+  authUserId: UuidValue?, relation(parent=serverpod_auth_core_user,), ,required
   ### Indicates whether the building supports multiple orders per table.
   tableMultiOrder: bool, default=false
   ### Indicates whether items can be appended to an existing order.
   allowAppendingItemsToOrder: bool, default=true
+  ### auto close orders when closing time is reached
+  autoCloseOrdersAtClosingTime: bool, default=false
+  ### currency code for the building (e.g., USD, EUR).
+  currencyCode: Currency,
+  long: double?
+  lat: double?

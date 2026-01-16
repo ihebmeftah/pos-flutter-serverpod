@@ -11,7 +11,9 @@ class AccessFormView extends GetView<AccessFormController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Access'),
+        title: Text(
+          controller.id != null ? 'Edit Access' : 'Create Access',
+        ),
       ),
       body: controller.obx(
         (s) => SingleChildScrollView(
@@ -23,7 +25,6 @@ class AccessFormView extends GetView<AccessFormController> {
               children: [
                 Column(
                   spacing: 20,
-
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppFormField.label(
@@ -56,6 +57,19 @@ class AccessFormView extends GetView<AccessFormController> {
                       },
                     ),
                     GetBuilder<AccessFormController>(
+                      id: 'orderCreationNotif',
+                      builder: (context) {
+                        return CheckboxListTile(
+                          title: Text("Order Creation Notification"),
+                          subtitle: Text(
+                            "User will receive notification on new order creation",
+                          ),
+                          value: controller.orderCreationNotif,
+                          onChanged: controller.updateOrderCreationNotif,
+                        );
+                      },
+                    ),
+                    GetBuilder<AccessFormController>(
                       id: 'orderPayment',
                       builder: (context) {
                         return CheckboxListTile(
@@ -77,11 +91,63 @@ class AccessFormView extends GetView<AccessFormController> {
                         );
                       },
                     ),
+                    GetBuilder<AccessFormController>(
+                      id: 'consultAllOrders',
+                      builder: (context) {
+                        return CheckboxListTile(
+                          title: Text("Consult All Orders"),
+                          subtitle: Text(
+                            "If disable user can only see his orders",
+                          ),
+                          value: controller.consultAllOrders,
+                          onChanged: controller.updateConsultAllOrders,
+                        );
+                      },
+                    ),
                   ],
+                ),
+                GetBuilder<AccessFormController>(
+                  id: 'takeOrder',
+                  builder: (context) {
+                    return CheckboxListTile(
+                      title: Text("Take Order"),
+                      subtitle: Text(
+                        "Allowed to make items as served",
+                      ),
+                      value: controller.takeOrder,
+                      onChanged: controller.updateTakeOrder,
+                    );
+                  },
+                ),
+                GetBuilder<AccessFormController>(
+                  id: 'appendItems',
+                  builder: (context) {
+                    return CheckboxListTile(
+                      title: Text("Append Items to Order"),
+                      subtitle: Text(
+                        "User able to append items to existing order",
+                      ),
+                      value: controller.appendItems,
+                      onChanged: controller.updateAppendItems,
+                    );
+                  },
+                ),
+                GetBuilder<AccessFormController>(
+                  id: 'preparation',
+                  builder: (context) {
+                    return CheckboxListTile(
+                      title: Text("Order Preparation"),
+                      subtitle: Text("User able to prepare order items"),
+                      value: controller.preparation,
+                      onChanged: controller.updatePreparation,
+                    );
+                  },
                 ),
                 ElevatedButton(
                   onPressed: controller.createAccess,
-                  child: Text('Create Access'),
+                  child: Text(
+                    controller.id == null ? "Create Access" : "Update Access",
+                  ),
                 ),
               ],
             ),

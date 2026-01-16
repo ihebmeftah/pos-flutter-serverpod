@@ -12,24 +12,14 @@ class OrderEndpoint extends Endpoint {
 
   Future<List<Order>> getOrders(
     Session session,
-    int? buildingId,
+    int buildingId,
     OrderStatus? orderStatus,
   ) async {
-    if (orderStatus != null) {
-      return await Order.db.find(
+    Employer? employer;
+    if (session.authenticated!.scopes.contains(Scope("employer"))) {
+      employer = await EmployerEndpoint().getEmployerByIdentifier(
         session,
-        orderByList: (k) => [
-          s.Order(column: k.createdAt, orderDescending: true),
-          s.Order(column: k.status, orderDescending: true),
-        ],
-        where: (t) =>
-            t.btable.buildingId.equals(buildingId) &
-            t.status.equals(orderStatus),
-        include: Order.include(
-          btable: BTable.include(),
-          passedBy: UserProfile.include(),
-          items: OrderItem.includeList(),
-        ),
+        session.authenticated!.authUserId,
       );
     }
     return await Order.db.find(
@@ -38,7 +28,30 @@ class OrderEndpoint extends Endpoint {
         s.Order(column: k.createdAt, orderDescending: true),
         s.Order(column: k.status, orderDescending: true),
       ],
-      where: (t) => t.btable.buildingId.equals(buildingId),
+      where: (t) {
+        final base = t.btable.buildingId.equals(buildingId);
+        final currentUser =
+            (t.passedBy.authUserId.equals(session.authenticated!.authUserId) |
+            t.closedby.authUserId.equals(session.authenticated!.authUserId) |
+            t.items.any(
+              (item) {
+                return item.passedBy.authUserId.equals(
+                  session.authenticated!.authUserId,
+                );
+              },
+            ));
+        if (session.authenticated!.scopes.contains(Scope("owner")) ||
+            (employer?.access?.consultAllOrders ?? false)) {
+          /// Owner can see all orders
+          if (orderStatus != null) return base & t.status.equals(orderStatus);
+          return base;
+        } else {
+          if (orderStatus != null) {
+            return base & t.status.equals(orderStatus) & currentUser;
+          }
+          return base & currentUser;
+        }
+      },
       include: Order.include(
         btable: BTable.include(),
         passedBy: UserProfile.include(),
@@ -58,6 +71,8 @@ class OrderEndpoint extends Endpoint {
         items: OrderItem.includeList(
           include: OrderItem.include(
             passedBy: UserProfile.include(),
+            preparedBy: UserProfile.include(),
+            payedTo: UserProfile.include(),
           ),
         ),
       ),
@@ -231,8 +246,8 @@ class OrderEndpoint extends Endpoint {
     int orderItemId,
     int buildingId,
   ) async {
+    /// verify employer access
     await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
-    Order order = await getOrderById(session, orderId);
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,
@@ -244,11 +259,15 @@ class OrderEndpoint extends Endpoint {
         message: 'You don\'t have access to pay order items',
       );
     }
+    Order order = await getOrderById(session, orderId);
     OrderItem? item = order.items!.firstWhere(
       (item) => item.id == orderItemId,
     );
-    item.payed = true;
-    if (!order.items!.any((i) => i.payed == false)) {
+    item.itemStatus = OrderItemStatus.payed;
+    item.payedToId = employer.userProfileId;
+    item.payedAt = DateTime.now();
+    item.updatedAt = DateTime.now();
+    if (!order.items!.any((i) => i.itemStatus != OrderItemStatus.payed)) {
       order.status = OrderStatus.payed;
       order.closedbyId = employer.userProfileId;
     }
@@ -266,8 +285,8 @@ class OrderEndpoint extends Endpoint {
     int orderId,
     int buildingId,
   ) async {
+    /// verify employer access
     await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
-    Order order = await getOrderById(session, orderId);
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,
@@ -279,12 +298,20 @@ class OrderEndpoint extends Endpoint {
         message: 'You don\'t have access to pay order items',
       );
     }
+
+    /// mark all items as payed
+    Order order = await getOrderById(session, orderId);
     for (OrderItem item in order.items!) {
-      if (!item.payed) {
-        item.payed = true;
+      if (item.itemStatus != OrderItemStatus.payed) {
+        item.itemStatus = OrderItemStatus.payed;
+        item.payedToId = employer.userProfileId;
+        item.payedAt = DateTime.now();
+        item.updatedAt = DateTime.now();
         await OrderItem.db.updateRow(session, item);
       }
     }
+
+    /// mark order as payed
     order.status = OrderStatus.payed;
     order.updatedAt = DateTime.now();
     order.closedbyId = employer.userProfileId;
@@ -310,6 +337,8 @@ class OrderEndpoint extends Endpoint {
         items: OrderItem.includeList(
           include: OrderItem.include(
             passedBy: UserProfile.include(),
+            preparedBy: UserProfile.include(),
+            payedTo: UserProfile.include(),
           ),
         ),
       ),
@@ -333,20 +362,14 @@ class OrderEndpoint extends Endpoint {
       "owner",
       "employer",
     ]);
-    if (orderStatus != null) {
-      return await Order.db.find(
-        session,
-        where: (t) => t.btableId.equals(tableId) & t.status.equals(orderStatus),
-        include: Order.include(
-          btable: BTable.include(),
-          passedBy: UserProfile.include(),
-          items: OrderItem.includeList(),
-        ),
-      );
-    }
     return await Order.db.find(
       session,
-      where: (t) => t.btableId.equals(tableId),
+      where: (t) {
+        if (orderStatus != null) {
+          return t.btableId.equals(tableId) & t.status.equals(orderStatus);
+        }
+        return t.btableId.equals(tableId);
+      },
       include: Order.include(
         passedBy: UserProfile.include(),
         btable: BTable.include(),

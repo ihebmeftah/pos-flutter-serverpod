@@ -27,7 +27,7 @@ class AuthorizationsHelpers {
       throw AppException(
         errorType: ExceptionType.Forbidden,
         message:
-            '${scopes.map((e) => e).join(', ')} not authorized to perform this action.',
+            '${currScope.map((e) => e.name).join(', ')} not authorized to perform this action.',
       );
     }
     return currScope;

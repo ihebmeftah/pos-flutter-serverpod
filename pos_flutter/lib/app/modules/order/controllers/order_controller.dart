@@ -30,7 +30,7 @@ class OrderController extends GetxController with StateMixin {
         );
       } else {
         orders.value = await ServerpodClient.instance.order.getOrders(
-          LocalStorage().building!.id,
+          LocalStorage().building!.id!,
           orderStatus,
         );
       }

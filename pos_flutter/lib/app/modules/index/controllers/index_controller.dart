@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/modules/order/controllers/order_controller.dart';
 import 'package:pos_flutter/app/modules/tables/controllers/tables_controller.dart';
+import 'package:pos_flutter/app/routes/app_pages.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
@@ -16,7 +17,7 @@ import '../../order/controllers/order_details_controller.dart';
 /// it listen to order create and update stream to update order and table info in real time
 class IndexController extends GetxController with StateMixin<UserProfile> {
   late UserProfile userProfile;
-  late Employer? employer;
+  Employer? employer;
   Access? get currentUserAccess => employer?.access;
 
   Set<String> scope = <String>{};
@@ -84,11 +85,28 @@ class IndexController extends GetxController with StateMixin<UserProfile> {
       .streamCreateOrder(LocalStorage().building!.id!)
       .listen((order) {
         // TODO: Handle order/table update [without send requests]
-        if (Get.find<IndexController>().currentUserAccess?.orderCreationNotif ??
-            false) {
+        if ((Get.find<IndexController>()
+                    .currentUserAccess
+                    ?.orderCreationNotif ??
+                false) &&
+            order.passedBy!.authUserId !=
+                ServerpodClient.instance.auth.authInfo!.authUserId) {
           Get.snackbar(
             "New order",
             "A new order need your attention",
+            mainButton: TextButton(
+              onPressed: () => Get.toNamed(
+                '${Routes.ORDER_DETAILS}/${order.id}',
+                arguments: "new_order_added",
+              ),
+              child: const Text(
+                "View",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColorLight,
             colorText: Get.theme.primaryColorDark,
@@ -131,11 +149,30 @@ class IndexController extends GetxController with StateMixin<UserProfile> {
       .streamAppendItemsOrder(LocalStorage().building!.id!)
       .listen((order) {
         // TODO: Handle order/table update [without send requests]
-        if (Get.find<IndexController>().currentUserAccess?.orderCreationNotif ??
-            false) {
+        if (((Get.find<IndexController>()
+                        .currentUserAccess
+                        ?.orderCreationNotif ??
+                    false) ||
+                (Get.find<IndexController>().currentUserAccess?.preparation ??
+                    false)) &&
+            order.passedBy!.authUserId !=
+                ServerpodClient.instance.auth.authInfo!.authUserId) {
           Get.snackbar(
             "New items added to order",
             "New items added need your attention",
+            mainButton: TextButton(
+              onPressed: () => Get.toNamed(
+                '${Routes.ORDER_DETAILS}/${order.id}',
+                arguments: "new_items_added",
+              ),
+              child: const Text(
+                "View",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Get.theme.primaryColorLight,
             colorText: Get.theme.primaryColorDark,

@@ -7,8 +7,12 @@ import '../../../../config/serverpod_client.dart';
 import '../../../data/local/local_storage.dart';
 
 class AccessFormController extends GetxController with StateMixin {
+  int? get id => int.tryParse(Get.parameters['id'] ?? "");
   @override
-  void onInit() {
+  void onInit() async {
+    if (id != null) {
+      await getAccessDetails();
+    }
     change(null, status: RxStatus.success());
     super.onInit();
   }
@@ -33,11 +37,47 @@ class AccessFormController extends GetxController with StateMixin {
     update(['orderItemsPayment']);
   }
 
+  bool consultAllOrders = false;
+  void updateConsultAllOrders(bool? value) {
+    consultAllOrders = value!;
+    update(['consultAllOrders']);
+  }
+
+  bool orderCreationNotif = false;
+  void updateOrderCreationNotif(bool? value) {
+    orderCreationNotif = value!;
+    update(['orderCreationNotif']);
+  }
+
+  bool appendItems = false;
+  void updateAppendItems(bool? value) {
+    appendItems = value!;
+    update(['appendItems']);
+  }
+
+  bool preparation = false;
+  void updatePreparation(bool? value) {
+    preparation = value!;
+    update(['preparation']);
+  }
+
+  bool takeOrder = false;
+  void updateTakeOrder(bool? value) {
+    takeOrder = value!;
+    update(['takeOrder']);
+  }
+
   Access get _accessDto => Access(
+    id: id,
     name: name.text,
     orderCreation: orderCreation,
     orderPayment: orderPayment,
     orderItemsPayment: orderItemsPayment,
+    consultAllOrders: consultAllOrders,
+    orderCreationNotif: orderCreationNotif,
+    appendItems: appendItems,
+    preparation: preparation,
+    takeOrder: takeOrder,
     buildingId: LocalStorage().building!.id!,
   );
 
@@ -45,9 +85,15 @@ class AccessFormController extends GetxController with StateMixin {
     try {
       if (formKey.currentState!.validate()) {
         change(null, status: RxStatus.loading());
-        await ServerpodClient.instance.access.createAccess(
-          _accessDto,
-        );
+        if (id != null) {
+          await ServerpodClient.instance.access.updateAccess(
+            _accessDto,
+          );
+        } else {
+          await ServerpodClient.instance.access.createAccess(
+            _accessDto,
+          );
+        }
         Get.find<AccessController>().getAccess();
         Get.back();
       }
@@ -65,6 +111,25 @@ class AccessFormController extends GetxController with StateMixin {
       change(null, status: RxStatus.error(e.message));
     } catch (e) {
       change(null, status: RxStatus.error("Failed to create accesses"));
+    }
+  }
+
+  Future<void> getAccessDetails() async {
+    try {
+      final accessDetails = await ServerpodClient.instance.access.getAccessById(
+        id!,
+      );
+      name.text = accessDetails.name;
+      orderCreation = accessDetails.orderCreation;
+      orderPayment = accessDetails.orderPayment;
+      orderItemsPayment = accessDetails.orderItemsPayment;
+      consultAllOrders = accessDetails.consultAllOrders;
+      orderCreationNotif = accessDetails.orderCreationNotif;
+      appendItems = accessDetails.appendItems;
+      preparation = accessDetails.preparation;
+      takeOrder = accessDetails.takeOrder;
+    } catch (e) {
+      change(null, status: RxStatus.error("Failed to fetch access details"));
     }
   }
 }

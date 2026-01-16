@@ -73,11 +73,22 @@ class TablesView extends GetView<TablesController> {
                             return;
                           }
                           bottomSheet(
-                            onConfirm: () {
-                              Get.back();
-                              passOrderCtr.setTable(controller.tables[index]);
-                              Get.toNamed(Routes.PASS_ORDER);
-                            },
+                            onConfirm:
+                                (Get.find<IndexController>()
+                                            .currentUserAccess
+                                            ?.orderCreation ??
+                                        true) &&
+                                    Get.find<IndexController>().scope.contains(
+                                      "employer",
+                                    )
+                                ? () {
+                                    Get.back();
+                                    passOrderCtr.setTable(
+                                      controller.tables[index],
+                                    );
+                                    Get.toNamed(Routes.PASS_ORDER);
+                                  }
+                                : null,
                             confirmeButtonText: "Pass Order",
                             children: [
                               Row(
@@ -97,7 +108,7 @@ class TablesView extends GetView<TablesController> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        controller.tables[index].number
+                                        "Table ${controller.tables[index].number}"
                                             .toString(),
                                         style: const TextStyle(
                                           fontSize: 20,
@@ -173,7 +184,10 @@ class TablesView extends GetView<TablesController> {
               ),
             ],
           ),
-          onEmpty: Appemptyscreen(route: Routes.TABLES),
+          onEmpty: Appemptyscreen(
+            pressText: "Press here to add Table (+)",
+            onPressed: () => Get.toNamed(Routes.FORM_TABLE),
+          ),
         ),
       ),
     );

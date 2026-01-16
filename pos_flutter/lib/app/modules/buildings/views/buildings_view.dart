@@ -43,23 +43,42 @@ class BuildingsView extends GetView<BuildingsController> {
                       "Building: ${building.name}",
                       style: context.textTheme.titleLarge,
                     ),
+                    Row(
+                      spacing: 5,
+                      children: [
+                        Icon(Icons.location_on_outlined),
+                        Expanded(child: Text(building.address)),
+                      ],
+                    ),
+                    Row(
+                      spacing: 5,
 
-                    /*     if (building.photos != null)
-                      SizedBox(
-                        height: 200,
-                        width: double.infinity,
-                        child: CarouselView(
-                          itemExtent: 350,
-                          children: List.generate(
-                            controller.buildings[index].photos!.length,
-                            (i) => Image.network(
-                              controller.buildings[index].photos![i],
-                              fit: BoxFit.fill,
-                            ),
+                      children: [
+                        Icon(Icons.access_time_outlined),
+                        Expanded(
+                          child: Text(
+                            '${building.openingTime.toTimeOnly} - ${building.closingTime.toTimeOnly}',
                           ),
                         ),
-                      ),
-                   */
+                      ],
+                    ),
+                    ListTile(
+                      title: Text("Update Information and Settings"),
+                      onTap: () {
+                        Get.back();
+                        Get.toNamed(
+                          Routes.FORM_BUILDING,
+                          parameters: {'id': building.id.toString()},
+                        );
+                      },
+                      leading: Icon(Icons.edit),
+                    ),
+                    SwitchListTile(
+                      value: true,
+                      onChanged: (v) {},
+                      title: Text("Active"),
+                      secondary: Icon(Icons.check_circle_outline),
+                    ),
                   ],
                 );
               },
@@ -77,7 +96,12 @@ class BuildingsView extends GetView<BuildingsController> {
             );
           },
         ),
-        onEmpty: Appemptyscreen(),
+        onEmpty: Appemptyscreen(
+          message: 'No buildings found',
+          pressText:
+              'Click here or tap the + button in the bottom right corner to add a building',
+          onPressed: () => Get.toNamed(Routes.FORM_BUILDING),
+        ),
         onError: (error) => AppErrorScreen(message: error),
       ),
     );

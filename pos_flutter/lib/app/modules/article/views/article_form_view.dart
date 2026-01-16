@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/data/local/local_storage.dart';
+import 'package:pos_flutter/app/extensions/currency.extension.dart';
 
 import '../../../components/appdropdown.dart';
 import '../../../components/apperrorscreen.dart';
@@ -69,8 +71,11 @@ class ArticleFormView extends GetView<ArticleFormController> {
                       ),
                       Expanded(
                         child: AppFormField.label(
+                          suffix: Text(
+                            LocalStorage().building!.currencyCode.symbol,
+                          ),
                           label: "Price",
-                          hint: "Enter article price",
+                          hint: "Price",
                           ctr: controller.price,
                           isNumeric: true,
                           validator: (value) {

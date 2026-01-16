@@ -30,4 +30,16 @@ class AccessController extends GetxController with StateMixin {
       change(null, status: RxStatus.error("Failed to load accesses"));
     }
   }
+
+  void deleleAcces(int index) async {
+    try {
+      await ServerpodClient.instance.access.deleteAccess(access[index].id!);
+      getAccess();
+      Get.back();
+    } on AppException catch (e) {
+      change(null, status: RxStatus.error(e.message));
+    } catch (e) {
+      change(null, status: RxStatus.error("Failed to load accesses"));
+    }
+  }
 }

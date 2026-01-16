@@ -1,5 +1,6 @@
 access:
   - createAccess:
+  - updateAccess:
   - getAllAccesses:
   - getAccessById:
   - deleteAccess:
@@ -24,6 +25,8 @@ jwtRefresh:
 building:
   - getAllBuildings:
   - createBuilding:
+  - getBuildingById:
+  - updateBuilding:
 buildingTables:
   - getTables:
   - createTables:
@@ -46,3 +49,5 @@ order:
   - streamCreateOrder:
   - streamAppendItemsOrder:
   - streamUpdateOrder:
+orderItem:
+  - changeOrderItemsStatus:

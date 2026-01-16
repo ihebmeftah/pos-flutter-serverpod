@@ -45,6 +45,11 @@ class BuildingEndpoint extends Endpoint {
         orderCreation: true,
         orderPayment: false,
         orderItemsPayment: false,
+        consultAllOrders: false,
+        orderCreationNotif: false,
+        preparation: false,
+        appendItems: false,
+        takeOrder: true,
         buildingId: createdBuilding.id!,
       ),
       Access(
@@ -52,6 +57,11 @@ class BuildingEndpoint extends Endpoint {
         orderCreation: false,
         orderPayment: true,
         orderItemsPayment: true,
+        consultAllOrders: true,
+        orderCreationNotif: false,
+        preparation: false,
+        appendItems: false,
+        takeOrder: false,
         buildingId: createdBuilding.id!,
       ),
       Access(
@@ -59,7 +69,11 @@ class BuildingEndpoint extends Endpoint {
         orderCreation: false,
         orderPayment: false,
         orderItemsPayment: false,
-        orderCreationNotif: true,
+        consultAllOrders: false,
+        orderCreationNotif: false,
+        preparation: true,
+        appendItems: false,
+        takeOrder: false,
         buildingId: createdBuilding.id!,
       ),
     ];
@@ -72,7 +86,6 @@ class BuildingEndpoint extends Endpoint {
   /// Returns the [Building] building
   /// allow for all type of users (admin, customer)
   /// This method is not generated in client side
-  @doNotGenerate
   Future<Building> getBuildingById(Session session, int buildingId) async {
     Building? building = await Building.db.findById(session, buildingId);
     if (building == null) {
@@ -81,6 +94,19 @@ class BuildingEndpoint extends Endpoint {
         errorType: ExceptionType.NotFound,
       );
     }
+    return building;
+  }
+
+  Future<Building> updateBuilding(Session session, Building building) async {
+    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
+    final existingBuilding = await getBuildingById(session, building.id!);
+    if (existingBuilding.authUserId != session.authenticated?.authUserId) {
+      throw AppException(
+        message: 'You are not authorized to update this building',
+        errorType: ExceptionType.Unauthorized,
+      );
+    }
+    await Building.db.updateRow(session, building);
     return building;
   }
 }

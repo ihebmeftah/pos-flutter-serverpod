@@ -16,23 +16,28 @@ abstract class Access implements _i1.SerializableModel {
   Access._({
     this.id,
     required this.name,
+    required this.consultAllOrders,
     required this.orderCreation,
-    bool? orderCreationNotif,
+    required this.orderCreationNotif,
     required this.orderPayment,
     required this.orderItemsPayment,
-    bool? appendItems,
+    required this.appendItems,
+    required this.preparation,
+    required this.takeOrder,
     required this.buildingId,
-  }) : orderCreationNotif = orderCreationNotif ?? true,
-       appendItems = appendItems ?? false;
+  });
 
   factory Access({
     int? id,
     required String name,
+    required bool consultAllOrders,
     required bool orderCreation,
-    bool? orderCreationNotif,
+    required bool orderCreationNotif,
     required bool orderPayment,
     required bool orderItemsPayment,
-    bool? appendItems,
+    required bool appendItems,
+    required bool preparation,
+    required bool takeOrder,
     required int? buildingId,
   }) = _AccessImpl;
 
@@ -40,11 +45,14 @@ abstract class Access implements _i1.SerializableModel {
     return Access(
       id: jsonSerialization['id'] as int?,
       name: jsonSerialization['name'] as String,
+      consultAllOrders: jsonSerialization['consultAllOrders'] as bool,
       orderCreation: jsonSerialization['orderCreation'] as bool,
-      orderCreationNotif: jsonSerialization['orderCreationNotif'] as bool?,
+      orderCreationNotif: jsonSerialization['orderCreationNotif'] as bool,
       orderPayment: jsonSerialization['orderPayment'] as bool,
       orderItemsPayment: jsonSerialization['orderItemsPayment'] as bool,
-      appendItems: jsonSerialization['appendItems'] as bool?,
+      appendItems: jsonSerialization['appendItems'] as bool,
+      preparation: jsonSerialization['preparation'] as bool,
+      takeOrder: jsonSerialization['takeOrder'] as bool,
       buildingId: jsonSerialization['buildingId'] as int?,
     );
   }
@@ -56,6 +64,8 @@ abstract class Access implements _i1.SerializableModel {
 
   String name;
 
+  bool consultAllOrders;
+
   bool orderCreation;
 
   bool orderCreationNotif;
@@ -66,6 +76,10 @@ abstract class Access implements _i1.SerializableModel {
 
   bool appendItems;
 
+  bool preparation;
+
+  bool takeOrder;
+
   int? buildingId;
 
   /// Returns a shallow copy of this [Access]
@@ -74,11 +88,14 @@ abstract class Access implements _i1.SerializableModel {
   Access copyWith({
     int? id,
     String? name,
+    bool? consultAllOrders,
     bool? orderCreation,
     bool? orderCreationNotif,
     bool? orderPayment,
     bool? orderItemsPayment,
     bool? appendItems,
+    bool? preparation,
+    bool? takeOrder,
     int? buildingId,
   });
   @override
@@ -87,11 +104,14 @@ abstract class Access implements _i1.SerializableModel {
       '__className__': 'Access',
       if (id != null) 'id': id,
       'name': name,
+      'consultAllOrders': consultAllOrders,
       'orderCreation': orderCreation,
       'orderCreationNotif': orderCreationNotif,
       'orderPayment': orderPayment,
       'orderItemsPayment': orderItemsPayment,
       'appendItems': appendItems,
+      'preparation': preparation,
+      'takeOrder': takeOrder,
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -108,20 +128,26 @@ class _AccessImpl extends Access {
   _AccessImpl({
     int? id,
     required String name,
+    required bool consultAllOrders,
     required bool orderCreation,
-    bool? orderCreationNotif,
+    required bool orderCreationNotif,
     required bool orderPayment,
     required bool orderItemsPayment,
-    bool? appendItems,
+    required bool appendItems,
+    required bool preparation,
+    required bool takeOrder,
     required int? buildingId,
   }) : super._(
          id: id,
          name: name,
+         consultAllOrders: consultAllOrders,
          orderCreation: orderCreation,
          orderCreationNotif: orderCreationNotif,
          orderPayment: orderPayment,
          orderItemsPayment: orderItemsPayment,
          appendItems: appendItems,
+         preparation: preparation,
+         takeOrder: takeOrder,
          buildingId: buildingId,
        );
 
@@ -132,21 +158,27 @@ class _AccessImpl extends Access {
   Access copyWith({
     Object? id = _Undefined,
     String? name,
+    bool? consultAllOrders,
     bool? orderCreation,
     bool? orderCreationNotif,
     bool? orderPayment,
     bool? orderItemsPayment,
     bool? appendItems,
+    bool? preparation,
+    bool? takeOrder,
     Object? buildingId = _Undefined,
   }) {
     return Access(
       id: id is int? ? id : this.id,
       name: name ?? this.name,
+      consultAllOrders: consultAllOrders ?? this.consultAllOrders,
       orderCreation: orderCreation ?? this.orderCreation,
       orderCreationNotif: orderCreationNotif ?? this.orderCreationNotif,
       orderPayment: orderPayment ?? this.orderPayment,
       orderItemsPayment: orderItemsPayment ?? this.orderItemsPayment,
       appendItems: appendItems ?? this.appendItems,
+      preparation: preparation ?? this.preparation,
+      takeOrder: takeOrder ?? this.takeOrder,
       buildingId: buildingId is int? ? buildingId : this.buildingId,
     );
   }

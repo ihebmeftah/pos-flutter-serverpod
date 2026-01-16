@@ -16,23 +16,28 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Access._({
     this.id,
     required this.name,
+    required this.consultAllOrders,
     required this.orderCreation,
-    bool? orderCreationNotif,
+    required this.orderCreationNotif,
     required this.orderPayment,
     required this.orderItemsPayment,
-    bool? appendItems,
+    required this.appendItems,
+    required this.preparation,
+    required this.takeOrder,
     required this.buildingId,
-  }) : orderCreationNotif = orderCreationNotif ?? true,
-       appendItems = appendItems ?? false;
+  });
 
   factory Access({
     int? id,
     required String name,
+    required bool consultAllOrders,
     required bool orderCreation,
-    bool? orderCreationNotif,
+    required bool orderCreationNotif,
     required bool orderPayment,
     required bool orderItemsPayment,
-    bool? appendItems,
+    required bool appendItems,
+    required bool preparation,
+    required bool takeOrder,
     required int? buildingId,
   }) = _AccessImpl;
 
@@ -40,11 +45,14 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     return Access(
       id: jsonSerialization['id'] as int?,
       name: jsonSerialization['name'] as String,
+      consultAllOrders: jsonSerialization['consultAllOrders'] as bool,
       orderCreation: jsonSerialization['orderCreation'] as bool,
-      orderCreationNotif: jsonSerialization['orderCreationNotif'] as bool?,
+      orderCreationNotif: jsonSerialization['orderCreationNotif'] as bool,
       orderPayment: jsonSerialization['orderPayment'] as bool,
       orderItemsPayment: jsonSerialization['orderItemsPayment'] as bool,
-      appendItems: jsonSerialization['appendItems'] as bool?,
+      appendItems: jsonSerialization['appendItems'] as bool,
+      preparation: jsonSerialization['preparation'] as bool,
+      takeOrder: jsonSerialization['takeOrder'] as bool,
       buildingId: jsonSerialization['buildingId'] as int?,
     );
   }
@@ -58,6 +66,8 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   String name;
 
+  bool consultAllOrders;
+
   bool orderCreation;
 
   bool orderCreationNotif;
@@ -67,6 +77,10 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   bool orderItemsPayment;
 
   bool appendItems;
+
+  bool preparation;
+
+  bool takeOrder;
 
   int? buildingId;
 
@@ -79,11 +93,14 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Access copyWith({
     int? id,
     String? name,
+    bool? consultAllOrders,
     bool? orderCreation,
     bool? orderCreationNotif,
     bool? orderPayment,
     bool? orderItemsPayment,
     bool? appendItems,
+    bool? preparation,
+    bool? takeOrder,
     int? buildingId,
   });
   @override
@@ -92,11 +109,14 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       '__className__': 'Access',
       if (id != null) 'id': id,
       'name': name,
+      'consultAllOrders': consultAllOrders,
       'orderCreation': orderCreation,
       'orderCreationNotif': orderCreationNotif,
       'orderPayment': orderPayment,
       'orderItemsPayment': orderItemsPayment,
       'appendItems': appendItems,
+      'preparation': preparation,
+      'takeOrder': takeOrder,
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -107,11 +127,14 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       '__className__': 'Access',
       if (id != null) 'id': id,
       'name': name,
+      'consultAllOrders': consultAllOrders,
       'orderCreation': orderCreation,
       'orderCreationNotif': orderCreationNotif,
       'orderPayment': orderPayment,
       'orderItemsPayment': orderItemsPayment,
       'appendItems': appendItems,
+      'preparation': preparation,
+      'takeOrder': takeOrder,
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -152,20 +175,26 @@ class _AccessImpl extends Access {
   _AccessImpl({
     int? id,
     required String name,
+    required bool consultAllOrders,
     required bool orderCreation,
-    bool? orderCreationNotif,
+    required bool orderCreationNotif,
     required bool orderPayment,
     required bool orderItemsPayment,
-    bool? appendItems,
+    required bool appendItems,
+    required bool preparation,
+    required bool takeOrder,
     required int? buildingId,
   }) : super._(
          id: id,
          name: name,
+         consultAllOrders: consultAllOrders,
          orderCreation: orderCreation,
          orderCreationNotif: orderCreationNotif,
          orderPayment: orderPayment,
          orderItemsPayment: orderItemsPayment,
          appendItems: appendItems,
+         preparation: preparation,
+         takeOrder: takeOrder,
          buildingId: buildingId,
        );
 
@@ -176,21 +205,27 @@ class _AccessImpl extends Access {
   Access copyWith({
     Object? id = _Undefined,
     String? name,
+    bool? consultAllOrders,
     bool? orderCreation,
     bool? orderCreationNotif,
     bool? orderPayment,
     bool? orderItemsPayment,
     bool? appendItems,
+    bool? preparation,
+    bool? takeOrder,
     Object? buildingId = _Undefined,
   }) {
     return Access(
       id: id is int? ? id : this.id,
       name: name ?? this.name,
+      consultAllOrders: consultAllOrders ?? this.consultAllOrders,
       orderCreation: orderCreation ?? this.orderCreation,
       orderCreationNotif: orderCreationNotif ?? this.orderCreationNotif,
       orderPayment: orderPayment ?? this.orderPayment,
       orderItemsPayment: orderItemsPayment ?? this.orderItemsPayment,
       appendItems: appendItems ?? this.appendItems,
+      preparation: preparation ?? this.preparation,
+      takeOrder: takeOrder ?? this.takeOrder,
       buildingId: buildingId is int? ? buildingId : this.buildingId,
     );
   }
@@ -201,6 +236,11 @@ class AccessUpdateTable extends _i1.UpdateTable<AccessTable> {
 
   _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
     table.name,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> consultAllOrders(bool value) => _i1.ColumnValue(
+    table.consultAllOrders,
     value,
   );
 
@@ -229,6 +269,16 @@ class AccessUpdateTable extends _i1.UpdateTable<AccessTable> {
     value,
   );
 
+  _i1.ColumnValue<bool, bool> preparation(bool value) => _i1.ColumnValue(
+    table.preparation,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> takeOrder(bool value) => _i1.ColumnValue(
+    table.takeOrder,
+    value,
+  );
+
   _i1.ColumnValue<int, int> buildingId(int? value) => _i1.ColumnValue(
     table.buildingId,
     value,
@@ -242,6 +292,10 @@ class AccessTable extends _i1.Table<int?> {
       'name',
       this,
     );
+    consultAllOrders = _i1.ColumnBool(
+      'consultAllOrders',
+      this,
+    );
     orderCreation = _i1.ColumnBool(
       'orderCreation',
       this,
@@ -249,7 +303,6 @@ class AccessTable extends _i1.Table<int?> {
     orderCreationNotif = _i1.ColumnBool(
       'orderCreationNotif',
       this,
-      hasDefault: true,
     );
     orderPayment = _i1.ColumnBool(
       'orderPayment',
@@ -262,7 +315,14 @@ class AccessTable extends _i1.Table<int?> {
     appendItems = _i1.ColumnBool(
       'appendItems',
       this,
-      hasDefault: true,
+    );
+    preparation = _i1.ColumnBool(
+      'preparation',
+      this,
+    );
+    takeOrder = _i1.ColumnBool(
+      'takeOrder',
+      this,
     );
     buildingId = _i1.ColumnInt(
       'buildingId',
@@ -274,6 +334,8 @@ class AccessTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString name;
 
+  late final _i1.ColumnBool consultAllOrders;
+
   late final _i1.ColumnBool orderCreation;
 
   late final _i1.ColumnBool orderCreationNotif;
@@ -284,17 +346,24 @@ class AccessTable extends _i1.Table<int?> {
 
   late final _i1.ColumnBool appendItems;
 
+  late final _i1.ColumnBool preparation;
+
+  late final _i1.ColumnBool takeOrder;
+
   late final _i1.ColumnInt buildingId;
 
   @override
   List<_i1.Column> get columns => [
     id,
     name,
+    consultAllOrders,
     orderCreation,
     orderCreationNotif,
     orderPayment,
     orderItemsPayment,
     appendItems,
+    preparation,
+    takeOrder,
     buildingId,
   ];
 }

@@ -150,9 +150,7 @@ class InventoryView extends GetView<InventoryController> {
                             : ctr.topCategories[index - 1].key.name,
                       ),
                       icon: Icon(
-                        index == 0
-                            ? Icons.add
-                            : Icons.tag,
+                        index == 0 ? Icons.add : Icons.tag,
                       ),
                     ),
                   );
@@ -175,7 +173,7 @@ class InventoryView extends GetView<InventoryController> {
               child: GetBuilder<HomeController>(
                 builder: (ctr) {
                   return ctr.topArticles.isEmpty
-                      ? Appemptyscreen(route: Routes.ARTICLE)
+                      ? Appemptyscreen()
                       : ListView.builder(
                           itemCount: ctr.topArticles.length,
                           itemBuilder: (context, index) => ListTile(
@@ -184,19 +182,18 @@ class InventoryView extends GetView<InventoryController> {
                               height: 50,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                             
                                 color: Colors.grey.shade300,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
-                                      ctr.topArticles[index].key.name
-                                          .substring(0, 1)
-                                          .toUpperCase(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                ctr.topArticles[index].key.name
+                                    .substring(0, 1)
+                                    .toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                             title: Text(ctr.topArticles[index].key.name),
                             subtitle: Text(

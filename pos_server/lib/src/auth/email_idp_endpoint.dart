@@ -86,6 +86,7 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
     return await super.startRegistration(session, email: email);
   }
 
+  ///Reworked verify registration code to assign owner scope
   Future<AuthSuccess> verifyRegistrationCodeReworked(
     Session session, {
     required UuidValue accountRequestId,

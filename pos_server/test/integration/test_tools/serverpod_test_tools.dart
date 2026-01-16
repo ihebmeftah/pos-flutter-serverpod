@@ -27,6 +27,8 @@ import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i11;
 import 'package:pos_server/src/generated/order/order.dart' as _i12;
 import 'package:pos_server/src/generated/order/order_status_enum.dart' as _i13;
 import 'package:pos_server/src/generated/order/order_item.dart' as _i14;
+import 'package:pos_server/src/generated/order/order_item_status_enum.dart'
+    as _i15;
 import 'package:pos_server/src/generated/protocol.dart';
 import 'package:pos_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -151,6 +153,8 @@ class TestEndpoints {
   late final _EmployerEndpoint employer;
 
   late final _OrderEndpoint order;
+
+  late final _OrderItemEndpoint orderItem;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -196,6 +200,10 @@ class _InternalTestEndpoints extends TestEndpoints
       endpoints,
       serializationManager,
     );
+    orderItem = _OrderItemEndpoint(
+      endpoints,
+      serializationManager,
+    );
   }
 }
 
@@ -224,6 +232,37 @@ class _AccessEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'access',
           methodName: 'createAccess',
+          parameters: _i1.testObjectToJson({'access': access}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i4.Access>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i4.Access> updateAccess(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i4.Access access,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'access',
+            method: 'updateAccess',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'access',
+          methodName: 'updateAccess',
           parameters: _i1.testObjectToJson({'access': access}),
           serializationManager: _serializationManager,
         );
@@ -949,6 +988,68 @@ class _BuildingEndpoint {
       }
     });
   }
+
+  _i3.Future<_i9.Building> getBuildingById(
+    _i1.TestSessionBuilder sessionBuilder,
+    int buildingId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'building',
+            method: 'getBuildingById',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'building',
+          methodName: 'getBuildingById',
+          parameters: _i1.testObjectToJson({'buildingId': buildingId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i9.Building>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i9.Building> updateBuilding(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i9.Building building,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'building',
+            method: 'updateBuilding',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'building',
+          methodName: 'updateBuilding',
+          parameters: _i1.testObjectToJson({'building': building}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i9.Building>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }
 
 class _BuildingTablesEndpoint {
@@ -1231,7 +1332,7 @@ class _OrderEndpoint {
 
   _i3.Future<List<_i12.Order>> getOrders(
     _i1.TestSessionBuilder sessionBuilder,
-    int? buildingId,
+    int buildingId,
     _i13.OrderStatus? orderStatus,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
@@ -1593,5 +1694,51 @@ class _OrderEndpoint {
       _localTestStreamManager.outputStreamController,
     );
     return _localTestStreamManager.outputStreamController.stream;
+  }
+}
+
+class _OrderItemEndpoint {
+  _OrderItemEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<List<_i14.OrderItem>> changeOrderItemsStatus(
+    _i1.TestSessionBuilder sessionBuilder,
+    List<int> orderItemIds,
+    _i15.OrderItemStatus newStatus,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'orderItem',
+            method: 'changeOrderItemsStatus',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'orderItem',
+          methodName: 'changeOrderItemsStatus',
+          parameters: _i1.testObjectToJson({
+            'orderItemIds': orderItemIds,
+            'newStatus': newStatus,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i14.OrderItem>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
   }
 }

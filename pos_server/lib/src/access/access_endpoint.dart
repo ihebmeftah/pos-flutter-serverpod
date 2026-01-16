@@ -12,6 +12,12 @@ class AccessEndpoint extends Endpoint {
     return await Access.db.insertRow(session, access);
   }
 
+  Future<Access> updateAccess(Session session, Access access) async {
+    final oldAccess = await getAccessById(session, access.id!);
+    if (oldAccess.name != access.name) await checkAccessExist(session, access);
+    return await Access.db.updateRow(session, access);
+  }
+
   @doNotGenerate
   Future<List<Access>> createListAccess(
     Session session,

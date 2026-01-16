@@ -140,7 +140,12 @@ class CategorieView extends GetView<CategorieController> {
             },
           ),
         ),
-        onEmpty: const Appemptyscreen(),
+        onEmpty: Appemptyscreen(
+          message: 'No categories found',
+          pressText:
+              'Click here or tap the + button in the top right corner to add a category',
+          onPressed: () => Get.toNamed(Routes.CATEGORIE_FORM),
+        ),
         onError: (error) => AppErrorScreen(message: error),
       ),
     );

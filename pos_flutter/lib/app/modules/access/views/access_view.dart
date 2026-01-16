@@ -25,6 +25,12 @@ class AccessView extends GetView<AccessController> {
           itemCount: controller.access.length,
           separatorBuilder: (c, index) => SizedBox(height: 10),
           itemBuilder: (c, index) => ListTile(
+            onTap: () => Get.toNamed(
+              Routes.ACCESS_FORM,
+              parameters: {
+                'id': controller.access[index].id.toString(),
+              },
+            ),
             leading: Icon(
               Icons.vpn_key_outlined,
               color: Colors.brown,
@@ -67,18 +73,24 @@ class AccessView extends GetView<AccessController> {
                       ),
                     ],
                   ),
-
                   textConfirm: "Yes",
                   textCancel: "No",
                   confirmTextColor: Colors.white,
-                  onConfirm: () {},
+                  onConfirm: () => controller.deleleAcces(index),
                 );
               },
               icon: Icon(Icons.delete),
             ),
           ),
         ),
-        onEmpty: Appemptyscreen(),
+        onEmpty: Appemptyscreen(
+          message: 'No access levels found',
+          pressText:
+              'Click here or tap the + button in the bottom right corner to add an access level',
+          onPressed: () => Get.toNamed(
+            Routes.ACCESS_FORM,
+          ),
+        ),
         onError: (error) => AppErrorScreen(message: error!),
       ),
     );

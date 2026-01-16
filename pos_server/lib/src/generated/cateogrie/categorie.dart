@@ -80,6 +80,7 @@ abstract class Categorie
       if (id != null) 'id': id,
       'name': name,
       'description': description,
+      if (buildingId != null) 'buildingId': buildingId,
     };
   }
 

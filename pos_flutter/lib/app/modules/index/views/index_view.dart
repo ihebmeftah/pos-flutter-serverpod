@@ -19,31 +19,37 @@ class IndexView extends GetView<IndexController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.toNamed(Routes.PASS_ORDER),
-        child: GetBuilder<PassOrderController>(
-          id: "table",
-          builder: (passOrderCtr) {
-            return Badge(
-              isLabelVisible: passOrderCtr.table != null,
-              label: Text("!", style: TextStyle(color: Colors.white)),
-              child: SvgPicture.asset(
-                "assets/images/svg/order.svg",
-                colorFilter: ColorFilter.mode(
-                  controller.currBnb == 1
-                      ? Theme.of(
-                          context,
-                        ).bottomNavigationBarTheme.selectedItemColor!
-                      : Theme.of(
-                          context,
-                        ).bottomNavigationBarTheme.unselectedItemColor!,
-                  BlendMode.srcIn,
-                ),
+      floatingActionButton:
+          (controller.currentUserAccess?.orderCreation ?? true) &&
+              Get.find<IndexController>().scope.contains(
+                "employer",
+              )
+          ? FloatingActionButton(
+              onPressed: () => Get.toNamed(Routes.PASS_ORDER),
+              child: GetBuilder<PassOrderController>(
+                id: "table",
+                builder: (passOrderCtr) {
+                  return Badge(
+                    isLabelVisible: passOrderCtr.table != null,
+                    label: Text("!", style: TextStyle(color: Colors.white)),
+                    child: SvgPicture.asset(
+                      "assets/images/svg/order.svg",
+                      colorFilter: ColorFilter.mode(
+                        controller.currBnb == 1
+                            ? Theme.of(
+                                context,
+                              ).bottomNavigationBarTheme.selectedItemColor!
+                            : Theme.of(
+                                context,
+                              ).bottomNavigationBarTheme.unselectedItemColor!,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-      ),
+            )
+          : null,
       drawer: GetBuilder<IndexController>(
         builder: (ctr) {
           return controller.status.isLoading

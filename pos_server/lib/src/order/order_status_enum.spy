@@ -3,6 +3,4 @@ serialized: byName
 default: progress
 values:
   - progress
-  - ready
-  - delivred
   - payed

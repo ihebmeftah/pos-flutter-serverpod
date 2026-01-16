@@ -1,0 +1,9 @@
+enum: OrderItemStatus
+serialized: byName
+default: progress
+values:
+  - progress
+  - picked
+  - ready
+  - delivered
+  - payed

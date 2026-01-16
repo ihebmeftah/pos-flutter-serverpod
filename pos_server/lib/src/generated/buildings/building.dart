@@ -11,6 +11,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import '../buildings/currency_enum.dart' as _i2;
 
 abstract class Building
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
@@ -23,8 +24,13 @@ abstract class Building
     required this.authUserId,
     bool? tableMultiOrder,
     bool? allowAppendingItemsToOrder,
+    bool? autoCloseOrdersAtClosingTime,
+    required this.currencyCode,
+    this.long,
+    this.lat,
   }) : tableMultiOrder = tableMultiOrder ?? false,
-       allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true;
+       allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true,
+       autoCloseOrdersAtClosingTime = autoCloseOrdersAtClosingTime ?? false;
 
   factory Building({
     int? id,
@@ -35,6 +41,10 @@ abstract class Building
     required _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
     bool? allowAppendingItemsToOrder,
+    bool? autoCloseOrdersAtClosingTime,
+    required _i2.Currency currencyCode,
+    double? long,
+    double? lat,
   }) = _BuildingImpl;
 
   factory Building.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -56,6 +66,13 @@ abstract class Building
       tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool?,
       allowAppendingItemsToOrder:
           jsonSerialization['allowAppendingItemsToOrder'] as bool?,
+      autoCloseOrdersAtClosingTime:
+          jsonSerialization['autoCloseOrdersAtClosingTime'] as bool?,
+      currencyCode: _i2.Currency.fromJson(
+        (jsonSerialization['currencyCode'] as String),
+      ),
+      long: (jsonSerialization['long'] as num?)?.toDouble(),
+      lat: (jsonSerialization['lat'] as num?)?.toDouble(),
     );
   }
 
@@ -87,6 +104,16 @@ abstract class Building
   /// Indicates whether items can be appended to an existing order.
   bool allowAppendingItemsToOrder;
 
+  /// auto close orders when closing time is reached
+  bool autoCloseOrdersAtClosingTime;
+
+  /// currency code for the building (e.g., USD, EUR).
+  _i2.Currency currencyCode;
+
+  double? long;
+
+  double? lat;
+
   @override
   _i1.Table<int?> get table => t;
 
@@ -102,6 +129,10 @@ abstract class Building
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
     bool? allowAppendingItemsToOrder,
+    bool? autoCloseOrdersAtClosingTime,
+    _i2.Currency? currencyCode,
+    double? long,
+    double? lat,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -115,6 +146,10 @@ abstract class Building
       if (authUserId != null) 'authUserId': authUserId?.toJson(),
       'tableMultiOrder': tableMultiOrder,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
+      'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
+      'currencyCode': currencyCode.toJson(),
+      if (long != null) 'long': long,
+      if (lat != null) 'lat': lat,
     };
   }
 
@@ -127,8 +162,13 @@ abstract class Building
       'address': address,
       'openingTime': openingTime.toJson(),
       'closingTime': closingTime.toJson(),
+      if (authUserId != null) 'authUserId': authUserId?.toJson(),
       'tableMultiOrder': tableMultiOrder,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
+      'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
+      'currencyCode': currencyCode.toJson(),
+      if (long != null) 'long': long,
+      if (lat != null) 'lat': lat,
     };
   }
 
@@ -174,6 +214,10 @@ class _BuildingImpl extends Building {
     required _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
     bool? allowAppendingItemsToOrder,
+    bool? autoCloseOrdersAtClosingTime,
+    required _i2.Currency currencyCode,
+    double? long,
+    double? lat,
   }) : super._(
          id: id,
          name: name,
@@ -183,6 +227,10 @@ class _BuildingImpl extends Building {
          authUserId: authUserId,
          tableMultiOrder: tableMultiOrder,
          allowAppendingItemsToOrder: allowAppendingItemsToOrder,
+         autoCloseOrdersAtClosingTime: autoCloseOrdersAtClosingTime,
+         currencyCode: currencyCode,
+         long: long,
+         lat: lat,
        );
 
   /// Returns a shallow copy of this [Building]
@@ -198,6 +246,10 @@ class _BuildingImpl extends Building {
     Object? authUserId = _Undefined,
     bool? tableMultiOrder,
     bool? allowAppendingItemsToOrder,
+    bool? autoCloseOrdersAtClosingTime,
+    _i2.Currency? currencyCode,
+    Object? long = _Undefined,
+    Object? lat = _Undefined,
   }) {
     return Building(
       id: id is int? ? id : this.id,
@@ -209,6 +261,11 @@ class _BuildingImpl extends Building {
       tableMultiOrder: tableMultiOrder ?? this.tableMultiOrder,
       allowAppendingItemsToOrder:
           allowAppendingItemsToOrder ?? this.allowAppendingItemsToOrder,
+      autoCloseOrdersAtClosingTime:
+          autoCloseOrdersAtClosingTime ?? this.autoCloseOrdersAtClosingTime,
+      currencyCode: currencyCode ?? this.currencyCode,
+      long: long is double? ? long : this.long,
+      lat: lat is double? ? lat : this.lat,
     );
   }
 }
@@ -255,6 +312,29 @@ class BuildingUpdateTable extends _i1.UpdateTable<BuildingTable> {
         table.allowAppendingItemsToOrder,
         value,
       );
+
+  _i1.ColumnValue<bool, bool> autoCloseOrdersAtClosingTime(bool value) =>
+      _i1.ColumnValue(
+        table.autoCloseOrdersAtClosingTime,
+        value,
+      );
+
+  _i1.ColumnValue<_i2.Currency, _i2.Currency> currencyCode(
+    _i2.Currency value,
+  ) => _i1.ColumnValue(
+    table.currencyCode,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> long(double? value) => _i1.ColumnValue(
+    table.long,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> lat(double? value) => _i1.ColumnValue(
+    table.lat,
+    value,
+  );
 }
 
 class BuildingTable extends _i1.Table<int?> {
@@ -290,6 +370,24 @@ class BuildingTable extends _i1.Table<int?> {
       this,
       hasDefault: true,
     );
+    autoCloseOrdersAtClosingTime = _i1.ColumnBool(
+      'autoCloseOrdersAtClosingTime',
+      this,
+      hasDefault: true,
+    );
+    currencyCode = _i1.ColumnEnum(
+      'currencyCode',
+      this,
+      _i1.EnumSerialization.byName,
+    );
+    long = _i1.ColumnDouble(
+      'long',
+      this,
+    );
+    lat = _i1.ColumnDouble(
+      'lat',
+      this,
+    );
   }
 
   late final BuildingUpdateTable updateTable;
@@ -315,6 +413,16 @@ class BuildingTable extends _i1.Table<int?> {
   /// Indicates whether items can be appended to an existing order.
   late final _i1.ColumnBool allowAppendingItemsToOrder;
 
+  /// auto close orders when closing time is reached
+  late final _i1.ColumnBool autoCloseOrdersAtClosingTime;
+
+  /// currency code for the building (e.g., USD, EUR).
+  late final _i1.ColumnEnum<_i2.Currency> currencyCode;
+
+  late final _i1.ColumnDouble long;
+
+  late final _i1.ColumnDouble lat;
+
   @override
   List<_i1.Column> get columns => [
     id,
@@ -325,6 +433,10 @@ class BuildingTable extends _i1.Table<int?> {
     authUserId,
     tableMultiOrder,
     allowAppendingItemsToOrder,
+    autoCloseOrdersAtClosingTime,
+    currencyCode,
+    long,
+    lat,
   ];
 }
 

@@ -26,7 +26,9 @@ import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i10;
 import 'package:pos_client/src/protocol/order/order.dart' as _i11;
 import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i12;
 import 'package:pos_client/src/protocol/order/order_item.dart' as _i13;
-import 'protocol.dart' as _i14;
+import 'package:pos_client/src/protocol/order/order_item_status_enum.dart'
+    as _i14;
+import 'protocol.dart' as _i15;
 
 /// {@category Endpoint}
 class EndpointAccess extends _i1.EndpointRef {
@@ -39,6 +41,13 @@ class EndpointAccess extends _i1.EndpointRef {
       caller.callServerEndpoint<_i3.Access>(
         'access',
         'createAccess',
+        {'access': access},
+      );
+
+  _i2.Future<_i3.Access> updateAccess(_i3.Access access) =>
+      caller.callServerEndpoint<_i3.Access>(
+        'access',
+        'updateAccess',
         {'access': access},
       );
 
@@ -160,6 +169,7 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
         {'email': email},
       );
 
+  ///Reworked verify registration code to assign owner scope
   _i2.Future<_i7.AuthSuccess> verifyRegistrationCodeReworked({
     required _i1.UuidValue accountRequestId,
     required String verificationCode,
@@ -406,6 +416,25 @@ class EndpointBuilding extends _i1.EndpointRef {
         'createBuilding',
         {'building': building},
       );
+
+  /// Get a building by id
+  /// required [buildingId] The id of the building
+  /// Returns the [Building] building
+  /// allow for all type of users (admin, customer)
+  /// This method is not generated in client side
+  _i2.Future<_i8.Building> getBuildingById(int buildingId) =>
+      caller.callServerEndpoint<_i8.Building>(
+        'building',
+        'getBuildingById',
+        {'buildingId': buildingId},
+      );
+
+  _i2.Future<_i8.Building> updateBuilding(_i8.Building building) =>
+      caller.callServerEndpoint<_i8.Building>(
+        'building',
+        'updateBuilding',
+        {'building': building},
+      );
 }
 
 /// Building Tables Endpoint
@@ -545,7 +574,7 @@ class EndpointOrder extends _i1.EndpointRef {
   String get name => 'order';
 
   _i2.Future<List<_i11.Order>> getOrders(
-    int? buildingId,
+    int buildingId,
     _i12.OrderStatus? orderStatus,
   ) => caller.callServerEndpoint<List<_i11.Order>>(
     'order',
@@ -666,6 +695,33 @@ class EndpointOrder extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointOrderItem extends _i1.EndpointRef {
+  EndpointOrderItem(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'orderItem';
+
+  /// Change status of order items
+  /// items status should have this workflow (progress -> picked -> ready -> delivered)
+  /// Parameters:
+  /// - [orderItemIds]: List of order item IDs to be updated
+  /// - [newStatus]: The new status to be set for the order items
+  /// Returns:
+  /// - A list of updated OrderItem objects
+  _i2.Future<List<_i13.OrderItem>> changeOrderItemsStatus(
+    List<int> orderItemIds,
+    _i14.OrderItemStatus newStatus,
+  ) => caller.callServerEndpoint<List<_i13.OrderItem>>(
+    'orderItem',
+    'changeOrderItemsStatus',
+    {
+      'orderItemIds': orderItemIds,
+      'newStatus': newStatus,
+    },
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i6.Caller(client);
@@ -697,7 +753,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i14.Protocol(),
+         _i15.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -715,6 +771,7 @@ class Client extends _i1.ServerpodClientShared {
     categorie = EndpointCategorie(this);
     employer = EndpointEmployer(this);
     order = EndpointOrder(this);
+    orderItem = EndpointOrderItem(this);
     modules = Modules(this);
   }
 
@@ -736,6 +793,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointOrder order;
 
+  late final EndpointOrderItem orderItem;
+
   late final Modules modules;
 
   @override
@@ -749,6 +808,7 @@ class Client extends _i1.ServerpodClientShared {
     'categorie': categorie,
     'employer': employer,
     'order': order,
+    'orderItem': orderItem,
   };
 
   @override
