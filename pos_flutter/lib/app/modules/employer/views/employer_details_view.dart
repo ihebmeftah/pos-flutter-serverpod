@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/components/app_section_card.dart';
 
 import '../../../components/appemptyscreen.dart';
 import '../../../components/apperrorscreen.dart';
@@ -23,38 +24,11 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Account Information Card
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(20),
+                AppSectionCard(
+                  title: 'Account Information',
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.account_circle,
-                            color: AppTheme().primary,
-                            size: 24,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Account Information',
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
                       _buildInfoRow(
                         context,
                         icon: Icons.person_outline,
@@ -73,69 +47,33 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                                 .toString(),
                       ),
                       const Divider(height: 32),
-                      _buildInfoRow(
-                        context,
-                        icon: Icons.vpn_key_outlined,
-                        label: 'Access',
-                        value: (employer.access?.name ?? 'No Access Assigned'),
-                      ),
-                      const Divider(height: 32),
-                      _buildInfoRow(
-                        context,
-                        icon: Icons.pin_outlined,
-                        label: 'Employer ID',
-                        value: (employer.id ?? 'N/A').toString(),
-                      ),
-                      const Divider(height: 32),
-                      _buildInfoRow(
-                        context,
-                        icon: Icons.pin_outlined,
-                        label: 'Profile ID',
-                        value: (employer.userProfileId).toString(),
-                      ),
-                      const Divider(height: 32),
-                      _buildInfoRow(
-                        context,
-                        icon: Icons.pin_outlined,
-                        label: 'Auth User ID',
-                        value: (employer.userProfile!.authUserId).toString(),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildInfoRow(
+                              context,
+                              icon: Icons.vpn_key_outlined,
+                              label: 'Access',
+                              value:
+                                  (employer.access?.name ??
+                                  'No Access Assigned'),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text("Change Access"),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
 
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(20),
+                AppSectionCard(
+                  title: 'Contact Information',
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.info,
-                            color: AppTheme().primary,
-                            size: 24,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Contact Information',
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
                       _buildInfoRow(
                         context,
                         icon: Icons.email,
@@ -149,15 +87,13 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                         label: 'Phone',
                         value: "--",
                       ),
-                      if (employer.building != null) ...[
-                        const Divider(height: 32),
-                        _buildInfoRow(
-                          context,
-                          icon: Icons.business,
-                          label: 'Building',
-                          value: employer.building!.name,
-                        ),
-                      ],
+                      const Divider(height: 32),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.business,
+                        label: 'Building',
+                        value: employer.building!.name,
+                      ),
                     ],
                   ),
                 ),

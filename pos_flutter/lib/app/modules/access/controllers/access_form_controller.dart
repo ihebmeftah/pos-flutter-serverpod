@@ -67,6 +67,12 @@ class AccessFormController extends GetxController with StateMixin {
     update(['takeOrder']);
   }
 
+  bool caisseManagement = false;
+  void updateCaisseManagement(bool? value) {
+    caisseManagement = value!;
+    update(['caisseManagement']);
+  }
+
   Access get _accessDto => Access(
     id: id,
     name: name.text,
@@ -78,6 +84,7 @@ class AccessFormController extends GetxController with StateMixin {
     appendItems: appendItems,
     preparation: preparation,
     takeOrder: takeOrder,
+    caisseManagement: caisseManagement,
     buildingId: LocalStorage().building!.id!,
   );
 

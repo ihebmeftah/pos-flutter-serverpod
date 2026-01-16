@@ -23,6 +23,7 @@ class FormBuildingController extends GetxController with StateMixin {
   bool tableMultiOrder = false;
   bool allowAppendingItemsToOrder = true;
   bool autoCloseOrdersAtClosingTime = false;
+  bool active = false;
 
   @override
   void onInit() async {
@@ -51,6 +52,11 @@ class FormBuildingController extends GetxController with StateMixin {
   void changeTableMultiOrder(bool? t) {
     tableMultiOrder = t!;
     update(['tableMultiOrder']);
+  }
+
+  void changeActive(bool? t) {
+    active = t!;
+    update(['active']);
   }
 
   void changeAllowAppendingItemsToOrder(bool? t) {

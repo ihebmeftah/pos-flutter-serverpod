@@ -6,9 +6,9 @@ class AppTheme {
   ThemeData get light => ThemeData(
     colorSchemeSeed: primary,
     scaffoldBackgroundColor: HexColor("F5F5F5"),
+    cardColor: Colors.white70,
     appBarTheme: AppBarTheme(
       toolbarHeight: 80,
-
       iconTheme: IconThemeData(color: primary),
       actionsPadding: EdgeInsets.only(right: 16),
       titleTextStyle: TextStyle(
@@ -24,26 +24,26 @@ class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.white,
+      fillColor: primary.withValues(alpha: 0.01),
       border: OutlineInputBorder(
-        borderSide: BorderSide.none,
+        borderSide: BorderSide(color: primary.withValues(alpha: 0.3)),
         borderRadius: BorderRadius.circular(8),
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide.none,
+        borderSide: BorderSide(color: primary.withValues(alpha: 0.3)),
         borderRadius: BorderRadius.circular(8),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide.none,
+        borderSide: BorderSide(color: primary.withValues(alpha: 0.5)),
         borderRadius: BorderRadius.circular(8),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide.none,
+        borderSide: BorderSide(color: Colors.red.withValues(alpha: 0.5)),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide.none,
+        borderSide: BorderSide(color: Colors.red.withValues(alpha: 0.3)),
       ),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -52,7 +52,7 @@ class AppTheme {
       selectedItemColor: primary,
       unselectedItemColor: Colors.grey.shade500,
       showUnselectedLabels: true,
-  ),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primary,
@@ -62,8 +62,11 @@ class AppTheme {
       ),
     ),
     cardTheme: CardThemeData(
-      shadowColor: Colors.black.withValues(alpha: 0.1),
+      shadowColor: Colors.brown.withValues(alpha: 0.1),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin:  EdgeInsets.zero,
+      elevation: 5,
+      color: Colors.white70,
     ),
     textTheme: TextTheme(
       displayLarge: TextStyle(

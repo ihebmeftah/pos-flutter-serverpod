@@ -19,9 +19,6 @@ void main() async {
       debugShowCheckedModeBanner: false,
       darkTheme: AppTheme().dark,
       themeMode: ThemeMode.light,
-onInit: () {
-    
-},
       initialRoute: Routes.AUTHENTIFICATION,
       getPages: AppPages.routes,
       builder: (context, child) {

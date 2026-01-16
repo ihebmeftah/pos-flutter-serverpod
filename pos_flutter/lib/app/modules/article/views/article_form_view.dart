@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/app_section_card.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/extensions/currency.extension.dart';
 
@@ -16,94 +17,110 @@ class ArticleFormView extends GetView<ArticleFormController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(title: const Text('Create Article')),
       body: controller.obx(
         (_) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: controller.artFormKey,
-              child: Column(
-                spacing: 20,
-                children: [
-                  //FileuploadView(uploadType: UploadType.image),
-                  AppFormField.label(
-                    label: "Article Name",
-                    hint: "Enter article name",
-                    ctr: controller.name,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Name is required";
-                      }
-                      return null;
-                    },
-                  ),
-                  Row(
-                    spacing: 20,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: GetX<CategorieController>(
-                          init: CategorieController(),
-                          builder: (catCtr) {
-                            return AppDropdown<Categorie>.label(
-                              selectedItem: controller.selectedCategory,
-                              onChanged: controller.selectCategorie,
-                              label: "Category",
-                              hint: "Select article Category",
-                              items: catCtr.categories
-                                  .map(
-                                    (e) => DropdownMenuItem<Categorie>(
-                                      value: e,
-                                      child: Text(e.name),
-                                    ),
-                                  )
-                                  .toList(),
-                              validator: (value) {
-                                if (value == null) {
-                                  return "Category is required";
-                                }
-                                return null;
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: AppFormField.label(
-                          suffix: Text(
-                            LocalStorage().building!.currencyCode.symbol,
+          return Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: controller.artFormKey,
+                    child: AppSectionCard(
+                      title: 'Article Information',
+                      icon: Icons.article_outlined,
+                      child: Column(
+                        spacing: 20,
+                        children: [
+                          //FileuploadView(uploadType: UploadType.image),
+                          AppFormField.label(
+                            label: "Article Name",
+                            hint: "Enter article name",
+                            ctr: controller.name,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Name is required";
+                              }
+                              return null;
+                            },
                           ),
-                          label: "Price",
-                          hint: "Price",
-                          ctr: controller.price,
-                          isNumeric: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Price is required";
-                            }
-                            if (!GetUtils.isNum(value)) {
-                              return "Price must be a number";
-                            }
-                            return null;
-                          },
-                        ),
+                          Row(
+                            spacing: 20,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: GetX<CategorieController>(
+                                  init: CategorieController(),
+                                  builder: (catCtr) {
+                                    return AppDropdown<Categorie>.label(
+                                      selectedItem: controller.selectedCategory,
+                                      onChanged: controller.selectCategorie,
+                                      label: "Category",
+                                      hint: "Select Category",
+                                      items: catCtr.categories
+                                          .map(
+                                            (e) => DropdownMenuItem<Categorie>(
+                                              value: e,
+                                              child: Text(e.name),
+                                            ),
+                                          )
+                                          .toList(),
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return "Category is required";
+                                        }
+                                        return null;
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                child: AppFormField.label(
+                                  suffix: Text(
+                                    LocalStorage()
+                                        .building!
+                                        .currencyCode
+                                        .symbol,
+                                  ),
+                                  label: "Price",
+                                  hint: "Price",
+                                  ctr: controller.price,
+                                  isNumeric: true,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Price is required";
+                                    }
+                                    if (!GetUtils.isNum(value)) {
+                                      return "Price must be a number";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          AppFormField.label(
+                            label: "Description",
+                            hint: "Enter article description",
+                            minLines: 3,
+                            ctr: controller.description,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                  AppFormField.label(
-                    label: "Description",
-                    hint: "Enter article description",
-                    minLines: 3,
-                    ctr: controller.description,
-                  ),
-                  ElevatedButton(
-                    onPressed: controller.createArticle,
-                    child: const Text("Add Article"),
-                  ),
-                ],
+                ),
               ),
-            ),
+              SafeArea(
+                child: ElevatedButton(
+                  onPressed: controller.createArticle,
+                  child: const Text("Add Article"),
+                ),
+              ),
+            ],
           );
         },
         onError: (error) => AppErrorScreen(message: error),

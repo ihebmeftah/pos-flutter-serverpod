@@ -19,14 +19,9 @@ class CategorieView extends GetView<CategorieController> {
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: IconButton(
-              color: Colors.white,
               onPressed: () {
                 Get.toNamed(Routes.CATEGORIE_FORM);
               },
-              style: IconButton.styleFrom(
-                backgroundColor: AppTheme().primary,
-                padding: const EdgeInsets.all(12),
-              ),
               icon: const Icon(Icons.add, size: 20),
             ),
           ),

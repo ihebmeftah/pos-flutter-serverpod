@@ -96,9 +96,9 @@ class EmployerView extends GetView<EmployerController> {
                               radius: 40,
                               backgroundColor: AppTheme().primary,
                               foregroundColor: Colors.white,
-
                               child: Text(
-                                '${employer.userProfile!.fullName![0].toUpperCase()}}',
+                                employer.userProfile!.fullName![0]
+                                    .toUpperCase(),
                                 style: const TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,

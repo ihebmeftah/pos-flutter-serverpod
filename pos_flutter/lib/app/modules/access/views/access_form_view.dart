@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../components/app_section_card.dart';
+import '../../../components/app_switchtile.dart';
 import '../../../components/appformfield.dart';
 import '../controllers/access_form_controller.dart';
 
@@ -10,148 +12,189 @@ class AccessFormView extends GetView<AccessFormController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
           controller.id != null ? 'Edit Access' : 'Create Access',
         ),
       ),
       body: controller.obx(
-        (s) => SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: controller.formKey,
-            child: Column(
-              spacing: 20,
-              children: [
-                Column(
-                  spacing: 20,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppFormField.label(
-                      label: "Name",
-                      hint: "Enter access name",
-                      ctr: controller.name,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Name is required";
-                        }
-                        return null;
-                      },
-                    ),
-                    Text(
-                      "Order permission : ",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+        (s) => Column(
+          spacing: 20,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: controller.formKey,
+                  child: Column(
+                    spacing: 24,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Access Name Field
+                      AppSectionCard(
+                        title: 'Basic Information',
+                        icon: Icons.info_outline,
+                        child: AppFormField.label(
+                          label: "Access Name",
+                          hint: "e.g., Manager, Waiter, Chef",
+                          ctr: controller.name,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Access name is required";
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    GetBuilder<AccessFormController>(
-                      id: 'orderCreation',
-                      builder: (context) {
-                        return CheckboxListTile(
-                          title: Text("Order Creation"),
-                          subtitle: Text("User able to create order"),
-                          value: controller.orderCreation,
-                          onChanged: controller.updateOrderCreation,
-                        );
-                      },
-                    ),
-                    GetBuilder<AccessFormController>(
-                      id: 'orderCreationNotif',
-                      builder: (context) {
-                        return CheckboxListTile(
-                          title: Text("Order Creation Notification"),
-                          subtitle: Text(
-                            "User will receive notification on new order creation",
-                          ),
-                          value: controller.orderCreationNotif,
-                          onChanged: controller.updateOrderCreationNotif,
-                        );
-                      },
-                    ),
-                    GetBuilder<AccessFormController>(
-                      id: 'orderPayment',
-                      builder: (context) {
-                        return CheckboxListTile(
-                          title: Text("Order Payment"),
-                          subtitle: Text("User able to pay order"),
-                          value: controller.orderPayment,
-                          onChanged: controller.updateOrderPayment,
-                        );
-                      },
-                    ),
-                    GetBuilder<AccessFormController>(
-                      id: 'orderItemsPayment',
-                      builder: (context) {
-                        return CheckboxListTile(
-                          title: Text("Order Items Payment"),
-                          subtitle: Text("User able to pay order items"),
-                          value: controller.orderItemsPayment,
-                          onChanged: controller.updateOrderItemsPayment,
-                        );
-                      },
-                    ),
-                    GetBuilder<AccessFormController>(
-                      id: 'consultAllOrders',
-                      builder: (context) {
-                        return CheckboxListTile(
-                          title: Text("Consult All Orders"),
-                          subtitle: Text(
-                            "If disable user can only see his orders",
-                          ),
-                          value: controller.consultAllOrders,
-                          onChanged: controller.updateConsultAllOrders,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                GetBuilder<AccessFormController>(
-                  id: 'takeOrder',
-                  builder: (context) {
-                    return CheckboxListTile(
-                      title: Text("Take Order"),
-                      subtitle: Text(
-                        "Allowed to make items as served",
+
+                      // Order Permissions Section
+                      AppSectionCard(
+                        title: 'Order Permissions',
+                        icon: Icons.receipt_long_outlined,
+                        child: Column(
+                          spacing: 8,
+                          children: [
+                            GetBuilder<AccessFormController>(
+                              id: 'orderCreation',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: 'Create Orders',
+                                  description: 'Allow creating new orders',
+                                  value: controller.orderCreation,
+                                  onChanged: controller.updateOrderCreation,
+                                );
+                              },
+                            ),
+                            GetBuilder<AccessFormController>(
+                              id: 'orderCreationNotif',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: 'Order Notifications',
+                                  description: 'Receive alerts for new orders',
+                                  value: controller.orderCreationNotif,
+                                  onChanged:
+                                      controller.updateOrderCreationNotif,
+                                );
+                              },
+                            ),
+                            GetBuilder<AccessFormController>(
+                              id: 'consultAllOrders',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: 'View All Orders',
+                                  description: 'See orders from all users',
+                                  value: controller.consultAllOrders,
+                                  onChanged: controller.updateConsultAllOrders,
+                                );
+                              },
+                            ),
+                            GetBuilder<AccessFormController>(
+                              id: 'appendItems',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: 'Modify Orders',
+                                  description: 'Add items to existing orders',
+                                  value: controller.appendItems,
+                                  onChanged: controller.updateAppendItems,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                      value: controller.takeOrder,
-                      onChanged: controller.updateTakeOrder,
-                    );
-                  },
-                ),
-                GetBuilder<AccessFormController>(
-                  id: 'appendItems',
-                  builder: (context) {
-                    return CheckboxListTile(
-                      title: Text("Append Items to Order"),
-                      subtitle: Text(
-                        "User able to append items to existing order",
+
+                      // Payment Permissions Section
+                      AppSectionCard(
+                        title: 'Payment Permissions',
+                        icon: Icons.payments_outlined,
+                        child: Column(
+                          spacing: 8,
+                          children: [
+                            GetBuilder<AccessFormController>(
+                              id: 'orderPayment',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: 'Process Payments',
+                                  description: 'Complete order payments',
+                                  value: controller.orderPayment,
+                                  onChanged: controller.updateOrderPayment,
+                                );
+                              },
+                            ),
+                            GetBuilder<AccessFormController>(
+                              id: 'orderItemsPayment',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: 'Item-Level Payment',
+                                  description: 'Pay for individual items',
+                                  value: controller.orderItemsPayment,
+                                  onChanged: controller.updateOrderItemsPayment,
+                                );
+                              },
+                            ),
+                            GetBuilder<AccessFormController>(
+                              id: 'caisseManagement',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: 'Manage Cash Register',
+                                  description: 'Access cash register controls',
+                                  value: controller.caisseManagement,
+                                  onChanged: controller.updateCaisseManagement,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                      value: controller.appendItems,
-                      onChanged: controller.updateAppendItems,
-                    );
-                  },
-                ),
-                GetBuilder<AccessFormController>(
-                  id: 'preparation',
-                  builder: (context) {
-                    return CheckboxListTile(
-                      title: Text("Order Preparation"),
-                      subtitle: Text("User able to prepare order items"),
-                      value: controller.preparation,
-                      onChanged: controller.updatePreparation,
-                    );
-                  },
-                ),
-                ElevatedButton(
-                  onPressed: controller.createAccess,
-                  child: Text(
-                    controller.id == null ? "Create Access" : "Update Access",
+
+                      // Kitchen Permissions Section
+                      AppSectionCard(
+                        title: 'Kitchen Permissions',
+                        icon: Icons.restaurant_outlined,
+                        child: Column(
+                          spacing: 8,
+                          children: [
+                            GetBuilder<AccessFormController>(
+                              id: 'preparation',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: 'Prepare Orders',
+                                  description: 'Mark items as prepared',
+                                  value: controller.preparation,
+                                  onChanged: controller.updatePreparation,
+                                );
+                              },
+                            ),
+                            GetBuilder<AccessFormController>(
+                              id: 'takeOrder',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: 'Serve Orders',
+                                  description: 'Mark items as served',
+                                  value: controller.takeOrder,
+                                  onChanged: controller.updateTakeOrder,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+            // Fixed Bottom Button
+            SafeArea(
+              child: ElevatedButton(
+                onPressed: controller.createAccess,
+                child: Text(
+                  controller.id == null ? "Create Access" : "Update Access",
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
