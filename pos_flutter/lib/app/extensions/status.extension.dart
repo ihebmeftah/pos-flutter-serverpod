@@ -7,45 +7,60 @@ extension OrderItemStatusExtension on OrderItemStatus {
   Color get color {
     switch (this) {
       case OrderItemStatus.progress:
-        return Colors.blue;
+        return Colors.blueGrey;
       case OrderItemStatus.picked:
         return Colors.purple;
       case OrderItemStatus.ready:
         return Colors.orange;
       case OrderItemStatus.delivered:
-        return Colors.green;
+        return Colors.blue;
       case OrderItemStatus.payed:
-        return Colors.green.shade600;
+        return Colors.green;
     }
   }
 
   Color get color50 {
     switch (this) {
       case OrderItemStatus.progress:
-        return Colors.blue.shade50;
+        return Colors.blueGrey.shade50;
       case OrderItemStatus.picked:
         return Colors.purple.shade50;
       case OrderItemStatus.ready:
         return Colors.orange.shade50;
       case OrderItemStatus.delivered:
-        return const Color.fromRGBO(232, 245, 233, 1);
+        return Colors.blue.shade50;
       case OrderItemStatus.payed:
-        return Colors.green.shade100;
+        return Colors.green.shade50;
     }
   }
 
   Color get color700 {
     switch (this) {
       case OrderItemStatus.progress:
-        return Colors.blue.shade700;
+        return Colors.blueGrey.shade700;
       case OrderItemStatus.picked:
         return Colors.purple.shade700;
       case OrderItemStatus.ready:
         return Colors.orange.shade700;
       case OrderItemStatus.delivered:
-        return Colors.green.shade700;
+        return Colors.blue.shade700;
       case OrderItemStatus.payed:
-        return Colors.green.shade900;
+        return Colors.green.shade700;
+    }
+  }
+
+  String get label {
+    switch (this) {
+      case OrderItemStatus.progress:
+        return "In Progress";
+      case OrderItemStatus.picked:
+        return "Picked for Preparation";
+      case OrderItemStatus.ready:
+        return "Ready for Delivery";
+      case OrderItemStatus.delivered:
+        return "Delivered";
+      case OrderItemStatus.payed:
+        return "Paid";
     }
   }
 }
@@ -91,27 +106,27 @@ extension OrderStatusExtension on OrderStatus {
   Color get color {
     switch (this) {
       case OrderStatus.progress:
-        return Colors.blue;
+        return Colors.blueGrey;
       case OrderStatus.payed:
-        return Colors.green.shade600;
+        return Colors.green;
     }
   }
 
   Color get color50 {
     switch (this) {
       case OrderStatus.progress:
-        return Colors.blue.shade50;
+        return Colors.blueGrey.shade50;
       case OrderStatus.payed:
-        return Colors.green.shade100;
+        return Colors.green.shade50;
     }
   }
 
   Color get color700 {
     switch (this) {
       case OrderStatus.progress:
-        return Colors.blue.shade700;
+        return Colors.blueGrey.shade700;
       case OrderStatus.payed:
-        return Colors.green.shade900;
+        return Colors.green.shade700;
     }
   }
 }

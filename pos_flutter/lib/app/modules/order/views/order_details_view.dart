@@ -144,9 +144,15 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                                         .color700,
                                   ),
                                   Text(
-                                    '${controller.order!.items![index].article.name.capitalize!} ${controller.order!.items![index].article.price.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
+                                    controller
+                                        .order!
+                                        .items![index]
+                                        .article
+                                        .name
+                                        .capitalize!,
                                     style: context.textTheme.titleLarge
                                         ?.copyWith(
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                           color: controller
                                               .order!
@@ -156,44 +162,17 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                                         ),
                                   ),
                                   Spacer(),
-                                  Icon(
-                                    (controller
-                                            .order!
-                                            .items![index]
-                                            .itemStatus
-                                            .isPaid)
-                                        ? Icons.check_circle
-                                        : Icons.schedule,
-                                    size: 16,
-                                    color:
-                                        (controller
-                                            .order!
-                                            .items![index]
-                                            .itemStatus
-                                            .isPaid)
-                                        ? Colors.green
-                                        : Colors.orange,
-                                  ),
                                   Text(
-                                    (controller
-                                            .order!
-                                            .items![index]
-                                            .itemStatus
-                                            .isPaid)
-                                        ? 'PAID'
-                                        : 'UNPAID',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color:
-                                          (controller
+                                    '${controller.order!.items![index].article.price.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
+                                    style: context.textTheme.titleLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: controller
                                               .order!
                                               .items![index]
                                               .itemStatus
-                                              .isPaid)
-                                          ? Colors.green[700]
-                                          : Colors.orange[700],
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                              .color700,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -290,7 +269,7 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                         id: "pay",
                         builder: (_) {
                           return Text(
-                            'Pay \n(${Get.find<OrderDetailsController>().unpaidAmount.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol})',
+                            'Pay (${Get.find<OrderDetailsController>().unpaidAmount.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol})',
                           );
                         },
                       ),
