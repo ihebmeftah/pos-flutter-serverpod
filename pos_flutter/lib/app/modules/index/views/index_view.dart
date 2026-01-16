@@ -9,7 +9,6 @@ import '../../../../config/serverpod_client.dart';
 import '../../../data/local/local_storage.dart';
 import '../../../routes/app_pages.dart';
 import '../../home/views/home_view.dart';
-import '../../order/controllers/pass_order_controller.dart';
 import '../../order/views/order_view.dart';
 import '../../tables/views/tables_view.dart';
 import '../controllers/index_controller.dart';
@@ -19,7 +18,7 @@ class IndexView extends GetView<IndexController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton:
+      /*   floatingActionButton:
           (controller.currentUserAccess?.orderCreation ?? true) &&
               Get.find<IndexController>().scope.contains(
                 "employer",
@@ -49,7 +48,7 @@ class IndexView extends GetView<IndexController> {
                 },
               ),
             )
-          : null,
+          : null, */
       drawer: GetBuilder<IndexController>(
         builder: (ctr) {
           return controller.status.isLoading
@@ -100,8 +99,7 @@ class IndexView extends GetView<IndexController> {
                           title: Text('Logout'),
                           onTap: () async {
                             await LocalStorage().clear();
-                            await ServerpodClient.instance.auth
-                                .signOutAllDevices();
+                            await ServerpodClient.instance.auth.signOutDevice();
                             Get.offAllNamed(Routes.AUTHENTIFICATION);
                           },
                         ),
@@ -113,15 +111,9 @@ class IndexView extends GetView<IndexController> {
       ),
       appBar: AppBar(
         centerTitle: false,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Badge(child: Icon(Icons.notifications)),
-          ),
-        ],
+        actions: [],
         title: Text(
-          'Current building : ${LocalStorage().building?.name ?? "None"}'
-              .toUpperCase(),
+          'building : ${LocalStorage().building?.name ?? "None"}'.toUpperCase(),
           maxLines: 1,
           style: TextStyle(
             fontSize: 16,

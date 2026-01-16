@@ -17,6 +17,29 @@ class OrderView extends GetView<OrderController> {
       length: 3,
       initialIndex: controller.currentTabIndex,
       child: Scaffold(
+        persistentFooterDecoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
+        persistentFooterButtons: [
+          TabBar(
+            onTap: controller.changeTab,
+            labelStyle: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            dividerHeight: 0,
+            indicator: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            indicatorSize: TabBarIndicatorSize.tab,
+            tabs: [
+              Tab(text: 'All'),
+              Tab(text: 'Progress'),
+              Tab(text: 'Paid'),
+            ],
+          ),
+        ],
         appBar:
             controller.tableId != null &&
                 Get.currentRoute.contains(Routes.ORDERS_TABLES)
@@ -25,121 +48,98 @@ class OrderView extends GetView<OrderController> {
         body: controller.obx(
           (state) => RefreshIndicator(
             onRefresh: controller.getOrders,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                spacing: 10,
-                children: [
-                  TabBar(
-                    onTap: controller.changeTab,
-                    labelStyle: context.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    dividerHeight: 0,
-                    indicator: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    tabs: [
-                      Tab(text: 'All'),
-                      Tab(text: 'Progress'),
-                      Tab(text: 'Paid'),
-                    ],
-                  ),
-                  Expanded(
-                    child: controller.orders.isEmpty
-                        ? Appemptyscreen(
-                            message: 'No orders found',
-                          )
-                        : ListView.separated(
-                            itemCount: controller.orders.length,
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(height: 15),
-                            itemBuilder: (context, index) {
-                              final order = controller.orders[index];
-                              final totalPrice = order.items!.fold<double>(
-                                0.0,
-                                (sum, item) => sum + item.article.price,
-                              );
-                              return ListTile(
-                                tileColor: _getStatusColor(
+            child: Scrollbar(
+              thumbVisibility: true,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: controller.orders.isEmpty
+                    ? Appemptyscreen(
+                        message: 'No orders found',
+                      )
+                    : ListView.separated(
+                        itemCount: controller.orders.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 15),
+                        itemBuilder: (context, index) {
+                          final order = controller.orders[index];
+                          final totalPrice = order.items!.fold<double>(
+                            0.0,
+                            (sum, item) => sum + item.article.price,
+                          );
+                          return ListTile(
+                            tileColor: _getStatusColor(
+                              order.status.name,
+                            ).withValues(alpha: 0.1),
+                            onTap: () => Get.toNamed(
+                              '${Routes.ORDER_DETAILS}/${order.id}',
+                            ),
+                            leading: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: _getStatusColor(
                                   order.status.name,
                                 ).withValues(alpha: 0.1),
-                                onTap: () => Get.toNamed(
-                                  '${Routes.ORDER_DETAILS}/${order.id}',
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                order.btable!.number.toString(),
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: Colors.grey[600],
                                 ),
-                                leading: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: _getStatusColor(
-                                      order.status.name,
-                                    ).withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    order.btable!.number.toString(),
-                                    style: context.textTheme.bodyMedium
-                                        ?.copyWith(color: Colors.grey[600]),
-                                  ),
-                                ),
+                              ),
+                            ),
 
-                                title: Row(
-                                  spacing: 5,
-                                  children: [
-                                    Text(
-                                      'REF - ${order.id}',
-                                      style: context.textTheme.titleLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                    Text(
-                                      'By - ${order.passedBy!.fullName ?? order.passedBy!.email}',
-                                      style: context.textTheme.titleLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                isThreeLine: false,
-                                trailing: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  spacing: 5,
-                                  children: [
-                                    Icon(Icons.shopping_cart, size: 16),
-                                    Text(
-                                      '${order.items!.length} item${order.items!.length > 1 ? 's' : ''}',
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Container(
-                                  margin: const EdgeInsets.only(top: 8),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: _getStatusColor(order.status.name),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "${order.status.name.toUpperCase()} - ${totalPrice.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}",
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            title: Row(
+                              spacing: 5,
+                              children: [
+                                Text(
+                                  'REF - ${order.id}',
+                                  style: context.textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              );
-                            },
-                          ),
-                  ),
-                ],
+                                Text(
+                                  'By - ${order.passedBy!.fullName ?? order.passedBy!.email}',
+                                  style: context.textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            isThreeLine: false,
+                            trailing: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              spacing: 5,
+                              children: [
+                                Icon(Icons.shopping_cart, size: 16),
+                                Text(
+                                  '${order.items!.length} item${order.items!.length > 1 ? 's' : ''}',
+                                ),
+                              ],
+                            ),
+                            subtitle: Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: _getStatusColor(order.status.name),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                "${order.status.name.toUpperCase()} - ${totalPrice.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}",
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
               ),
             ),
           ),

@@ -23,7 +23,7 @@ class BuildingsView extends GetView<BuildingsController> {
       appBar: AppBar(
         title: const Text('Your Buildings'),
         leading: IconButton(
-          onPressed: ServerpodClient.instance.auth.signOutAllDevices,
+          onPressed: ServerpodClient.instance.auth.signOutDevice,
           icon: Icon(Icons.logout),
         ),
       ),
