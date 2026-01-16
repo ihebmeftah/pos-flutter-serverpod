@@ -50,13 +50,7 @@ class ArticleEndpoint extends Endpoint {
     required int buildingId,
   }) async {
     await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
-    final existe = await Article.db.findFirstRow(
-      session,
-      where: (a) =>
-          a.name.ilike(article.name) &
-          a.categorie.buildingId.equals(buildingId),
-    );
-    if (existe != null) throw Exception('Article already exists');
+    await _checkArticleNameExist(session, article.name, buildingId);
     return await Article.db.insertRow(
       session,
       article,
@@ -64,19 +58,70 @@ class ArticleEndpoint extends Endpoint {
   }
 
   @doNotGenerate
-  Future<Article> getArticleById(
+  Future<void> _checkArticleNameExist(
     Session session,
-    int articleId,
+    String name,
     int buildingId,
   ) async {
-    Article? article = await Article.db.findFirstRow(
+    final existe = await Article.db.findFirstRow(
       session,
       where: (a) =>
-          a.id.equals(articleId) & a.categorie.buildingId.equals(buildingId),
+          a.name.ilike(name) & a.categorie.buildingId.equals(buildingId),
+    );
+    if (existe != null) {
+      throw AppException(
+        errorType: ExceptionType.Conflict,
+        message: 'Article with name $name already exists',
+      );
+    }
+  }
+
+  /// Get article by id
+  /// required [articleId] The id of the article
+  /// required [buildingId] buildingId The id of the building
+  /// Returns the [Article] article
+  /// allow for all type of users (admin, employee, customer)
+  Future<Article> getArticleById(Session session, int id) async {
+    Article? article = await Article.db.findById(
+      session,
+      id,
+      include: Article.include(
+        categorie: Categorie.include(),
+      ),
     );
     if (article == null) {
-      throw Exception('Article with id $articleId not found');
+      throw AppException(
+        errorType: ExceptionType.NotFound,
+        message: 'Article not found',
+      );
     }
     return article;
+  }
+
+  /// Update article
+  /// required [article] The article to update
+  /// Returns the updated [Article] article
+  /// allow for admin users only
+  Future<Article> updateArticle(
+    Session session, {
+    required Article article,
+  }) async {
+    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
+    final existingArticle = await getArticleById(session, article.id!);
+    if (existingArticle.name != article.name) {
+      await _checkArticleNameExist(
+        session,
+        article.name,
+        article.categorie!.buildingId!,
+      );
+    }
+    existingArticle.name = article.name;
+    existingArticle.description = article.description;
+    existingArticle.price = article.price;
+    existingArticle.categorieId = article.categorieId;
+    return await Article.db.updateRow(
+      session,
+      existingArticle,
+    );
   }
 }

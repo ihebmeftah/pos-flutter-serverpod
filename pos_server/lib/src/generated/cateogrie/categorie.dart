@@ -17,14 +17,14 @@ abstract class Categorie
   Categorie._({
     this.id,
     required this.name,
-    required this.description,
+    this.description,
     required this.buildingId,
   });
 
   factory Categorie({
     int? id,
     required String name,
-    required String description,
+    String? description,
     required int? buildingId,
   }) = _CategorieImpl;
 
@@ -32,7 +32,7 @@ abstract class Categorie
     return Categorie(
       id: jsonSerialization['id'] as int?,
       name: jsonSerialization['name'] as String,
-      description: jsonSerialization['description'] as String,
+      description: jsonSerialization['description'] as String?,
       buildingId: jsonSerialization['buildingId'] as int?,
     );
   }
@@ -46,7 +46,7 @@ abstract class Categorie
 
   String name;
 
-  String description;
+  String? description;
 
   int? buildingId;
 
@@ -68,7 +68,7 @@ abstract class Categorie
       '__className__': 'Categorie',
       if (id != null) 'id': id,
       'name': name,
-      'description': description,
+      if (description != null) 'description': description,
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -79,7 +79,7 @@ abstract class Categorie
       '__className__': 'Categorie',
       if (id != null) 'id': id,
       'name': name,
-      'description': description,
+      if (description != null) 'description': description,
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -120,7 +120,7 @@ class _CategorieImpl extends Categorie {
   _CategorieImpl({
     int? id,
     required String name,
-    required String description,
+    String? description,
     required int? buildingId,
   }) : super._(
          id: id,
@@ -136,13 +136,13 @@ class _CategorieImpl extends Categorie {
   Categorie copyWith({
     Object? id = _Undefined,
     String? name,
-    String? description,
+    Object? description = _Undefined,
     Object? buildingId = _Undefined,
   }) {
     return Categorie(
       id: id is int? ? id : this.id,
       name: name ?? this.name,
-      description: description ?? this.description,
+      description: description is String? ? description : this.description,
       buildingId: buildingId is int? ? buildingId : this.buildingId,
     );
   }
@@ -156,7 +156,7 @@ class CategorieUpdateTable extends _i1.UpdateTable<CategorieTable> {
     value,
   );
 
-  _i1.ColumnValue<String, String> description(String value) => _i1.ColumnValue(
+  _i1.ColumnValue<String, String> description(String? value) => _i1.ColumnValue(
     table.description,
     value,
   );

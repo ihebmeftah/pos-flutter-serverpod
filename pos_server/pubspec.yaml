@@ -19,6 +19,7 @@ serverpod:
   scripts:
     # Starts the server and applies migrations
     start: dart bin/main.dart --apply-migrations
+    g-start: serverpod generate && dart bin/main.dart --apply-migrations
     all: serverpod generate && serverpod create migrations && dart bin/main.dart --apply-migrations
 
     # Build the Flutter web app and move it to the server's web directory

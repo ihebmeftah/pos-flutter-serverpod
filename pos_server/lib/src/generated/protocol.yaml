@@ -8,6 +8,8 @@ access:
 article:
   - getArticles:
   - createArticle:
+  - getArticleById:
+  - updateArticle:
 emailIdp:
   - getUserProfile:
   - loginReworked:
@@ -30,9 +32,14 @@ building:
 buildingTables:
   - getTables:
   - createTables:
+caisse:
+  - getCaisses:
+  - createCaisse:
 categorie:
   - getCategories:
+  - getCategorieById:
   - createCategorie:
+  - updateCategorie:
 employer:
   - createEmployerAccount:
   - getEmployers:

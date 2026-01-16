@@ -24,8 +24,9 @@ abstract class Access implements _i1.SerializableModel {
     required this.appendItems,
     required this.preparation,
     required this.takeOrder,
+    bool? caisseManagement,
     required this.buildingId,
-  });
+  }) : caisseManagement = caisseManagement ?? false;
 
   factory Access({
     int? id,
@@ -38,6 +39,7 @@ abstract class Access implements _i1.SerializableModel {
     required bool appendItems,
     required bool preparation,
     required bool takeOrder,
+    bool? caisseManagement,
     required int? buildingId,
   }) = _AccessImpl;
 
@@ -53,6 +55,7 @@ abstract class Access implements _i1.SerializableModel {
       appendItems: jsonSerialization['appendItems'] as bool,
       preparation: jsonSerialization['preparation'] as bool,
       takeOrder: jsonSerialization['takeOrder'] as bool,
+      caisseManagement: jsonSerialization['caisseManagement'] as bool?,
       buildingId: jsonSerialization['buildingId'] as int?,
     );
   }
@@ -80,6 +83,8 @@ abstract class Access implements _i1.SerializableModel {
 
   bool takeOrder;
 
+  bool caisseManagement;
+
   int? buildingId;
 
   /// Returns a shallow copy of this [Access]
@@ -96,6 +101,7 @@ abstract class Access implements _i1.SerializableModel {
     bool? appendItems,
     bool? preparation,
     bool? takeOrder,
+    bool? caisseManagement,
     int? buildingId,
   });
   @override
@@ -112,6 +118,7 @@ abstract class Access implements _i1.SerializableModel {
       'appendItems': appendItems,
       'preparation': preparation,
       'takeOrder': takeOrder,
+      'caisseManagement': caisseManagement,
       if (buildingId != null) 'buildingId': buildingId,
     };
   }
@@ -136,6 +143,7 @@ class _AccessImpl extends Access {
     required bool appendItems,
     required bool preparation,
     required bool takeOrder,
+    bool? caisseManagement,
     required int? buildingId,
   }) : super._(
          id: id,
@@ -148,6 +156,7 @@ class _AccessImpl extends Access {
          appendItems: appendItems,
          preparation: preparation,
          takeOrder: takeOrder,
+         caisseManagement: caisseManagement,
          buildingId: buildingId,
        );
 
@@ -166,6 +175,7 @@ class _AccessImpl extends Access {
     bool? appendItems,
     bool? preparation,
     bool? takeOrder,
+    bool? caisseManagement,
     Object? buildingId = _Undefined,
   }) {
     return Access(
@@ -179,6 +189,7 @@ class _AccessImpl extends Access {
       appendItems: appendItems ?? this.appendItems,
       preparation: preparation ?? this.preparation,
       takeOrder: takeOrder ?? this.takeOrder,
+      caisseManagement: caisseManagement ?? this.caisseManagement,
       buildingId: buildingId is int? ? buildingId : this.buildingId,
     );
   }

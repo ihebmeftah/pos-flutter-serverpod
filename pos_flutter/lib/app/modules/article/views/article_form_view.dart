@@ -52,7 +52,6 @@ class ArticleFormView extends GetView<ArticleFormController> {
                               Expanded(
                                 flex: 2,
                                 child: GetX<CategorieController>(
-                                  init: CategorieController(),
                                   builder: (catCtr) {
                                     return AppDropdown<Categorie>.label(
                                       selectedItem: controller.selectedCategory,

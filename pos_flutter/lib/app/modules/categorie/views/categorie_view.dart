@@ -121,8 +121,12 @@ class CategorieView extends GetView<CategorieController> {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 foregroundColor: AppTheme().primary,
                               ),
-                              onPressed: () =>
-                                  Get.toNamed(Routes.CATEGORIE_FORM),
+                              onPressed: () => Get.toNamed(
+                                Routes.CATEGORIE_FORM,
+                                parameters: {
+                                  'id': category.id!.toString(),
+                                },
+                              ),
                               icon: Icon(Icons.edit_square),
                             ),
                           ],

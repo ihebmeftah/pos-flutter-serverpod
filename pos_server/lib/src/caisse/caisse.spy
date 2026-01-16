@@ -1,0 +1,8 @@
+class: Caisse
+table: caisse
+fields:
+    start: DateTime
+    end: DateTime?
+    isClosed: bool
+    buildingId: int?, relation(parent=building),required
+    createdAt: DateTime,default=now

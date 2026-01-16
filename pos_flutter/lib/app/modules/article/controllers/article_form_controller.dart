@@ -5,11 +5,21 @@ import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/modules/article/controllers/article_controller.dart';
 
 import '../../../../config/serverpod_client.dart';
+import '../../categorie/controllers/categorie_controller.dart';
 
 class ArticleFormController extends GetxController with StateMixin {
+  final categorieController = Get.put<CategorieController>(
+    CategorieController(),
+  );
+  final id = int.tryParse(Get.parameters['id'] ?? "");
   @override
-  void onInit() {
-    change(null, status: RxStatus.success());
+  void onInit() async {
+    await categorieController.getCategories();
+    if (id != null) {
+      await getArticleById();
+    } else {
+      change(null, status: RxStatus.success());
+    }
     super.onInit();
   }
 
@@ -18,24 +28,64 @@ class ArticleFormController extends GetxController with StateMixin {
       description = TextEditingController(),
       price = TextEditingController();
   Categorie? selectedCategory;
+
   Article get articleDto => Article(
+    id: id,
     name: name.text,
     description: description.text,
     price: double.parse(price.text),
     categorieId: selectedCategory!.id!,
     categorie: selectedCategory,
   );
+
+  Future<void> getArticleById() async {
+    try {
+      change(null, status: RxStatus.loading());
+      final article = await ServerpodClient.instance.article.getArticleById(
+        id!,
+      );
+      name.text = article.name;
+      description.text = article.description ?? "";
+      price.text = article.price.toString();
+      await categorieController.getCategories();
+      selectedCategory = categorieController.categories.firstWhereOrNull(
+        (cat) => cat.id == article.categorieId,
+      );
+      change(article, status: RxStatus.success());
+    } on AppException catch (e) {
+      change(null, status: RxStatus.error(e.message));
+    } catch (e) {
+      change(null, status: RxStatus.error("Failed to load Article"));
+    }
+  }
+
   void createArticle() async {
     try {
       if (artFormKey.currentState!.validate()) {
-        await ServerpodClient.instance.article.createArticle(
-          article: articleDto,
-          buildingId: LocalStorage().building!.id!,
-        );
+        change(null, status: RxStatus.loading());
+        if (id == null) {
+          await ServerpodClient.instance.article.createArticle(
+            article: articleDto,
+            buildingId: LocalStorage().building!.id!,
+          );
+        } else {
+          await ServerpodClient.instance.article.updateArticle(
+            article: articleDto,
+          );
+        }
         Get.find<ArticleController>().getArticles();
         Get.back();
       }
     } on AppException catch (e) {
+      if (e.errorType == ExceptionType.Conflict) {
+        Get.snackbar(
+          "Existing name",
+          "Article with this name already exists",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        change([], status: RxStatus.success());
+        return;
+      }
       change([], status: RxStatus.error(e.message));
     } catch (e) {
       change([], status: RxStatus.error("Failed to create article"));

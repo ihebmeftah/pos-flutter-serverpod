@@ -55,7 +55,9 @@ class CategorieFormView extends GetView<CategorieFormController> {
             SafeArea(
               child: ElevatedButton(
                 onPressed: controller.craeteCategory,
-                child: const Text("Add Category"),
+                child: Text(
+                  controller.id == null ? "Add Category" : "Update Category",
+                ),
               ),
             ),
           ],

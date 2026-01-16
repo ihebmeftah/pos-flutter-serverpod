@@ -2,5 +2,5 @@ class: Categorie
 table: categorie
 fields:
   name: String,
-  description: String
+  description: String?
   buildingId: int?, relation(parent=building), , required

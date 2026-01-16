@@ -6,32 +6,67 @@ import 'package:pos_flutter/app/modules/categorie/controllers/categorie_controll
 import 'package:pos_flutter/config/serverpod_client.dart';
 
 class CategorieFormController extends GetxController with StateMixin {
+  final id = int.tryParse(Get.parameters['id'] ?? "");
   final catFormKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descController = TextEditingController();
   Categorie get categorieDto => Categorie(
+    id: id,
     name: nameController.text,
     description: descController.text,
     buildingId: LocalStorage().building!.id!,
   );
   @override
-  void onInit() {
+  void onInit() async {
+    if (id != null) {
+      await getCategorieById();
+    }
     change(null, status: RxStatus.success());
     super.onInit();
+  }
+
+  Future<void> getCategorieById() async {
+    try {
+      change(null, status: RxStatus.loading());
+      final categorie = await ServerpodClient.instance.categorie
+          .getCategorieById(id!);
+      nameController.text = categorie.name;
+      descController.text = categorie.description ?? "";
+      change(categorie, status: RxStatus.success());
+    } on AppException catch (e) {
+      change(null, status: RxStatus.error(e.message));
+    } catch (e) {
+      change(null, status: RxStatus.error("Failed to load Category"));
+    }
   }
 
   void craeteCategory() async {
     try {
       if (catFormKey.currentState!.validate()) {
         change(null, status: RxStatus.loading());
-        await ServerpodClient.instance.categorie.createCategorie(
-          categorie: categorieDto,
-          buildingId: LocalStorage().building!.id!,
-        );
+        if (id == null) {
+          await ServerpodClient.instance.categorie.createCategorie(
+            categorie: categorieDto,
+            buildingId: LocalStorage().building!.id!,
+          );
+        } else {
+          await ServerpodClient.instance.categorie.updateCategorie(
+            categorie: categorieDto,
+          );
+        }
         Get.find<CategorieController>().getCategories();
         Get.back();
       }
     } on AppException catch (e) {
+      if (e.errorType == ExceptionType.Conflict) {
+        Get.snackbar(
+          "Existing name",
+          "Category with this name already exists",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        change(null, status: RxStatus.success());
+        return;
+      }
       change(null, status: RxStatus.error(e.message));
     } catch (e) {
       change(null, status: RxStatus.error("Failed to create Category"));
