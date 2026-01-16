@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/extensions/status.extension.dart';
 
 import '../../../components/appemptyscreen.dart';
 import '../../../components/apperrorscreen.dart';
@@ -67,64 +69,40 @@ class OrderView extends GetView<OrderController> {
                             (sum, item) => sum + item.article.price,
                           );
                           return ListTile(
-                            tileColor: _getStatusColor(
-                              order.status.name,
-                            ).withValues(alpha: 0.1),
+                            tileColor: order.status.color.withValues(alpha: .9),
+
                             onTap: () => Get.toNamed(
                               '${Routes.ORDER_DETAILS}/${order.id}',
                             ),
-                            leading: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: _getStatusColor(
-                                  order.status.name,
-                                ).withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                order.btable!.number.toString(),
-                                style: context.textTheme.bodyMedium?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ),
-
-                            title: Row(
+                            leading: Row(
                               spacing: 5,
+                              mainAxisSize: .min,
                               children: [
-                                Text(
-                                  'REF - ${order.id}',
-                                  style: context.textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
+                                SvgPicture.asset(
+                                  "assets/images/svg/table.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.white,
+                                    BlendMode.srcIn,
                                   ),
                                 ),
                                 Text(
-                                  'By - ${order.passedBy!.fullName ?? order.passedBy!.email}',
-                                  style: context.textTheme.titleLarge?.copyWith(
+                                  "№${order.btable!.number}",
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             isThreeLine: false,
-                            trailing: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              spacing: 5,
-                              children: [
-                                Icon(Icons.shopping_cart, size: 16),
-                                Text(
-                                  '${order.items!.length} item${order.items!.length > 1 ? 's' : ''}',
-                                ),
-                              ],
+                            trailing: Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.white,
                             ),
-                            subtitle: Container(
-                              margin: const EdgeInsets.only(top: 8),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
+                            title: Container(
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: _getStatusColor(order.status.name),
+                                color: order.status.color700,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
@@ -147,18 +125,5 @@ class OrderView extends GetView<OrderController> {
         ),
       ),
     );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'progress':
-        return Colors.orange;
-      case 'delivred':
-        return Colors.green;
-      case 'payed':
-        return Colors.blue;
-      default:
-        return Colors.grey;
-    }
   }
 }

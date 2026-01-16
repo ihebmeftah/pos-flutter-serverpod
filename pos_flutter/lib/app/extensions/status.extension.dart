@@ -121,6 +121,15 @@ extension OrderStatusExtension on OrderStatus {
     }
   }
 
+  Color get color100 {
+    switch (this) {
+      case OrderStatus.progress:
+        return Colors.blueGrey.shade100;
+      case OrderStatus.payed:
+        return Colors.green.shade100;
+    }
+  }
+
   Color get color700 {
     switch (this) {
       case OrderStatus.progress:
