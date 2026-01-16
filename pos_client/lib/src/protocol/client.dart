@@ -606,53 +606,8 @@ class EndpointOrder extends _i1.EndpointRef {
         {'order': order},
       );
 
-  /// Append items to an existing order
-  /// Parameters:
-  /// - [orderId]: The id of the order to append items to
-  /// - [orderItems]: The list of items to append to the order
-  /// Returns:
-  /// - The updated order with the appended items
-  /// Employer should have access to append items
-  _i2.Future<_i11.Order> appendItemsToOrder(
-    int orderId,
-    List<_i13.OrderItem> orderItems,
-  ) => caller.callServerEndpoint<_i11.Order>(
-    'order',
-    'appendItemsToOrder',
-    {
-      'orderId': orderId,
-      'orderItems': orderItems,
-    },
-  );
-
-  _i2.Future<_i11.Order> payItem(
-    int orderId,
-    int orderItemId,
-    int buildingId,
-  ) => caller.callServerEndpoint<_i11.Order>(
-    'order',
-    'payItem',
-    {
-      'orderId': orderId,
-      'orderItemId': orderItemId,
-      'buildingId': buildingId,
-    },
-  );
-
-  _i2.Future<_i11.Order> payAllItems(
-    int orderId,
-    int buildingId,
-  ) => caller.callServerEndpoint<_i11.Order>(
-    'order',
-    'payAllItems',
-    {
-      'orderId': orderId,
-      'buildingId': buildingId,
-    },
-  );
-
-  _i2.Future<_i11.Order> getOrderCurrOfTable(int tableId) =>
-      caller.callServerEndpoint<_i11.Order>(
+  _i2.Future<_i11.Order?> getOrderCurrOfTable(int tableId) =>
+      caller.callServerEndpoint<_i11.Order?>(
         'order',
         'getOrderCurrOfTable',
         {'tableId': tableId},
@@ -669,30 +624,6 @@ class EndpointOrder extends _i1.EndpointRef {
       'orderStatus': orderStatus,
     },
   );
-
-  _i2.Stream<_i11.Order> streamCreateOrder(int buildingId) =>
-      caller.callStreamingServerEndpoint<_i2.Stream<_i11.Order>, _i11.Order>(
-        'order',
-        'streamCreateOrder',
-        {'buildingId': buildingId},
-        {},
-      );
-
-  _i2.Stream<_i11.Order> streamAppendItemsOrder(int buildingId) =>
-      caller.callStreamingServerEndpoint<_i2.Stream<_i11.Order>, _i11.Order>(
-        'order',
-        'streamAppendItemsOrder',
-        {'buildingId': buildingId},
-        {},
-      );
-
-  _i2.Stream<_i11.Order> streamUpdateOrder(int buildingId) =>
-      caller.callStreamingServerEndpoint<_i2.Stream<_i11.Order>, _i11.Order>(
-        'order',
-        'streamUpdateOrder',
-        {'buildingId': buildingId},
-        {},
-      );
 }
 
 /// {@category Endpoint}
@@ -701,6 +632,25 @@ class EndpointOrderItem extends _i1.EndpointRef {
 
   @override
   String get name => 'orderItem';
+
+  /// Append items to an existing order
+  /// Parameters:
+  /// - [orderId]: The id of the order to append items to
+  /// - [orderItems]: The list of items to append to the order
+  /// Returns:
+  /// - The updated order with the appended items
+  /// Employer should have access to append items
+  _i2.Future<_i11.Order> appendItemsToOrder(
+    int orderId,
+    List<_i13.OrderItem> orderItems,
+  ) => caller.callServerEndpoint<_i11.Order>(
+    'orderItem',
+    'appendItemsToOrder',
+    {
+      'orderId': orderId,
+      'orderItems': orderItems,
+    },
+  );
 
   /// Change status of order items
   /// items status should have this workflow (progress -> picked -> ready -> delivered)
@@ -718,6 +668,32 @@ class EndpointOrderItem extends _i1.EndpointRef {
     {
       'orderItemIds': orderItemIds,
       'newStatus': newStatus,
+    },
+  );
+
+  _i2.Future<List<_i13.OrderItem>> payOrderItem(
+    int orderId,
+    List<int> orderItemPayedIds,
+    int buildingId,
+  ) => caller.callServerEndpoint<List<_i13.OrderItem>>(
+    'orderItem',
+    'payOrderItem',
+    {
+      'orderId': orderId,
+      'orderItemPayedIds': orderItemPayedIds,
+      'buildingId': buildingId,
+    },
+  );
+
+  _i2.Future<_i11.Order> payAllItems(
+    int orderId,
+    int buildingId,
+  ) => caller.callServerEndpoint<_i11.Order>(
+    'orderItem',
+    'payAllItems',
+    {
+      'orderId': orderId,
+      'buildingId': buildingId,
     },
   );
 }

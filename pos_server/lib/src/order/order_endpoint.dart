@@ -123,11 +123,11 @@ class OrderEndpoint extends Endpoint {
       order.btable!.buildingId!,
     );
     if (building.tableMultiOrder == false) {
-      final currentTableStatus = await checkTableHaveOrder(
+      final tableOrder = await OrderEndpoint().getOrderCurrOfTable(
         session,
         order.btableId,
       );
-      if (currentTableStatus == TableStatus.occupied) {
+      if (tableOrder != null) {
         throw AppException(
           errorType: ExceptionType.Forbidden,
           message: 'Table ${order.btable!.number} already has an ongoing order',
@@ -148,186 +148,36 @@ class OrderEndpoint extends Endpoint {
 
     /// Attach items to the order
     await Order.db.attach.items(session, orderCreated, itemsCreated);
-
-    /// Send message to notify about the new order
-    await session.messages.postMessage(
-      'order_created-${order.btable!.buildingId!}',
-      orderCreated,
-    );
     return orderCreated;
   }
 
-  /// Append items to an existing order
-  /// Parameters:
-  /// - [orderId]: The id of the order to append items to
-  /// - [orderItems]: The list of items to append to the order
-  /// Returns:
-  /// - The updated order with the appended items
-  /// Employer should have access to append items
-  Future<Order> appendItemsToOrder(
+  @doNotGenerate
+  Future<Order> makeOrderPayed(
     Session session,
-    int orderId,
-    List<OrderItem> orderItems,
-  ) async {
-    session.log('Appending items to order ${orderItems.toString()}');
-
-    /// Only employer allowed for this endpoint
-    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
-
-    /// Employer should have access to append items
-    final employer = await EmployerEndpoint().getEmployerByIdentifier(
-      session,
-      session.authenticated!.authUserId,
-    );
-    if (employer.access != null && employer.access?.appendItems == false) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to append items to orders',
-      );
-    }
-
-    /// Must provide at least one new item to append
-    if (orderItems.isEmpty) {
-      throw AppException(
-        errorType: ExceptionType.BadRequest,
-        message: 'You must provide at least one new item to append',
-      );
-    }
-
-    /// Get the order by id
-    Order order = await getOrderById(session, orderId);
-    if (order.status == OrderStatus.payed) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'Cannot append items to a paid order',
-      );
-    }
-
-    /// Check if table allows appending items to order
-    final building = await BuildingEndpoint().getBuildingById(
-      session,
-      order.btable!.buildingId!,
-    );
-    if (building.allowAppendingItemsToOrder == false) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'This building does not allow appending items to orders',
-      );
-    }
-
-    /// Insert new items to the database
-    final newOrderItems = await OrderItem.db.insert(
-      session,
-      orderItems,
-    );
-
-    /// Attach new items to the order
-    await Order.db.attach.items(session, order, newOrderItems);
-
-    /// Update the order's updatedAt field
-    order.updatedAt = DateTime.now();
-    final orderUpdated = await Order.db.updateRow(
-      session,
-      order,
-      columns: (t) => [t.updatedAt],
-    );
-
-    /// Send message to notify about the order update
-    await session.messages.postMessage(
-      'order_appendItems-${order.btable!.buildingId!}',
-      order,
-    );
-    return orderUpdated;
-  }
-
-  Future<Order> payItem(
-    Session session,
-    int orderId,
-    int orderItemId,
+    Order order,
+    UuidValue userProfileId,
     int buildingId,
   ) async {
-    /// verify employer access
-    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
-    final employer = await EmployerEndpoint().getEmployerByIdentifier(
-      session,
-      session.authenticated!.authUserId,
-    );
-    if (employer.access != null &&
-        employer.access?.orderItemsPayment == false) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to pay order items',
-      );
-    }
-    Order order = await getOrderById(session, orderId);
-    OrderItem? item = order.items!.firstWhere(
-      (item) => item.id == orderItemId,
-    );
-    item.itemStatus = OrderItemStatus.payed;
-    item.payedToId = employer.userProfileId;
-    item.payedAt = DateTime.now();
-    item.updatedAt = DateTime.now();
-    if (!order.items!.any((i) => i.itemStatus != OrderItemStatus.payed)) {
-      order.status = OrderStatus.payed;
-      order.closedbyId = employer.userProfileId;
-    }
-    order.updatedAt = DateTime.now();
-    await OrderItem.db.updateRow(session, item);
-    await session.messages.postMessage(
-      'order_updated-$buildingId',
-      order,
-    );
-    return await Order.db.updateRow(session, order);
-  }
-
-  Future<Order> payAllItems(
-    Session session,
-    int orderId,
-    int buildingId,
-  ) async {
-    /// verify employer access
-    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
-    final employer = await EmployerEndpoint().getEmployerByIdentifier(
-      session,
-      session.authenticated!.authUserId,
-    );
-    if (employer.access != null &&
-        employer.access?.orderItemsPayment == false) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to pay order items',
-      );
-    }
-
-    /// mark all items as payed
-    Order order = await getOrderById(session, orderId);
-    for (OrderItem item in order.items!) {
-      if (item.itemStatus != OrderItemStatus.payed) {
-        item.itemStatus = OrderItemStatus.payed;
-        item.payedToId = employer.userProfileId;
-        item.payedAt = DateTime.now();
-        item.updatedAt = DateTime.now();
-        await OrderItem.db.updateRow(session, item);
-      }
-    }
-
-    /// mark order as payed
     order.status = OrderStatus.payed;
+    order.closedbyId = userProfileId;
     order.updatedAt = DateTime.now();
-    order.closedbyId = employer.userProfileId;
-    await session.messages.postMessage(
-      'order_updated-$buildingId',
+    return await Order.db.updateRow(
+      session,
       order,
+      columns: (t) => [
+        t.status,
+        t.closedbyId,
+        t.updatedAt,
+      ],
     );
-    return await Order.db.updateRow(session, order);
   }
 
-  Future<Order> getOrderCurrOfTable(Session session, int tableId) async {
+  Future<Order?> getOrderCurrOfTable(Session session, int tableId) async {
     await AuthorizationsHelpers().requiredScopes(session, [
       "owner",
       "employer",
     ]);
-    Order? order = await Order.db.findFirstRow(
+    return await Order.db.findFirstRow(
       session,
       where: (t) =>
           t.btableId.equals(tableId) & t.status.equals(OrderStatus.progress),
@@ -343,14 +193,6 @@ class OrderEndpoint extends Endpoint {
         ),
       ),
     );
-    if (order == null) {
-      throw AppException(
-        errorType: ExceptionType.NotFound,
-        message:
-            'No existing order in progress for table ${order?.btable?.number}',
-      );
-    }
-    return order;
   }
 
   Future<List<Order>> getOrdersOfTable(
@@ -376,45 +218,5 @@ class OrderEndpoint extends Endpoint {
         items: OrderItem.includeList(),
       ),
     );
-  }
-
-  @doNotGenerate
-  Future<TableStatus> checkTableHaveOrder(Session session, int tableId) async {
-    Order? order = await Order.db.findFirstRow(
-      session,
-      where: (t) =>
-          t.btableId.equals(tableId) & t.status.equals(OrderStatus.progress),
-    );
-    if (order != null && order.status == OrderStatus.progress) {
-      return TableStatus.occupied;
-    }
-    return TableStatus.available;
-  }
-
-  Stream<Order> streamCreateOrder(Session session, int buildingId) async* {
-    Stream<Order> msgStream = session.messages.createStream<Order>(
-      'order_created-$buildingId',
-    );
-    await for (var message in msgStream) {
-      yield message;
-    }
-  }
-
-  Stream<Order> streamAppendItemsOrder(Session session, int buildingId) async* {
-    Stream<Order> msgStream = session.messages.createStream<Order>(
-      'order_appendItems-$buildingId',
-    );
-    await for (var message in msgStream) {
-      yield message;
-    }
-  }
-
-  Stream<Order> streamUpdateOrder(Session session, int buildingId) async* {
-    Stream<Order> msgStream = session.messages.createStream<Order>(
-      'order_updated-$buildingId',
-    );
-    await for (var message in msgStream) {
-      yield message;
-    }
   }
 }

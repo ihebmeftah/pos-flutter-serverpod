@@ -6,7 +6,6 @@ import 'package:serverpod/serverpod.dart';
 /// DON'T USE THIS HELEPRS WITH @doNotGenerate METHODES
 class AuthorizationsHelpers {
   Future<void> loggedIn(Session session) async {
-    session.log("loggedIn methode called");
     if (session.isUserSignedIn) {
       throw AppException(
         errorType: ExceptionType.Unauthorized,

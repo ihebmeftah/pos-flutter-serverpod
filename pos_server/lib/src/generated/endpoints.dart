@@ -890,85 +890,6 @@ class Endpoints extends _i1.EndpointDispatch {
                 params['order'],
               ),
         ),
-        'appendItemsToOrder': _i1.MethodConnector(
-          name: 'appendItemsToOrder',
-          params: {
-            'orderId': _i1.ParameterDescription(
-              name: 'orderId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-            'orderItems': _i1.ParameterDescription(
-              name: 'orderItems',
-              type: _i1.getType<List<_i20.OrderItem>>(),
-              nullable: false,
-            ),
-          },
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async =>
-                  (endpoints['order'] as _i10.OrderEndpoint).appendItemsToOrder(
-                    session,
-                    params['orderId'],
-                    params['orderItems'],
-                  ),
-        ),
-        'payItem': _i1.MethodConnector(
-          name: 'payItem',
-          params: {
-            'orderId': _i1.ParameterDescription(
-              name: 'orderId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-            'orderItemId': _i1.ParameterDescription(
-              name: 'orderItemId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-            'buildingId': _i1.ParameterDescription(
-              name: 'buildingId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-          },
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async => (endpoints['order'] as _i10.OrderEndpoint).payItem(
-                session,
-                params['orderId'],
-                params['orderItemId'],
-                params['buildingId'],
-              ),
-        ),
-        'payAllItems': _i1.MethodConnector(
-          name: 'payAllItems',
-          params: {
-            'orderId': _i1.ParameterDescription(
-              name: 'orderId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-            'buildingId': _i1.ParameterDescription(
-              name: 'buildingId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-          },
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async => (endpoints['order'] as _i10.OrderEndpoint).payAllItems(
-                session,
-                params['orderId'],
-                params['buildingId'],
-              ),
-        ),
         'getOrderCurrOfTable': _i1.MethodConnector(
           name: 'getOrderCurrOfTable',
           params: {
@@ -1013,76 +934,37 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['orderStatus'],
                   ),
         ),
-        'streamCreateOrder': _i1.MethodStreamConnector(
-          name: 'streamCreateOrder',
-          params: {
-            'buildingId': _i1.ParameterDescription(
-              name: 'buildingId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-          },
-          streamParams: {},
-          returnType: _i1.MethodStreamReturnType.streamType,
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-                Map<String, Stream> streamParams,
-              ) => (endpoints['order'] as _i10.OrderEndpoint).streamCreateOrder(
-                session,
-                params['buildingId'],
-              ),
-        ),
-        'streamAppendItemsOrder': _i1.MethodStreamConnector(
-          name: 'streamAppendItemsOrder',
-          params: {
-            'buildingId': _i1.ParameterDescription(
-              name: 'buildingId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-          },
-          streamParams: {},
-          returnType: _i1.MethodStreamReturnType.streamType,
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-                Map<String, Stream> streamParams,
-              ) => (endpoints['order'] as _i10.OrderEndpoint)
-                  .streamAppendItemsOrder(
-                    session,
-                    params['buildingId'],
-                  ),
-        ),
-        'streamUpdateOrder': _i1.MethodStreamConnector(
-          name: 'streamUpdateOrder',
-          params: {
-            'buildingId': _i1.ParameterDescription(
-              name: 'buildingId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-          },
-          streamParams: {},
-          returnType: _i1.MethodStreamReturnType.streamType,
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-                Map<String, Stream> streamParams,
-              ) => (endpoints['order'] as _i10.OrderEndpoint).streamUpdateOrder(
-                session,
-                params['buildingId'],
-              ),
-        ),
       },
     );
     connectors['orderItem'] = _i1.EndpointConnector(
       name: 'orderItem',
       endpoint: endpoints['orderItem']!,
       methodConnectors: {
+        'appendItemsToOrder': _i1.MethodConnector(
+          name: 'appendItemsToOrder',
+          params: {
+            'orderId': _i1.ParameterDescription(
+              name: 'orderId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'orderItems': _i1.ParameterDescription(
+              name: 'orderItems',
+              type: _i1.getType<List<_i20.OrderItem>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['orderItem'] as _i11.OrderItemEndpoint)
+                  .appendItemsToOrder(
+                    session,
+                    params['orderId'],
+                    params['orderItems'],
+                  ),
+        ),
         'changeOrderItemsStatus': _i1.MethodConnector(
           name: 'changeOrderItemsStatus',
           params: {
@@ -1106,6 +988,62 @@ class Endpoints extends _i1.EndpointDispatch {
                     session,
                     params['orderItemIds'],
                     params['newStatus'],
+                  ),
+        ),
+        'payOrderItem': _i1.MethodConnector(
+          name: 'payOrderItem',
+          params: {
+            'orderId': _i1.ParameterDescription(
+              name: 'orderId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'orderItemPayedIds': _i1.ParameterDescription(
+              name: 'orderItemPayedIds',
+              type: _i1.getType<List<int>>(),
+              nullable: false,
+            ),
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['orderItem'] as _i11.OrderItemEndpoint)
+                  .payOrderItem(
+                    session,
+                    params['orderId'],
+                    params['orderItemPayedIds'],
+                    params['buildingId'],
+                  ),
+        ),
+        'payAllItems': _i1.MethodConnector(
+          name: 'payAllItems',
+          params: {
+            'orderId': _i1.ParameterDescription(
+              name: 'orderId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['orderItem'] as _i11.OrderItemEndpoint)
+                  .payAllItems(
+                    session,
+                    params['orderId'],
+                    params['buildingId'],
                   ),
         ),
       },

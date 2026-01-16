@@ -19,10 +19,15 @@ class BuildingTablesEndpoint extends Endpoint {
       where: (t) => t.buildingId.equals(buildingId),
     );
     for (BTable table in tables) {
-      table.status = await OrderEndpoint().checkTableHaveOrder(
+      final haveOrder = await OrderEndpoint().getOrderCurrOfTable(
         session,
         table.id!,
       );
+      if (haveOrder != null) {
+        table.status = TableStatus.occupied;
+      } else {
+        table.status = TableStatus.available;
+      }
     }
     return tables;
   }

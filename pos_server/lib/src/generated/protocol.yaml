@@ -41,13 +41,10 @@ order:
   - getOrders:
   - getOrderById:
   - createOrder:
-  - appendItemsToOrder:
-  - payItem:
-  - payAllItems:
   - getOrderCurrOfTable:
   - getOrdersOfTable:
-  - streamCreateOrder:
-  - streamAppendItemsOrder:
-  - streamUpdateOrder:
 orderItem:
+  - appendItemsToOrder:
   - changeOrderItemsStatus:
+  - payOrderItem:
+  - payAllItems:

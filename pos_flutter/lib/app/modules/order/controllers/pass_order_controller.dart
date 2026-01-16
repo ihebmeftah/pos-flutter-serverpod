@@ -150,7 +150,7 @@ class PassOrderController extends GetxController with StateMixin {
 
   Future<void> appendItemToOrder() async {
     try {
-      await ServerpodClient.instance.order.appendItemsToOrder(
+      await ServerpodClient.instance.orderItem.appendItemsToOrder(
         currOrder!.id!,
         orderDto.items!,
       );

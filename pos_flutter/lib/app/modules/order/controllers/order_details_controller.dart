@@ -53,11 +53,20 @@ class OrderDetailsController extends GetxController with StateMixin {
 
   Future<void> payForItem(OrderItem item) async {
     try {
-      order = await ServerpodClient.instance.order.payItem(
-        order!.id!,
-        item.id!,
-        LocalStorage().building!.id!,
-      );
+      final updatedItems = await ServerpodClient.instance.orderItem
+          .payOrderItem(
+            order!.id!,
+            [item.id!],
+            LocalStorage().building!.id!,
+          );
+      for (var updatedItem in updatedItems) {
+        final index = order!.items!.indexWhere(
+          (element) => element.id == updatedItem.id,
+        );
+        if (index != -1) {
+          order!.items![index] = updatedItem;
+        }
+      }
       change(order, status: RxStatus.success());
       Get.snackbar(
         'Payment Processed',
@@ -88,7 +97,7 @@ class OrderDetailsController extends GetxController with StateMixin {
 
   Future<void> payAllItems() async {
     try {
-      order = await ServerpodClient.instance.order.payAllItems(
+      order = await ServerpodClient.instance.orderItem.payAllItems(
         order!.id!,
         LocalStorage().building!.id!,
       );
