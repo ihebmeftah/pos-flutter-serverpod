@@ -81,20 +81,4 @@ class AccessEndpoint extends Endpoint {
     return await Access.db.deleteRow(session, access);
   }
 
-  Future<Employer> assignAccessToEmployer(
-    Session session,
-    int employerId,
-    int accessId,
-  ) async {
-    final employer = await Employer.db.findById(session, employerId);
-    if (employer == null) {
-      throw AppException(
-        errorType: ExceptionType.NotFound,
-        message: 'Employer with id $employerId not found.',
-      );
-    }
-    final access = await getAccessById(session, accessId);
-    employer.accessId = access.id;
-    return await Employer.db.updateRow(session, employer);
-  }
 }

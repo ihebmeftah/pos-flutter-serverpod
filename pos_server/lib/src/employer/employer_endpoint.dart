@@ -1,3 +1,4 @@
+import 'package:pos_server/src/access/access_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
 import 'package:pos_server/src/helpers/authorizations_helpers.dart';
 import 'package:serverpod/serverpod.dart';
@@ -101,5 +102,27 @@ class EmployerEndpoint extends Endpoint {
       throw Exception('Employer with $identifier not found');
     }
     return employer;
+  }
+
+  Future<Employer> assignAccessToEmployer(
+    Session session,
+    int employerId,
+    int accessId,
+  ) async {
+    final employer = await Employer.db.findById(session, employerId);
+    if (employer == null) {
+      throw AppException(
+        errorType: ExceptionType.NotFound,
+        message: 'Employer with id $employerId not found.',
+      );
+    }
+    final access = await AccessEndpoint().getAccessById(session, accessId);
+    employer.accessId = access.id;
+    employer.access = access;
+    return await Employer.db.updateRow(
+      session,
+      employer,
+      columns: (t) => [t.accessId],
+    );
   }
 }

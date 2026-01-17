@@ -20,7 +20,7 @@ class AccessView extends GetView<AccessController> {
             padding: const EdgeInsets.only(right: 16),
             child: IconButton(
               onPressed: () => Get.toNamed(Routes.ACCESS_FORM),
-              icon: const Icon(Icons.add, size: 20),
+              icon: const Icon(Icons.add),
             ),
           ),
         ],

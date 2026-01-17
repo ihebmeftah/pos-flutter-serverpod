@@ -12,7 +12,7 @@ void bottomSheet({
     // height: Get.height * 0.95,
     padding: const EdgeInsets.all(20),
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       spacing: 20,
       children: [
         if (topCloseButton)

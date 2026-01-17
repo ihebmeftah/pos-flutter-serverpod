@@ -207,31 +207,6 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['accessId'],
                   ),
         ),
-        'assignAccessToEmployer': _i1.MethodConnector(
-          name: 'assignAccessToEmployer',
-          params: {
-            'employerId': _i1.ParameterDescription(
-              name: 'employerId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-            'accessId': _i1.ParameterDescription(
-              name: 'accessId',
-              type: _i1.getType<int>(),
-              nullable: false,
-            ),
-          },
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async => (endpoints['access'] as _i2.AccessEndpoint)
-                  .assignAccessToEmployer(
-                    session,
-                    params['employerId'],
-                    params['accessId'],
-                  ),
-        ),
       },
     );
     connectors['article'] = _i1.EndpointConnector(
@@ -947,6 +922,31 @@ class Endpoints extends _i1.EndpointDispatch {
                   .getEmployerByIdentifier(
                     session,
                     params['identifier'],
+                  ),
+        ),
+        'assignAccessToEmployer': _i1.MethodConnector(
+          name: 'assignAccessToEmployer',
+          params: {
+            'employerId': _i1.ParameterDescription(
+              name: 'employerId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'accessId': _i1.ParameterDescription(
+              name: 'accessId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['employer'] as _i10.EmployerEndpoint)
+                  .assignAccessToEmployer(
+                    session,
+                    params['employerId'],
+                    params['accessId'],
                   ),
         ),
       },

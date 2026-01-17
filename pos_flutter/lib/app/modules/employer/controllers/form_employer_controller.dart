@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/app_snackbar.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/modules/employer/controllers/employer_controller.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
@@ -34,14 +35,14 @@ class FormEmployerController extends GetxController with StateMixin {
               LocalStorage().building!.id!,
               selectedAccess?.id,
             );
+        AppSnackbar.success();
         Get.find<EmployerController>().getEmployers();
         Get.back(result: employer);
-        Get.snackbar('Success', 'Employer created successfully');
       }
     } on AppException catch (e) {
       change(null, status: RxStatus.error(e.message));
     } catch (e) {
-      Get.snackbar('Error', 'Failed to create employer: $e');
+      change(null, status: RxStatus.error());
     }
   }
 

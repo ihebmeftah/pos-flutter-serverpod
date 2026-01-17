@@ -116,7 +116,9 @@ class ArticleFormView extends GetView<ArticleFormController> {
               SafeArea(
                 child: ElevatedButton(
                   onPressed: controller.createArticle,
-                  child: const Text("Add Article"),
+                  child: Text(
+                    controller.id == null ? "Add Article" : "Update Article",
+                  ),
                 ),
               ),
             ],

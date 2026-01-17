@@ -50,6 +50,7 @@ class BuildingEndpoint extends Endpoint {
         preparation: false,
         appendItems: false,
         takeOrder: true,
+        caisseManagement: false,
         buildingId: createdBuilding.id!,
       ),
       Access(
@@ -58,6 +59,7 @@ class BuildingEndpoint extends Endpoint {
         orderPayment: true,
         orderItemsPayment: true,
         consultAllOrders: true,
+        caisseManagement: true,
         orderCreationNotif: false,
         preparation: false,
         appendItems: false,
@@ -73,6 +75,7 @@ class BuildingEndpoint extends Endpoint {
         orderCreationNotif: false,
         preparation: true,
         appendItems: false,
+        caisseManagement: false,
         takeOrder: false,
         buildingId: createdBuilding.id!,
       ),

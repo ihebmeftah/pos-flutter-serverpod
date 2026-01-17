@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/app_snackbar.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
@@ -27,29 +28,15 @@ class LoginController extends GetxController {
       }
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Unauthorized) {
-        Get.snackbar(
-          'Credentials Error',
-          'Invalid email or password. Please try again.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
-        );
+        AppSnackbar.error('Invalid email or password. Please try again.');
       }
     } on AuthUserBlockedException {
-      Get.snackbar(
-        'Login Error',
+      AppSnackbar.error(
         'Your account has been blocked. Please contact support.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
       );
     } catch (e) {
-      Get.snackbar(
-        'Login Error',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
+      AppSnackbar.error(
+        'An unexpected error occurred. Please try again later.',
       );
     }
   }

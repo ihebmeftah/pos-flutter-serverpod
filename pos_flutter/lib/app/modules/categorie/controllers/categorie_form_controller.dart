@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/app_snackbar.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/modules/categorie/controllers/categorie_controller.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
@@ -54,15 +55,14 @@ class CategorieFormController extends GetxController with StateMixin {
             categorie: categorieDto,
           );
         }
+        AppSnackbar.success();
         Get.find<CategorieController>().getCategories();
         Get.back();
       }
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Conflict) {
-        Get.snackbar(
-          "Existing name",
-          "Category with this name already exists",
-          snackPosition: SnackPosition.BOTTOM,
+        AppSnackbar.info(
+          "A category with the name ${nameController.text} already exists",
         );
         change(null, status: RxStatus.success());
         return;

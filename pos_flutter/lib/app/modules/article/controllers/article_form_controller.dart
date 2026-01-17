@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/app_snackbar.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/modules/article/controllers/article_controller.dart';
 
@@ -73,15 +74,14 @@ class ArticleFormController extends GetxController with StateMixin {
             article: articleDto,
           );
         }
+        AppSnackbar.success();
         Get.find<ArticleController>().getArticles();
         Get.back();
       }
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Conflict) {
-        Get.snackbar(
-          "Existing name",
-          "Article with this name already exists",
-          snackPosition: SnackPosition.BOTTOM,
+        AppSnackbar.info(
+          "Article with the name ${articleDto.name} already exists",
         );
         change([], status: RxStatus.success());
         return;

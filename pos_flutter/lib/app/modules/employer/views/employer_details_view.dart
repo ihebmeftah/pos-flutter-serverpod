@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_flutter/app/components/app_section_card.dart';
+import 'package:pos_flutter/app/components/appbottomsheet.dart';
+import 'package:pos_flutter/app/modules/access/controllers/access_controller.dart';
 
 import '../../../components/appemptyscreen.dart';
 import '../../../components/apperrorscreen.dart';
@@ -50,17 +52,46 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildInfoRow(
-                              context,
-                              icon: Icons.vpn_key_outlined,
-                              label: 'Access',
-                              value:
-                                  (employer.access?.name ??
-                                  'No Access Assigned'),
+                            child: GetBuilder<EmployerDetailsController>(
+                              id: "update-access",
+                              builder: (_) {
+                                return _buildInfoRow(
+                                  context,
+                                  icon: Icons.vpn_key_outlined,
+                                  label: 'Access',
+                                  value:
+                                      (employer.access?.name ??
+                                      'No Access Assigned'),
+                                );
+                              },
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () => bottomSheet(
+                              children: [
+                                Expanded(
+                                  child: GetBuilder<AccessController>(
+                                    init: AccessController(),
+                                    builder: (accessCtr) {
+                                      return ListView.builder(
+                                        itemCount: accessCtr.access.length,
+                                        itemBuilder: (context, index) {
+                                          final access =
+                                              accessCtr.access[index];
+                                          return ListTile(
+                                            title: Text(access.name),
+                                            onTap: () =>
+                                                controller.updateEmployerAccess(
+                                                  access.id!,
+                                                ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                             child: Text("Change Access"),
                           ),
                         ],

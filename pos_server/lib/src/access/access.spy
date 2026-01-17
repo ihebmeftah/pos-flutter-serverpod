@@ -10,5 +10,5 @@ fields:
   appendItems: bool,
   preparation: bool,
   takeOrder: bool,
-  caisseManagement: bool,default=false
+  caisseManagement: bool
   buildingId: int?, relation(parent=building),required

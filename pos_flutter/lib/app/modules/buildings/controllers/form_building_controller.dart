@@ -3,6 +3,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/app_snackbar.dart';
 import 'package:pos_flutter/app/modules/buildings/controllers/buildings_controller.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
@@ -87,6 +88,7 @@ class FormBuildingController extends GetxController with StateMixin {
             addDto,
           );
         }
+        AppSnackbar.success();
         Get.find<BuildingsController>().onInit();
         Get.back();
       }
@@ -94,13 +96,7 @@ class FormBuildingController extends GetxController with StateMixin {
     } on AppException catch (e) {
       change(null, status: RxStatus.error(e.message));
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Failed to add building: $e",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      change(null, status: RxStatus.error("Failed to create building"));
     }
   }
 
@@ -183,12 +179,8 @@ class FormBuildingController extends GetxController with StateMixin {
         update(['location']);
       }
     } else {
-      Get.snackbar(
-        "Permission Denied",
-        "Location permission is required to determine address based on current location.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+      AppSnackbar.info(
+        "Location permission is denied. Please enable it in settings to use this feature.",
       );
     }
   }

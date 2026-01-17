@@ -13,12 +13,12 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:pos_client/src/protocol/access/access.dart' as _i3;
-import 'package:pos_client/src/protocol/employer/employer.dart' as _i4;
-import 'package:pos_client/src/protocol/article/article.dart' as _i5;
+import 'package:pos_client/src/protocol/article/article.dart' as _i4;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i6;
+    as _i5;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i7;
+    as _i6;
+import 'package:pos_client/src/protocol/employer/employer.dart' as _i7;
 import 'package:pos_client/src/protocol/buildings/building.dart' as _i8;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
     as _i9;
@@ -72,18 +72,6 @@ class EndpointAccess extends _i1.EndpointRef {
         'deleteAccess',
         {'accessId': accessId},
       );
-
-  _i2.Future<_i4.Employer> assignAccessToEmployer(
-    int employerId,
-    int accessId,
-  ) => caller.callServerEndpoint<_i4.Employer>(
-    'access',
-    'assignAccessToEmployer',
-    {
-      'employerId': employerId,
-      'accessId': accessId,
-    },
-  );
 }
 
 /// {@category Endpoint}
@@ -98,10 +86,10 @@ class EndpointArticle extends _i1.EndpointRef {
   /// optional [categoryId] The id of the category
   /// Returns a list of [Article] articles
   /// allow for all type of users (admin, employee, customer)
-  _i2.Future<List<_i5.Article>> getArticles(
+  _i2.Future<List<_i4.Article>> getArticles(
     int buildingId, {
     int? categoryId,
-  }) => caller.callServerEndpoint<List<_i5.Article>>(
+  }) => caller.callServerEndpoint<List<_i4.Article>>(
     'article',
     'getArticles',
     {
@@ -115,10 +103,10 @@ class EndpointArticle extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// Returns the created [Article] article
   /// allow for admin users only
-  _i2.Future<_i5.Article> createArticle({
-    required _i5.Article article,
+  _i2.Future<_i4.Article> createArticle({
+    required _i4.Article article,
     required int buildingId,
-  }) => caller.callServerEndpoint<_i5.Article>(
+  }) => caller.callServerEndpoint<_i4.Article>(
     'article',
     'createArticle',
     {
@@ -132,8 +120,8 @@ class EndpointArticle extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// Returns the [Article] article
   /// allow for all type of users (admin, employee, customer)
-  _i2.Future<_i5.Article> getArticleById(int id) =>
-      caller.callServerEndpoint<_i5.Article>(
+  _i2.Future<_i4.Article> getArticleById(int id) =>
+      caller.callServerEndpoint<_i4.Article>(
         'article',
         'getArticleById',
         {'id': id},
@@ -143,8 +131,8 @@ class EndpointArticle extends _i1.EndpointRef {
   /// required [article] The article to update
   /// Returns the updated [Article] article
   /// allow for admin users only
-  _i2.Future<_i5.Article> updateArticle({required _i5.Article article}) =>
-      caller.callServerEndpoint<_i5.Article>(
+  _i2.Future<_i4.Article> updateArticle({required _i4.Article article}) =>
+      caller.callServerEndpoint<_i4.Article>(
         'article',
         'updateArticle',
         {'article': article},
@@ -155,14 +143,14 @@ class EndpointArticle extends _i1.EndpointRef {
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 /// {@category Endpoint}
-class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
+class EndpointEmailIdp extends _i5.EndpointEmailIdpBase {
   EndpointEmailIdp(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'emailIdp';
 
-  _i2.Future<_i7.UserProfile> getUserProfile() =>
-      caller.callServerEndpoint<_i7.UserProfile>(
+  _i2.Future<_i6.UserProfile> getUserProfile() =>
+      caller.callServerEndpoint<_i6.UserProfile>(
         'emailIdp',
         'getUserProfile',
         {},
@@ -170,13 +158,13 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
 
   /// A reworked login method that returns an Employer on successful login.
   /// If the logged-in user is an admin, it returns null.
-  _i2.Future<({_i7.AuthSuccess authSuccess, _i4.Employer? employer})>
+  _i2.Future<({_i6.AuthSuccess authSuccess, _i7.Employer? employer})>
   loginReworked({
     required String email,
     required String password,
   }) =>
       caller.callServerEndpoint<
-        ({_i7.AuthSuccess authSuccess, _i4.Employer? employer})
+        ({_i6.AuthSuccess authSuccess, _i7.Employer? employer})
       >(
         'emailIdp',
         'loginReworked',
@@ -194,11 +182,11 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
       );
 
   ///Reworked verify registration code to assign owner scope
-  _i2.Future<_i7.AuthSuccess> verifyRegistrationCodeReworked({
+  _i2.Future<_i6.AuthSuccess> verifyRegistrationCodeReworked({
     required _i1.UuidValue accountRequestId,
     required String verificationCode,
     required String password,
-  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i6.AuthSuccess>(
     'emailIdp',
     'verifyRegistrationCodeReworked',
     {
@@ -218,10 +206,10 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i2.Future<_i7.AuthSuccess> login({
+  _i2.Future<_i6.AuthSuccess> login({
     required String email,
     required String password,
-  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i6.AuthSuccess>(
     'emailIdp',
     'login',
     {
@@ -286,10 +274,10 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
   ///
   /// Returns a session for the newly created user.
   @override
-  _i2.Future<_i7.AuthSuccess> finishRegistration({
+  _i2.Future<_i6.AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
-  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i6.AuthSuccess>(
     'emailIdp',
     'finishRegistration',
     {
@@ -377,7 +365,7 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
 /// is made available on the server and enables automatic token refresh on the client.
 /// {@category Endpoint}
-class EndpointJwtRefresh extends _i7.EndpointRefreshJwtTokens {
+class EndpointJwtRefresh extends _i6.EndpointRefreshJwtTokens {
   EndpointJwtRefresh(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -402,9 +390,9 @@ class EndpointJwtRefresh extends _i7.EndpointRefreshJwtTokens {
   /// This endpoint is unauthenticated, meaning the client won't include any
   /// authentication information with the call.
   @override
-  _i2.Future<_i7.AuthSuccess> refreshAccessToken({
+  _i2.Future<_i6.AuthSuccess> refreshAccessToken({
     required String refreshToken,
-  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i6.AuthSuccess>(
     'jwtRefresh',
     'refreshAccessToken',
     {'refreshToken': refreshToken},
@@ -596,12 +584,12 @@ class EndpointEmployer extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// Returns the created [Employer] employer account
   /// allow for admin users only
-  _i2.Future<_i4.Employer> createEmployerAccount(
-    _i7.UserProfileData userProfileData,
+  _i2.Future<_i7.Employer> createEmployerAccount(
+    _i6.UserProfileData userProfileData,
     String password,
     int buildingId,
     int? accessId,
-  ) => caller.callServerEndpoint<_i4.Employer>(
+  ) => caller.callServerEndpoint<_i7.Employer>(
     'employer',
     'createEmployerAccount',
     {
@@ -616,8 +604,8 @@ class EndpointEmployer extends _i1.EndpointRef {
   /// Identifier can be a[buildingId]
   /// Returns list of [Employer]
   /// This enpoint need login and allowed only for admin
-  _i2.Future<List<_i4.Employer>> getEmployers(int buildingId) =>
-      caller.callServerEndpoint<List<_i4.Employer>>(
+  _i2.Future<List<_i7.Employer>> getEmployers(int buildingId) =>
+      caller.callServerEndpoint<List<_i7.Employer>>(
         'employer',
         'getEmployers',
         {'buildingId': buildingId},
@@ -627,12 +615,24 @@ class EndpointEmployer extends _i1.EndpointRef {
   /// Identifier can be a[authId] or [UserProfileId]
   /// Returns [Employer] if found else throws exception
   /// This enpoint need login and allowed for all users
-  _i2.Future<_i4.Employer> getEmployerByIdentifier(_i1.UuidValue identifier) =>
-      caller.callServerEndpoint<_i4.Employer>(
+  _i2.Future<_i7.Employer> getEmployerByIdentifier(_i1.UuidValue identifier) =>
+      caller.callServerEndpoint<_i7.Employer>(
         'employer',
         'getEmployerByIdentifier',
         {'identifier': identifier},
       );
+
+  _i2.Future<_i7.Employer> assignAccessToEmployer(
+    int employerId,
+    int accessId,
+  ) => caller.callServerEndpoint<_i7.Employer>(
+    'employer',
+    'assignAccessToEmployer',
+    {
+      'employerId': employerId,
+      'accessId': accessId,
+    },
+  );
 }
 
 /// {@category Endpoint}
@@ -769,13 +769,13 @@ class EndpointOrderItem extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    serverpod_auth_idp = _i6.Caller(client);
-    serverpod_auth_core = _i7.Caller(client);
+    serverpod_auth_idp = _i5.Caller(client);
+    serverpod_auth_core = _i6.Caller(client);
   }
 
-  late final _i6.Caller serverpod_auth_idp;
+  late final _i5.Caller serverpod_auth_idp;
 
-  late final _i7.Caller serverpod_auth_core;
+  late final _i6.Caller serverpod_auth_core;
 }
 
 class Client extends _i1.ServerpodClientShared {

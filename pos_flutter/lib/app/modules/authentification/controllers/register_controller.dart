@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/app_snackbar.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
@@ -62,20 +63,13 @@ class RegisterController extends GetxController with StateMixin {
       }
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Conflict) {
-        Get.snackbar(
-          'Email already registered',
-          'The email you provided is already registered.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
+        AppSnackbar.info(
+          "An account with the email ${email.text} already exists",
         );
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Registration failed',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+      AppSnackbar.error(
+        'An unexpected error occurred during registration. Please try again later.',
       );
     } finally {
       change(null, status: RxStatus.success());
@@ -85,12 +79,7 @@ class RegisterController extends GetxController with StateMixin {
   Future<void> _verifyCode(String verifCode, UuidValue accountRequestId) async {
     try {
       if (verifCode.isEmpty) {
-        Get.snackbar(
-          'Error',
-          'Please enter the verification code',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        AppSnackbar.error('Please enter the verification code');
         return;
       }
       final authSuccess = await ServerpodClient.instance.emailIdp
@@ -103,11 +92,8 @@ class RegisterController extends GetxController with StateMixin {
         authSuccess,
       );
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Verification failed',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+      AppSnackbar.error(
+        'Verification failed. Please check the code and try again.',
       );
     }
   }

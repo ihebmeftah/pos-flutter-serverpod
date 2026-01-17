@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/app_snackbar.dart';
 import 'package:pos_flutter/app/modules/access/controllers/access_controller.dart';
 
 import '../../../../config/serverpod_client.dart';
@@ -101,17 +102,15 @@ class AccessFormController extends GetxController with StateMixin {
             _accessDto,
           );
         }
+        AppSnackbar.success();
         Get.find<AccessController>().getAccess();
         Get.back();
       }
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Conflict) {
         change(null, status: RxStatus.success());
-        ScaffoldMessenger.of(Get.context!).showSnackBar(
-          SnackBar(
-            content: Text("Access with the same name already exists"),
-            backgroundColor: Colors.red,
-          ),
+        AppSnackbar.info(
+          "Access with the name ${_accessDto.name} already exists",
         );
         return;
       }

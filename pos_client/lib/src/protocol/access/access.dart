@@ -24,9 +24,9 @@ abstract class Access implements _i1.SerializableModel {
     required this.appendItems,
     required this.preparation,
     required this.takeOrder,
-    bool? caisseManagement,
+    required this.caisseManagement,
     required this.buildingId,
-  }) : caisseManagement = caisseManagement ?? false;
+  });
 
   factory Access({
     int? id,
@@ -39,7 +39,7 @@ abstract class Access implements _i1.SerializableModel {
     required bool appendItems,
     required bool preparation,
     required bool takeOrder,
-    bool? caisseManagement,
+    required bool caisseManagement,
     required int? buildingId,
   }) = _AccessImpl;
 
@@ -55,7 +55,7 @@ abstract class Access implements _i1.SerializableModel {
       appendItems: jsonSerialization['appendItems'] as bool,
       preparation: jsonSerialization['preparation'] as bool,
       takeOrder: jsonSerialization['takeOrder'] as bool,
-      caisseManagement: jsonSerialization['caisseManagement'] as bool?,
+      caisseManagement: jsonSerialization['caisseManagement'] as bool,
       buildingId: jsonSerialization['buildingId'] as int?,
     );
   }
@@ -143,7 +143,7 @@ class _AccessImpl extends Access {
     required bool appendItems,
     required bool preparation,
     required bool takeOrder,
-    bool? caisseManagement,
+    required bool caisseManagement,
     required int? buildingId,
   }) : super._(
          id: id,

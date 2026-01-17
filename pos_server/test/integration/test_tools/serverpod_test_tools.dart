@@ -15,10 +15,10 @@ import 'package:serverpod_test/serverpod_test.dart' as _i1;
 import 'package:serverpod/serverpod.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:pos_server/src/generated/access/access.dart' as _i4;
-import 'package:pos_server/src/generated/employer/employer.dart' as _i5;
-import 'package:pos_server/src/generated/article/article.dart' as _i6;
+import 'package:pos_server/src/generated/article/article.dart' as _i5;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i7;
+    as _i6;
+import 'package:pos_server/src/generated/employer/employer.dart' as _i7;
 import 'package:pos_server/src/generated/protocol.dart' as _i8;
 import 'package:pos_server/src/generated/buildings/building.dart' as _i9;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
@@ -378,41 +378,6 @@ class _AccessEndpoint {
       }
     });
   }
-
-  _i3.Future<_i5.Employer> assignAccessToEmployer(
-    _i1.TestSessionBuilder sessionBuilder,
-    int employerId,
-    int accessId,
-  ) async {
-    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession =
-          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-            endpoint: 'access',
-            method: 'assignAccessToEmployer',
-          );
-      try {
-        var _localCallContext = await _endpointDispatch.getMethodCallContext(
-          createSessionCallback: (_) => _localUniqueSession,
-          endpointPath: 'access',
-          methodName: 'assignAccessToEmployer',
-          parameters: _i1.testObjectToJson({
-            'employerId': employerId,
-            'accessId': accessId,
-          }),
-          serializationManager: _serializationManager,
-        );
-        var _localReturnValue =
-            await (_localCallContext.method.call(
-                  _localUniqueSession,
-                  _localCallContext.arguments,
-                )
-                as _i3.Future<_i5.Employer>);
-        return _localReturnValue;
-      } finally {
-        await _localUniqueSession.close();
-      }
-    });
-  }
 }
 
 class _ArticleEndpoint {
@@ -425,7 +390,7 @@ class _ArticleEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<List<_i6.Article>> getArticles(
+  _i3.Future<List<_i5.Article>> getArticles(
     _i1.TestSessionBuilder sessionBuilder,
     int buildingId, {
     int? categoryId,
@@ -452,7 +417,7 @@ class _ArticleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i6.Article>>);
+                as _i3.Future<List<_i5.Article>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -460,9 +425,9 @@ class _ArticleEndpoint {
     });
   }
 
-  _i3.Future<_i6.Article> createArticle(
+  _i3.Future<_i5.Article> createArticle(
     _i1.TestSessionBuilder sessionBuilder, {
-    required _i6.Article article,
+    required _i5.Article article,
     required int buildingId,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
@@ -487,7 +452,7 @@ class _ArticleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i6.Article>);
+                as _i3.Future<_i5.Article>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -495,7 +460,7 @@ class _ArticleEndpoint {
     });
   }
 
-  _i3.Future<_i6.Article> getArticleById(
+  _i3.Future<_i5.Article> getArticleById(
     _i1.TestSessionBuilder sessionBuilder,
     int id,
   ) async {
@@ -518,7 +483,7 @@ class _ArticleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i6.Article>);
+                as _i3.Future<_i5.Article>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -526,9 +491,9 @@ class _ArticleEndpoint {
     });
   }
 
-  _i3.Future<_i6.Article> updateArticle(
+  _i3.Future<_i5.Article> updateArticle(
     _i1.TestSessionBuilder sessionBuilder, {
-    required _i6.Article article,
+    required _i5.Article article,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -549,7 +514,7 @@ class _ArticleEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i6.Article>);
+                as _i3.Future<_i5.Article>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -568,7 +533,7 @@ class _EmailIdpEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i7.UserProfile> getUserProfile(
+  _i3.Future<_i6.UserProfile> getUserProfile(
     _i1.TestSessionBuilder sessionBuilder,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
@@ -590,7 +555,7 @@ class _EmailIdpEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i7.UserProfile>);
+                as _i3.Future<_i6.UserProfile>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -598,7 +563,7 @@ class _EmailIdpEndpoint {
     });
   }
 
-  _i3.Future<({_i7.AuthSuccess authSuccess, _i5.Employer? employer})>
+  _i3.Future<({_i6.AuthSuccess authSuccess, _i7.Employer? employer})>
   loginReworked(
     _i1.TestSessionBuilder sessionBuilder, {
     required String email,
@@ -629,7 +594,7 @@ class _EmailIdpEndpoint {
             .then(
               (record) =>
                   _i8.Protocol().deserialize<
-                    ({_i7.AuthSuccess authSuccess, _i5.Employer? employer})
+                    ({_i6.AuthSuccess authSuccess, _i7.Employer? employer})
                   >(record),
             );
         return _localReturnValue;
@@ -670,7 +635,7 @@ class _EmailIdpEndpoint {
     });
   }
 
-  _i3.Future<_i7.AuthSuccess> verifyRegistrationCodeReworked(
+  _i3.Future<_i6.AuthSuccess> verifyRegistrationCodeReworked(
     _i1.TestSessionBuilder sessionBuilder, {
     required _i2.UuidValue accountRequestId,
     required String verificationCode,
@@ -699,7 +664,7 @@ class _EmailIdpEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i7.AuthSuccess>);
+                as _i3.Future<_i6.AuthSuccess>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -707,7 +672,7 @@ class _EmailIdpEndpoint {
     });
   }
 
-  _i3.Future<_i7.AuthSuccess> login(
+  _i3.Future<_i6.AuthSuccess> login(
     _i1.TestSessionBuilder sessionBuilder, {
     required String email,
     required String password,
@@ -734,7 +699,7 @@ class _EmailIdpEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i7.AuthSuccess>);
+                as _i3.Future<_i6.AuthSuccess>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -808,7 +773,7 @@ class _EmailIdpEndpoint {
     });
   }
 
-  _i3.Future<_i7.AuthSuccess> finishRegistration(
+  _i3.Future<_i6.AuthSuccess> finishRegistration(
     _i1.TestSessionBuilder sessionBuilder, {
     required String registrationToken,
     required String password,
@@ -835,7 +800,7 @@ class _EmailIdpEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i7.AuthSuccess>);
+                as _i3.Future<_i6.AuthSuccess>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -955,7 +920,7 @@ class _JwtRefreshEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i7.AuthSuccess> refreshAccessToken(
+  _i3.Future<_i6.AuthSuccess> refreshAccessToken(
     _i1.TestSessionBuilder sessionBuilder, {
     required String refreshToken,
   }) async {
@@ -978,7 +943,7 @@ class _JwtRefreshEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i7.AuthSuccess>);
+                as _i3.Future<_i6.AuthSuccess>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1422,9 +1387,9 @@ class _EmployerEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i5.Employer> createEmployerAccount(
+  _i3.Future<_i7.Employer> createEmployerAccount(
     _i1.TestSessionBuilder sessionBuilder,
-    _i7.UserProfileData userProfileData,
+    _i6.UserProfileData userProfileData,
     String password,
     int buildingId,
     int? accessId,
@@ -1453,7 +1418,7 @@ class _EmployerEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i5.Employer>);
+                as _i3.Future<_i7.Employer>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1461,7 +1426,7 @@ class _EmployerEndpoint {
     });
   }
 
-  _i3.Future<List<_i5.Employer>> getEmployers(
+  _i3.Future<List<_i7.Employer>> getEmployers(
     _i1.TestSessionBuilder sessionBuilder,
     int buildingId,
   ) async {
@@ -1484,7 +1449,7 @@ class _EmployerEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i5.Employer>>);
+                as _i3.Future<List<_i7.Employer>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1492,7 +1457,7 @@ class _EmployerEndpoint {
     });
   }
 
-  _i3.Future<_i5.Employer> getEmployerByIdentifier(
+  _i3.Future<_i7.Employer> getEmployerByIdentifier(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue identifier,
   ) async {
@@ -1515,7 +1480,42 @@ class _EmployerEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i5.Employer>);
+                as _i3.Future<_i7.Employer>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i7.Employer> assignAccessToEmployer(
+    _i1.TestSessionBuilder sessionBuilder,
+    int employerId,
+    int accessId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'employer',
+            method: 'assignAccessToEmployer',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'employer',
+          methodName: 'assignAccessToEmployer',
+          parameters: _i1.testObjectToJson({
+            'employerId': employerId,
+            'accessId': accessId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i7.Employer>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

@@ -4,7 +4,6 @@ access:
   - getAllAccesses:
   - getAccessById:
   - deleteAccess:
-  - assignAccessToEmployer:
 article:
   - getArticles:
   - createArticle:
@@ -44,6 +43,7 @@ employer:
   - createEmployerAccount:
   - getEmployers:
   - getEmployerByIdentifier:
+  - assignAccessToEmployer:
 order:
   - getOrders:
   - getOrderById:
