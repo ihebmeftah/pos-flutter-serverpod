@@ -12,9 +12,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Access
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Access._({
-    this.id,
+    _i1.UuidValue? id,
     required this.name,
     required this.consultAllOrders,
     required this.orderCreation,
@@ -26,10 +27,10 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required this.takeOrder,
     required this.caisseManagement,
     required this.buildingId,
-  });
+  }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Access({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     required bool consultAllOrders,
     required bool orderCreation,
@@ -40,12 +41,14 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     required bool preparation,
     required bool takeOrder,
     required bool caisseManagement,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) = _AccessImpl;
 
   factory Access.fromJson(Map<String, dynamic> jsonSerialization) {
     return Access(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       consultAllOrders: jsonSerialization['consultAllOrders'] as bool,
       orderCreation: jsonSerialization['orderCreation'] as bool,
@@ -56,7 +59,9 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       preparation: jsonSerialization['preparation'] as bool,
       takeOrder: jsonSerialization['takeOrder'] as bool,
       caisseManagement: jsonSerialization['caisseManagement'] as bool,
-      buildingId: jsonSerialization['buildingId'] as int?,
+      buildingId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['buildingId'],
+      ),
     );
   }
 
@@ -65,7 +70,7 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   static const db = AccessRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue id;
 
   String name;
 
@@ -87,16 +92,16 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   bool caisseManagement;
 
-  int? buildingId;
+  _i1.UuidValue buildingId;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue> get table => t;
 
   /// Returns a shallow copy of this [Access]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Access copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
     bool? consultAllOrders,
     bool? orderCreation,
@@ -107,13 +112,13 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     bool? preparation,
     bool? takeOrder,
     bool? caisseManagement,
-    int? buildingId,
+    _i1.UuidValue? buildingId,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Access',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       'consultAllOrders': consultAllOrders,
       'orderCreation': orderCreation,
@@ -124,7 +129,7 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       'preparation': preparation,
       'takeOrder': takeOrder,
       'caisseManagement': caisseManagement,
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
     };
   }
 
@@ -132,7 +137,7 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Access',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       'consultAllOrders': consultAllOrders,
       'orderCreation': orderCreation,
@@ -143,7 +148,7 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
       'preparation': preparation,
       'takeOrder': takeOrder,
       'caisseManagement': caisseManagement,
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
     };
   }
 
@@ -177,11 +182,9 @@ abstract class Access implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   }
 }
 
-class _Undefined {}
-
 class _AccessImpl extends Access {
   _AccessImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     required bool consultAllOrders,
     required bool orderCreation,
@@ -192,7 +195,7 @@ class _AccessImpl extends Access {
     required bool preparation,
     required bool takeOrder,
     required bool caisseManagement,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) : super._(
          id: id,
          name: name,
@@ -213,7 +216,7 @@ class _AccessImpl extends Access {
   @_i1.useResult
   @override
   Access copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     String? name,
     bool? consultAllOrders,
     bool? orderCreation,
@@ -224,10 +227,10 @@ class _AccessImpl extends Access {
     bool? preparation,
     bool? takeOrder,
     bool? caisseManagement,
-    Object? buildingId = _Undefined,
+    _i1.UuidValue? buildingId,
   }) {
     return Access(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       name: name ?? this.name,
       consultAllOrders: consultAllOrders ?? this.consultAllOrders,
       orderCreation: orderCreation ?? this.orderCreation,
@@ -238,7 +241,7 @@ class _AccessImpl extends Access {
       preparation: preparation ?? this.preparation,
       takeOrder: takeOrder ?? this.takeOrder,
       caisseManagement: caisseManagement ?? this.caisseManagement,
-      buildingId: buildingId is int? ? buildingId : this.buildingId,
+      buildingId: buildingId ?? this.buildingId,
     );
   }
 }
@@ -296,13 +299,15 @@ class AccessUpdateTable extends _i1.UpdateTable<AccessTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> buildingId(int? value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> buildingId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.buildingId,
     value,
   );
 }
 
-class AccessTable extends _i1.Table<int?> {
+class AccessTable extends _i1.Table<_i1.UuidValue> {
   AccessTable({super.tableRelation}) : super(tableName: 'access') {
     updateTable = AccessUpdateTable(this);
     name = _i1.ColumnString(
@@ -345,7 +350,7 @@ class AccessTable extends _i1.Table<int?> {
       'caisseManagement',
       this,
     );
-    buildingId = _i1.ColumnInt(
+    buildingId = _i1.ColumnUuid(
       'buildingId',
       this,
     );
@@ -373,7 +378,7 @@ class AccessTable extends _i1.Table<int?> {
 
   late final _i1.ColumnBool caisseManagement;
 
-  late final _i1.ColumnInt buildingId;
+  late final _i1.ColumnUuid buildingId;
 
   @override
   List<_i1.Column> get columns => [
@@ -399,7 +404,7 @@ class AccessInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => Access.t;
+  _i1.Table<_i1.UuidValue> get table => Access.t;
 }
 
 class AccessIncludeList extends _i1.IncludeList {
@@ -419,7 +424,7 @@ class AccessIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Access.t;
+  _i1.Table<_i1.UuidValue> get table => Access.t;
 }
 
 class AccessRepository {
@@ -507,7 +512,7 @@ class AccessRepository {
   /// Finds a single [Access] by its [id] or null if no such row exists.
   Future<Access?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<Access>(
@@ -585,7 +590,7 @@ class AccessRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Access?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<AccessUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

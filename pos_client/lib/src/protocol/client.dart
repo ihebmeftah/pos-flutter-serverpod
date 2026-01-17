@@ -24,12 +24,14 @@ import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
     as _i9;
 import 'package:pos_client/src/protocol/caisse/caisse.dart' as _i10;
 import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i11;
-import 'package:pos_client/src/protocol/order/order.dart' as _i12;
-import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i13;
-import 'package:pos_client/src/protocol/order/order_item.dart' as _i14;
+import 'package:pos_client/src/protocol/employer/create_employer.dto.dart'
+    as _i12;
+import 'package:pos_client/src/protocol/order/order.dart' as _i13;
+import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i14;
+import 'package:pos_client/src/protocol/order/order_item.dart' as _i15;
 import 'package:pos_client/src/protocol/order/order_item_status_enum.dart'
-    as _i15;
-import 'protocol.dart' as _i16;
+    as _i16;
+import 'protocol.dart' as _i17;
 
 /// {@category Endpoint}
 class EndpointAccess extends _i1.EndpointRef {
@@ -52,21 +54,22 @@ class EndpointAccess extends _i1.EndpointRef {
         {'access': access},
       );
 
-  _i2.Future<List<_i3.Access>> getAllAccesses(int buildingId) =>
-      caller.callServerEndpoint<List<_i3.Access>>(
-        'access',
-        'getAllAccesses',
-        {'buildingId': buildingId},
-      );
+  _i2.Future<List<_i3.Access>> getAccessesByBuildingId(
+    _i1.UuidValue buildingId,
+  ) => caller.callServerEndpoint<List<_i3.Access>>(
+    'access',
+    'getAccessesByBuildingId',
+    {'buildingId': buildingId},
+  );
 
-  _i2.Future<_i3.Access> getAccessById(int accessId) =>
+  _i2.Future<_i3.Access> getAccessById(_i1.UuidValue accessId) =>
       caller.callServerEndpoint<_i3.Access>(
         'access',
         'getAccessById',
         {'accessId': accessId},
       );
 
-  _i2.Future<_i3.Access> deleteAccess(int accessId) =>
+  _i2.Future<_i3.Access> deleteAccess(_i1.UuidValue accessId) =>
       caller.callServerEndpoint<_i3.Access>(
         'access',
         'deleteAccess',
@@ -85,13 +88,12 @@ class EndpointArticle extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// optional [categoryId] The id of the category
   /// Returns a list of [Article] articles
-  /// allow for all type of users (admin, employee, customer)
-  _i2.Future<List<_i4.Article>> getArticles(
-    int buildingId, {
-    int? categoryId,
+  _i2.Future<List<_i4.Article>> getArticlesByBuildingId(
+    _i1.UuidValue buildingId, {
+    _i1.UuidValue? categoryId,
   }) => caller.callServerEndpoint<List<_i4.Article>>(
     'article',
-    'getArticles',
+    'getArticlesByBuildingId',
     {
       'buildingId': buildingId,
       'categoryId': categoryId,
@@ -100,27 +102,19 @@ class EndpointArticle extends _i1.EndpointRef {
 
   /// Create new article
   /// required [article] The article to create
-  /// required [buildingId] buildingId The id of the building
   /// Returns the created [Article] article
   /// allow for admin users only
-  _i2.Future<_i4.Article> createArticle({
-    required _i4.Article article,
-    required int buildingId,
-  }) => caller.callServerEndpoint<_i4.Article>(
-    'article',
-    'createArticle',
-    {
-      'article': article,
-      'buildingId': buildingId,
-    },
-  );
+  _i2.Future<_i4.Article> createArticle(_i4.Article article) =>
+      caller.callServerEndpoint<_i4.Article>(
+        'article',
+        'createArticle',
+        {'article': article},
+      );
 
   /// Get article by id
   /// required [articleId] The id of the article
-  /// required [buildingId] buildingId The id of the building
   /// Returns the [Article] article
-  /// allow for all type of users (admin, employee, customer)
-  _i2.Future<_i4.Article> getArticleById(int id) =>
+  _i2.Future<_i4.Article> getArticleById(_i1.UuidValue id) =>
       caller.callServerEndpoint<_i4.Article>(
         'article',
         'getArticleById',
@@ -130,7 +124,7 @@ class EndpointArticle extends _i1.EndpointRef {
   /// Update article
   /// required [article] The article to update
   /// Returns the updated [Article] article
-  /// allow for admin users only
+  /// allow for owner users only
   _i2.Future<_i4.Article> updateArticle({required _i4.Article article}) =>
       caller.callServerEndpoint<_i4.Article>(
         'article',
@@ -407,21 +401,29 @@ class EndpointBuilding extends _i1.EndpointRef {
   @override
   String get name => 'building';
 
-  /// Get all buildings
-  /// If current user is admin user, return only buildings created by the user
-  /// else current user is customer, return all buildings
+  /// Get buildings of the owner
   /// Returns a list of [Building] buildings
-  /// allow for all type of users (admin, customer)
-  _i2.Future<List<_i8.Building>> getAllBuildings() =>
+  /// allow for owners users
+  _i2.Future<List<_i8.Building>> getBuildingsOfOwner() =>
       caller.callServerEndpoint<List<_i8.Building>>(
         'building',
-        'getAllBuildings',
+        'getBuildingsOfOwner',
+        {},
+      );
+
+  /// Get buildings
+  /// Returns a list of [Building] buildings
+  /// allow for customer users
+  _i2.Future<List<_i8.Building>> getBuildings() =>
+      caller.callServerEndpoint<List<_i8.Building>>(
+        'building',
+        'getBuildings',
         {},
       );
 
   /// Create new building for the admin
   /// Returns  [Building] building
-  /// allowed only for admins
+  /// allowed only for owner
   _i2.Future<_i8.Building> createBuilding(_i8.Building building) =>
       caller.callServerEndpoint<_i8.Building>(
         'building',
@@ -432,9 +434,7 @@ class EndpointBuilding extends _i1.EndpointRef {
   /// Get a building by id
   /// required [buildingId] The id of the building
   /// Returns the [Building] building
-  /// allow for all type of users (admin, customer)
-  /// This method is not generated in client side
-  _i2.Future<_i8.Building> getBuildingById(int buildingId) =>
+  _i2.Future<_i8.Building> getBuildingById(_i1.UuidValue buildingId) =>
       caller.callServerEndpoint<_i8.Building>(
         'building',
         'getBuildingById',
@@ -462,12 +462,13 @@ class EndpointBuildingTables extends _i1.EndpointRef {
   /// required [buildingId] buildingId The id of the building
   /// Returns a list of [BTable] tables
   /// allow for all type of users (admin, employee, customer)
-  _i2.Future<List<_i9.BTable>> getTables(int buildingId) =>
-      caller.callServerEndpoint<List<_i9.BTable>>(
-        'buildingTables',
-        'getTables',
-        {'buildingId': buildingId},
-      );
+  _i2.Future<List<_i9.BTable>> getTablesByBuildingId(
+    _i1.UuidValue buildingId,
+  ) => caller.callServerEndpoint<List<_i9.BTable>>(
+    'buildingTables',
+    'getTablesByBuildingId',
+    {'buildingId': buildingId},
+  );
 
   /// Create multiple tables for a building
   /// required [nbtables] number of tables to create
@@ -478,7 +479,7 @@ class EndpointBuildingTables extends _i1.EndpointRef {
   _i2.Future<List<_i9.BTable>> createTables({
     required int nbtables,
     required int seatsMax,
-    required int buildingId,
+    required _i1.UuidValue buildingId,
   }) => caller.callServerEndpoint<List<_i9.BTable>>(
     'buildingTables',
     'createTables',
@@ -497,14 +498,14 @@ class EndpointCaisse extends _i1.EndpointRef {
   @override
   String get name => 'caisse';
 
-  _i2.Future<List<_i10.Caisse>> getCaisses(int buildingId) =>
+  _i2.Future<List<_i10.Caisse>> getCaisses(_i1.UuidValue buildingId) =>
       caller.callServerEndpoint<List<_i10.Caisse>>(
         'caisse',
         'getCaisses',
         {'buildingId': buildingId},
       );
 
-  _i2.Future<_i10.Caisse> createCaisse(int buildingId) =>
+  _i2.Future<_i10.Caisse> createCaisse(_i1.UuidValue buildingId) =>
       caller.callServerEndpoint<_i10.Caisse>(
         'caisse',
         'createCaisse',
@@ -522,8 +523,7 @@ class EndpointCategorie extends _i1.EndpointRef {
   /// Get all categories for a building
   /// required [buildingId] buildingId The id of the building
   /// Returns a list of [Categorie] categories
-  /// allow for all type of users (admin, employee, customer)
-  _i2.Future<List<_i11.Categorie>> getCategories(int buildingId) =>
+  _i2.Future<List<_i11.Categorie>> getCategories(_i1.UuidValue buildingId) =>
       caller.callServerEndpoint<List<_i11.Categorie>>(
         'categorie',
         'getCategories',
@@ -533,8 +533,7 @@ class EndpointCategorie extends _i1.EndpointRef {
   /// Get categorie by id
   /// required [id] The id of the categorie
   /// Returns the [Categorie] categorie
-  /// allow for all type of users (admin, employee, customer)
-  _i2.Future<_i11.Categorie> getCategorieById(int id) =>
+  _i2.Future<_i11.Categorie> getCategorieById(_i1.UuidValue id) =>
       caller.callServerEndpoint<_i11.Categorie>(
         'categorie',
         'getCategorieById',
@@ -543,32 +542,25 @@ class EndpointCategorie extends _i1.EndpointRef {
 
   /// Create new categorie
   /// required [categorie] The categorie to create
-  /// required [buildingId] buildingId The id of the building
   /// Returns the created [Categorie] categorie
-  /// allow for admin users only
-  _i2.Future<_i11.Categorie> createCategorie({
-    required _i11.Categorie categorie,
-    required int buildingId,
-  }) => caller.callServerEndpoint<_i11.Categorie>(
-    'categorie',
-    'createCategorie',
-    {
-      'categorie': categorie,
-      'buildingId': buildingId,
-    },
-  );
+  /// allow for owner users only
+  _i2.Future<_i11.Categorie> createCategorie(_i11.Categorie categorie) =>
+      caller.callServerEndpoint<_i11.Categorie>(
+        'categorie',
+        'createCategorie',
+        {'categorie': categorie},
+      );
 
   /// Update categorie
   /// required [categorie] The categorie to update
   /// Returns the updated [Categorie] categorie
-  /// allow for admin users only
-  _i2.Future<_i11.Categorie> updateCategorie({
-    required _i11.Categorie categorie,
-  }) => caller.callServerEndpoint<_i11.Categorie>(
-    'categorie',
-    'updateCategorie',
-    {'categorie': categorie},
-  );
+  /// allow for owner users only
+  _i2.Future<_i11.Categorie> updateCategorie(_i11.Categorie categorie) =>
+      caller.callServerEndpoint<_i11.Categorie>(
+        'categorie',
+        'updateCategorie',
+        {'categorie': categorie},
+      );
 }
 
 /// {@category Endpoint}
@@ -583,28 +575,20 @@ class EndpointEmployer extends _i1.EndpointRef {
   /// required [password] The password for the account
   /// required [buildingId] buildingId The id of the building
   /// Returns the created [Employer] employer account
-  /// allow for admin users only
+  /// allow for iwner users only
   _i2.Future<_i7.Employer> createEmployerAccount(
-    _i6.UserProfileData userProfileData,
-    String password,
-    int buildingId,
-    int? accessId,
+    _i12.CreateEmployerDTO createEmployerDto,
   ) => caller.callServerEndpoint<_i7.Employer>(
     'employer',
     'createEmployerAccount',
-    {
-      'userProfileData': userProfileData,
-      'password': password,
-      'buildingId': buildingId,
-      'accessId': accessId,
-    },
+    {'createEmployerDto': createEmployerDto},
   );
 
   /// Get employers by buildingId
   /// Identifier can be a[buildingId]
   /// Returns list of [Employer]
-  /// This enpoint need login and allowed only for admin
-  _i2.Future<List<_i7.Employer>> getEmployers(int buildingId) =>
+  /// This enpoint need login and allowed only for owner
+  _i2.Future<List<_i7.Employer>> getEmployers(_i1.UuidValue buildingId) =>
       caller.callServerEndpoint<List<_i7.Employer>>(
         'employer',
         'getEmployers',
@@ -623,8 +607,8 @@ class EndpointEmployer extends _i1.EndpointRef {
       );
 
   _i2.Future<_i7.Employer> assignAccessToEmployer(
-    int employerId,
-    int accessId,
+    _i1.UuidValue employerId,
+    _i1.UuidValue accessId,
   ) => caller.callServerEndpoint<_i7.Employer>(
     'employer',
     'assignAccessToEmployer',
@@ -642,20 +626,32 @@ class EndpointOrder extends _i1.EndpointRef {
   @override
   String get name => 'order';
 
-  _i2.Future<List<_i12.Order>> getOrders(
-    int buildingId,
-    _i13.OrderStatus? orderStatus,
-  ) => caller.callServerEndpoint<List<_i12.Order>>(
+  /// Get all orders for a building
+  /// Parameters:
+  /// - [buildingId]: The id of the building
+  /// - [orderStatus]: The status of the orders to filter by (optional)
+  /// Returns:
+  /// - A list of orders for the building
+  /// Only owner and employers are allowed for this endpoint
+  _i2.Future<List<_i13.Order>> getOrdersByBuilingId(
+    _i1.UuidValue buildingId,
+    _i14.OrderStatus? orderStatus,
+  ) => caller.callServerEndpoint<List<_i13.Order>>(
     'order',
-    'getOrders',
+    'getOrdersByBuilingId',
     {
       'buildingId': buildingId,
       'orderStatus': orderStatus,
     },
   );
 
-  _i2.Future<_i12.Order> getOrderById(int id) =>
-      caller.callServerEndpoint<_i12.Order>(
+  /// Get order by id
+  /// Parameters:
+  /// - [id]: The id of the order
+  /// Returns:
+  /// - The order with the given id
+  _i2.Future<_i13.Order> getOrderById(_i1.UuidValue id) =>
+      caller.callServerEndpoint<_i13.Order>(
         'order',
         'getOrderById',
         {'id': id},
@@ -668,24 +664,24 @@ class EndpointOrder extends _i1.EndpointRef {
   /// - The created order
   /// Only employer allowed for this endpoint
   /// Employer should have access to order creation
-  _i2.Future<_i12.Order> createOrder(_i12.Order order) =>
-      caller.callServerEndpoint<_i12.Order>(
+  _i2.Future<_i13.Order> createOrder(_i13.Order order) =>
+      caller.callServerEndpoint<_i13.Order>(
         'order',
         'createOrder',
         {'order': order},
       );
 
-  _i2.Future<_i12.Order?> getOrderCurrOfTable(int tableId) =>
-      caller.callServerEndpoint<_i12.Order?>(
+  _i2.Future<_i13.Order?> getOrderCurrOfTable(_i1.UuidValue tableId) =>
+      caller.callServerEndpoint<_i13.Order?>(
         'order',
         'getOrderCurrOfTable',
         {'tableId': tableId},
       );
 
-  _i2.Future<List<_i12.Order>> getOrdersOfTable(
-    int tableId,
-    _i13.OrderStatus? orderStatus,
-  ) => caller.callServerEndpoint<List<_i12.Order>>(
+  _i2.Future<List<_i13.Order>> getOrdersOfTable(
+    _i1.UuidValue tableId,
+    _i14.OrderStatus? orderStatus,
+  ) => caller.callServerEndpoint<List<_i13.Order>>(
     'order',
     'getOrdersOfTable',
     {
@@ -709,10 +705,10 @@ class EndpointOrderItem extends _i1.EndpointRef {
   /// Returns:
   /// - The updated order with the appended items
   /// Employer should have access to append items
-  _i2.Future<_i12.Order> appendItemsToOrder(
-    int orderId,
-    List<_i14.OrderItem> orderItems,
-  ) => caller.callServerEndpoint<_i12.Order>(
+  _i2.Future<_i13.Order> appendItemsToOrder(
+    _i1.UuidValue orderId,
+    List<_i15.OrderItem> orderItems,
+  ) => caller.callServerEndpoint<_i13.Order>(
     'orderItem',
     'appendItemsToOrder',
     {
@@ -728,10 +724,10 @@ class EndpointOrderItem extends _i1.EndpointRef {
   /// - [newStatus]: The new status to be set for the order items
   /// Returns:
   /// - A list of updated OrderItem objects
-  _i2.Future<List<_i14.OrderItem>> changeOrderItemsStatus(
-    List<int> orderItemIds,
-    _i15.OrderItemStatus newStatus,
-  ) => caller.callServerEndpoint<List<_i14.OrderItem>>(
+  _i2.Future<List<_i15.OrderItem>> changeOrderItemsStatus(
+    List<_i1.UuidValue> orderItemIds,
+    _i16.OrderItemStatus newStatus,
+  ) => caller.callServerEndpoint<List<_i15.OrderItem>>(
     'orderItem',
     'changeOrderItemsStatus',
     {
@@ -740,11 +736,11 @@ class EndpointOrderItem extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<List<_i14.OrderItem>> payOrderItem(
-    int orderId,
-    List<int> orderItemPayedIds,
-    int buildingId,
-  ) => caller.callServerEndpoint<List<_i14.OrderItem>>(
+  _i2.Future<List<_i15.OrderItem>> payOrderItem(
+    _i1.UuidValue orderId,
+    List<_i1.UuidValue> orderItemPayedIds,
+    _i1.UuidValue buildingId,
+  ) => caller.callServerEndpoint<List<_i15.OrderItem>>(
     'orderItem',
     'payOrderItem',
     {
@@ -754,10 +750,10 @@ class EndpointOrderItem extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<_i12.Order> payAllItems(
-    int orderId,
-    int buildingId,
-  ) => caller.callServerEndpoint<_i12.Order>(
+  _i2.Future<_i13.Order> payAllItems(
+    _i1.UuidValue orderId,
+    _i1.UuidValue buildingId,
+  ) => caller.callServerEndpoint<_i13.Order>(
     'orderItem',
     'payAllItems',
     {
@@ -765,6 +761,14 @@ class EndpointOrderItem extends _i1.EndpointRef {
       'buildingId': buildingId,
     },
   );
+}
+
+/// {@category Endpoint}
+class EndpointStats extends _i1.EndpointRef {
+  EndpointStats(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'stats';
 }
 
 class Modules {
@@ -798,7 +802,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i16.Protocol(),
+         _i17.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -818,6 +822,7 @@ class Client extends _i1.ServerpodClientShared {
     employer = EndpointEmployer(this);
     order = EndpointOrder(this);
     orderItem = EndpointOrderItem(this);
+    stats = EndpointStats(this);
     modules = Modules(this);
   }
 
@@ -843,6 +848,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointOrderItem orderItem;
 
+  late final EndpointStats stats;
+
   late final Modules modules;
 
   @override
@@ -858,6 +865,7 @@ class Client extends _i1.ServerpodClientShared {
     'employer': employer,
     'order': order,
     'orderItem': orderItem,
+    'stats': stats,
   };
 
   @override

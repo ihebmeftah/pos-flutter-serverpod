@@ -6,9 +6,9 @@ import '../../../data/local/local_storage.dart';
 
 class ArticleController extends GetxController with StateMixin {
   final articles = <Article>[].obs;
-  int? get categoryId => Get.parameters['catId'] == null
+  UuidValue? get categoryId => Get.parameters['catId'] == null
       ? null
-      : int.tryParse(Get.parameters['catId']!);
+      : UuidValue.fromString(Get.parameters['catId']!);
   @override
   void onInit() {
     getArticles();
@@ -17,10 +17,11 @@ class ArticleController extends GetxController with StateMixin {
 
   Future getArticles() async {
     try {
-      articles.value = await ServerpodClient.instance.article.getArticles(
-        LocalStorage().building!.id!,
-        categoryId: categoryId, // for getting articles by category
-      );
+      articles.value = await ServerpodClient.instance.article
+          .getArticlesByBuildingId(
+            LocalStorage().building!.id,
+            categoryId: categoryId, // for getting articles by category
+          );
       if (articles.isEmpty) {
         change(null, status: RxStatus.empty());
       } else {

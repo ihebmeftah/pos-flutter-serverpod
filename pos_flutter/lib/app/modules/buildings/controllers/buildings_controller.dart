@@ -16,7 +16,7 @@ class BuildingsController extends GetxController
 
   Future getBuilding() async {
     try {
-      buildings(await ServerpodClient.instance.building.getAllBuildings());
+      buildings(await ServerpodClient.instance.building.getBuildingsOfOwner());
       if (buildings.isEmpty) {
         change(null, status: RxStatus.empty());
       } else {

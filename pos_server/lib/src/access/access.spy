@@ -1,6 +1,7 @@
 class: Access
 table: access
 fields:
+  id: UuidValue, defaultPersist=random, defaultModel=random
   name: String
   consultAllOrders: bool,  ### false mean consult only his passed orders
   orderCreation: bool
@@ -11,4 +12,9 @@ fields:
   preparation: bool,
   takeOrder: bool,
   caisseManagement: bool
-  buildingId: int?, relation(parent=building),required
+  buildingId: UuidValue, relation(parent=building)
+
+
+indexes:
+  access_buildingId_idx:
+    fields: buildingId

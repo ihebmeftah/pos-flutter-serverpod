@@ -33,27 +33,75 @@ class FormEmployerView extends GetView<FormEmployerController> {
                         spacing: 10,
                         children: [
                           //  FileuploadView(uploadType: UploadType.image),
+                          Row(
+                            spacing: 10,
+                            children: [
+                              Expanded(
+                                child: AppFormField.label(
+                                  label: "First Name",
+                                  hint: "Enter first name",
+                                  ctr: controller.fname,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "First Name is required";
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: controller.onChangeFirstLastName,
+                                ),
+                              ),
+                              Expanded(
+                                child: AppFormField.label(
+                                  label: "Last Name",
+                                  hint: "Enter last name",
+                                  ctr: controller.lname,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Last Name is required";
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: controller.onChangeFirstLastName,
+                                ),
+                              ),
+                            ],
+                          ),
                           AppFormField.label(
-                            label: "Fulll Name",
-                            hint: "Enter full name",
-                            ctr: controller.fname,
+                            readOnly: true,
+                            label: "Display Name",
+                            hint: "Enter Display Name",
+                            ctr: controller.displayName,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "Full Name is required";
+                                return "Display Name is required";
                               }
                               return null;
                             },
                           ),
                           AppFormField.label(
-                            label: "Email",
-                            hint: "Enter email",
-                            ctr: controller.email,
+                            label: "Personal Email",
+                            hint: "Enter personal email",
+                            ctr: controller.persoEmail,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "Email is required";
+                                return "Personal Email is required";
                               }
                               if (!GetUtils.isEmail(value)) {
-                                return "Invalid email format";
+                                return "Invalid personal email format";
+                              }
+                              return null;
+                            },
+                          ),
+                          AppFormField.label(
+                            label: "Phone",
+                            hint: "Ex: +21712345678",
+                            ctr: controller.phone,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Phone number is required";
+                              }
+                              if (!GetUtils.isPhoneNumber(value)) {
+                                return "Invalid phone number format";
                               }
                               return null;
                             },

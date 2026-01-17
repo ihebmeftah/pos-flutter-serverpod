@@ -14,56 +14,58 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 abstract class Categorie implements _i1.SerializableModel {
   Categorie._({
-    this.id,
+    _i1.UuidValue? id,
     required this.name,
     this.description,
     required this.buildingId,
-  });
+  }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Categorie({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     String? description,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) = _CategorieImpl;
 
   factory Categorie.fromJson(Map<String, dynamic> jsonSerialization) {
     return Categorie(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       description: jsonSerialization['description'] as String?,
-      buildingId: jsonSerialization['buildingId'] as int?,
+      buildingId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['buildingId'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
+  /// The id of the object.
+  _i1.UuidValue id;
 
   String name;
 
   String? description;
 
-  int? buildingId;
+  _i1.UuidValue buildingId;
 
   /// Returns a shallow copy of this [Categorie]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Categorie copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
     String? description,
-    int? buildingId,
+    _i1.UuidValue? buildingId,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Categorie',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       if (description != null) 'description': description,
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
     };
   }
 
@@ -77,10 +79,10 @@ class _Undefined {}
 
 class _CategorieImpl extends Categorie {
   _CategorieImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     String? description,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) : super._(
          id: id,
          name: name,
@@ -93,16 +95,16 @@ class _CategorieImpl extends Categorie {
   @_i1.useResult
   @override
   Categorie copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     String? name,
     Object? description = _Undefined,
-    Object? buildingId = _Undefined,
+    _i1.UuidValue? buildingId,
   }) {
     return Categorie(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       name: name ?? this.name,
       description: description is String? ? description : this.description,
-      buildingId: buildingId is int? ? buildingId : this.buildingId,
+      buildingId: buildingId ?? this.buildingId,
     );
   }
 }

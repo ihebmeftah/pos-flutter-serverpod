@@ -1,7 +1,7 @@
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
-import '../helpers/authorizations_helpers.dart';
+import '../helpers/session_extensions.dart';
 
 class CategorieEndpoint extends Endpoint {
   @override
@@ -10,8 +10,10 @@ class CategorieEndpoint extends Endpoint {
   /// Get all categories for a building
   /// required [buildingId] buildingId The id of the building
   /// Returns a list of [Categorie] categories
-  /// allow for all type of users (admin, employee, customer)
-  Future<List<Categorie>> getCategories(Session session, int buildingId) async {
+  Future<List<Categorie>> getCategories(
+    Session session,
+    UuidValue buildingId,
+  ) async {
     List<Categorie> categories = await Categorie.db.find(
       session,
       where: (c) => c.buildingId.equals(buildingId),
@@ -22,8 +24,7 @@ class CategorieEndpoint extends Endpoint {
   /// Get categorie by id
   /// required [id] The id of the categorie
   /// Returns the [Categorie] categorie
-  /// allow for all type of users (admin, employee, customer)
-  Future<Categorie> getCategorieById(Session session, int id) async {
+  Future<Categorie> getCategorieById(Session session, UuidValue id) async {
     final categorie = await Categorie.db.findById(session, id);
     if (categorie == null) {
       throw AppException(
@@ -36,17 +37,18 @@ class CategorieEndpoint extends Endpoint {
 
   /// Create new categorie
   /// required [categorie] The categorie to create
-  /// required [buildingId] buildingId The id of the building
   /// Returns the created [Categorie] categorie
-  /// allow for admin users only
+  /// allow for owner users only
   Future<Categorie> createCategorie(
-    Session session, {
-    required Categorie categorie,
-    required int buildingId,
-  }) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
-    await _checkCategorieNameExiste(session, categorie.name, buildingId);
-    categorie.buildingId = buildingId;
+    Session session,
+    Categorie categorie,
+  ) async {
+    session.authorizedTo(['owner']);
+    await _checkCategorieNameExiste(
+      session,
+      categorie.name,
+      categorie.buildingId,
+    );
     return await Categorie.db.insertRow(
       session,
       categorie,
@@ -57,7 +59,7 @@ class CategorieEndpoint extends Endpoint {
   Future<void> _checkCategorieNameExiste(
     Session session,
     String name,
-    int buildingId,
+    UuidValue buildingId,
   ) async {
     final existe = await Categorie.db.findFirstRow(
       session,
@@ -74,18 +76,18 @@ class CategorieEndpoint extends Endpoint {
   /// Update categorie
   /// required [categorie] The categorie to update
   /// Returns the updated [Categorie] categorie
-  /// allow for admin users only
+  /// allow for owner users only
   Future<Categorie> updateCategorie(
-    Session session, {
-    required Categorie categorie,
-  }) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
-    final existingCategorie = await getCategorieById(session, categorie.id!);
+    Session session,
+    Categorie categorie,
+  ) async {
+    session.authorizedTo(['owner']);
+    final existingCategorie = await getCategorieById(session, categorie.id);
     if (existingCategorie.name != categorie.name) {
       await _checkCategorieNameExiste(
         session,
         categorie.name,
-        categorie.buildingId!,
+        categorie.buildingId,
       );
     }
     existingCategorie.name = categorie.name;

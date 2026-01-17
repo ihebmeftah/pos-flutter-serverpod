@@ -16,30 +16,34 @@ import 'package:pos_client/src/protocol/protocol.dart' as _i3;
 
 abstract class Article implements _i1.SerializableModel {
   Article._({
-    this.id,
+    _i1.UuidValue? id,
     required this.name,
     this.description,
     required this.price,
     required this.categorieId,
-    required this.categorie,
-  });
+    this.categorie,
+  }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Article({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     String? description,
     required double price,
-    required int categorieId,
-    required _i2.Categorie? categorie,
+    required _i1.UuidValue categorieId,
+    _i2.Categorie? categorie,
   }) = _ArticleImpl;
 
   factory Article.fromJson(Map<String, dynamic> jsonSerialization) {
     return Article(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       description: jsonSerialization['description'] as String?,
       price: (jsonSerialization['price'] as num).toDouble(),
-      categorieId: jsonSerialization['categorieId'] as int,
+      categorieId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['categorieId'],
+      ),
       categorie: jsonSerialization['categorie'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.Categorie>(
@@ -48,10 +52,8 @@ abstract class Article implements _i1.SerializableModel {
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
+  /// The id of the object.
+  _i1.UuidValue id;
 
   String name;
 
@@ -59,7 +61,7 @@ abstract class Article implements _i1.SerializableModel {
 
   double price;
 
-  int categorieId;
+  _i1.UuidValue categorieId;
 
   _i2.Categorie? categorie;
 
@@ -67,22 +69,22 @@ abstract class Article implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Article copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
     String? description,
     double? price,
-    int? categorieId,
+    _i1.UuidValue? categorieId,
     _i2.Categorie? categorie,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Article',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       if (description != null) 'description': description,
       'price': price,
-      'categorieId': categorieId,
+      'categorieId': categorieId.toJson(),
       if (categorie != null) 'categorie': categorie?.toJson(),
     };
   }
@@ -97,12 +99,12 @@ class _Undefined {}
 
 class _ArticleImpl extends Article {
   _ArticleImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     String? description,
     required double price,
-    required int categorieId,
-    required _i2.Categorie? categorie,
+    required _i1.UuidValue categorieId,
+    _i2.Categorie? categorie,
   }) : super._(
          id: id,
          name: name,
@@ -117,15 +119,15 @@ class _ArticleImpl extends Article {
   @_i1.useResult
   @override
   Article copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     String? name,
     Object? description = _Undefined,
     double? price,
-    int? categorieId,
+    _i1.UuidValue? categorieId,
     Object? categorie = _Undefined,
   }) {
     return Article(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       name: name ?? this.name,
       description: description is String? ? description : this.description,
       price: price ?? this.price,

@@ -16,7 +16,7 @@ class EmployerController extends GetxController with StateMixin {
     try {
       employers(
         await ServerpodClient.instance.employer.getEmployers(
-          LocalStorage().building!.id!,
+          LocalStorage().building!.id,
         ),
       );
       if (employers.isNotEmpty) {

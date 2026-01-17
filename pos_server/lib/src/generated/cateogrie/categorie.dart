@@ -13,27 +13,31 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 abstract class Categorie
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Categorie._({
-    this.id,
+    _i1.UuidValue? id,
     required this.name,
     this.description,
     required this.buildingId,
-  });
+  }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Categorie({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     String? description,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) = _CategorieImpl;
 
   factory Categorie.fromJson(Map<String, dynamic> jsonSerialization) {
     return Categorie(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       description: jsonSerialization['description'] as String?,
-      buildingId: jsonSerialization['buildingId'] as int?,
+      buildingId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['buildingId'],
+      ),
     );
   }
 
@@ -42,34 +46,34 @@ abstract class Categorie
   static const db = CategorieRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue id;
 
   String name;
 
   String? description;
 
-  int? buildingId;
+  _i1.UuidValue buildingId;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue> get table => t;
 
   /// Returns a shallow copy of this [Categorie]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Categorie copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
     String? description,
-    int? buildingId,
+    _i1.UuidValue? buildingId,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Categorie',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       if (description != null) 'description': description,
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
     };
   }
 
@@ -77,10 +81,10 @@ abstract class Categorie
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Categorie',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       if (description != null) 'description': description,
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
     };
   }
 
@@ -118,10 +122,10 @@ class _Undefined {}
 
 class _CategorieImpl extends Categorie {
   _CategorieImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     String? description,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) : super._(
          id: id,
          name: name,
@@ -134,16 +138,16 @@ class _CategorieImpl extends Categorie {
   @_i1.useResult
   @override
   Categorie copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     String? name,
     Object? description = _Undefined,
-    Object? buildingId = _Undefined,
+    _i1.UuidValue? buildingId,
   }) {
     return Categorie(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       name: name ?? this.name,
       description: description is String? ? description : this.description,
-      buildingId: buildingId is int? ? buildingId : this.buildingId,
+      buildingId: buildingId ?? this.buildingId,
     );
   }
 }
@@ -161,13 +165,15 @@ class CategorieUpdateTable extends _i1.UpdateTable<CategorieTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> buildingId(int? value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> buildingId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.buildingId,
     value,
   );
 }
 
-class CategorieTable extends _i1.Table<int?> {
+class CategorieTable extends _i1.Table<_i1.UuidValue> {
   CategorieTable({super.tableRelation}) : super(tableName: 'categorie') {
     updateTable = CategorieUpdateTable(this);
     name = _i1.ColumnString(
@@ -178,7 +184,7 @@ class CategorieTable extends _i1.Table<int?> {
       'description',
       this,
     );
-    buildingId = _i1.ColumnInt(
+    buildingId = _i1.ColumnUuid(
       'buildingId',
       this,
     );
@@ -190,7 +196,7 @@ class CategorieTable extends _i1.Table<int?> {
 
   late final _i1.ColumnString description;
 
-  late final _i1.ColumnInt buildingId;
+  late final _i1.ColumnUuid buildingId;
 
   @override
   List<_i1.Column> get columns => [
@@ -208,7 +214,7 @@ class CategorieInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => Categorie.t;
+  _i1.Table<_i1.UuidValue> get table => Categorie.t;
 }
 
 class CategorieIncludeList extends _i1.IncludeList {
@@ -228,7 +234,7 @@ class CategorieIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Categorie.t;
+  _i1.Table<_i1.UuidValue> get table => Categorie.t;
 }
 
 class CategorieRepository {
@@ -316,7 +322,7 @@ class CategorieRepository {
   /// Finds a single [Categorie] by its [id] or null if no such row exists.
   Future<Categorie?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<Categorie>(
@@ -394,7 +400,7 @@ class CategorieRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Categorie?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<CategorieUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

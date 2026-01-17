@@ -14,9 +14,9 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../buildings/currency_enum.dart' as _i2;
 
 abstract class Building
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Building._({
-    this.id,
+    _i1.UuidValue? id,
     required this.name,
     required this.address,
     required this.openingTime,
@@ -28,12 +28,13 @@ abstract class Building
     required this.currencyCode,
     this.long,
     this.lat,
-  }) : tableMultiOrder = tableMultiOrder ?? false,
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       tableMultiOrder = tableMultiOrder ?? false,
        allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true,
        autoCloseOrdersAtClosingTime = autoCloseOrdersAtClosingTime ?? false;
 
   factory Building({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     required String address,
     required DateTime openingTime,
@@ -49,7 +50,9 @@ abstract class Building
 
   factory Building.fromJson(Map<String, dynamic> jsonSerialization) {
     return Building(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       address: jsonSerialization['address'] as String,
       openingTime: _i1.DateTimeJsonExtension.fromJson(
@@ -81,7 +84,7 @@ abstract class Building
   static const db = BuildingRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue id;
 
   /// The name of the building.
   String name;
@@ -115,13 +118,13 @@ abstract class Building
   double? lat;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue> get table => t;
 
   /// Returns a shallow copy of this [Building]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Building copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
     String? address,
     DateTime? openingTime,
@@ -138,7 +141,7 @@ abstract class Building
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Building',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       'address': address,
       'openingTime': openingTime.toJson(),
@@ -157,7 +160,7 @@ abstract class Building
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Building',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       'address': address,
       'openingTime': openingTime.toJson(),
@@ -206,7 +209,7 @@ class _Undefined {}
 
 class _BuildingImpl extends Building {
   _BuildingImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     required String address,
     required DateTime openingTime,
@@ -238,7 +241,7 @@ class _BuildingImpl extends Building {
   @_i1.useResult
   @override
   Building copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     String? name,
     String? address,
     DateTime? openingTime,
@@ -252,7 +255,7 @@ class _BuildingImpl extends Building {
     Object? lat = _Undefined,
   }) {
     return Building(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       name: name ?? this.name,
       address: address ?? this.address,
       openingTime: openingTime ?? this.openingTime,
@@ -337,7 +340,7 @@ class BuildingUpdateTable extends _i1.UpdateTable<BuildingTable> {
   );
 }
 
-class BuildingTable extends _i1.Table<int?> {
+class BuildingTable extends _i1.Table<_i1.UuidValue> {
   BuildingTable({super.tableRelation}) : super(tableName: 'building') {
     updateTable = BuildingUpdateTable(this);
     name = _i1.ColumnString(
@@ -447,7 +450,7 @@ class BuildingInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => Building.t;
+  _i1.Table<_i1.UuidValue> get table => Building.t;
 }
 
 class BuildingIncludeList extends _i1.IncludeList {
@@ -467,7 +470,7 @@ class BuildingIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Building.t;
+  _i1.Table<_i1.UuidValue> get table => Building.t;
 }
 
 class BuildingRepository {
@@ -555,7 +558,7 @@ class BuildingRepository {
   /// Finds a single [Building] by its [id] or null if no such row exists.
   Future<Building?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<Building>(
@@ -633,7 +636,7 @@ class BuildingRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Building?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<BuildingUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

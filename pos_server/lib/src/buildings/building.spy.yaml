@@ -1,6 +1,7 @@
 class: Building
 table: building
 fields:
+  id: UuidValue, defaultPersist=random, defaultModel=random
   ### The name of the building.
   name: String
   ### The address of the building.

@@ -19,9 +19,10 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import '../order/order_item.dart' as _i5;
 import 'package:pos_server/src/generated/protocol.dart' as _i6;
 
-abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Order
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Order._({
-    this.id,
+    _i1.UuidValue? id,
     _i2.OrderStatus? status,
     required this.btableId,
     required this.btable,
@@ -32,13 +33,14 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
     this.items,
     DateTime? createdAt,
     this.updatedAt,
-  }) : status = status ?? _i2.OrderStatus.progress,
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? _i2.OrderStatus.progress,
        createdAt = createdAt ?? DateTime.now();
 
   factory Order({
-    int? id,
+    _i1.UuidValue? id,
     _i2.OrderStatus? status,
-    required int btableId,
+    required _i1.UuidValue btableId,
     required _i3.BTable? btable,
     required _i1.UuidValue passedById,
     _i4.UserProfile? passedBy,
@@ -51,11 +53,15 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   factory Order.fromJson(Map<String, dynamic> jsonSerialization) {
     return Order(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       status: jsonSerialization['status'] == null
           ? null
           : _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
-      btableId: jsonSerialization['btableId'] as int,
+      btableId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['btableId'],
+      ),
       btable: jsonSerialization['btable'] == null
           ? null
           : _i6.Protocol().deserialize<_i3.BTable>(jsonSerialization['btable']),
@@ -96,11 +102,11 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   static const db = OrderRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue id;
 
   _i2.OrderStatus status;
 
-  int btableId;
+  _i1.UuidValue btableId;
 
   _i3.BTable? btable;
 
@@ -119,15 +125,15 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   DateTime? updatedAt;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue> get table => t;
 
   /// Returns a shallow copy of this [Order]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Order copyWith({
-    int? id,
+    _i1.UuidValue? id,
     _i2.OrderStatus? status,
-    int? btableId,
+    _i1.UuidValue? btableId,
     _i3.BTable? btable,
     _i1.UuidValue? passedById,
     _i4.UserProfile? passedBy,
@@ -141,9 +147,9 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Order',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'status': status.toJson(),
-      'btableId': btableId,
+      'btableId': btableId.toJson(),
       if (btable != null) 'btable': btable?.toJson(),
       'passedById': passedById.toJson(),
       if (passedBy != null) 'passedBy': passedBy?.toJson(),
@@ -159,9 +165,9 @@ abstract class Order implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Order',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'status': status.toJson(),
-      'btableId': btableId,
+      'btableId': btableId.toJson(),
       if (btable != null) 'btable': btable?.toJsonForProtocol(),
       'passedById': passedById.toJson(),
       if (passedBy != null) 'passedBy': passedBy?.toJsonForProtocol(),
@@ -218,9 +224,9 @@ class _Undefined {}
 
 class _OrderImpl extends Order {
   _OrderImpl({
-    int? id,
+    _i1.UuidValue? id,
     _i2.OrderStatus? status,
-    required int btableId,
+    required _i1.UuidValue btableId,
     required _i3.BTable? btable,
     required _i1.UuidValue passedById,
     _i4.UserProfile? passedBy,
@@ -248,9 +254,9 @@ class _OrderImpl extends Order {
   @_i1.useResult
   @override
   Order copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     _i2.OrderStatus? status,
-    int? btableId,
+    _i1.UuidValue? btableId,
     Object? btable = _Undefined,
     _i1.UuidValue? passedById,
     Object? passedBy = _Undefined,
@@ -261,7 +267,7 @@ class _OrderImpl extends Order {
     Object? updatedAt = _Undefined,
   }) {
     return Order(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       status: status ?? this.status,
       btableId: btableId ?? this.btableId,
       btable: btable is _i3.BTable? ? btable : this.btable?.copyWith(),
@@ -292,10 +298,11 @@ class OrderUpdateTable extends _i1.UpdateTable<OrderTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> btableId(int value) => _i1.ColumnValue(
-    table.btableId,
-    value,
-  );
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> btableId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.btableId,
+        value,
+      );
 
   _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> passedById(
     _i1.UuidValue value,
@@ -324,7 +331,7 @@ class OrderUpdateTable extends _i1.UpdateTable<OrderTable> {
       );
 }
 
-class OrderTable extends _i1.Table<int?> {
+class OrderTable extends _i1.Table<_i1.UuidValue> {
   OrderTable({super.tableRelation}) : super(tableName: 'orders') {
     updateTable = OrderUpdateTable(this);
     status = _i1.ColumnEnum(
@@ -333,7 +340,7 @@ class OrderTable extends _i1.Table<int?> {
       _i1.EnumSerialization.byName,
       hasDefault: true,
     );
-    btableId = _i1.ColumnInt(
+    btableId = _i1.ColumnUuid(
       'btableId',
       this,
     );
@@ -360,7 +367,7 @@ class OrderTable extends _i1.Table<int?> {
 
   late final _i1.ColumnEnum<_i2.OrderStatus> status;
 
-  late final _i1.ColumnInt btableId;
+  late final _i1.ColumnUuid btableId;
 
   _i3.BTableTable? _btable;
 
@@ -510,7 +517,7 @@ class OrderInclude extends _i1.IncludeObject {
   };
 
   @override
-  _i1.Table<int?> get table => Order.t;
+  _i1.Table<_i1.UuidValue> get table => Order.t;
 }
 
 class OrderIncludeList extends _i1.IncludeList {
@@ -530,7 +537,7 @@ class OrderIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Order.t;
+  _i1.Table<_i1.UuidValue> get table => Order.t;
 }
 
 class OrderRepository {
@@ -630,7 +637,7 @@ class OrderRepository {
   /// Finds a single [Order] by its [id] or null if no such row exists.
   Future<Order?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     OrderInclude? include,
   }) async {
@@ -710,7 +717,7 @@ class OrderRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Order?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<OrderUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

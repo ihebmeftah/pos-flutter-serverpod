@@ -1,5 +1,5 @@
 import 'package:pos_server/src/generated/protocol.dart';
-import 'package:pos_server/src/helpers/authorizations_helpers.dart';
+import '../helpers/session_extensions.dart';
 import 'package:pos_server/src/order/order_endpoint.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -13,7 +13,10 @@ class BuildingTablesEndpoint extends Endpoint {
   /// required [buildingId] buildingId The id of the building
   /// Returns a list of [BTable] tables
   /// allow for all type of users (admin, employee, customer)
-  Future<List<BTable>> getTables(Session session, int buildingId) async {
+  Future<List<BTable>> getTablesByBuildingId(
+    Session session,
+    UuidValue buildingId,
+  ) async {
     List<BTable> tables = await BTable.db.find(
       session,
       where: (t) => t.buildingId.equals(buildingId),
@@ -21,7 +24,7 @@ class BuildingTablesEndpoint extends Endpoint {
     for (BTable table in tables) {
       final haveOrder = await OrderEndpoint().getOrderCurrOfTable(
         session,
-        table.id!,
+        table.id,
       );
       if (haveOrder != null) {
         table.status = TableStatus.occupied;
@@ -42,9 +45,9 @@ class BuildingTablesEndpoint extends Endpoint {
     Session session, {
     required int nbtables,
     required int seatsMax,
-    required int buildingId,
+    required UuidValue buildingId,
   }) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
+    session.authorizedTo(['owner']);
     int total = await BTable.db.count(
       session,
       where: (t) => t.buildingId.equals(buildingId),

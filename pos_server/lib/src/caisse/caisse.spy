@@ -1,8 +1,9 @@
 class: Caisse
 table: caisse
 fields:
+    id: UuidValue, defaultPersist=random, defaultModel=random
     start: DateTime
     end: DateTime?
     isClosed: bool
-    buildingId: int?, relation(parent=building),required
+    buildingId: UuidValue, relation(parent=building)
     createdAt: DateTime,default=now

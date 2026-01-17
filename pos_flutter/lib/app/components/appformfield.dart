@@ -16,7 +16,9 @@ class AppFormField extends StatelessWidget {
     this.isOutsideLabel = false,
     this.maxLines,
     this.minLines = 1,
-    this.buildCounter,  });
+    this.buildCounter,
+    this.onChanged,
+  });
   const AppFormField.label({
     super.key,
     this.isNumeric = false,
@@ -33,6 +35,7 @@ class AppFormField extends StatelessWidget {
     this.maxLines,
     this.minLines = 1,
     this.buildCounter,
+    this.onChanged,
   }) : assert(
          isOutsideLabel == true || label != null,
          "If isOutsideLabel is false, label must not be null",
@@ -48,6 +51,7 @@ class AppFormField extends StatelessWidget {
   final bool isNumeric;
   final Widget? pIcon, suffix, sIcon;
   final InputCounterWidgetBuilder? buildCounter;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +69,7 @@ class AppFormField extends StatelessWidget {
               : TextInputType.text,
           readOnly: readOnly,
           onTap: onTap,
+          onChanged: onChanged,
           maxLines: maxLines ?? minLines,
           minLines: minLines,
           buildCounter: buildCounter,

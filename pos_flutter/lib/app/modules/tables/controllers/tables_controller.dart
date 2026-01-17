@@ -26,8 +26,8 @@ class TablesController extends GetxController with StateMixin<List<BTable>> {
   Future getTabels() async {
     try {
       tables(
-        await ServerpodClient.instance.buildingTables.getTables(
-          LocalStorage().building!.id!,
+        await ServerpodClient.instance.buildingTables.getTablesByBuildingId(
+          LocalStorage().building!.id,
         ),
       );
       if (tables.isEmpty) {

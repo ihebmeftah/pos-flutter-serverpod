@@ -15,37 +15,40 @@ import '../buildings_tables/table_status_enum.dart' as _i2;
 
 abstract class BTable implements _i1.SerializableModel {
   BTable._({
-    this.id,
+    _i1.UuidValue? id,
     required this.number,
     int? seatsMax,
     this.status,
     required this.buildingId,
-  }) : seatsMax = seatsMax ?? 4;
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       seatsMax = seatsMax ?? 4;
 
   factory BTable({
-    int? id,
+    _i1.UuidValue? id,
     required int number,
     int? seatsMax,
     _i2.TableStatus? status,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) = _BTableImpl;
 
   factory BTable.fromJson(Map<String, dynamic> jsonSerialization) {
     return BTable(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       number: jsonSerialization['number'] as int,
       seatsMax: jsonSerialization['seatsMax'] as int?,
       status: jsonSerialization['status'] == null
           ? null
           : _i2.TableStatus.fromJson((jsonSerialization['status'] as String)),
-      buildingId: jsonSerialization['buildingId'] as int?,
+      buildingId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['buildingId'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
+  /// The id of the object.
+  _i1.UuidValue id;
 
   /// The number of the building.
   int number;
@@ -54,27 +57,27 @@ abstract class BTable implements _i1.SerializableModel {
 
   _i2.TableStatus? status;
 
-  int? buildingId;
+  _i1.UuidValue buildingId;
 
   /// Returns a shallow copy of this [BTable]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   BTable copyWith({
-    int? id,
+    _i1.UuidValue? id,
     int? number,
     int? seatsMax,
     _i2.TableStatus? status,
-    int? buildingId,
+    _i1.UuidValue? buildingId,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'BTable',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'number': number,
       'seatsMax': seatsMax,
       if (status != null) 'status': status?.toJson(),
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
     };
   }
 
@@ -88,11 +91,11 @@ class _Undefined {}
 
 class _BTableImpl extends BTable {
   _BTableImpl({
-    int? id,
+    _i1.UuidValue? id,
     required int number,
     int? seatsMax,
     _i2.TableStatus? status,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) : super._(
          id: id,
          number: number,
@@ -106,18 +109,18 @@ class _BTableImpl extends BTable {
   @_i1.useResult
   @override
   BTable copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     int? number,
     int? seatsMax,
     Object? status = _Undefined,
-    Object? buildingId = _Undefined,
+    _i1.UuidValue? buildingId,
   }) {
     return BTable(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       number: number ?? this.number,
       seatsMax: seatsMax ?? this.seatsMax,
       status: status is _i2.TableStatus? ? status : this.status,
-      buildingId: buildingId is int? ? buildingId : this.buildingId,
+      buildingId: buildingId ?? this.buildingId,
     );
   }
 }

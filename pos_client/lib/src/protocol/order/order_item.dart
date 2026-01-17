@@ -19,7 +19,7 @@ import 'package:pos_client/src/protocol/protocol.dart' as _i5;
 
 abstract class OrderItem implements _i1.SerializableModel {
   OrderItem._({
-    this.id,
+    _i1.UuidValue? id,
     required this.article,
     _i2.OrderItemStatus? itemStatus,
     required this.passedById,
@@ -28,16 +28,16 @@ abstract class OrderItem implements _i1.SerializableModel {
     this.payedTo,
     this.preparedById,
     this.preparedBy,
-    this.orderId,
     DateTime? createdAt,
     this.updatedAt,
     this.preaparedAt,
     this.payedAt,
-  }) : itemStatus = itemStatus ?? _i2.OrderItemStatus.progress,
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       itemStatus = itemStatus ?? _i2.OrderItemStatus.progress,
        createdAt = createdAt ?? DateTime.now();
 
   factory OrderItem({
-    int? id,
+    _i1.UuidValue? id,
     required _i3.Article article,
     _i2.OrderItemStatus? itemStatus,
     required _i1.UuidValue passedById,
@@ -46,7 +46,6 @@ abstract class OrderItem implements _i1.SerializableModel {
     _i4.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
     _i4.UserProfile? preparedBy,
-    int? orderId,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
@@ -55,7 +54,9 @@ abstract class OrderItem implements _i1.SerializableModel {
 
   factory OrderItem.fromJson(Map<String, dynamic> jsonSerialization) {
     return OrderItem(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       article: _i5.Protocol().deserialize<_i3.Article>(
         jsonSerialization['article'],
       ),
@@ -90,7 +91,6 @@ abstract class OrderItem implements _i1.SerializableModel {
           : _i5.Protocol().deserialize<_i4.UserProfile>(
               jsonSerialization['preparedBy'],
             ),
-      orderId: jsonSerialization['orderId'] as int?,
       createdAt: jsonSerialization['createdAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
@@ -108,10 +108,8 @@ abstract class OrderItem implements _i1.SerializableModel {
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
+  /// The id of the object.
+  _i1.UuidValue id;
 
   _i3.Article article;
 
@@ -129,8 +127,6 @@ abstract class OrderItem implements _i1.SerializableModel {
 
   _i4.UserProfile? preparedBy;
 
-  int? orderId;
-
   DateTime createdAt;
 
   DateTime? updatedAt;
@@ -143,7 +139,7 @@ abstract class OrderItem implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   OrderItem copyWith({
-    int? id,
+    _i1.UuidValue? id,
     _i3.Article? article,
     _i2.OrderItemStatus? itemStatus,
     _i1.UuidValue? passedById,
@@ -152,7 +148,6 @@ abstract class OrderItem implements _i1.SerializableModel {
     _i4.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
     _i4.UserProfile? preparedBy,
-    int? orderId,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
@@ -162,7 +157,7 @@ abstract class OrderItem implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'OrderItem',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'article': article.toJson(),
       'itemStatus': itemStatus.toJson(),
       'passedById': passedById.toJson(),
@@ -171,7 +166,6 @@ abstract class OrderItem implements _i1.SerializableModel {
       if (payedTo != null) 'payedTo': payedTo?.toJson(),
       if (preparedById != null) 'preparedById': preparedById?.toJson(),
       if (preparedBy != null) 'preparedBy': preparedBy?.toJson(),
-      if (orderId != null) 'orderId': orderId,
       'createdAt': createdAt.toJson(),
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
       if (preaparedAt != null) 'preaparedAt': preaparedAt?.toJson(),
@@ -189,7 +183,7 @@ class _Undefined {}
 
 class _OrderItemImpl extends OrderItem {
   _OrderItemImpl({
-    int? id,
+    _i1.UuidValue? id,
     required _i3.Article article,
     _i2.OrderItemStatus? itemStatus,
     required _i1.UuidValue passedById,
@@ -198,7 +192,6 @@ class _OrderItemImpl extends OrderItem {
     _i4.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
     _i4.UserProfile? preparedBy,
-    int? orderId,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
@@ -213,7 +206,6 @@ class _OrderItemImpl extends OrderItem {
          payedTo: payedTo,
          preparedById: preparedById,
          preparedBy: preparedBy,
-         orderId: orderId,
          createdAt: createdAt,
          updatedAt: updatedAt,
          preaparedAt: preaparedAt,
@@ -225,7 +217,7 @@ class _OrderItemImpl extends OrderItem {
   @_i1.useResult
   @override
   OrderItem copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     _i3.Article? article,
     _i2.OrderItemStatus? itemStatus,
     _i1.UuidValue? passedById,
@@ -234,14 +226,13 @@ class _OrderItemImpl extends OrderItem {
     Object? payedTo = _Undefined,
     Object? preparedById = _Undefined,
     Object? preparedBy = _Undefined,
-    Object? orderId = _Undefined,
     DateTime? createdAt,
     Object? updatedAt = _Undefined,
     Object? preaparedAt = _Undefined,
     Object? payedAt = _Undefined,
   }) {
     return OrderItem(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       article: article ?? this.article.copyWith(),
       itemStatus: itemStatus ?? this.itemStatus,
       passedById: passedById ?? this.passedById,
@@ -256,7 +247,6 @@ class _OrderItemImpl extends OrderItem {
       preparedBy: preparedBy is _i4.UserProfile?
           ? preparedBy
           : this.preparedBy?.copyWith(),
-      orderId: orderId is int? ? orderId : this.orderId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
       preaparedAt: preaparedAt is DateTime? ? preaparedAt : this.preaparedAt,

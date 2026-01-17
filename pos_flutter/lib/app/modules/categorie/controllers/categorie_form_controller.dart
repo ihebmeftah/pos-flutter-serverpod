@@ -7,7 +7,9 @@ import 'package:pos_flutter/app/modules/categorie/controllers/categorie_controll
 import 'package:pos_flutter/config/serverpod_client.dart';
 
 class CategorieFormController extends GetxController with StateMixin {
-  final id = int.tryParse(Get.parameters['id'] ?? "");
+  UuidValue? get id => Get.parameters['id'] != null
+      ? UuidValue.fromString(Get.parameters['id']!)
+      : null;
   final catFormKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descController = TextEditingController();
@@ -15,7 +17,7 @@ class CategorieFormController extends GetxController with StateMixin {
     id: id,
     name: nameController.text,
     description: descController.text,
-    buildingId: LocalStorage().building!.id!,
+    buildingId: LocalStorage().building!.id,
   );
   @override
   void onInit() async {
@@ -47,12 +49,11 @@ class CategorieFormController extends GetxController with StateMixin {
         change(null, status: RxStatus.loading());
         if (id == null) {
           await ServerpodClient.instance.categorie.createCategorie(
-            categorie: categorieDto,
-            buildingId: LocalStorage().building!.id!,
+            categorieDto,
           );
         } else {
           await ServerpodClient.instance.categorie.updateCategorie(
-            categorie: categorieDto,
+            categorieDto,
           );
         }
         AppSnackbar.success();

@@ -1,0 +1,10 @@
+class: CreateEmployerDTO
+fields:
+   firstName: String
+   lastName: String
+   displayName: String
+   phone: int
+   persoEmail: String
+   buildingId: UuidValue
+   accessId: UuidValue?
+   password: String

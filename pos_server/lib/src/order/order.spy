@@ -1,6 +1,7 @@
 class: Order
 table: orders
 fields:
+  id: UuidValue, defaultPersist=random, defaultModel=random
   status: OrderStatus, default=progress
   btable: BTable?, relation(onDelete=cascade),required
   passedBy:  module:serverpod_auth_core:UserProfile?,relation,
@@ -8,3 +9,8 @@ fields:
   items: List<OrderItem>?, relation(name=order_items)
   createdAt: DateTime, default=now
   updatedAt: DateTime?, ### the last value when the status is payed
+
+
+indexes:
+  order_btableId_idx:
+    fields: btableId

@@ -8,7 +8,9 @@ import '../../../../config/serverpod_client.dart';
 import '../../../data/local/local_storage.dart';
 
 class AccessFormController extends GetxController with StateMixin {
-  int? get id => int.tryParse(Get.parameters['id'] ?? "");
+  UuidValue? get id => Get.parameters['id'] != null
+      ? UuidValue.fromString(Get.parameters['id']!)
+      : null;
   @override
   void onInit() async {
     if (id != null) {
@@ -86,7 +88,7 @@ class AccessFormController extends GetxController with StateMixin {
     preparation: preparation,
     takeOrder: takeOrder,
     caisseManagement: caisseManagement,
-    buildingId: LocalStorage().building!.id!,
+    buildingId: LocalStorage().building!.id,
   );
 
   void createAccess() async {
@@ -134,6 +136,7 @@ class AccessFormController extends GetxController with StateMixin {
       appendItems = accessDetails.appendItems;
       preparation = accessDetails.preparation;
       takeOrder = accessDetails.takeOrder;
+      caisseManagement = accessDetails.caisseManagement;
     } catch (e) {
       change(null, status: RxStatus.error("Failed to fetch access details"));
     }

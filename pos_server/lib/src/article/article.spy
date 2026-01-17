@@ -1,7 +1,12 @@
 class: Article
 table: article
 fields:
+  id: UuidValue, defaultPersist=random, defaultModel=random
   name: String,
   description: String?
   price: double,
-  categorie: Categorie?, relation,required
+  categorie: Categorie?, relation(onDelete=setNull)
+
+indexes:
+  article_categorieId_idx:
+    fields: categorieId

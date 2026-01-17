@@ -1,6 +1,12 @@
 class: Categorie
 table: categorie
 fields:
+  id: UuidValue, defaultPersist=random, defaultModel=random
   name: String,
   description: String?
-  buildingId: int?, relation(parent=building), , required
+  buildingId: UuidValue, relation(parent=building),
+
+
+indexes:
+  categorie_buildingId_idx:
+    fields: buildingId

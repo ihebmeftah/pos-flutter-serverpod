@@ -11,7 +11,9 @@ import '../../../../config/serverpod_client.dart';
 import '../../../extensions/datetime.extension.dart';
 
 class FormBuildingController extends GetxController with StateMixin {
-  int? get id => int.tryParse(Get.parameters['id'] ?? "");
+  UuidValue? get id => Get.parameters['id'] != null
+      ? UuidValue.fromString(Get.parameters['id']!)
+      : null;
 
   final addFormkey = GlobalKey<FormState>();
   DateTime openingTime = DateTime.now();

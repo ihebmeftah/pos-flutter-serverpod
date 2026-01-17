@@ -1,7 +1,7 @@
 import 'package:pos_server/src/buildings/building_endpoint.dart';
 import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
-import 'package:pos_server/src/helpers/authorizations_helpers.dart';
+import '../helpers/session_extensions.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import 'package:serverpod/serverpod.dart' as s;
 import 'package:serverpod_auth_idp_server/core.dart';
@@ -10,13 +10,20 @@ class OrderEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  Future<List<Order>> getOrders(
+  /// Get all orders for a building
+  /// Parameters:
+  /// - [buildingId]: The id of the building
+  /// - [orderStatus]: The status of the orders to filter by (optional)
+  /// Returns:
+  /// - A list of orders for the building
+  /// Only owner and employers are allowed for this endpoint
+  Future<List<Order>> getOrdersByBuilingId(
     Session session,
-    int buildingId,
+    UuidValue buildingId,
     OrderStatus? orderStatus,
   ) async {
     Employer? employer;
-    if (session.authenticated!.scopes.contains(Scope("employer"))) {
+    if (session.isAdmin) {
       employer = await EmployerEndpoint().getEmployerByIdentifier(
         session,
         session.authenticated!.authUserId,
@@ -40,9 +47,10 @@ class OrderEndpoint extends Endpoint {
                 );
               },
             ));
+
+        /// Employer ih has access to consult all orders or only his own orders
         if (session.authenticated!.scopes.contains(Scope("owner")) ||
             (employer?.access?.consultAllOrders ?? false)) {
-          /// Owner can see all orders
           if (orderStatus != null) return base & t.status.equals(orderStatus);
           return base;
         } else {
@@ -61,7 +69,12 @@ class OrderEndpoint extends Endpoint {
     );
   }
 
-  Future<Order> getOrderById(Session session, int id) async {
+  /// Get order by id
+  /// Parameters:
+  /// - [id]: The id of the order
+  /// Returns:
+  /// - The order with the given id
+  Future<Order> getOrderById(Session session, UuidValue id) async {
     Order? order = await Order.db.findFirstRow(
       session,
       where: (t) => t.id.equals(id),
@@ -79,7 +92,10 @@ class OrderEndpoint extends Endpoint {
       ),
     );
     if (order == null) {
-      throw Exception('Order with id or ref $id not found');
+      throw AppException(
+        errorType: ExceptionType.NotFound,
+        message: 'Order with id or ref $id not found',
+      );
     }
     return order;
   }
@@ -96,14 +112,14 @@ class OrderEndpoint extends Endpoint {
     Order order,
   ) async {
     /// Only employer allowed for this endpoint
-    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
+    session.authorizedTo(['employer']);
 
     /// Employer should have access to order creation
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,
     );
-    if (employer.access != null && employer.access?.orderCreation == false) {
+    if (employer.access == null || employer.access?.orderCreation == false) {
       throw AppException(
         errorType: ExceptionType.Forbidden,
         message: 'You don\'t have access to create orders',
@@ -121,7 +137,7 @@ class OrderEndpoint extends Endpoint {
     /// Check if table allows multi orders
     final building = await BuildingEndpoint().getBuildingById(
       session,
-      order.btable!.buildingId!,
+      order.btable!.buildingId,
     );
     if (building.tableMultiOrder == false) {
       final tableOrder = await OrderEndpoint().getOrderCurrOfTable(
@@ -157,7 +173,7 @@ class OrderEndpoint extends Endpoint {
     Session session,
     Order order,
     UuidValue userProfileId,
-    int buildingId,
+    UuidValue buildingId,
   ) async {
     order.status = OrderStatus.payed;
     order.closedbyId = userProfileId;
@@ -173,11 +189,8 @@ class OrderEndpoint extends Endpoint {
     );
   }
 
-  Future<Order?> getOrderCurrOfTable(Session session, int tableId) async {
-    await AuthorizationsHelpers().requiredScopes(session, [
-      "owner",
-      "employer",
-    ]);
+  Future<Order?> getOrderCurrOfTable(Session session, UuidValue tableId) async {
+    session.authorizedTo(["owner", "employer"]);
     return await Order.db.findFirstRow(
       session,
       where: (t) =>
@@ -198,13 +211,10 @@ class OrderEndpoint extends Endpoint {
 
   Future<List<Order>> getOrdersOfTable(
     Session session,
-    int tableId,
+    UuidValue tableId,
     OrderStatus? orderStatus,
   ) async {
-    await AuthorizationsHelpers().requiredScopes(session, [
-      "owner",
-      "employer",
-    ]);
+    session.authorizedTo(["owner", "employer"]);
     return await Order.db.find(
       session,
       where: (t) {

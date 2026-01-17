@@ -1,11 +1,20 @@
 class: Employer
 table: employers
 fields:
-  userProfile: module:serverpod_auth_core:UserProfile?, relation, required
+  id: UuidValue, defaultPersist=random, defaultModel=random
+  firstName: String,
+  lastName: String,
+  phone: int,
+  phoneVerified: bool,defaultModel=false
+  persoEmail: String,
+  persoEmailVerified: bool,defaultModel=false
+  userProfile: module:serverpod_auth_core:UserProfile?, relation(onDelete=cascade), required
   building: Building?, relation(onDelete=cascade)
   access: Access?, relation(onDelete=setNull,optional)
 
 indexes:
   employer_profile_idx:
-    fields: userProfileId
+    fields: userProfileId,persoEmail,phone
     unique: true
+  employer_buildingId_idx:
+    fields: buildingId

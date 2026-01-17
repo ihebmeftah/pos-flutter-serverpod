@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/components/app_snackbar.dart';
-import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/modules/article/controllers/article_controller.dart';
 
 import '../../../../config/serverpod_client.dart';
@@ -12,7 +11,9 @@ class ArticleFormController extends GetxController with StateMixin {
   final categorieController = Get.put<CategorieController>(
     CategorieController(),
   );
-  final id = int.tryParse(Get.parameters['id'] ?? "");
+  UuidValue? get id => Get.parameters['id'] != null
+      ? UuidValue.fromString(Get.parameters['id']!)
+      : null;
   @override
   void onInit() async {
     await categorieController.getCategories();
@@ -35,7 +36,7 @@ class ArticleFormController extends GetxController with StateMixin {
     name: name.text,
     description: description.text,
     price: double.parse(price.text),
-    categorieId: selectedCategory!.id!,
+    categorieId: selectedCategory!.id,
     categorie: selectedCategory,
   );
 
@@ -65,10 +66,7 @@ class ArticleFormController extends GetxController with StateMixin {
       if (artFormKey.currentState!.validate()) {
         change(null, status: RxStatus.loading());
         if (id == null) {
-          await ServerpodClient.instance.article.createArticle(
-            article: articleDto,
-            buildingId: LocalStorage().building!.id!,
-          );
+          await ServerpodClient.instance.article.createArticle(articleDto);
         } else {
           await ServerpodClient.instance.article.updateArticle(
             article: articleDto,

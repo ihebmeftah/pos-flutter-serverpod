@@ -1,4 +1,4 @@
-import 'package:pos_server/src/helpers/authorizations_helpers.dart';
+import '../helpers/session_extensions.dart';
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
@@ -11,46 +11,40 @@ class ArticleEndpoint extends Endpoint {
   /// required [buildingId] buildingId The id of the building
   /// optional [categoryId] The id of the category
   /// Returns a list of [Article] articles
-  /// allow for all type of users (admin, employee, customer)
-  Future<List<Article>> getArticles(
+  Future<List<Article>> getArticlesByBuildingId(
     Session session,
-    int buildingId, {
-    int? categoryId,
+    UuidValue buildingId, {
+    UuidValue? categoryId,
   }) async {
-    if (categoryId != null) {
-      return await Article.db.find(
-        session,
-        include: Article.include(
-          categorie: Categorie.include(),
-        ),
-        where: (a) =>
-            a.categorie.buildingId.equals(buildingId) &
-            a.categorie.id.equals(
-              categoryId,
-            ),
-      );
-    }
     return await Article.db.find(
       session,
       include: Article.include(
         categorie: Categorie.include(),
       ),
-      where: (a) => a.categorie.buildingId.equals(buildingId),
+      where: (a) {
+        final base = a.categorie.buildingId.equals(buildingId);
+        if (categoryId != null) {
+          return base & a.categorieId.equals(categoryId);
+        }
+        return a.categorie.buildingId.equals(buildingId);
+      },
     );
   }
 
   /// Create new article
   /// required [article] The article to create
-  /// required [buildingId] buildingId The id of the building
   /// Returns the created [Article] article
   /// allow for admin users only
   Future<Article> createArticle(
-    Session session, {
-    required Article article,
-    required int buildingId,
-  }) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
-    await _checkArticleNameExist(session, article.name, buildingId);
+    Session session,
+    Article article,
+  ) async {
+    session.authorizedTo(['owner']);
+    await _checkArticleNameExist(
+      session,
+      article.name,
+      article.categorie!.buildingId,
+    );
     return await Article.db.insertRow(
       session,
       article,
@@ -61,7 +55,7 @@ class ArticleEndpoint extends Endpoint {
   Future<void> _checkArticleNameExist(
     Session session,
     String name,
-    int buildingId,
+    UuidValue buildingId,
   ) async {
     final existe = await Article.db.findFirstRow(
       session,
@@ -78,10 +72,8 @@ class ArticleEndpoint extends Endpoint {
 
   /// Get article by id
   /// required [articleId] The id of the article
-  /// required [buildingId] buildingId The id of the building
   /// Returns the [Article] article
-  /// allow for all type of users (admin, employee, customer)
-  Future<Article> getArticleById(Session session, int id) async {
+  Future<Article> getArticleById(Session session, UuidValue id) async {
     Article? article = await Article.db.findById(
       session,
       id,
@@ -101,18 +93,18 @@ class ArticleEndpoint extends Endpoint {
   /// Update article
   /// required [article] The article to update
   /// Returns the updated [Article] article
-  /// allow for admin users only
+  /// allow for owner users only
   Future<Article> updateArticle(
     Session session, {
     required Article article,
   }) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
-    final existingArticle = await getArticleById(session, article.id!);
+    session.authorizedTo(['owner']);
+    final existingArticle = await getArticleById(session, article.id);
     if (existingArticle.name != article.name) {
       await _checkArticleNameExist(
         session,
         article.name,
-        article.categorie!.buildingId!,
+        article.categorie!.buildingId,
       );
     }
     existingArticle.name = article.name;

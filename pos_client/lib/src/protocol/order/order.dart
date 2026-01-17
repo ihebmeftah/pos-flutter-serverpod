@@ -20,7 +20,7 @@ import 'package:pos_client/src/protocol/protocol.dart' as _i6;
 
 abstract class Order implements _i1.SerializableModel {
   Order._({
-    this.id,
+    _i1.UuidValue? id,
     _i2.OrderStatus? status,
     required this.btableId,
     required this.btable,
@@ -31,13 +31,14 @@ abstract class Order implements _i1.SerializableModel {
     this.items,
     DateTime? createdAt,
     this.updatedAt,
-  }) : status = status ?? _i2.OrderStatus.progress,
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? _i2.OrderStatus.progress,
        createdAt = createdAt ?? DateTime.now();
 
   factory Order({
-    int? id,
+    _i1.UuidValue? id,
     _i2.OrderStatus? status,
-    required int btableId,
+    required _i1.UuidValue btableId,
     required _i3.BTable? btable,
     required _i1.UuidValue passedById,
     _i4.UserProfile? passedBy,
@@ -50,11 +51,15 @@ abstract class Order implements _i1.SerializableModel {
 
   factory Order.fromJson(Map<String, dynamic> jsonSerialization) {
     return Order(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       status: jsonSerialization['status'] == null
           ? null
           : _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
-      btableId: jsonSerialization['btableId'] as int,
+      btableId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['btableId'],
+      ),
       btable: jsonSerialization['btable'] == null
           ? null
           : _i6.Protocol().deserialize<_i3.BTable>(jsonSerialization['btable']),
@@ -90,14 +95,12 @@ abstract class Order implements _i1.SerializableModel {
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
+  /// The id of the object.
+  _i1.UuidValue id;
 
   _i2.OrderStatus status;
 
-  int btableId;
+  _i1.UuidValue btableId;
 
   _i3.BTable? btable;
 
@@ -119,9 +122,9 @@ abstract class Order implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Order copyWith({
-    int? id,
+    _i1.UuidValue? id,
     _i2.OrderStatus? status,
-    int? btableId,
+    _i1.UuidValue? btableId,
     _i3.BTable? btable,
     _i1.UuidValue? passedById,
     _i4.UserProfile? passedBy,
@@ -135,9 +138,9 @@ abstract class Order implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Order',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'status': status.toJson(),
-      'btableId': btableId,
+      'btableId': btableId.toJson(),
       if (btable != null) 'btable': btable?.toJson(),
       'passedById': passedById.toJson(),
       if (passedBy != null) 'passedBy': passedBy?.toJson(),
@@ -159,9 +162,9 @@ class _Undefined {}
 
 class _OrderImpl extends Order {
   _OrderImpl({
-    int? id,
+    _i1.UuidValue? id,
     _i2.OrderStatus? status,
-    required int btableId,
+    required _i1.UuidValue btableId,
     required _i3.BTable? btable,
     required _i1.UuidValue passedById,
     _i4.UserProfile? passedBy,
@@ -189,9 +192,9 @@ class _OrderImpl extends Order {
   @_i1.useResult
   @override
   Order copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     _i2.OrderStatus? status,
-    int? btableId,
+    _i1.UuidValue? btableId,
     Object? btable = _Undefined,
     _i1.UuidValue? passedById,
     Object? passedBy = _Undefined,
@@ -202,7 +205,7 @@ class _OrderImpl extends Order {
     Object? updatedAt = _Undefined,
   }) {
     return Order(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       status: status ?? this.status,
       btableId: btableId ?? this.btableId,
       btable: btable is _i3.BTable? ? btable : this.btable?.copyWith(),

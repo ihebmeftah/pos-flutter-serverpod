@@ -16,14 +16,9 @@ class CategorieView extends GetView<CategorieController> {
       appBar: AppBar(
         title: const Text('Categories'),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: IconButton(
-              onPressed: () {
-                Get.toNamed(Routes.CATEGORIE_FORM);
-              },
-              icon: const Icon(Icons.add, size: 20),
-            ),
+          IconButton(
+            onPressed: () => Get.toNamed(Routes.CATEGORIE_FORM),
+            icon: const Icon(Icons.add, size: 20),
           ),
         ],
       ),
@@ -43,7 +38,7 @@ class CategorieView extends GetView<CategorieController> {
               return GestureDetector(
                 onTap: () => Get.toNamed(
                   Routes.ARTICLE,
-                  parameters: {'catId': category.id!.toString()},
+                  parameters: {'catId': category.id.toString()},
                 ),
                 child: Container(
                   decoration: BoxDecoration(
@@ -124,7 +119,7 @@ class CategorieView extends GetView<CategorieController> {
                               onPressed: () => Get.toNamed(
                                 Routes.CATEGORIE_FORM,
                                 parameters: {
-                                  'id': category.id!.toString(),
+                                  'id': category.id.toString(),
                                 },
                               ),
                               icon: Icon(Icons.edit_square),

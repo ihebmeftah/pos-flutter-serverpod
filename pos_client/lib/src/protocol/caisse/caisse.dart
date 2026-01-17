@@ -14,42 +14,45 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 abstract class Caisse implements _i1.SerializableModel {
   Caisse._({
-    this.id,
+    _i1.UuidValue? id,
     required this.start,
     this.end,
     required this.isClosed,
     required this.buildingId,
     DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       createdAt = createdAt ?? DateTime.now();
 
   factory Caisse({
-    int? id,
+    _i1.UuidValue? id,
     required DateTime start,
     DateTime? end,
     required bool isClosed,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
     DateTime? createdAt,
   }) = _CaisseImpl;
 
   factory Caisse.fromJson(Map<String, dynamic> jsonSerialization) {
     return Caisse(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       start: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['start']),
       end: jsonSerialization['end'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['end']),
       isClosed: jsonSerialization['isClosed'] as bool,
-      buildingId: jsonSerialization['buildingId'] as int?,
+      buildingId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['buildingId'],
+      ),
       createdAt: jsonSerialization['createdAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
+  /// The id of the object.
+  _i1.UuidValue id;
 
   DateTime start;
 
@@ -57,7 +60,7 @@ abstract class Caisse implements _i1.SerializableModel {
 
   bool isClosed;
 
-  int? buildingId;
+  _i1.UuidValue buildingId;
 
   DateTime createdAt;
 
@@ -65,22 +68,22 @@ abstract class Caisse implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Caisse copyWith({
-    int? id,
+    _i1.UuidValue? id,
     DateTime? start,
     DateTime? end,
     bool? isClosed,
-    int? buildingId,
+    _i1.UuidValue? buildingId,
     DateTime? createdAt,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Caisse',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'start': start.toJson(),
       if (end != null) 'end': end?.toJson(),
       'isClosed': isClosed,
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
       'createdAt': createdAt.toJson(),
     };
   }
@@ -95,11 +98,11 @@ class _Undefined {}
 
 class _CaisseImpl extends Caisse {
   _CaisseImpl({
-    int? id,
+    _i1.UuidValue? id,
     required DateTime start,
     DateTime? end,
     required bool isClosed,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
     DateTime? createdAt,
   }) : super._(
          id: id,
@@ -115,19 +118,19 @@ class _CaisseImpl extends Caisse {
   @_i1.useResult
   @override
   Caisse copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     DateTime? start,
     Object? end = _Undefined,
     bool? isClosed,
-    Object? buildingId = _Undefined,
+    _i1.UuidValue? buildingId,
     DateTime? createdAt,
   }) {
     return Caisse(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       start: start ?? this.start,
       end: end is DateTime? ? end : this.end,
       isClosed: isClosed ?? this.isClosed,
-      buildingId: buildingId is int? ? buildingId : this.buildingId,
+      buildingId: buildingId ?? this.buildingId,
       createdAt: createdAt ?? this.createdAt,
     );
   }

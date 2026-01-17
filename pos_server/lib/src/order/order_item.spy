@@ -1,13 +1,19 @@
 class: OrderItem
 table: order_items
 fields:
+    id: UuidValue, defaultPersist=random, defaultModel=random
     article: Article
     itemStatus: OrderItemStatus, default=progress
     passedBy:  module:serverpod_auth_core:UserProfile?, relation
     payedTo:  module:serverpod_auth_core:UserProfile?, relation(optional),
     preparedBy:  module:serverpod_auth_core:UserProfile?, relation(optional),
-    orderId: int?, relation(name=order_items, parent=orders,onDelete=cascade),
+    orderId: UuidValue?, relation(name=order_items, parent=orders,onDelete=cascade), scope=serverOnly
     createdAt: DateTime, default=now
     updatedAt: DateTime?, #
     preaparedAt: DateTime?, ### the last value when item status changed to ready
     payedAt: DateTime?, ### the last value when the payed is true
+
+
+indexes:
+    order_item_orderId_idx:
+        fields: orderId

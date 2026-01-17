@@ -24,8 +24,10 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
       where: (t) => t.authUserId.equals(session.authenticated!.authUserId),
     );
     if (userProfile == null) {
-      throw Exception(
-        'User profile for auth user id ${session.authenticated!.authUserId} not found',
+      throw AppException(
+        errorType: ExceptionType.NotFound,
+        message:
+            'User profile for auth user id ${session.authenticated!.authUserId} not found',
       );
     }
     return userProfile;

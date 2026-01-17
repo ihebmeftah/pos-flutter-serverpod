@@ -13,7 +13,7 @@ class AccessEndpoint extends Endpoint {
   }
 
   Future<Access> updateAccess(Session session, Access access) async {
-    final oldAccess = await getAccessById(session, access.id!);
+    final oldAccess = await getAccessById(session, access.id);
     if (oldAccess.name != access.name) await checkAccessExist(session, access);
     return await Access.db.updateRow(session, access);
   }
@@ -27,7 +27,7 @@ class AccessEndpoint extends Endpoint {
       session,
       where: (t) =>
           t.name.inSet(access.map((e) => e.name).toSet()) &
-          t.buildingId.inSet(access.map((e) => e.buildingId!).toSet()),
+          t.buildingId.inSet(access.map((e) => e.buildingId).toSet()),
     );
     if (existingAccess != null) {
       throw AppException(
@@ -52,14 +52,17 @@ class AccessEndpoint extends Endpoint {
     }
   }
 
-  Future<List<Access>> getAllAccesses(Session session, int buildingId) async {
+  Future<List<Access>> getAccessesByBuildingId(
+    Session session,
+    UuidValue buildingId,
+  ) async {
     return await Access.db.find(
       session,
       where: (t) => t.buildingId.equals(buildingId),
     );
   }
 
-  Future<Access> getAccessById(Session session, int accessId) async {
+  Future<Access> getAccessById(Session session, UuidValue accessId) async {
     final access = await Access.db.findById(
       session,
       accessId,
@@ -73,12 +76,11 @@ class AccessEndpoint extends Endpoint {
     return access;
   }
 
-  Future<Access> deleteAccess(Session session, int accessId) async {
+  Future<Access> deleteAccess(Session session, UuidValue accessId) async {
     final access = await getAccessById(
       session,
       accessId,
     );
     return await Access.db.deleteRow(session, access);
   }
-
 }

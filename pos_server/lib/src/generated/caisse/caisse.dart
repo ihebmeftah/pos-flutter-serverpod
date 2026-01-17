@@ -12,34 +12,40 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class Caisse implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class Caisse
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Caisse._({
-    this.id,
+    _i1.UuidValue? id,
     required this.start,
     this.end,
     required this.isClosed,
     required this.buildingId,
     DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       createdAt = createdAt ?? DateTime.now();
 
   factory Caisse({
-    int? id,
+    _i1.UuidValue? id,
     required DateTime start,
     DateTime? end,
     required bool isClosed,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
     DateTime? createdAt,
   }) = _CaisseImpl;
 
   factory Caisse.fromJson(Map<String, dynamic> jsonSerialization) {
     return Caisse(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       start: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['start']),
       end: jsonSerialization['end'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['end']),
       isClosed: jsonSerialization['isClosed'] as bool,
-      buildingId: jsonSerialization['buildingId'] as int?,
+      buildingId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['buildingId'],
+      ),
       createdAt: jsonSerialization['createdAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
@@ -51,7 +57,7 @@ abstract class Caisse implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   static const db = CaisseRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue id;
 
   DateTime start;
 
@@ -59,33 +65,33 @@ abstract class Caisse implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   bool isClosed;
 
-  int? buildingId;
+  _i1.UuidValue buildingId;
 
   DateTime createdAt;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue> get table => t;
 
   /// Returns a shallow copy of this [Caisse]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Caisse copyWith({
-    int? id,
+    _i1.UuidValue? id,
     DateTime? start,
     DateTime? end,
     bool? isClosed,
-    int? buildingId,
+    _i1.UuidValue? buildingId,
     DateTime? createdAt,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Caisse',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'start': start.toJson(),
       if (end != null) 'end': end?.toJson(),
       'isClosed': isClosed,
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
       'createdAt': createdAt.toJson(),
     };
   }
@@ -94,11 +100,11 @@ abstract class Caisse implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Caisse',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'start': start.toJson(),
       if (end != null) 'end': end?.toJson(),
       'isClosed': isClosed,
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
       'createdAt': createdAt.toJson(),
     };
   }
@@ -137,11 +143,11 @@ class _Undefined {}
 
 class _CaisseImpl extends Caisse {
   _CaisseImpl({
-    int? id,
+    _i1.UuidValue? id,
     required DateTime start,
     DateTime? end,
     required bool isClosed,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
     DateTime? createdAt,
   }) : super._(
          id: id,
@@ -157,19 +163,19 @@ class _CaisseImpl extends Caisse {
   @_i1.useResult
   @override
   Caisse copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     DateTime? start,
     Object? end = _Undefined,
     bool? isClosed,
-    Object? buildingId = _Undefined,
+    _i1.UuidValue? buildingId,
     DateTime? createdAt,
   }) {
     return Caisse(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       start: start ?? this.start,
       end: end is DateTime? ? end : this.end,
       isClosed: isClosed ?? this.isClosed,
-      buildingId: buildingId is int? ? buildingId : this.buildingId,
+      buildingId: buildingId ?? this.buildingId,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -193,7 +199,9 @@ class CaisseUpdateTable extends _i1.UpdateTable<CaisseTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> buildingId(int? value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> buildingId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.buildingId,
     value,
   );
@@ -205,7 +213,7 @@ class CaisseUpdateTable extends _i1.UpdateTable<CaisseTable> {
       );
 }
 
-class CaisseTable extends _i1.Table<int?> {
+class CaisseTable extends _i1.Table<_i1.UuidValue> {
   CaisseTable({super.tableRelation}) : super(tableName: 'caisse') {
     updateTable = CaisseUpdateTable(this);
     start = _i1.ColumnDateTime(
@@ -220,7 +228,7 @@ class CaisseTable extends _i1.Table<int?> {
       'isClosed',
       this,
     );
-    buildingId = _i1.ColumnInt(
+    buildingId = _i1.ColumnUuid(
       'buildingId',
       this,
     );
@@ -239,7 +247,7 @@ class CaisseTable extends _i1.Table<int?> {
 
   late final _i1.ColumnBool isClosed;
 
-  late final _i1.ColumnInt buildingId;
+  late final _i1.ColumnUuid buildingId;
 
   late final _i1.ColumnDateTime createdAt;
 
@@ -261,7 +269,7 @@ class CaisseInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => Caisse.t;
+  _i1.Table<_i1.UuidValue> get table => Caisse.t;
 }
 
 class CaisseIncludeList extends _i1.IncludeList {
@@ -281,7 +289,7 @@ class CaisseIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Caisse.t;
+  _i1.Table<_i1.UuidValue> get table => Caisse.t;
 }
 
 class CaisseRepository {
@@ -369,7 +377,7 @@ class CaisseRepository {
   /// Finds a single [Caisse] by its [id] or null if no such row exists.
   Future<Caisse?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<Caisse>(
@@ -447,7 +455,7 @@ class CaisseRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Caisse?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<CaisseUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

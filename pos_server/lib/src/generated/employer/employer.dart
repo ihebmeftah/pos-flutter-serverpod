@@ -19,30 +19,52 @@ import '../access/access.dart' as _i4;
 import 'package:pos_server/src/generated/protocol.dart' as _i5;
 
 abstract class Employer
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Employer._({
-    this.id,
+    _i1.UuidValue? id,
+    required this.firstName,
+    required this.lastName,
+    required this.phone,
+    bool? phoneVerified,
+    required this.persoEmail,
+    bool? persoEmailVerified,
     required this.userProfileId,
     required this.userProfile,
     required this.buildingId,
     this.building,
     this.accessId,
     this.access,
-  });
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       phoneVerified = phoneVerified ?? false,
+       persoEmailVerified = persoEmailVerified ?? false;
 
   factory Employer({
-    int? id,
+    _i1.UuidValue? id,
+    required String firstName,
+    required String lastName,
+    required int phone,
+    bool? phoneVerified,
+    required String persoEmail,
+    bool? persoEmailVerified,
     required _i1.UuidValue userProfileId,
     required _i2.UserProfile? userProfile,
-    required int buildingId,
+    required _i1.UuidValue buildingId,
     _i3.Building? building,
-    int? accessId,
+    _i1.UuidValue? accessId,
     _i4.Access? access,
   }) = _EmployerImpl;
 
   factory Employer.fromJson(Map<String, dynamic> jsonSerialization) {
     return Employer(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      firstName: jsonSerialization['firstName'] as String,
+      lastName: jsonSerialization['lastName'] as String,
+      phone: jsonSerialization['phone'] as int,
+      phoneVerified: jsonSerialization['phoneVerified'] as bool?,
+      persoEmail: jsonSerialization['persoEmail'] as String,
+      persoEmailVerified: jsonSerialization['persoEmailVerified'] as bool?,
       userProfileId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['userProfileId'],
       ),
@@ -51,13 +73,17 @@ abstract class Employer
           : _i5.Protocol().deserialize<_i2.UserProfile>(
               jsonSerialization['userProfile'],
             ),
-      buildingId: jsonSerialization['buildingId'] as int,
+      buildingId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['buildingId'],
+      ),
       building: jsonSerialization['building'] == null
           ? null
           : _i5.Protocol().deserialize<_i3.Building>(
               jsonSerialization['building'],
             ),
-      accessId: jsonSerialization['accessId'] as int?,
+      accessId: jsonSerialization['accessId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['accessId']),
       access: jsonSerialization['access'] == null
           ? null
           : _i5.Protocol().deserialize<_i4.Access>(jsonSerialization['access']),
@@ -69,45 +95,69 @@ abstract class Employer
   static const db = EmployerRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue id;
+
+  String firstName;
+
+  String lastName;
+
+  int phone;
+
+  bool phoneVerified;
+
+  String persoEmail;
+
+  bool persoEmailVerified;
 
   _i1.UuidValue userProfileId;
 
   _i2.UserProfile? userProfile;
 
-  int buildingId;
+  _i1.UuidValue buildingId;
 
   _i3.Building? building;
 
-  int? accessId;
+  _i1.UuidValue? accessId;
 
   _i4.Access? access;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue> get table => t;
 
   /// Returns a shallow copy of this [Employer]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Employer copyWith({
-    int? id,
+    _i1.UuidValue? id,
+    String? firstName,
+    String? lastName,
+    int? phone,
+    bool? phoneVerified,
+    String? persoEmail,
+    bool? persoEmailVerified,
     _i1.UuidValue? userProfileId,
     _i2.UserProfile? userProfile,
-    int? buildingId,
+    _i1.UuidValue? buildingId,
     _i3.Building? building,
-    int? accessId,
+    _i1.UuidValue? accessId,
     _i4.Access? access,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Employer',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
+      'firstName': firstName,
+      'lastName': lastName,
+      'phone': phone,
+      'phoneVerified': phoneVerified,
+      'persoEmail': persoEmail,
+      'persoEmailVerified': persoEmailVerified,
       'userProfileId': userProfileId.toJson(),
       if (userProfile != null) 'userProfile': userProfile?.toJson(),
-      'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
       if (building != null) 'building': building?.toJson(),
-      if (accessId != null) 'accessId': accessId,
+      if (accessId != null) 'accessId': accessId?.toJson(),
       if (access != null) 'access': access?.toJson(),
     };
   }
@@ -116,12 +166,18 @@ abstract class Employer
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Employer',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
+      'firstName': firstName,
+      'lastName': lastName,
+      'phone': phone,
+      'phoneVerified': phoneVerified,
+      'persoEmail': persoEmail,
+      'persoEmailVerified': persoEmailVerified,
       'userProfileId': userProfileId.toJson(),
       if (userProfile != null) 'userProfile': userProfile?.toJsonForProtocol(),
-      'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
       if (building != null) 'building': building?.toJsonForProtocol(),
-      if (accessId != null) 'accessId': accessId,
+      if (accessId != null) 'accessId': accessId?.toJson(),
       if (access != null) 'access': access?.toJsonForProtocol(),
     };
   }
@@ -168,15 +224,27 @@ class _Undefined {}
 
 class _EmployerImpl extends Employer {
   _EmployerImpl({
-    int? id,
+    _i1.UuidValue? id,
+    required String firstName,
+    required String lastName,
+    required int phone,
+    bool? phoneVerified,
+    required String persoEmail,
+    bool? persoEmailVerified,
     required _i1.UuidValue userProfileId,
     required _i2.UserProfile? userProfile,
-    required int buildingId,
+    required _i1.UuidValue buildingId,
     _i3.Building? building,
-    int? accessId,
+    _i1.UuidValue? accessId,
     _i4.Access? access,
   }) : super._(
          id: id,
+         firstName: firstName,
+         lastName: lastName,
+         phone: phone,
+         phoneVerified: phoneVerified,
+         persoEmail: persoEmail,
+         persoEmailVerified: persoEmailVerified,
          userProfileId: userProfileId,
          userProfile: userProfile,
          buildingId: buildingId,
@@ -190,16 +258,28 @@ class _EmployerImpl extends Employer {
   @_i1.useResult
   @override
   Employer copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
+    String? firstName,
+    String? lastName,
+    int? phone,
+    bool? phoneVerified,
+    String? persoEmail,
+    bool? persoEmailVerified,
     _i1.UuidValue? userProfileId,
     Object? userProfile = _Undefined,
-    int? buildingId,
+    _i1.UuidValue? buildingId,
     Object? building = _Undefined,
     Object? accessId = _Undefined,
     Object? access = _Undefined,
   }) {
     return Employer(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phone: phone ?? this.phone,
+      phoneVerified: phoneVerified ?? this.phoneVerified,
+      persoEmail: persoEmail ?? this.persoEmail,
+      persoEmailVerified: persoEmailVerified ?? this.persoEmailVerified,
       userProfileId: userProfileId ?? this.userProfileId,
       userProfile: userProfile is _i2.UserProfile?
           ? userProfile
@@ -208,7 +288,7 @@ class _EmployerImpl extends Employer {
       building: building is _i3.Building?
           ? building
           : this.building?.copyWith(),
-      accessId: accessId is int? ? accessId : this.accessId,
+      accessId: accessId is _i1.UuidValue? ? accessId : this.accessId,
       access: access is _i4.Access? ? access : this.access?.copyWith(),
     );
   }
@@ -217,6 +297,36 @@ class _EmployerImpl extends Employer {
 class EmployerUpdateTable extends _i1.UpdateTable<EmployerTable> {
   EmployerUpdateTable(super.table);
 
+  _i1.ColumnValue<String, String> firstName(String value) => _i1.ColumnValue(
+    table.firstName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> lastName(String value) => _i1.ColumnValue(
+    table.lastName,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> phone(int value) => _i1.ColumnValue(
+    table.phone,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> phoneVerified(bool value) => _i1.ColumnValue(
+    table.phoneVerified,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> persoEmail(String value) => _i1.ColumnValue(
+    table.persoEmail,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> persoEmailVerified(bool value) => _i1.ColumnValue(
+    table.persoEmailVerified,
+    value,
+  );
+
   _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userProfileId(
     _i1.UuidValue value,
   ) => _i1.ColumnValue(
@@ -224,29 +334,57 @@ class EmployerUpdateTable extends _i1.UpdateTable<EmployerTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> buildingId(int value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> buildingId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.buildingId,
     value,
   );
 
-  _i1.ColumnValue<int, int> accessId(int? value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> accessId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
     table.accessId,
     value,
   );
 }
 
-class EmployerTable extends _i1.Table<int?> {
+class EmployerTable extends _i1.Table<_i1.UuidValue> {
   EmployerTable({super.tableRelation}) : super(tableName: 'employers') {
     updateTable = EmployerUpdateTable(this);
+    firstName = _i1.ColumnString(
+      'firstName',
+      this,
+    );
+    lastName = _i1.ColumnString(
+      'lastName',
+      this,
+    );
+    phone = _i1.ColumnInt(
+      'phone',
+      this,
+    );
+    phoneVerified = _i1.ColumnBool(
+      'phoneVerified',
+      this,
+    );
+    persoEmail = _i1.ColumnString(
+      'persoEmail',
+      this,
+    );
+    persoEmailVerified = _i1.ColumnBool(
+      'persoEmailVerified',
+      this,
+    );
     userProfileId = _i1.ColumnUuid(
       'userProfileId',
       this,
     );
-    buildingId = _i1.ColumnInt(
+    buildingId = _i1.ColumnUuid(
       'buildingId',
       this,
     );
-    accessId = _i1.ColumnInt(
+    accessId = _i1.ColumnUuid(
       'accessId',
       this,
     );
@@ -254,15 +392,27 @@ class EmployerTable extends _i1.Table<int?> {
 
   late final EmployerUpdateTable updateTable;
 
+  late final _i1.ColumnString firstName;
+
+  late final _i1.ColumnString lastName;
+
+  late final _i1.ColumnInt phone;
+
+  late final _i1.ColumnBool phoneVerified;
+
+  late final _i1.ColumnString persoEmail;
+
+  late final _i1.ColumnBool persoEmailVerified;
+
   late final _i1.ColumnUuid userProfileId;
 
   _i2.UserProfileTable? _userProfile;
 
-  late final _i1.ColumnInt buildingId;
+  late final _i1.ColumnUuid buildingId;
 
   _i3.BuildingTable? _building;
 
-  late final _i1.ColumnInt accessId;
+  late final _i1.ColumnUuid accessId;
 
   _i4.AccessTable? _access;
 
@@ -308,6 +458,12 @@ class EmployerTable extends _i1.Table<int?> {
   @override
   List<_i1.Column> get columns => [
     id,
+    firstName,
+    lastName,
+    phone,
+    phoneVerified,
+    persoEmail,
+    persoEmailVerified,
     userProfileId,
     buildingId,
     accessId,
@@ -353,7 +509,7 @@ class EmployerInclude extends _i1.IncludeObject {
   };
 
   @override
-  _i1.Table<int?> get table => Employer.t;
+  _i1.Table<_i1.UuidValue> get table => Employer.t;
 }
 
 class EmployerIncludeList extends _i1.IncludeList {
@@ -373,7 +529,7 @@ class EmployerIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Employer.t;
+  _i1.Table<_i1.UuidValue> get table => Employer.t;
 }
 
 class EmployerRepository {
@@ -469,7 +625,7 @@ class EmployerRepository {
   /// Finds a single [Employer] by its [id] or null if no such row exists.
   Future<Employer?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     EmployerInclude? include,
   }) async {
@@ -549,7 +705,7 @@ class EmployerRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Employer?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<EmployerUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

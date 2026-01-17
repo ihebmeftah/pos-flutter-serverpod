@@ -1,11 +1,11 @@
 access:
   - createAccess:
   - updateAccess:
-  - getAllAccesses:
+  - getAccessesByBuildingId:
   - getAccessById:
   - deleteAccess:
 article:
-  - getArticles:
+  - getArticlesByBuildingId:
   - createArticle:
   - getArticleById:
   - updateArticle:
@@ -24,12 +24,13 @@ emailIdp:
 jwtRefresh:
   - refreshAccessToken:
 building:
-  - getAllBuildings:
+  - getBuildingsOfOwner:
+  - getBuildings:
   - createBuilding:
   - getBuildingById:
   - updateBuilding:
 buildingTables:
-  - getTables:
+  - getTablesByBuildingId:
   - createTables:
 caisse:
   - getCaisses:
@@ -45,7 +46,7 @@ employer:
   - getEmployerByIdentifier:
   - assignAccessToEmployer:
 order:
-  - getOrders:
+  - getOrdersByBuilingId:
   - getOrderById:
   - createOrder:
   - getOrderCurrOfTable:
@@ -55,3 +56,4 @@ orderItem:
   - changeOrderItemsStatus:
   - payOrderItem:
   - payAllItems:
+stats:

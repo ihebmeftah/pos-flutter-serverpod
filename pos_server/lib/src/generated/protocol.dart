@@ -24,23 +24,24 @@ import 'buildings_tables/building_tables.dart' as _i9;
 import 'buildings_tables/table_status_enum.dart' as _i10;
 import 'caisse/caisse.dart' as _i11;
 import 'cateogrie/categorie.dart' as _i12;
-import 'employer/employer.dart' as _i13;
-import 'exceptions/endpoint_exceptions.dart' as _i14;
-import 'exceptions/exceptiont_enums.dart' as _i15;
-import 'order/order.dart' as _i16;
-import 'order/order_item.dart' as _i17;
-import 'order/order_item_status_enum.dart' as _i18;
-import 'order/order_status_enum.dart' as _i19;
-import 'package:pos_server/src/generated/access/access.dart' as _i20;
-import 'package:pos_server/src/generated/article/article.dart' as _i21;
-import 'package:pos_server/src/generated/employer/employer.dart' as _i22;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i23;
+import 'employer/create_employer.dto.dart' as _i13;
+import 'employer/employer.dart' as _i14;
+import 'exceptions/endpoint_exceptions.dart' as _i15;
+import 'exceptions/exceptiont_enums.dart' as _i16;
+import 'order/order.dart' as _i17;
+import 'order/order_item.dart' as _i18;
+import 'order/order_item_status_enum.dart' as _i19;
+import 'order/order_status_enum.dart' as _i20;
+import 'package:pos_server/src/generated/access/access.dart' as _i21;
+import 'package:pos_server/src/generated/article/article.dart' as _i22;
+import 'package:pos_server/src/generated/employer/employer.dart' as _i23;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i24;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
-    as _i24;
-import 'package:pos_server/src/generated/caisse/caisse.dart' as _i25;
-import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i26;
-import 'package:pos_server/src/generated/order/order.dart' as _i27;
-import 'package:pos_server/src/generated/order/order_item.dart' as _i28;
+    as _i25;
+import 'package:pos_server/src/generated/caisse/caisse.dart' as _i26;
+import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i27;
+import 'package:pos_server/src/generated/order/order.dart' as _i28;
+import 'package:pos_server/src/generated/order/order_item.dart' as _i29;
 export 'access/access.dart';
 export 'article/article.dart';
 export 'buildings/building.dart';
@@ -49,6 +50,7 @@ export 'buildings_tables/building_tables.dart';
 export 'buildings_tables/table_status_enum.dart';
 export 'caisse/caisse.dart';
 export 'cateogrie/categorie.dart';
+export 'employer/create_employer.dto.dart';
 export 'employer/employer.dart';
 export 'exceptions/endpoint_exceptions.dart';
 export 'exceptions/exceptiont_enums.dart';
@@ -73,10 +75,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'access_id_seq\'::regclass)',
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'name',
@@ -140,9 +142,9 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'buildingId',
-          columnType: _i2.ColumnType.bigint,
-          isNullable: true,
-          dartType: 'int?',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
         ),
       ],
       foreignKeys: [
@@ -171,6 +173,19 @@ class Protocol extends _i1.SerializationManagerServer {
           isUnique: true,
           isPrimary: true,
         ),
+        _i2.IndexDefinition(
+          indexName: 'access_buildingId_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'buildingId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
       ],
       managed: true,
     ),
@@ -182,10 +197,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'article_id_seq\'::regclass)',
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'name',
@@ -207,9 +222,9 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'categorieId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
       ],
       foreignKeys: [
@@ -220,7 +235,7 @@ class Protocol extends _i1.SerializationManagerServer {
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
-          onDelete: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.setNull,
           matchType: null,
         ),
       ],
@@ -238,6 +253,19 @@ class Protocol extends _i1.SerializationManagerServer {
           isUnique: true,
           isPrimary: true,
         ),
+        _i2.IndexDefinition(
+          indexName: 'article_categorieId_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'categorieId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
       ],
       managed: true,
     ),
@@ -249,10 +277,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'b_tables_id_seq\'::regclass)',
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'number',
@@ -269,9 +297,9 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'buildingId',
-          columnType: _i2.ColumnType.bigint,
-          isNullable: true,
-          dartType: 'int?',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
         ),
       ],
       foreignKeys: [
@@ -300,6 +328,19 @@ class Protocol extends _i1.SerializationManagerServer {
           isUnique: true,
           isPrimary: true,
         ),
+        _i2.IndexDefinition(
+          indexName: 'btables_buildingId_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'buildingId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
       ],
       managed: true,
     ),
@@ -311,10 +352,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'building_id_seq\'::regclass)',
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'name',
@@ -423,10 +464,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'caisse_id_seq\'::regclass)',
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'start',
@@ -448,9 +489,9 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'buildingId',
-          columnType: _i2.ColumnType.bigint,
-          isNullable: true,
-          dartType: 'int?',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'createdAt',
@@ -497,10 +538,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'categorie_id_seq\'::regclass)',
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'name',
@@ -516,9 +557,9 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'buildingId',
-          columnType: _i2.ColumnType.bigint,
-          isNullable: true,
-          dartType: 'int?',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
         ),
       ],
       foreignKeys: [
@@ -547,6 +588,19 @@ class Protocol extends _i1.SerializationManagerServer {
           isUnique: true,
           isPrimary: true,
         ),
+        _i2.IndexDefinition(
+          indexName: 'categorie_buildingId_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'buildingId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
       ],
       managed: true,
     ),
@@ -558,10 +612,46 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'firstName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'phone',
           columnType: _i2.ColumnType.bigint,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'employers_id_seq\'::regclass)',
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'phoneVerified',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'persoEmail',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'persoEmailVerified',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
         ),
         _i2.ColumnDefinition(
           name: 'userProfileId',
@@ -571,15 +661,15 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'buildingId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'accessId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: true,
-          dartType: 'int?',
+          dartType: 'UuidValue?',
         ),
       ],
       foreignKeys: [
@@ -590,7 +680,7 @@ class Protocol extends _i1.SerializationManagerServer {
           referenceTableSchema: 'public',
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
-          onDelete: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.cascade,
           matchType: null,
         ),
         _i2.ForeignKeyDefinition(
@@ -636,9 +726,30 @@ class Protocol extends _i1.SerializationManagerServer {
               type: _i2.IndexElementDefinitionType.column,
               definition: 'userProfileId',
             ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'persoEmail',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'phone',
+            ),
           ],
           type: 'btree',
           isUnique: true,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'employer_buildingId_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'buildingId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
           isPrimary: false,
         ),
       ],
@@ -652,10 +763,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'order_items_id_seq\'::regclass)',
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'article',
@@ -690,9 +801,9 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'orderId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: true,
-          dartType: 'int?',
+          dartType: 'UuidValue?',
         ),
         _i2.ColumnDefinition(
           name: 'createdAt',
@@ -776,6 +887,19 @@ class Protocol extends _i1.SerializationManagerServer {
           isUnique: true,
           isPrimary: true,
         ),
+        _i2.IndexDefinition(
+          indexName: 'order_item_orderId_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'orderId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
       ],
       managed: true,
     ),
@@ -787,10 +911,10 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int?',
-          columnDefault: 'nextval(\'orders_id_seq\'::regclass)',
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
           name: 'status',
@@ -801,9 +925,9 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'btableId',
-          columnType: _i2.ColumnType.bigint,
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
-          dartType: 'int',
+          dartType: 'UuidValue',
         ),
         _i2.ColumnDefinition(
           name: 'passedById',
@@ -877,6 +1001,19 @@ class Protocol extends _i1.SerializationManagerServer {
           isUnique: true,
           isPrimary: true,
         ),
+        _i2.IndexDefinition(
+          indexName: 'order_btableId_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'btableId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
       ],
       managed: true,
     ),
@@ -936,26 +1073,29 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i12.Categorie) {
       return _i12.Categorie.fromJson(data) as T;
     }
-    if (t == _i13.Employer) {
-      return _i13.Employer.fromJson(data) as T;
+    if (t == _i13.CreateEmployerDTO) {
+      return _i13.CreateEmployerDTO.fromJson(data) as T;
     }
-    if (t == _i14.AppException) {
-      return _i14.AppException.fromJson(data) as T;
+    if (t == _i14.Employer) {
+      return _i14.Employer.fromJson(data) as T;
     }
-    if (t == _i15.ExceptionType) {
-      return _i15.ExceptionType.fromJson(data) as T;
+    if (t == _i15.AppException) {
+      return _i15.AppException.fromJson(data) as T;
     }
-    if (t == _i16.Order) {
-      return _i16.Order.fromJson(data) as T;
+    if (t == _i16.ExceptionType) {
+      return _i16.ExceptionType.fromJson(data) as T;
     }
-    if (t == _i17.OrderItem) {
-      return _i17.OrderItem.fromJson(data) as T;
+    if (t == _i17.Order) {
+      return _i17.Order.fromJson(data) as T;
     }
-    if (t == _i18.OrderItemStatus) {
-      return _i18.OrderItemStatus.fromJson(data) as T;
+    if (t == _i18.OrderItem) {
+      return _i18.OrderItem.fromJson(data) as T;
     }
-    if (t == _i19.OrderStatus) {
-      return _i19.OrderStatus.fromJson(data) as T;
+    if (t == _i19.OrderItemStatus) {
+      return _i19.OrderItemStatus.fromJson(data) as T;
+    }
+    if (t == _i20.OrderStatus) {
+      return _i20.OrderStatus.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Access?>()) {
       return (data != null ? _i5.Access.fromJson(data) : null) as T;
@@ -981,51 +1121,54 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i12.Categorie?>()) {
       return (data != null ? _i12.Categorie.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i13.Employer?>()) {
-      return (data != null ? _i13.Employer.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i13.CreateEmployerDTO?>()) {
+      return (data != null ? _i13.CreateEmployerDTO.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i14.AppException?>()) {
-      return (data != null ? _i14.AppException.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.Employer?>()) {
+      return (data != null ? _i14.Employer.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i15.ExceptionType?>()) {
-      return (data != null ? _i15.ExceptionType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i15.AppException?>()) {
+      return (data != null ? _i15.AppException.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i16.Order?>()) {
-      return (data != null ? _i16.Order.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i16.ExceptionType?>()) {
+      return (data != null ? _i16.ExceptionType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i17.OrderItem?>()) {
-      return (data != null ? _i17.OrderItem.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i17.Order?>()) {
+      return (data != null ? _i17.Order.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i18.OrderItemStatus?>()) {
-      return (data != null ? _i18.OrderItemStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i18.OrderItem?>()) {
+      return (data != null ? _i18.OrderItem.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i19.OrderStatus?>()) {
-      return (data != null ? _i19.OrderStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i19.OrderItemStatus?>()) {
+      return (data != null ? _i19.OrderItemStatus.fromJson(data) : null) as T;
     }
-    if (t == List<_i17.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i17.OrderItem>(e)).toList()
+    if (t == _i1.getType<_i20.OrderStatus?>()) {
+      return (data != null ? _i20.OrderStatus.fromJson(data) : null) as T;
+    }
+    if (t == List<_i18.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i18.OrderItem>(e)).toList()
           as T;
     }
-    if (t == _i1.getType<List<_i17.OrderItem>?>()) {
+    if (t == _i1.getType<List<_i18.OrderItem>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i17.OrderItem>(e))
+                    .map((e) => deserialize<_i18.OrderItem>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i20.Access>) {
-      return (data as List).map((e) => deserialize<_i20.Access>(e)).toList()
+    if (t == List<_i21.Access>) {
+      return (data as List).map((e) => deserialize<_i21.Access>(e)).toList()
           as T;
     }
-    if (t == List<_i21.Article>) {
-      return (data as List).map((e) => deserialize<_i21.Article>(e)).toList()
+    if (t == List<_i22.Article>) {
+      return (data as List).map((e) => deserialize<_i22.Article>(e)).toList()
           as T;
     }
     if (t ==
         _i1
             .getType<
-              ({_i4.AuthSuccess authSuccess, _i22.Employer? employer})
+              ({_i4.AuthSuccess authSuccess, _i23.Employer? employer})
             >()) {
       return (
             authSuccess: deserialize<_i4.AuthSuccess>(
@@ -1033,40 +1176,41 @@ class Protocol extends _i1.SerializationManagerServer {
             ),
             employer: ((data)['n'] as Map)['employer'] == null
                 ? null
-                : deserialize<_i22.Employer>(data['n']['employer']),
+                : deserialize<_i23.Employer>(data['n']['employer']),
           )
           as T;
     }
-    if (t == List<_i23.Building>) {
-      return (data as List).map((e) => deserialize<_i23.Building>(e)).toList()
+    if (t == List<_i24.Building>) {
+      return (data as List).map((e) => deserialize<_i24.Building>(e)).toList()
           as T;
     }
-    if (t == List<_i24.BTable>) {
-      return (data as List).map((e) => deserialize<_i24.BTable>(e)).toList()
+    if (t == List<_i25.BTable>) {
+      return (data as List).map((e) => deserialize<_i25.BTable>(e)).toList()
           as T;
     }
-    if (t == List<_i25.Caisse>) {
-      return (data as List).map((e) => deserialize<_i25.Caisse>(e)).toList()
+    if (t == List<_i26.Caisse>) {
+      return (data as List).map((e) => deserialize<_i26.Caisse>(e)).toList()
           as T;
     }
-    if (t == List<_i26.Categorie>) {
-      return (data as List).map((e) => deserialize<_i26.Categorie>(e)).toList()
+    if (t == List<_i27.Categorie>) {
+      return (data as List).map((e) => deserialize<_i27.Categorie>(e)).toList()
           as T;
     }
-    if (t == List<_i22.Employer>) {
-      return (data as List).map((e) => deserialize<_i22.Employer>(e)).toList()
+    if (t == List<_i23.Employer>) {
+      return (data as List).map((e) => deserialize<_i23.Employer>(e)).toList()
           as T;
     }
-    if (t == List<_i27.Order>) {
-      return (data as List).map((e) => deserialize<_i27.Order>(e)).toList()
+    if (t == List<_i28.Order>) {
+      return (data as List).map((e) => deserialize<_i28.Order>(e)).toList()
           as T;
     }
-    if (t == List<_i28.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i28.OrderItem>(e)).toList()
+    if (t == List<_i29.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i29.OrderItem>(e)).toList()
           as T;
     }
-    if (t == List<int>) {
-      return (data as List).map((e) => deserialize<int>(e)).toList() as T;
+    if (t == List<_i1.UuidValue>) {
+      return (data as List).map((e) => deserialize<_i1.UuidValue>(e)).toList()
+          as T;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);
@@ -1090,13 +1234,14 @@ class Protocol extends _i1.SerializationManagerServer {
       _i10.TableStatus => 'TableStatus',
       _i11.Caisse => 'Caisse',
       _i12.Categorie => 'Categorie',
-      _i13.Employer => 'Employer',
-      _i14.AppException => 'AppException',
-      _i15.ExceptionType => 'ExceptionType',
-      _i16.Order => 'Order',
-      _i17.OrderItem => 'OrderItem',
-      _i18.OrderItemStatus => 'OrderItemStatus',
-      _i19.OrderStatus => 'OrderStatus',
+      _i13.CreateEmployerDTO => 'CreateEmployerDTO',
+      _i14.Employer => 'Employer',
+      _i15.AppException => 'AppException',
+      _i16.ExceptionType => 'ExceptionType',
+      _i17.Order => 'Order',
+      _i18.OrderItem => 'OrderItem',
+      _i19.OrderItemStatus => 'OrderItemStatus',
+      _i20.OrderStatus => 'OrderStatus',
       _ => null,
     };
   }
@@ -1127,19 +1272,21 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'Caisse';
       case _i12.Categorie():
         return 'Categorie';
-      case _i13.Employer():
+      case _i13.CreateEmployerDTO():
+        return 'CreateEmployerDTO';
+      case _i14.Employer():
         return 'Employer';
-      case _i14.AppException():
+      case _i15.AppException():
         return 'AppException';
-      case _i15.ExceptionType():
+      case _i16.ExceptionType():
         return 'ExceptionType';
-      case _i16.Order():
+      case _i17.Order():
         return 'Order';
-      case _i17.OrderItem():
+      case _i18.OrderItem():
         return 'OrderItem';
-      case _i18.OrderItemStatus():
+      case _i19.OrderItemStatus():
         return 'OrderItemStatus';
-      case _i19.OrderStatus():
+      case _i20.OrderStatus():
         return 'OrderStatus';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -1187,26 +1334,29 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Categorie') {
       return deserialize<_i12.Categorie>(data['data']);
     }
+    if (dataClassName == 'CreateEmployerDTO') {
+      return deserialize<_i13.CreateEmployerDTO>(data['data']);
+    }
     if (dataClassName == 'Employer') {
-      return deserialize<_i13.Employer>(data['data']);
+      return deserialize<_i14.Employer>(data['data']);
     }
     if (dataClassName == 'AppException') {
-      return deserialize<_i14.AppException>(data['data']);
+      return deserialize<_i15.AppException>(data['data']);
     }
     if (dataClassName == 'ExceptionType') {
-      return deserialize<_i15.ExceptionType>(data['data']);
+      return deserialize<_i16.ExceptionType>(data['data']);
     }
     if (dataClassName == 'Order') {
-      return deserialize<_i16.Order>(data['data']);
+      return deserialize<_i17.Order>(data['data']);
     }
     if (dataClassName == 'OrderItem') {
-      return deserialize<_i17.OrderItem>(data['data']);
+      return deserialize<_i18.OrderItem>(data['data']);
     }
     if (dataClassName == 'OrderItemStatus') {
-      return deserialize<_i18.OrderItemStatus>(data['data']);
+      return deserialize<_i19.OrderItemStatus>(data['data']);
     }
     if (dataClassName == 'OrderStatus') {
-      return deserialize<_i19.OrderStatus>(data['data']);
+      return deserialize<_i20.OrderStatus>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1256,12 +1406,12 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i11.Caisse.t;
       case _i12.Categorie:
         return _i12.Categorie.t;
-      case _i13.Employer:
-        return _i13.Employer.t;
-      case _i16.Order:
-        return _i16.Order.t;
-      case _i17.OrderItem:
-        return _i17.OrderItem.t;
+      case _i14.Employer:
+        return _i14.Employer.t;
+      case _i17.Order:
+        return _i17.Order.t;
+      case _i18.OrderItem:
+        return _i18.OrderItem.t;
     }
     return null;
   }
@@ -1282,7 +1432,7 @@ class Protocol extends _i1.SerializationManagerServer {
     if (record == null) {
       return null;
     }
-    if (record is ({_i4.AuthSuccess authSuccess, _i22.Employer? employer})) {
+    if (record is ({_i4.AuthSuccess authSuccess, _i23.Employer? employer})) {
       return {
         "n": {
           "authSuccess": record.authSuccess,

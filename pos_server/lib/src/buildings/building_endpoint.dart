@@ -3,39 +3,38 @@ import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
 import '../generated/protocol.dart';
-import '../helpers/authorizations_helpers.dart';
+import '../helpers/session_extensions.dart';
 
 class BuildingEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  /// Get all buildings
-  /// If current user is admin user, return only buildings created by the user
-  /// else current user is customer, return all buildings
+  /// Get buildings of the owner
   /// Returns a list of [Building] buildings
-  /// allow for all type of users (admin, customer)
-  Future<List<Building>> getAllBuildings(Session session) async {
-    final currentUserScope = await AuthorizationsHelpers().requiredScopes(
+  /// allow for owners users
+  Future<List<Building>> getBuildingsOfOwner(Session session) async {
+    session.authorizedTo(['owner']);
+    return await Building.db.find(
       session,
-      ["owner", "customer"],
+      where: (t) => t.authUserId.equals(
+        session.authenticated?.authUserId,
+      ),
     );
-    if (currentUserScope.any((scope) => scope.name == "owner")) {
-      return await Building.db.find(
-        session,
-        where: (t) => t.authUserId.equals(
-          session.authenticated?.authUserId,
-        ),
-      );
-    }
+  }
+
+  /// Get buildings
+  /// Returns a list of [Building] buildings
+  /// allow for customer users
+  Future<List<Building>> getBuildings(Session session) async {
+    session.authorizedTo(['customer']);
     return await Building.db.find(session);
   }
 
   /// Create new building for the admin
   /// Returns  [Building] building
-  /// allowed only for admins
+  /// allowed only for owner
   Future<Building> createBuilding(Session session, Building building) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
-    building.authUserId = session.authenticated?.authUserId;
+    session.authorizedTo(["owner"]);
     final createdBuilding = await Building.db.insertRow(session, building);
 
     /// Create default access for the building
@@ -51,7 +50,7 @@ class BuildingEndpoint extends Endpoint {
         appendItems: false,
         takeOrder: true,
         caisseManagement: false,
-        buildingId: createdBuilding.id!,
+        buildingId: createdBuilding.id,
       ),
       Access(
         name: 'cashier',
@@ -64,7 +63,7 @@ class BuildingEndpoint extends Endpoint {
         preparation: false,
         appendItems: false,
         takeOrder: false,
-        buildingId: createdBuilding.id!,
+        buildingId: createdBuilding.id,
       ),
       Access(
         name: 'barista',
@@ -77,7 +76,7 @@ class BuildingEndpoint extends Endpoint {
         appendItems: false,
         caisseManagement: false,
         takeOrder: false,
-        buildingId: createdBuilding.id!,
+        buildingId: createdBuilding.id,
       ),
     ];
     await AccessEndpoint().createListAccess(session, defaultAccess);
@@ -87,9 +86,7 @@ class BuildingEndpoint extends Endpoint {
   /// Get a building by id
   /// required [buildingId] The id of the building
   /// Returns the [Building] building
-  /// allow for all type of users (admin, customer)
-  /// This method is not generated in client side
-  Future<Building> getBuildingById(Session session, int buildingId) async {
+  Future<Building> getBuildingById(Session session, UuidValue buildingId) async {
     Building? building = await Building.db.findById(session, buildingId);
     if (building == null) {
       throw AppException(
@@ -101,11 +98,11 @@ class BuildingEndpoint extends Endpoint {
   }
 
   Future<Building> updateBuilding(Session session, Building building) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
-    final existingBuilding = await getBuildingById(session, building.id!);
+    session.authorizedTo(["owner"]);
+    final existingBuilding = await getBuildingById(session, building.id);
     if (existingBuilding.authUserId != session.authenticated?.authUserId) {
       throw AppException(
-        message: 'You are not authorized to update this building',
+        message: 'You are not authorizedTo to update this building',
         errorType: ExceptionType.Unauthorized,
       );
     }

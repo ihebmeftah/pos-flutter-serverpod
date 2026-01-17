@@ -13,32 +13,38 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../buildings_tables/table_status_enum.dart' as _i2;
 
-abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+abstract class BTable
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   BTable._({
-    this.id,
+    _i1.UuidValue? id,
     required this.number,
     int? seatsMax,
     this.status,
     required this.buildingId,
-  }) : seatsMax = seatsMax ?? 4;
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       seatsMax = seatsMax ?? 4;
 
   factory BTable({
-    int? id,
+    _i1.UuidValue? id,
     required int number,
     int? seatsMax,
     _i2.TableStatus? status,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) = _BTableImpl;
 
   factory BTable.fromJson(Map<String, dynamic> jsonSerialization) {
     return BTable(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       number: jsonSerialization['number'] as int,
       seatsMax: jsonSerialization['seatsMax'] as int?,
       status: jsonSerialization['status'] == null
           ? null
           : _i2.TableStatus.fromJson((jsonSerialization['status'] as String)),
-      buildingId: jsonSerialization['buildingId'] as int?,
+      buildingId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['buildingId'],
+      ),
     );
   }
 
@@ -47,7 +53,7 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   static const db = BTableRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue id;
 
   /// The number of the building.
   int number;
@@ -56,30 +62,30 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
 
   _i2.TableStatus? status;
 
-  int? buildingId;
+  _i1.UuidValue buildingId;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue> get table => t;
 
   /// Returns a shallow copy of this [BTable]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   BTable copyWith({
-    int? id,
+    _i1.UuidValue? id,
     int? number,
     int? seatsMax,
     _i2.TableStatus? status,
-    int? buildingId,
+    _i1.UuidValue? buildingId,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'BTable',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'number': number,
       'seatsMax': seatsMax,
       if (status != null) 'status': status?.toJson(),
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
     };
   }
 
@@ -87,11 +93,11 @@ abstract class BTable implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'BTable',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'number': number,
       'seatsMax': seatsMax,
       if (status != null) 'status': status?.toJson(),
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
     };
   }
 
@@ -129,11 +135,11 @@ class _Undefined {}
 
 class _BTableImpl extends BTable {
   _BTableImpl({
-    int? id,
+    _i1.UuidValue? id,
     required int number,
     int? seatsMax,
     _i2.TableStatus? status,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) : super._(
          id: id,
          number: number,
@@ -147,18 +153,18 @@ class _BTableImpl extends BTable {
   @_i1.useResult
   @override
   BTable copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     int? number,
     int? seatsMax,
     Object? status = _Undefined,
-    Object? buildingId = _Undefined,
+    _i1.UuidValue? buildingId,
   }) {
     return BTable(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       number: number ?? this.number,
       seatsMax: seatsMax ?? this.seatsMax,
       status: status is _i2.TableStatus? ? status : this.status,
-      buildingId: buildingId is int? ? buildingId : this.buildingId,
+      buildingId: buildingId ?? this.buildingId,
     );
   }
 }
@@ -176,13 +182,15 @@ class BTableUpdateTable extends _i1.UpdateTable<BTableTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> buildingId(int? value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> buildingId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.buildingId,
     value,
   );
 }
 
-class BTableTable extends _i1.Table<int?> {
+class BTableTable extends _i1.Table<_i1.UuidValue> {
   BTableTable({super.tableRelation}) : super(tableName: 'b_tables') {
     updateTable = BTableUpdateTable(this);
     number = _i1.ColumnInt(
@@ -194,7 +202,7 @@ class BTableTable extends _i1.Table<int?> {
       this,
       hasDefault: true,
     );
-    buildingId = _i1.ColumnInt(
+    buildingId = _i1.ColumnUuid(
       'buildingId',
       this,
     );
@@ -207,7 +215,7 @@ class BTableTable extends _i1.Table<int?> {
 
   late final _i1.ColumnInt seatsMax;
 
-  late final _i1.ColumnInt buildingId;
+  late final _i1.ColumnUuid buildingId;
 
   @override
   List<_i1.Column> get columns => [
@@ -225,7 +233,7 @@ class BTableInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {};
 
   @override
-  _i1.Table<int?> get table => BTable.t;
+  _i1.Table<_i1.UuidValue> get table => BTable.t;
 }
 
 class BTableIncludeList extends _i1.IncludeList {
@@ -245,7 +253,7 @@ class BTableIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => BTable.t;
+  _i1.Table<_i1.UuidValue> get table => BTable.t;
 }
 
 class BTableRepository {
@@ -333,7 +341,7 @@ class BTableRepository {
   /// Finds a single [BTable] by its [id] or null if no such row exists.
   Future<BTable?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
   }) async {
     return session.db.findById<BTable>(
@@ -411,7 +419,7 @@ class BTableRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<BTable?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<BTableUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

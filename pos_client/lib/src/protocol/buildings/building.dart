@@ -15,7 +15,7 @@ import '../buildings/currency_enum.dart' as _i2;
 
 abstract class Building implements _i1.SerializableModel {
   Building._({
-    this.id,
+    _i1.UuidValue? id,
     required this.name,
     required this.address,
     required this.openingTime,
@@ -27,12 +27,13 @@ abstract class Building implements _i1.SerializableModel {
     required this.currencyCode,
     this.long,
     this.lat,
-  }) : tableMultiOrder = tableMultiOrder ?? false,
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       tableMultiOrder = tableMultiOrder ?? false,
        allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true,
        autoCloseOrdersAtClosingTime = autoCloseOrdersAtClosingTime ?? false;
 
   factory Building({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     required String address,
     required DateTime openingTime,
@@ -48,7 +49,9 @@ abstract class Building implements _i1.SerializableModel {
 
   factory Building.fromJson(Map<String, dynamic> jsonSerialization) {
     return Building(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       address: jsonSerialization['address'] as String,
       openingTime: _i1.DateTimeJsonExtension.fromJson(
@@ -75,10 +78,8 @@ abstract class Building implements _i1.SerializableModel {
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
+  /// The id of the object.
+  _i1.UuidValue id;
 
   /// The name of the building.
   String name;
@@ -115,7 +116,7 @@ abstract class Building implements _i1.SerializableModel {
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Building copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
     String? address,
     DateTime? openingTime,
@@ -132,7 +133,7 @@ abstract class Building implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Building',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       'address': address,
       'openingTime': openingTime.toJson(),
@@ -157,7 +158,7 @@ class _Undefined {}
 
 class _BuildingImpl extends Building {
   _BuildingImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     required String address,
     required DateTime openingTime,
@@ -189,7 +190,7 @@ class _BuildingImpl extends Building {
   @_i1.useResult
   @override
   Building copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     String? name,
     String? address,
     DateTime? openingTime,
@@ -203,7 +204,7 @@ class _BuildingImpl extends Building {
     Object? lat = _Undefined,
   }) {
     return Building(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       name: name ?? this.name,
       address: address ?? this.address,
       openingTime: openingTime ?? this.openingTime,

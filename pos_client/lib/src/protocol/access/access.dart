@@ -14,7 +14,7 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 abstract class Access implements _i1.SerializableModel {
   Access._({
-    this.id,
+    _i1.UuidValue? id,
     required this.name,
     required this.consultAllOrders,
     required this.orderCreation,
@@ -26,10 +26,10 @@ abstract class Access implements _i1.SerializableModel {
     required this.takeOrder,
     required this.caisseManagement,
     required this.buildingId,
-  });
+  }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Access({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     required bool consultAllOrders,
     required bool orderCreation,
@@ -40,12 +40,14 @@ abstract class Access implements _i1.SerializableModel {
     required bool preparation,
     required bool takeOrder,
     required bool caisseManagement,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) = _AccessImpl;
 
   factory Access.fromJson(Map<String, dynamic> jsonSerialization) {
     return Access(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       consultAllOrders: jsonSerialization['consultAllOrders'] as bool,
       orderCreation: jsonSerialization['orderCreation'] as bool,
@@ -56,14 +58,14 @@ abstract class Access implements _i1.SerializableModel {
       preparation: jsonSerialization['preparation'] as bool,
       takeOrder: jsonSerialization['takeOrder'] as bool,
       caisseManagement: jsonSerialization['caisseManagement'] as bool,
-      buildingId: jsonSerialization['buildingId'] as int?,
+      buildingId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['buildingId'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
-  int? id;
+  /// The id of the object.
+  _i1.UuidValue id;
 
   String name;
 
@@ -85,13 +87,13 @@ abstract class Access implements _i1.SerializableModel {
 
   bool caisseManagement;
 
-  int? buildingId;
+  _i1.UuidValue buildingId;
 
   /// Returns a shallow copy of this [Access]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Access copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
     bool? consultAllOrders,
     bool? orderCreation,
@@ -102,13 +104,13 @@ abstract class Access implements _i1.SerializableModel {
     bool? preparation,
     bool? takeOrder,
     bool? caisseManagement,
-    int? buildingId,
+    _i1.UuidValue? buildingId,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Access',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       'consultAllOrders': consultAllOrders,
       'orderCreation': orderCreation,
@@ -119,7 +121,7 @@ abstract class Access implements _i1.SerializableModel {
       'preparation': preparation,
       'takeOrder': takeOrder,
       'caisseManagement': caisseManagement,
-      if (buildingId != null) 'buildingId': buildingId,
+      'buildingId': buildingId.toJson(),
     };
   }
 
@@ -129,11 +131,9 @@ abstract class Access implements _i1.SerializableModel {
   }
 }
 
-class _Undefined {}
-
 class _AccessImpl extends Access {
   _AccessImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     required bool consultAllOrders,
     required bool orderCreation,
@@ -144,7 +144,7 @@ class _AccessImpl extends Access {
     required bool preparation,
     required bool takeOrder,
     required bool caisseManagement,
-    required int? buildingId,
+    required _i1.UuidValue buildingId,
   }) : super._(
          id: id,
          name: name,
@@ -165,7 +165,7 @@ class _AccessImpl extends Access {
   @_i1.useResult
   @override
   Access copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     String? name,
     bool? consultAllOrders,
     bool? orderCreation,
@@ -176,10 +176,10 @@ class _AccessImpl extends Access {
     bool? preparation,
     bool? takeOrder,
     bool? caisseManagement,
-    Object? buildingId = _Undefined,
+    _i1.UuidValue? buildingId,
   }) {
     return Access(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       name: name ?? this.name,
       consultAllOrders: consultAllOrders ?? this.consultAllOrders,
       orderCreation: orderCreation ?? this.orderCreation,
@@ -190,7 +190,7 @@ class _AccessImpl extends Access {
       preparation: preparation ?? this.preparation,
       takeOrder: takeOrder ?? this.takeOrder,
       caisseManagement: caisseManagement ?? this.caisseManagement,
-      buildingId: buildingId is int? ? buildingId : this.buildingId,
+      buildingId: buildingId ?? this.buildingId,
     );
   }
 }

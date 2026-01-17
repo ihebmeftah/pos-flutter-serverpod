@@ -9,7 +9,9 @@ import '../../../routes/app_pages.dart';
 
 class OrderController extends GetxController with StateMixin {
   final RxList<Order> orders = <Order>[].obs;
-  String? tableId = Get.parameters['tableId'];
+  UuidValue? get tableId => Get.parameters['tableId'] != null
+      ? UuidValue.fromString(Get.parameters['tableId']!)
+      : null;
   @override
   void onInit() async {
     await getOrders();
@@ -25,14 +27,15 @@ class OrderController extends GetxController with StateMixin {
           : OrderStatus.payed;
       if (tableId != null && Get.currentRoute.contains(Routes.ORDERS_TABLES)) {
         orders.value = await ServerpodClient.instance.order.getOrdersOfTable(
-          int.parse(tableId!),
+          tableId!,
           orderStatus,
         );
       } else {
-        orders.value = await ServerpodClient.instance.order.getOrders(
-          LocalStorage().building!.id!,
-          orderStatus,
-        );
+        orders.value = await ServerpodClient.instance.order
+            .getOrdersByBuilingId(
+              LocalStorage().building!.id,
+              orderStatus,
+            );
       }
       change(orders, status: RxStatus.success());
     } catch (e) {

@@ -27,12 +27,12 @@ class EmployerDetailsController extends GetxController with StateMixin {
     }
   }
 
-  void updateEmployerAccess(int accesId) async {
+  void updateEmployerAccess(UuidValue accesId) async {
     try {
       if (id != null) {
         final employer = await ServerpodClient.instance.employer
             .assignAccessToEmployer(
-              this.employer!.id!,
+              this.employer!.id,
               accesId,
             );
         Get.back();

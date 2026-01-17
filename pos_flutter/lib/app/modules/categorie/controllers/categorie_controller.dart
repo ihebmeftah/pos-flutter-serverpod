@@ -16,8 +16,8 @@ class CategorieController extends GetxController
     try {
       change([], status: RxStatus.loading());
       categories(
-       await ServerpodClient.instance.categorie.getCategories(
-          LocalStorage().building!.id!,
+        await ServerpodClient.instance.categorie.getCategories(
+          LocalStorage().building!.id,
         ),
       );
       if (categories.isEmpty) {

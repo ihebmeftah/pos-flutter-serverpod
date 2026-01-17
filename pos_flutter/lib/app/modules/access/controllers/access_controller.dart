@@ -15,8 +15,8 @@ class AccessController extends GetxController with StateMixin {
   Future<void> getAccess() async {
     try {
       access(
-        await ServerpodClient.instance.access.getAllAccesses(
-          LocalStorage().building!.id!,
+        await ServerpodClient.instance.access.getAccessesByBuildingId(
+          LocalStorage().building!.id,
         ),
       );
       if (access.isEmpty) {
@@ -33,7 +33,7 @@ class AccessController extends GetxController with StateMixin {
 
   void deleleAcces(int index) async {
     try {
-      await ServerpodClient.instance.access.deleteAccess(access[index].id!);
+      await ServerpodClient.instance.access.deleteAccess(access[index].id);
       getAccess();
       Get.back();
     } on AppException catch (e) {

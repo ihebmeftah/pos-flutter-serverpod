@@ -16,9 +16,11 @@ class AppSnackbar {
             Icons.check_circle,
             color: Colors.green.shade100,
           ),
-          Text(
-            message ?? "Operation completed successfully",
-            style: TextStyle(color: Colors.white),
+          Expanded(
+            child: Text(
+              message ?? "Operation completed successfully",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -38,9 +40,11 @@ class AppSnackbar {
             Icons.error,
             color: Colors.red.shade100,
           ),
-          Text(
-            message ?? "Operation failed, please try again",
-            style: TextStyle(color: Colors.white),
+          Expanded(
+            child: Text(
+              message ?? "Operation failed, please try again",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -60,9 +64,11 @@ class AppSnackbar {
             Icons.info,
             color: Colors.blue.shade100,
           ),
-          Text(
-            message,
-            style: TextStyle(color: Colors.white),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),

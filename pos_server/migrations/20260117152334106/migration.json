@@ -1,0 +1,81 @@
+{
+  "__className__": "serverpod.DatabaseMigration",
+  "actions": [
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "alterTable",
+      "alterTable": {
+        "__className__": "serverpod.TableMigration",
+        "name": "employers",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [],
+        "modifyColumns": [
+          {
+            "__className__": "serverpod.ColumnMigration",
+            "columnName": "phone",
+            "addNullable": false,
+            "removeNullable": true,
+            "changeDefault": false
+          },
+          {
+            "__className__": "serverpod.ColumnMigration",
+            "columnName": "persoEmail",
+            "addNullable": false,
+            "removeNullable": true,
+            "changeDefault": false
+          }
+        ],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "notNullAdded",
+            "message": "Column \"phone\" of table \"employers\" is modified to be not null. If there are existing rows with null values, this migration will fail.",
+            "table": "employers",
+            "columns": [
+              "phone"
+            ],
+            "destrucive": false
+          },
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "notNullAdded",
+            "message": "Column \"persoEmail\" of table \"employers\" is modified to be not null. If there are existing rows with null values, this migration will fail.",
+            "table": "employers",
+            "columns": [
+              "persoEmail"
+            ],
+            "destrucive": false
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "notNullAdded",
+      "message": "Column \"phone\" of table \"employers\" is modified to be not null. If there are existing rows with null values, this migration will fail.",
+      "table": "employers",
+      "columns": [
+        "phone"
+      ],
+      "destrucive": false
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "notNullAdded",
+      "message": "Column \"persoEmail\" of table \"employers\" is modified to be not null. If there are existing rows with null values, this migration will fail.",
+      "table": "employers",
+      "columns": [
+        "persoEmail"
+      ],
+      "destrucive": false
+    }
+  ],
+  "migrationApiVersion": 1
+}

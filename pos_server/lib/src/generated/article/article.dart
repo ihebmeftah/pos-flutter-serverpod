@@ -16,32 +16,36 @@ import '../cateogrie/categorie.dart' as _i2;
 import 'package:pos_server/src/generated/protocol.dart' as _i3;
 
 abstract class Article
-    implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
+    implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Article._({
-    this.id,
+    _i1.UuidValue? id,
     required this.name,
     this.description,
     required this.price,
     required this.categorieId,
-    required this.categorie,
-  });
+    this.categorie,
+  }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Article({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     String? description,
     required double price,
-    required int categorieId,
-    required _i2.Categorie? categorie,
+    required _i1.UuidValue categorieId,
+    _i2.Categorie? categorie,
   }) = _ArticleImpl;
 
   factory Article.fromJson(Map<String, dynamic> jsonSerialization) {
     return Article(
-      id: jsonSerialization['id'] as int?,
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       description: jsonSerialization['description'] as String?,
       price: (jsonSerialization['price'] as num).toDouble(),
-      categorieId: jsonSerialization['categorieId'] as int,
+      categorieId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['categorieId'],
+      ),
       categorie: jsonSerialization['categorie'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.Categorie>(
@@ -55,7 +59,7 @@ abstract class Article
   static const db = ArticleRepository._();
 
   @override
-  int? id;
+  _i1.UuidValue id;
 
   String name;
 
@@ -63,33 +67,33 @@ abstract class Article
 
   double price;
 
-  int categorieId;
+  _i1.UuidValue categorieId;
 
   _i2.Categorie? categorie;
 
   @override
-  _i1.Table<int?> get table => t;
+  _i1.Table<_i1.UuidValue> get table => t;
 
   /// Returns a shallow copy of this [Article]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   Article copyWith({
-    int? id,
+    _i1.UuidValue? id,
     String? name,
     String? description,
     double? price,
-    int? categorieId,
+    _i1.UuidValue? categorieId,
     _i2.Categorie? categorie,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'Article',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       if (description != null) 'description': description,
       'price': price,
-      'categorieId': categorieId,
+      'categorieId': categorieId.toJson(),
       if (categorie != null) 'categorie': categorie?.toJson(),
     };
   }
@@ -98,11 +102,11 @@ abstract class Article
   Map<String, dynamic> toJsonForProtocol() {
     return {
       '__className__': 'Article',
-      if (id != null) 'id': id,
+      'id': id.toJson(),
       'name': name,
       if (description != null) 'description': description,
       'price': price,
-      'categorieId': categorieId,
+      'categorieId': categorieId.toJson(),
       if (categorie != null) 'categorie': categorie?.toJsonForProtocol(),
     };
   }
@@ -141,12 +145,12 @@ class _Undefined {}
 
 class _ArticleImpl extends Article {
   _ArticleImpl({
-    int? id,
+    _i1.UuidValue? id,
     required String name,
     String? description,
     required double price,
-    required int categorieId,
-    required _i2.Categorie? categorie,
+    required _i1.UuidValue categorieId,
+    _i2.Categorie? categorie,
   }) : super._(
          id: id,
          name: name,
@@ -161,15 +165,15 @@ class _ArticleImpl extends Article {
   @_i1.useResult
   @override
   Article copyWith({
-    Object? id = _Undefined,
+    _i1.UuidValue? id,
     String? name,
     Object? description = _Undefined,
     double? price,
-    int? categorieId,
+    _i1.UuidValue? categorieId,
     Object? categorie = _Undefined,
   }) {
     return Article(
-      id: id is int? ? id : this.id,
+      id: id ?? this.id,
       name: name ?? this.name,
       description: description is String? ? description : this.description,
       price: price ?? this.price,
@@ -199,13 +203,15 @@ class ArticleUpdateTable extends _i1.UpdateTable<ArticleTable> {
     value,
   );
 
-  _i1.ColumnValue<int, int> categorieId(int value) => _i1.ColumnValue(
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> categorieId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
     table.categorieId,
     value,
   );
 }
 
-class ArticleTable extends _i1.Table<int?> {
+class ArticleTable extends _i1.Table<_i1.UuidValue> {
   ArticleTable({super.tableRelation}) : super(tableName: 'article') {
     updateTable = ArticleUpdateTable(this);
     name = _i1.ColumnString(
@@ -220,7 +226,7 @@ class ArticleTable extends _i1.Table<int?> {
       'price',
       this,
     );
-    categorieId = _i1.ColumnInt(
+    categorieId = _i1.ColumnUuid(
       'categorieId',
       this,
     );
@@ -234,7 +240,7 @@ class ArticleTable extends _i1.Table<int?> {
 
   late final _i1.ColumnDouble price;
 
-  late final _i1.ColumnInt categorieId;
+  late final _i1.ColumnUuid categorieId;
 
   _i2.CategorieTable? _categorie;
 
@@ -280,7 +286,7 @@ class ArticleInclude extends _i1.IncludeObject {
   Map<String, _i1.Include?> get includes => {'categorie': _categorie};
 
   @override
-  _i1.Table<int?> get table => Article.t;
+  _i1.Table<_i1.UuidValue> get table => Article.t;
 }
 
 class ArticleIncludeList extends _i1.IncludeList {
@@ -300,7 +306,7 @@ class ArticleIncludeList extends _i1.IncludeList {
   Map<String, _i1.Include?> get includes => include?.includes ?? {};
 
   @override
-  _i1.Table<int?> get table => Article.t;
+  _i1.Table<_i1.UuidValue> get table => Article.t;
 }
 
 class ArticleRepository {
@@ -394,7 +400,7 @@ class ArticleRepository {
   /// Finds a single [Article] by its [id] or null if no such row exists.
   Future<Article?> findById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     _i1.Transaction? transaction,
     ArticleInclude? include,
   }) async {
@@ -474,7 +480,7 @@ class ArticleRepository {
   /// Returns the updated row or null if no row with the given id exists.
   Future<Article?> updateById(
     _i1.Session session,
-    int id, {
+    _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<ArticleUpdateTable> columnValues,
     _i1.Transaction? transaction,
   }) async {

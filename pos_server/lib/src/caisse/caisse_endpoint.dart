@@ -1,5 +1,5 @@
 import 'package:pos_server/src/employer/employer_endpoint.dart';
-import 'package:pos_server/src/helpers/authorizations_helpers.dart';
+import '../helpers/session_extensions.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
@@ -8,8 +8,8 @@ import '../generated/protocol.dart' hide Order;
 class CaisseEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
-  Future<List<Caisse>> getCaisses(Session session, int buildingId) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
+  Future<List<Caisse>> getCaisses(Session session, UuidValue buildingId) async {
+    session.authorizedTo(['employer']);
     Employer employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,
@@ -29,7 +29,7 @@ class CaisseEndpoint extends Endpoint {
     );
   }
 
-  Future<Caisse> createCaisse(Session session, int buildingId) async {
+  Future<Caisse> createCaisse(Session session, UuidValue buildingId) async {
     await _closeLastCaisse(session, buildingId);
     return await Caisse.db.insertRow(
       session,
@@ -42,8 +42,9 @@ class CaisseEndpoint extends Endpoint {
   }
 
   @doNotGenerate
-  Future<bool> _closeLastCaisse(Session session, int buildingId) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
+  Future<bool> _closeLastCaisse(Session session, UuidValue buildingId) async {
+    session.authorizedTo(['employer']);
+
     Employer employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,

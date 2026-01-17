@@ -5,7 +5,6 @@ import 'package:pos_flutter/app/components/app_snackbar.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/modules/employer/controllers/employer_controller.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
-import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
 class FormEmployerController extends GetxController with StateMixin {
   @override
@@ -16,13 +15,21 @@ class FormEmployerController extends GetxController with StateMixin {
 
   final formKey = GlobalKey<FormState>();
   final fname = TextEditingController(),
-      email = TextEditingController(),
+      lname = TextEditingController(),
+      displayName = TextEditingController(),
+      persoEmail = TextEditingController(),
       password = TextEditingController(),
       phone = TextEditingController();
   Access? selectedAccess;
-  UserProfileData get profileDto => UserProfileData(
-    fullName: fname.text,
-    email: email.text,
+  CreateEmployerDTO get createEmployerDTO => CreateEmployerDTO(
+    firstName: fname.text.trim(),
+    lastName: lname.text.trim(),
+    displayName: displayName.text.trim(),
+    persoEmail: persoEmail.text.trim(),
+    phone: int.parse(phone.text.trim()),
+    password: password.text.trim(),
+    buildingId: LocalStorage().building!.id,
+    accessId: selectedAccess?.id,
   );
 
   void createEmployyer() async {
@@ -30,17 +37,14 @@ class FormEmployerController extends GetxController with StateMixin {
       if (formKey.currentState!.validate()) {
         final employer = await ServerpodClient.instance.employer
             .createEmployerAccount(
-              profileDto,
-              password.text,
-              LocalStorage().building!.id!,
-              selectedAccess?.id,
+              createEmployerDTO,
             );
         AppSnackbar.success();
         Get.find<EmployerController>().getEmployers();
         Get.back(result: employer);
       }
     } on AppException catch (e) {
-      change(null, status: RxStatus.error(e.message));
+      AppSnackbar.error(e.message);
     } catch (e) {
       change(null, status: RxStatus.error());
     }
@@ -54,5 +58,9 @@ class FormEmployerController extends GetxController with StateMixin {
   void removeAccess() {
     selectedAccess = null;
     update(["accessDropdown"]);
+  }
+
+  void onChangeFirstLastName(String value) {
+    displayName.text = "${fname.text} ${lname.text}".trim();
   }
 }

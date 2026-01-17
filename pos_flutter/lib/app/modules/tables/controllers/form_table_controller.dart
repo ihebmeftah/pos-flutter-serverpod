@@ -36,7 +36,7 @@ class FormTableController extends GetxController
         await ServerpodClient.instance.buildingTables.createTables(
           nbtables: int.parse(t.nb.text),
           seatsMax: int.parse(t.nbSeat.text),
-          buildingId: LocalStorage().building!.id!,
+          buildingId: LocalStorage().building!.id,
         );
       }
       Get.back();

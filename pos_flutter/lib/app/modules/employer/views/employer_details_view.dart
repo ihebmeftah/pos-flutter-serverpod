@@ -27,15 +27,49 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
               children: [
                 // Account Information Card
                 AppSectionCard(
-                  title: 'Account Information',
+                  title: 'User Information',
                   child: Column(
                     crossAxisAlignment: .start,
                     children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildInfoRow(
+                              context,
+                              icon: Icons.person_outline,
+                              label: 'First Name',
+                              value: employer.firstName,
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildInfoRow(
+                              context,
+                              label: 'Last Name',
+                              value: employer.lastName,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Divider(height: 32),
                       _buildInfoRow(
                         context,
-                        icon: Icons.person_outline,
-                        label: 'Full Name',
-                        value: (employer.userProfile!.fullName).toString(),
+                        icon: Icons.public,
+                        label: 'Display Name',
+                        value: employer.userProfile!.fullName ?? '--',
+                      ),
+                      const Divider(height: 32),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.alternate_email,
+                        label: 'Personal Email',
+                        value: employer.persoEmail,
+                      ),
+                      const Divider(height: 32),
+                      _buildInfoRow(
+                        context,
+                        icon: Icons.phone,
+                        label: 'Phone',
+                        value: "+${employer.phone}",
                       ),
                       const Divider(height: 32),
                       _buildInfoRow(
@@ -82,7 +116,7 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                                             title: Text(access.name),
                                             onTap: () =>
                                                 controller.updateEmployerAccess(
-                                                  access.id!,
+                                                  access.id,
                                                 ),
                                           );
                                         },
@@ -101,7 +135,7 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                 ),
 
                 AppSectionCard(
-                  title: 'Contact Information',
+                  title: 'Login Information',
                   child: Column(
                     crossAxisAlignment: .start,
                     children: [
@@ -110,13 +144,6 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                         icon: Icons.email,
                         label: 'Email',
                         value: employer.userProfile!.email!,
-                      ),
-                      const Divider(height: 32),
-                      _buildInfoRow(
-                        context,
-                        icon: Icons.phone,
-                        label: 'Phone',
-                        value: "--",
                       ),
                       const Divider(height: 32),
                       _buildInfoRow(
@@ -141,22 +168,23 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
 
   Widget _buildInfoRow(
     BuildContext context, {
-    required IconData icon,
+    IconData? icon,
     required String label,
     required String value,
   }) {
     return Row(
       crossAxisAlignment: .start,
       children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppTheme().primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
+        if (icon != null)
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppTheme().primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 20, color: AppTheme().primary),
           ),
-          child: Icon(icon, size: 20, color: AppTheme().primary),
-        ),
-        const SizedBox(width: 12),
+        if (icon != null) const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: .start,

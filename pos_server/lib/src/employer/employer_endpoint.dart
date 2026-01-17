@@ -1,6 +1,7 @@
 import 'package:pos_server/src/access/access_endpoint.dart';
+import 'package:pos_server/src/buildings/building_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
-import 'package:pos_server/src/helpers/authorizations_helpers.dart';
+import '../helpers/session_extensions.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
@@ -14,36 +15,42 @@ class EmployerEndpoint extends Endpoint {
   /// required [password] The password for the account
   /// required [buildingId] buildingId The id of the building
   /// Returns the created [Employer] employer account
-  /// allow for admin users only
+  /// allow for iwner users only
   Future<Employer> createEmployerAccount(
     Session session,
-    UserProfileData userProfileData,
-    String password,
-    int buildingId,
-    int? accessId,
+    CreateEmployerDTO createEmployerDto,
   ) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
+    session.authorizedTo(['owner']);
     final emailIdp = AuthServices.instance.emailIdp;
     return session.db.transaction<Employer>((transaction) async {
+      final building = await BuildingEndpoint().getBuildingById(
+        session,
+        createEmployerDto.buildingId,
+      );
+      await _checkExistPersoEmail(session, createEmployerDto.persoEmail);
+      await _checkExistPhone(session, createEmployerDto.phone);
       final authUser = await AuthServices.instance.authUsers.create(
         session,
         scopes: {Scope('employer')},
         transaction: transaction,
       );
+      final userName = createEmployerDto.persoEmail.split('@').first;
+      final email = "$userName@${building.name.toLowerCase().trim()}.com";
       await emailIdp.admin.createEmailAuthentication(
         session,
         authUserId: authUser.id,
-        email: userProfileData.email!,
-        password: password,
+        email: email,
+        password: createEmployerDto.password,
         transaction: transaction,
       );
       final userProfile = await UserProfile.db.insertRow(
         session,
         transaction: transaction,
         UserProfile(
+          userName: userName,
           authUserId: authUser.id,
-          email: userProfileData.email!,
-          fullName: userProfileData.fullName,
+          email: email,
+          fullName: createEmployerDto.displayName,
           createdAt: DateTime.now(),
         ),
       );
@@ -51,24 +58,54 @@ class EmployerEndpoint extends Endpoint {
         session,
         transaction: transaction,
         Employer(
+          firstName: createEmployerDto.firstName,
+          lastName: createEmployerDto.lastName,
+          phone: createEmployerDto.phone,
+          persoEmail: createEmployerDto.persoEmail,
           userProfileId: userProfile.id!,
           userProfile: userProfile,
-          buildingId: buildingId,
-          accessId: accessId,
+          buildingId: createEmployerDto.buildingId,
+          accessId: createEmployerDto.accessId,
         ),
       );
     });
   }
 
+  Future<void> _checkExistPersoEmail(Session session, String persoEmail) async {
+    final existpersoEmail = await Employer.db.findFirstRow(
+      session,
+      where: (t) => t.persoEmail.equals(persoEmail),
+    );
+    if (existpersoEmail != null) {
+      throw AppException(
+        errorType: ExceptionType.Conflict,
+        message: 'Employer with personal email $persoEmail already exists',
+      );
+    }
+  }
+
+  Future<void> _checkExistPhone(Session session, int phone) async {
+    final existPhone = await Employer.db.findFirstRow(
+      session,
+      where: (t) => t.phone.equals(phone),
+    );
+    if (existPhone != null) {
+      throw AppException(
+        errorType: ExceptionType.Conflict,
+        message: 'Employer with personal phone $phone already exists',
+      );
+    }
+  }
+
   /// Get employers by buildingId
   /// Identifier can be a[buildingId]
   /// Returns list of [Employer]
-  /// This enpoint need login and allowed only for admin
+  /// This enpoint need login and allowed only for owner
   Future<List<Employer>> getEmployers(
     Session session,
-    int buildingId,
+    UuidValue buildingId,
   ) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["owner"]);
+    session.authorizedTo(['owner']);
     return await Employer.db.find(
       session,
       include: Employer.include(
@@ -96,18 +133,22 @@ class EmployerEndpoint extends Endpoint {
       ),
       where: (t) =>
           t.userProfile.authUserId.equals(identifier) |
-          t.userProfileId.equals(identifier),
+          t.userProfileId.equals(identifier) |
+          t.id.equals(identifier),
     );
     if (employer == null) {
-      throw Exception('Employer with $identifier not found');
+      throw AppException(
+        errorType: ExceptionType.NotFound,
+        message: 'Employer with $identifier not found',
+      );
     }
     return employer;
   }
 
   Future<Employer> assignAccessToEmployer(
     Session session,
-    int employerId,
-    int accessId,
+    UuidValue employerId,
+    UuidValue accessId,
   ) async {
     final employer = await Employer.db.findById(session, employerId);
     if (employer == null) {

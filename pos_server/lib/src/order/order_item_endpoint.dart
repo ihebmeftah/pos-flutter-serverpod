@@ -1,6 +1,6 @@
 import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
-import 'package:pos_server/src/helpers/authorizations_helpers.dart';
+import '../helpers/session_extensions.dart';
 import 'package:pos_server/src/order/order_endpoint.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import 'package:serverpod_auth_idp_server/core.dart';
@@ -20,11 +20,11 @@ class OrderItemEndpoint extends Endpoint {
   /// Employer should have access to append items
   Future<Order> appendItemsToOrder(
     Session session,
-    int orderId,
+    UuidValue orderId,
     List<OrderItem> orderItems,
   ) async {
     /// Only employer allowed for this endpoint
-    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
+    session.authorizedTo(['employer']);
 
     /// Employer should have access to append items
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
@@ -58,7 +58,7 @@ class OrderItemEndpoint extends Endpoint {
     /// Check if table allows appending items to order
     final building = await BuildingEndpoint().getBuildingById(
       session,
-      order.btable!.buildingId!,
+      order.btable!.buildingId,
     );
     if (building.allowAppendingItemsToOrder == false) {
       throw AppException(
@@ -95,10 +95,10 @@ class OrderItemEndpoint extends Endpoint {
   /// - A list of updated OrderItem objects
   Future<List<OrderItem>> changeOrderItemsStatus(
     Session session,
-    List<int> orderItemIds,
+    List<UuidValue> orderItemIds,
     OrderItemStatus newStatus,
   ) async {
-    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
+    session.authorizedTo(['employer']);
 
     /// Check if employer has access to change the status
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
@@ -106,17 +106,17 @@ class OrderItemEndpoint extends Endpoint {
       session.authenticated!.authUserId,
     );
     if (newStatus case OrderItemStatus.ready || OrderItemStatus.picked) {
-      if (((employer.access?.preparation ?? false) == false)) {
+      if (employer.access == null || employer.access?.preparation == false) {
         throw AppException(
           errorType: ExceptionType.Forbidden,
-          message: 'You are not authorized to change items status',
+          message: 'You are not authorizedTo to change items status',
         );
       }
     } else {
-      if ((employer.access?.takeOrder ?? false) == false) {
+      if (employer.access == null || employer.access?.takeOrder == false) {
         throw AppException(
           errorType: ExceptionType.Forbidden,
-          message: 'You are not authorized to change items status',
+          message: 'You are not authorizedTo to change items status',
         );
       }
     }
@@ -148,17 +148,18 @@ class OrderItemEndpoint extends Endpoint {
 
   Future<List<OrderItem>> payOrderItem(
     Session session,
-    int orderId,
-    List<int> orderItemPayedIds,
-    int buildingId,
+    UuidValue orderId,
+    List<UuidValue> orderItemPayedIds,
+    UuidValue buildingId,
   ) async {
     /// verify employer access
-    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
+    session.authorizedTo(['employer']);
+
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,
     );
-    if (employer.access != null &&
+    if (employer.access == null ||
         employer.access?.orderItemsPayment == false) {
       throw AppException(
         errorType: ExceptionType.Forbidden,
@@ -201,16 +202,17 @@ class OrderItemEndpoint extends Endpoint {
 
   Future<Order> payAllItems(
     Session session,
-    int orderId,
-    int buildingId,
+    UuidValue orderId,
+    UuidValue buildingId,
   ) async {
     /// verify employer access
-    await AuthorizationsHelpers().requiredScopes(session, ["employer"]);
+    session.authorizedTo(['employer']);
+
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,
     );
-    if (employer.access != null &&
+    if (employer.access == null ||
         employer.access?.orderItemsPayment == false) {
       throw AppException(
         errorType: ExceptionType.Forbidden,

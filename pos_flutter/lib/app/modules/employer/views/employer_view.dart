@@ -16,17 +16,9 @@ class EmployerView extends GetView<EmployerController> {
       appBar: AppBar(
         title: const Text('Employer Management'),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: IconButton(
-              color: Colors.white,
-              onPressed: () => Get.toNamed(Routes.FORM_EMPLOYER),
-              style: IconButton.styleFrom(
-                backgroundColor: AppTheme().primary,
-                padding: const EdgeInsets.all(12),
-              ),
-              icon: const Icon(Icons.add, size: 20),
-            ),
+          IconButton(
+            onPressed: () => Get.toNamed(Routes.FORM_EMPLOYER),
+            icon: const Icon(Icons.add),
           ),
         ],
       ),

@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart' hide Table;
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/modules/index/controllers/index_controller.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 
+import '../../../components/app_snackbar.dart';
 import '../../../data/local/local_storage.dart';
 import '../../../routes/app_pages.dart';
 import 'order_controller.dart';
@@ -32,13 +32,13 @@ class PassOrderController extends GetxController with StateMixin {
       }
       return;
     }
-    if (t.status == TableStatus.occupied) await getCurrOrderOfTable(t.id!);
+    if (t.status == TableStatus.occupied) await getCurrOrderOfTable(t.id);
     table = t;
     update(['table']);
     change(null, status: RxStatus.success());
   }
 
-  Future<void> getCurrOrderOfTable(int tableid) async {
+  Future<void> getCurrOrderOfTable(UuidValue tableid) async {
     try {
       currOrder = await ServerpodClient.instance.order.getOrderCurrOfTable(
         tableid,
@@ -51,14 +51,14 @@ class PassOrderController extends GetxController with StateMixin {
   void addArticle(Article article) {
     selectedArticles.add(article);
     _updateSelectedArticleWithOcc();
-    update(['selectedArticles', article.id!]);
+    update(['selectedArticles', article.id]);
   }
 
   void removeArticle(Article article) {
     final first = selectedArticles.indexWhere((a) => a.id == article.id);
     selectedArticles.removeAt(first);
     _updateSelectedArticleWithOcc();
-    update(['selectedArticles', article.id!]);
+    update(['selectedArticles', article.id]);
   }
 
   void clearAllArticles() {
@@ -93,27 +93,16 @@ class PassOrderController extends GetxController with StateMixin {
       reset();
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Forbidden) {
-        Get.snackbar(
-          'Payment Error',
-          e.message,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        AppSnackbar.info(e.message);
         return;
       }
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Failed to pass order",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to pass order');
     }
   }
 
   Order get orderDto => Order(
-    btableId: table!.id!,
+    btableId: table!.id,
     btable: table,
     passedById: Get.find<IndexController>().userProfile.id!,
     items: selectedArticles
@@ -126,6 +115,7 @@ class PassOrderController extends GetxController with StateMixin {
         )
         .toList(),
   );
+
   Future<void> createOrder() async {
     try {
       //? Create new order when tabe available
@@ -135,14 +125,8 @@ class PassOrderController extends GetxController with StateMixin {
       /*  if (Get.isRegistered<TablesController>()) {
         Get.find<TablesController>().updateTable(passedOrder.btable!);
       }*/
-      Get.offAndToNamed("${Routes.ORDER_DETAILS}/${passedOrder.id!}");
-      Get.snackbar(
-        "Success",
-        "Order passed successfully",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      Get.offAndToNamed("${Routes.ORDER_DETAILS}/${passedOrder.id}");
+      AppSnackbar.success('Order created successfully');
     } catch (e) {
       rethrow;
     }
@@ -151,36 +135,30 @@ class PassOrderController extends GetxController with StateMixin {
   Future<void> appendItemToOrder() async {
     try {
       await ServerpodClient.instance.orderItem.appendItemsToOrder(
-        currOrder!.id!,
+        currOrder!.id,
         orderDto.items!,
       );
-      Get.offAndToNamed("${Routes.ORDER_DETAILS}/${currOrder!.id!}");
-      Get.snackbar(
-        "Success",
-        "New items added to order successfully",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      Get.offAndToNamed("${Routes.ORDER_DETAILS}/${currOrder!.id}");
+      AppSnackbar.success('Items added to existing order successfully');
     } catch (e) {
       rethrow;
     }
   }
 
-  int countArticleOcc(int articleId) {
+  int countArticleOcc(UuidValue articleId) {
     return selectedArticles.where((a) => a.id == articleId).length;
   }
 
-  bool existeArticle(int articleId) {
+  bool existeArticle(UuidValue articleId) {
     return selectedArticles.any((a) => a.id == articleId);
   }
 
   List<({Article article, int occurrence})> selectedArticleWithOcc = [];
 
   void _updateSelectedArticleWithOcc() {
-    final Map<int, int> occMap = {};
+    final Map<UuidValue, int> occMap = {};
     for (var article in selectedArticles) {
-      occMap[article.id!] = (occMap[article.id!] ?? 0) + 1;
+      occMap[article.id] = (occMap[article.id] ?? 0) + 1;
     }
     selectedArticleWithOcc = occMap.entries.map((entry) {
       final article = selectedArticles.firstWhere((a) => a.id == entry.key);

@@ -21,14 +21,9 @@ class ArticleView extends GetView<ArticleController> {
         title: const Text('Articles'),
         actions: [
           if (Get.previousRoute != Routes.PASS_ORDER)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: IconButton(
-                onPressed: () {
-                  Get.toNamed(Routes.ARTICLE_FORM);
-                },
-                icon: const Icon(Icons.add),
-              ),
+            IconButton(
+              onPressed: () => Get.toNamed(Routes.ARTICLE_FORM),
+              icon: const Icon(Icons.add),
             ),
         ],
       ),
@@ -162,10 +157,10 @@ class ArticleView extends GetView<ArticleController> {
       id: controller.articles[index].id,
       builder: (passOrderCtr) {
         final exists = passOrderCtr.existeArticle(
-          controller.articles[index].id!,
+          controller.articles[index].id,
         );
         final count = passOrderCtr.countArticleOcc(
-          controller.articles[index].id!,
+          controller.articles[index].id,
         );
         return Container(
           decoration: BoxDecoration(

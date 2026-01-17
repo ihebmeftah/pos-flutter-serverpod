@@ -16,12 +16,9 @@ class AccessView extends GetView<AccessController> {
       appBar: AppBar(
         title: const Text('Access Management'),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: IconButton(
-              onPressed: () => Get.toNamed(Routes.ACCESS_FORM),
-              icon: const Icon(Icons.add),
-            ),
+          IconButton(
+            onPressed: () => Get.toNamed(Routes.ACCESS_FORM),
+            icon: const Icon(Icons.add),
           ),
         ],
       ),

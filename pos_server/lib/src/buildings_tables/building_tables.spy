@@ -1,8 +1,13 @@
 class: BTable
 table: b_tables
 fields:
+  id: UuidValue, defaultPersist=random, defaultModel=random
   ### The number of the building.
   number: int
   seatsMax: int,default=4
   status: TableStatus?,!persist ### This field is not persisted in the database.
-  buildingId: int?, relation(parent=building),required
+  buildingId: UuidValue, relation(parent=building)
+
+indexes:
+  btables_buildingId_idx:
+    fields: buildingId

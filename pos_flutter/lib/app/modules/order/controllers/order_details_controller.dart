@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pos_client/pos_client.dart';
@@ -14,7 +13,7 @@ import '../../../data/local/local_storage.dart';
 import '../../../extensions/status.extension.dart';
 
 class OrderDetailsController extends GetxController with StateMixin {
-  String get id => Get.parameters['id']!;
+  UuidValue get id => UuidValue.fromString(Get.parameters['id']!);
   String? get from => Get.parameters['from'];
   Order? order;
 
@@ -34,13 +33,9 @@ class OrderDetailsController extends GetxController with StateMixin {
   Future<void> getOrderById() async {
     try {
       if (from == 'tables') {
-        order = await ServerpodClient.instance.order.getOrderCurrOfTable(
-          int.parse(id),
-        );
+        order = await ServerpodClient.instance.order.getOrderCurrOfTable(id);
       } else {
-        order = await ServerpodClient.instance.order.getOrderById(
-          int.parse(id),
-        );
+        order = await ServerpodClient.instance.order.getOrderById(id);
       }
       if (order == null) {
         change(null, status: RxStatus.empty());
@@ -62,9 +57,9 @@ class OrderDetailsController extends GetxController with StateMixin {
     try {
       final updatedItems = await ServerpodClient.instance.orderItem
           .payOrderItem(
-            order!.id!,
-            [item.id!],
-            LocalStorage().building!.id!,
+            order!.id,
+            [item.id],
+            LocalStorage().building!.id,
           );
       for (var updatedItem in updatedItems) {
         final index = order!.items!.indexWhere(
@@ -75,64 +70,36 @@ class OrderDetailsController extends GetxController with StateMixin {
         }
       }
       change(order, status: RxStatus.success());
-      Get.snackbar(
-        'Payment Processed',
-        'Payment for ${item.article.name} has been processed',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
+      AppSnackbar.success(
+        'Item ${item.article.name} has been paid successfully',
       );
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Forbidden) {
-        Get.snackbar(
-          'Payment Error',
-          'Only employers with access can process item payments',
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        AppSnackbar.info(e.message);
         return;
       }
       change(order, status: RxStatus.error(e.message));
     } catch (e) {
-      Get.snackbar(
-        'Payment Error',
-        'Failed to pay for item: ${item.article.name}',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      change(order, status: RxStatus.error('Failed to pay for the item'));
     }
   }
 
   Future<void> payAllItems() async {
     try {
       order = await ServerpodClient.instance.orderItem.payAllItems(
-        order!.id!,
-        LocalStorage().building!.id!,
+        order!.id,
+        LocalStorage().building!.id,
       );
-      Get.snackbar(
-        'Payment Processed',
-        'All items have been paid',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('All items have been paid successfully');
       change(order, status: RxStatus.success());
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Forbidden) {
-        Get.snackbar(
-          'Payment Error',
-          'Only employers with access can pay for all items in the order',
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        AppSnackbar.info(e.message);
         return;
       }
       change(order, status: RxStatus.error(e.message));
     } catch (e) {
-      Get.snackbar(
-        'Payment Error',
-        'Failed to pay for all items in the order',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      change(order, status: RxStatus.error('Failed to pay for all items'));
     }
   }
 
@@ -140,32 +107,27 @@ class OrderDetailsController extends GetxController with StateMixin {
     try {
       final items = await ServerpodClient.instance.orderItem
           .changeOrderItemsStatus(
-            [order!.items![index].id!],
+            [order!.items![index].id],
             newStataus,
           );
       order!.items![index] = items.first;
       change(order, status: RxStatus.success());
+    } on AppException catch (e) {
+      if (e.errorType == ExceptionType.Forbidden) {
+        AppSnackbar.info(e.message);
+        return;
+      }
+      change(order, status: RxStatus.error(e.message));
     } catch (e) {
-      Get.snackbar(
-        'Payment Error',
-        'Failed to change items status',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      change(order, status: RxStatus.error());
     }
   }
 
   Future<void> generateReciep() async {
     if (order == null) {
-      Get.snackbar(
-        'Error',
-        'No order data available',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error();
       return;
     }
-
     try {
       final pdf = pw.Document();
       final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
@@ -173,7 +135,6 @@ class OrderDetailsController extends GetxController with StateMixin {
         symbol: '\$',
         decimalDigits: 2,
       );
-
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.roll80,
@@ -425,7 +386,6 @@ class OrderDetailsController extends GetxController with StateMixin {
         '${directory.path}/"order_${order!.id}_receipt.pdf',
       );
       await file.writeAsBytes(pdfDoc);
-      AppSnackbar.success();
       // Preview and print the PDF
       await Printing.sharePdf(
         bytes: pdfDoc,

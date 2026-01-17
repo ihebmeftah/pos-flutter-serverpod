@@ -34,7 +34,7 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                     itemCount: controller.order!.items!.length,
                     itemBuilder: (context, index) {
                       return GetBuilder<OrderDetailsController>(
-                        id: controller.order!.items![index].id!,
+                        id: controller.order!.items![index].id,
                         builder: (_) {
                           final item = controller.order!.items![index];
                           return Container(
