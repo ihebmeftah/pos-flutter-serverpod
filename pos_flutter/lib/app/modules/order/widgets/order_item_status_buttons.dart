@@ -22,7 +22,7 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
         padding: const EdgeInsets.only(top: 5.0),
         child: Row(
           spacing: 5,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: .spaceBetween,
           children: [
             if (orderItem.itemStatus == OrderItemStatus.progress)
               _currentStatus("In Progress"),

@@ -53,7 +53,7 @@ class AppFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       spacing: 5,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         if (isOutsideLabel && label != null) AppLabel(label: label),
         TextFormField(

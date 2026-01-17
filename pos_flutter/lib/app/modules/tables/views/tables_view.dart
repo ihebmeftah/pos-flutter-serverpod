@@ -36,7 +36,7 @@ class TablesView extends GetView<TablesController> {
                 ),
               Row(
                 spacing: 20,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: .center,
                 children: [
                   TableStatusWidget(
                     color: Colors.greenAccent,
@@ -104,8 +104,7 @@ class TablesView extends GetView<TablesController> {
                                     ),
                                   ),
                                   Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: .start,
                                     children: [
                                       Text(
                                         "Table ${controller.tables[index].number}"

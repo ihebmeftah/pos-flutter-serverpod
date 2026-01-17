@@ -28,8 +28,8 @@ class AuthentificationView extends GetView<AuthentificationController> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .center,
               children: [
                 // Logo or Icon (optional - you can replace with your app logo)
                 Container(
@@ -121,7 +121,7 @@ class _SocialLoginButton extends StatelessWidget {
   final IconData icon;
   final Color backgroundColor;
   final Color textColor;
- // final Color? borderColor;
+  // final Color? borderColor;
   final VoidCallback onPressed;
 
   const _SocialLoginButton({
@@ -129,7 +129,7 @@ class _SocialLoginButton extends StatelessWidget {
     required this.icon,
     required this.backgroundColor,
     required this.textColor,
-  //  this.borderColor,
+    //  this.borderColor,
     required this.onPressed,
   });
 
@@ -149,11 +149,12 @@ class _SocialLoginButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             side: /*borderColor != null
                 ? BorderSide(color: borderColor!, width: 1)
-                : */BorderSide.none,
+                : */
+                BorderSide.none,
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: .center,
           children: [
             Icon(icon, size: 24),
             const SizedBox(width: 12),

@@ -67,7 +67,7 @@ class ArticleView extends GetView<ArticleController> {
                     ),
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: .start,
                         children: [
                           Text(
                             article.name.capitalizeFirst!,

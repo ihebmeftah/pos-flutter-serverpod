@@ -34,7 +34,7 @@ class AppSectionCard extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         spacing: 16,
         children: [
           if (title != null && icon != null)

@@ -29,7 +29,7 @@ class AccessFormView extends GetView<AccessFormController> {
                   key: controller.formKey,
                   child: Column(
                     spacing: 24,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       // Access Name Field
                       AppSectionCard(

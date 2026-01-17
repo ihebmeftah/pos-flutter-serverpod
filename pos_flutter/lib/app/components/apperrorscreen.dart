@@ -10,8 +10,8 @@ class AppErrorScreen extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: .center,
+          mainAxisAlignment: .center,
           spacing: 15,
           children: [
             Icon(

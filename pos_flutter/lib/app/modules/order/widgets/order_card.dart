@@ -50,7 +50,7 @@ class _OrderCardState extends State<OrderCard> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             spacing: 10,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               // Main Information Row
               Row(
@@ -129,7 +129,7 @@ class _OrderCardState extends State<OrderCard> {
 
               // Total Price
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: .spaceBetween,
                 children: [
                   Text(
                     'Total:',
@@ -228,7 +228,7 @@ class _DetailRow extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Text(
                 label,

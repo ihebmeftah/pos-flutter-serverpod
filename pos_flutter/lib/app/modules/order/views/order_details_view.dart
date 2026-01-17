@@ -42,7 +42,9 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: item.itemStatus.color,
+                                color: item.itemStatus.color.withValues(
+                                  alpha: 0.3,
+                                ),
                                 width: 2,
                               ),
                               color: item.itemStatus.color50,
@@ -56,7 +58,7 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                               ],
                             ),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: .start,
                               children: [
                                 /// Item Header
                                 Row(

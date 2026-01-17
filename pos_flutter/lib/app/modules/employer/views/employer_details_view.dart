@@ -23,13 +23,13 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               spacing: 20,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: .stretch,
               children: [
                 // Account Information Card
                 AppSectionCard(
                   title: 'Account Information',
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       _buildInfoRow(
                         context,
@@ -103,7 +103,7 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                 AppSectionCard(
                   title: 'Contact Information',
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       _buildInfoRow(
                         context,
@@ -146,7 +146,7 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
     required String value,
   }) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Container(
           padding: const EdgeInsets.all(8),
@@ -159,7 +159,7 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
         const SizedBox(width: 12),
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               Text(
                 label,

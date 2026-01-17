@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
-import 'package:intl/intl.dart';
+import 'package:pos_flutter/app/extensions/datetime.extension.dart';
 import '../../../extensions/status.extension.dart';
 
 class OrderItemOverviewSheet extends StatelessWidget {
@@ -23,18 +23,19 @@ class OrderItemOverviewSheet extends StatelessWidget {
         ),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .center,
+        spacing: 10,
         children: [
           /// Header
           Row(
+            spacing: 5,
             children: [
               Icon(
                 Icons.info_outline,
                 color: Colors.brown.shade700,
                 size: 28,
               ),
-              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   'Item Overview',
@@ -51,7 +52,6 @@ class OrderItemOverviewSheet extends StatelessWidget {
               ),
             ],
           ),
-          const Divider(height: 24),
 
           /// Article Name
           _buildInfoCard(
@@ -60,7 +60,6 @@ class OrderItemOverviewSheet extends StatelessWidget {
             value: orderItem.article.name.capitalize ?? 'N/A',
             color: Colors.brown,
           ),
-          const SizedBox(height: 12),
 
           /// Item Status
           _buildInfoCard(
@@ -70,17 +69,15 @@ class OrderItemOverviewSheet extends StatelessWidget {
             color: orderItem.itemStatus.color,
             valueColor: orderItem.itemStatus.color700,
           ),
-          const SizedBox(height: 12),
 
           /// Passed By
           _buildInfoCard(
             icon: Icons.person_add,
             title: 'Passed By',
             value: orderItem.passedBy?.fullName ?? 'N/A',
-            subtitle: _formatDateTime(orderItem.createdAt),
+            subtitle: (orderItem.createdAt).toLongDateString,
             color: Colors.blue,
           ),
-          const SizedBox(height: 12),
 
           /// Prepared By
           _buildInfoCard(
@@ -88,11 +85,10 @@ class OrderItemOverviewSheet extends StatelessWidget {
             title: 'Prepared By',
             value: orderItem.preparedBy?.fullName ?? 'Not prepared yet',
             subtitle: orderItem.preaparedAt != null
-                ? _formatDateTime(orderItem.preaparedAt!)
+                ? (orderItem.preaparedAt!.toLongDateString)
                 : null,
             color: Colors.orange,
           ),
-          const SizedBox(height: 12),
 
           /// Paid To
           _buildInfoCard(
@@ -100,35 +96,11 @@ class OrderItemOverviewSheet extends StatelessWidget {
             title: 'Paid To',
             value: orderItem.payedTo?.fullName ?? 'Not paid yet',
             subtitle: orderItem.payedAt != null
-                ? _formatDateTime(orderItem.payedAt!)
+                ? (orderItem.payedAt!.toLongDateString)
                 : null,
             color: Colors.green,
           ),
-          const SizedBox(height: 20),
-
-          /// Close Button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => Get.back(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.brown,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                'Close',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).padding.bottom),
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -153,6 +125,7 @@ class OrderItemOverviewSheet extends StatelessWidget {
         ),
       ),
       child: Row(
+        spacing: 10,
         children: [
           Container(
             padding: const EdgeInsets.all(10),
@@ -166,10 +139,10 @@ class OrderItemOverviewSheet extends StatelessWidget {
               size: 24,
             ),
           ),
-          const SizedBox(width: 16),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 5,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   title,
@@ -179,7 +152,6 @@ class OrderItemOverviewSheet extends StatelessWidget {
                     color: Colors.grey.shade600,
                   ),
                 ),
-                const SizedBox(height: 4),
                 Text(
                   value,
                   style: TextStyle(
@@ -188,16 +160,15 @@ class OrderItemOverviewSheet extends StatelessWidget {
                     color: valueColor ?? Colors.black87,
                   ),
                 ),
-                if (subtitle != null) ...[
-                  const SizedBox(height: 4),
+                if (subtitle != null)
                   Row(
+                    spacing: 5,
                     children: [
                       Icon(
                         Icons.access_time,
                         size: 14,
                         color: Colors.grey.shade600,
                       ),
-                      const SizedBox(width: 4),
                       Text(
                         subtitle,
                         style: TextStyle(
@@ -207,16 +178,11 @@ class OrderItemOverviewSheet extends StatelessWidget {
                       ),
                     ],
                   ),
-                ],
               ],
             ),
           ),
         ],
       ),
     );
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    return DateFormat('MMM dd, yyyy • hh:mm a').format(dateTime);
   }
 }

@@ -22,14 +22,14 @@ class TableItemWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: .center,
+          crossAxisAlignment: .center,
           spacing: 8,
           children: [
             //* Left Seats
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .center,
               spacing: 20,
               children: List.generate(seats.left, (index) {
                 return GetBuilder<PassOrderController>(
@@ -55,7 +55,7 @@ class TableItemWidget extends StatelessWidget {
               children: [
                 //* Top Seats
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: .center,
                   spacing: 10,
                   children: List.generate(seats.top, (index) {
                     return GetBuilder<PassOrderController>(
@@ -105,7 +105,7 @@ class TableItemWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: .center,
                           children: [
                             Text(
                               "№${table.number}",
@@ -131,7 +131,7 @@ class TableItemWidget extends StatelessWidget {
                 ),
                 //* Bottom Seats
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: .center,
                   spacing: 10,
                   children: List.generate(seats.bottom, (index) {
                     return GetBuilder<PassOrderController>(
@@ -156,7 +156,7 @@ class TableItemWidget extends StatelessWidget {
             ),
             //* Right Seats
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: .center,
               spacing: 20,
               children: List.generate(seats.right, (index) {
                 return GetBuilder<PassOrderController>(

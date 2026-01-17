@@ -31,7 +31,7 @@ class OrderPaymentButton extends GetView<OrderDetailsController> {
                 spacing: 5,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: .spaceBetween,
                     children: [
                       Text(
                         'Paid Amount',
@@ -134,7 +134,7 @@ class OrderPaymentButton extends GetView<OrderDetailsController> {
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: controller.generateReciep,
                   icon: const Icon(Icons.print),
                   label: Text(
                     "Print Receipt",

@@ -55,6 +55,7 @@ class OrderEndpoint extends Endpoint {
       include: Order.include(
         btable: BTable.include(),
         passedBy: UserProfile.include(),
+        closedby: UserProfile.include(),
         items: OrderItem.includeList(),
       ),
     );

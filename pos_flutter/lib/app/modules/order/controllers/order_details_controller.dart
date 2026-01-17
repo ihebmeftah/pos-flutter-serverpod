@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/app_snackbar.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
-
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
+import 'package:intl/intl.dart';
 import '../../../data/local/local_storage.dart';
 import '../../../extensions/status.extension.dart';
 
@@ -145,6 +152,287 @@ class OrderDetailsController extends GetxController with StateMixin {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+    }
+  }
+
+  Future<void> generateReciep() async {
+    if (order == null) {
+      Get.snackbar(
+        'Error',
+        'No order data available',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    try {
+      final pdf = pw.Document();
+      final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+      final currencyFormat = NumberFormat.currency(
+        symbol: '\$',
+        decimalDigits: 2,
+      );
+
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.roll80,
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                // Header
+                pw.Center(
+                  child: pw.Column(
+                    children: [
+                      pw.Text(
+                        LocalStorage().building?.name ?? 'POS System',
+                        style: pw.TextStyle(
+                          fontSize: 24,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Text(
+                        'Receipt',
+                        style: pw.TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(height: 20),
+
+                // Order Info
+                pw.Divider(thickness: 2),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text(
+                      'Order #:',
+                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                    ),
+                    pw.Text('${order!.id}'),
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text(
+                      'Table:',
+                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                    ),
+                    pw.Text('${order!.btable!.number}'),
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text(
+                      'Date:',
+                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                    ),
+                    pw.Text(
+                      dateFormat.format(order!.createdAt),
+                    ),
+                  ],
+                ),
+                pw.Divider(thickness: 2),
+                pw.SizedBox(height: 10),
+
+                // Items List
+                pw.Text(
+                  'ITEMS',
+                  style: pw.TextStyle(
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+
+                // Items
+                ...order!.items!.map((item) {
+                  return pw.Column(
+                    children: [
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Expanded(
+                            child: pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Text(
+                                  item.article.name,
+                                  style: pw.TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: pw.FontWeight.bold,
+                                  ),
+                                ),
+                                pw.SizedBox(height: 2),
+                                pw.Text(
+                                  'Status: ${item.itemStatus.name}',
+                                  style: pw.TextStyle(
+                                    fontSize: 9,
+                                    color: PdfColors.grey700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          pw.SizedBox(width: 10),
+                          pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.end,
+                            children: [
+                              pw.Text(
+                                currencyFormat.format(item.article.price),
+                                style: pw.TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                              if (item.itemStatus.isPaid)
+                                pw.Text(
+                                  'PAID',
+                                  style: pw.TextStyle(
+                                    fontSize: 8,
+                                    color: PdfColors.green,
+                                    fontWeight: pw.FontWeight.bold,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      pw.SizedBox(height: 8),
+                    ],
+                  );
+                }),
+
+                pw.Divider(),
+                pw.SizedBox(height: 10),
+
+                // Totals
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text('Subtotal:', style: pw.TextStyle(fontSize: 12)),
+                    pw.Text(
+                      currencyFormat.format(totalPrice),
+                      style: pw.TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+                pw.SizedBox(height: 4),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text(
+                      'Total:',
+                      style: pw.TextStyle(
+                        fontSize: 16,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                    pw.Text(
+                      currencyFormat.format(totalPrice),
+                      style: pw.TextStyle(
+                        fontSize: 16,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                pw.SizedBox(height: 10),
+                pw.Divider(thickness: 2),
+
+                // Payment Info
+                pw.SizedBox(height: 10),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text(
+                      'Paid Amount:',
+                      style: pw.TextStyle(
+                        fontSize: 12,
+                        color: PdfColors.green,
+                      ),
+                    ),
+                    pw.Text(
+                      currencyFormat.format(paidAmount),
+                      style: pw.TextStyle(
+                        fontSize: 12,
+                        color: PdfColors.green,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                if (unpaidAmount > 0) ...[
+                  pw.SizedBox(height: 4),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text(
+                        'Unpaid Amount:',
+                        style: pw.TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.red,
+                        ),
+                      ),
+                      pw.Text(
+                        currencyFormat.format(unpaidAmount),
+                        style: pw.TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.red,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+
+                pw.SizedBox(height: 20),
+                pw.Divider(),
+
+                // Footer
+                pw.SizedBox(height: 10),
+                pw.Center(
+                  child: pw.Column(
+                    children: [
+                      pw.Text(
+                        'Thank you for your business!',
+                        style: pw.TextStyle(
+                          fontSize: 12,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Text(
+                        'Please come again',
+                        style: pw.TextStyle(fontSize: 10),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+      final pdfDoc = await pdf.save();
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File(
+        '${directory.path}/"order_${order!.id}_receipt.pdf',
+      );
+      await file.writeAsBytes(pdfDoc);
+      AppSnackbar.success();
+      // Preview and print the PDF
+      await Printing.sharePdf(
+        bytes: pdfDoc,
+        filename: 'order_${order!.id}_receipt.pdf',
+      );
+    } catch (e) {
+      AppSnackbar.error();
     }
   }
 }

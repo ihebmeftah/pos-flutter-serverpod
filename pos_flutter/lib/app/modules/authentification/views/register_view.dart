@@ -54,8 +54,8 @@ class RegisterView extends GetView<RegisterController> {
             padding: const EdgeInsets.all(25.0),
             child: Column(
               spacing: 10.0,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: .start,
+              mainAxisAlignment: .center,
               children: [
                 const Text(
                   'Create Account',

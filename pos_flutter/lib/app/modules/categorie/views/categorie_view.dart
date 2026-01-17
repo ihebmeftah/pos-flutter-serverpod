@@ -58,7 +58,7 @@ class CategorieView extends GetView<CategorieController> {
                     ],
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       // Image Container
                       Expanded(
@@ -101,7 +101,7 @@ class CategorieView extends GetView<CategorieController> {
                         ),
                         padding: const EdgeInsets.all(12),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: .spaceBetween,
                           children: [
                             Expanded(
                               child: Text(

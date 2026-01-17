@@ -113,7 +113,7 @@ class EmployerView extends GetView<EmployerController> {
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: .center,
                             children: [
                               // Full Name
                               Text(
@@ -128,7 +128,7 @@ class EmployerView extends GetView<EmployerController> {
                               // Username
                               if (employer.userProfile?.userName != null)
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: .center,
                                   children: [
                                     Icon(
                                       Icons.person,
@@ -155,7 +155,7 @@ class EmployerView extends GetView<EmployerController> {
                               const SizedBox(height: 6),
                               // Email
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: .center,
                                 children: [
                                   Icon(
                                     Icons.email,

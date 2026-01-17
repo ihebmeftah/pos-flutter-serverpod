@@ -15,8 +15,8 @@ class NotfoundView extends GetView<NotfoundController> {
         padding: const EdgeInsets.all(20.0),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .center,
             spacing: 10,
             children: [
               Icon(

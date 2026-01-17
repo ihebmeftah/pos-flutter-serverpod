@@ -30,7 +30,7 @@ class PassOrderView extends GetView<PassOrderController> {
             children: [
               Row(
                 spacing: 10,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: .center,
                 children: [
                   SvgPicture.asset(
                     "assets/images/svg/table.svg",
@@ -63,8 +63,8 @@ class PassOrderView extends GetView<PassOrderController> {
                     builder: (_) {
                       return controller.selectedArticles.isEmpty
                           ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: .center,
+                              crossAxisAlignment: .center,
                               children: [
                                 Text(
                                   "No articles selected yet.",
@@ -85,7 +85,7 @@ class PassOrderView extends GetView<PassOrderController> {
                             )
                           : Column(
                               spacing: 10,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: .start,
                               children: [
                                 AppLabel(
                                   label:
@@ -144,8 +144,7 @@ class PassOrderView extends GetView<PassOrderController> {
                                 ),
                                 Row(
                                   spacing: 5,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: .spaceEvenly,
                                   children: [
                                     TextButton(
                                       style: TextButton.styleFrom(
@@ -189,7 +188,7 @@ class PassOrderView extends GetView<PassOrderController> {
               ),*/
               Column(
                 spacing: 10,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   if (controller.table!.status == TableStatus.occupied &&
                       LocalStorage().building!.tableMultiOrder == false)
@@ -236,8 +235,8 @@ class PassOrderView extends GetView<PassOrderController> {
           ),
           onEmpty: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .center,
               children: [
                 Text(
                   "You can't pass an order without\nselecting a table.",

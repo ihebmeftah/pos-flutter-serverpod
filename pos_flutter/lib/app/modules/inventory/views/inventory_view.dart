@@ -43,7 +43,7 @@ class InventoryView extends GetView<InventoryController> {
 
             /// Out stock ingredient Section
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 Text(
                   "Out of Stock Ingredients",
@@ -70,8 +70,8 @@ class InventoryView extends GetView<InventoryController> {
                     border: Border.all(color: Colors.red.shade200, width: 1),
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: .center,
+                    crossAxisAlignment: .start,
                     children: [
                       Row(
                         children: [
@@ -110,7 +110,7 @@ class InventoryView extends GetView<InventoryController> {
 
             /// Categories Section
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 Text(
                   "Categories",
@@ -160,7 +160,7 @@ class InventoryView extends GetView<InventoryController> {
 
             /// Articles Section
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 Text("Articles", style: Theme.of(context).textTheme.titleLarge),
                 TextButton(
