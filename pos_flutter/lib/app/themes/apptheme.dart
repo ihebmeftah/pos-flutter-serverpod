@@ -47,7 +47,7 @@ class AppTheme {
       ),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      elevation: 0,
+      elevation: 2,
       backgroundColor: Colors.white,
       selectedItemColor: primary,
       unselectedItemColor: Colors.grey.shade500,

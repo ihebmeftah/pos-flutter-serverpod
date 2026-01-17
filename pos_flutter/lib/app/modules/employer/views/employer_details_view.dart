@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_flutter/app/components/app_section_card.dart';
+import 'package:pos_flutter/app/components/app_switchtile.dart';
 import 'package:pos_flutter/app/components/appbottomsheet.dart';
 import 'package:pos_flutter/app/modules/access/controllers/access_controller.dart';
 
@@ -50,28 +51,28 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                           ),
                         ],
                       ),
-                      const Divider(height: 32),
+                      const Divider(height: 30),
                       _buildInfoRow(
                         context,
                         icon: Icons.public,
                         label: 'Display Name',
                         value: employer.userProfile!.fullName ?? '--',
                       ),
-                      const Divider(height: 32),
+                      const Divider(height: 30),
                       _buildInfoRow(
                         context,
                         icon: Icons.alternate_email,
                         label: 'Personal Email',
                         value: employer.persoEmail,
                       ),
-                      const Divider(height: 32),
+                      const Divider(height: 30),
                       _buildInfoRow(
                         context,
                         icon: Icons.phone,
                         label: 'Phone',
                         value: "+${employer.phone}",
                       ),
-                      const Divider(height: 32),
+                      const Divider(height: 30),
                       _buildInfoRow(
                         context,
                         icon: Icons.badge_outlined,
@@ -82,7 +83,7 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                                     .toUpperCase())
                                 .toString(),
                       ),
-                      const Divider(height: 32),
+                      const Divider(height: 30),
                       Row(
                         children: [
                           Expanded(
@@ -145,12 +146,25 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
                         label: 'Email',
                         value: employer.userProfile!.email!,
                       ),
-                      const Divider(height: 32),
+                      const Divider(height: 30),
                       _buildInfoRow(
                         context,
                         icon: Icons.business,
                         label: 'Building',
                         value: employer.building!.name,
+                      ),
+                      const Divider(height: 30),
+                      GetBuilder<EmployerDetailsController>(
+                        id: "block-employer",
+                        builder: (_) {
+                          return AppSwitchtile(
+                            title: "Block",
+                            description:
+                                "Toggle to block or unblock the employer",
+                            value: employer.userProfile!.authUser!.blocked,
+                            onChanged: controller.blockEmployer,
+                          );
+                        },
                       ),
                     ],
                   ),

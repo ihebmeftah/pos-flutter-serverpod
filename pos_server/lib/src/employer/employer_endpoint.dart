@@ -35,7 +35,8 @@ class EmployerEndpoint extends Endpoint {
         transaction: transaction,
       );
       final userName = createEmployerDto.persoEmail.split('@').first;
-      final email = "$userName@${building.name.toLowerCase().trim()}.com";
+      final email =
+          "$userName@${building.name.replaceAll(RegExp(r'\s+'), '-').toLowerCase().trim()}.com";
       await emailIdp.admin.createEmailAuthentication(
         session,
         authUserId: authUser.id,
@@ -165,5 +166,24 @@ class EmployerEndpoint extends Endpoint {
       employer,
       columns: (t) => [t.accessId],
     );
+  }
+
+  Future<bool> blockEmployer(
+    Session session,
+    UuidValue identifier,
+    bool isBlocked,
+  ) async {
+    session.authorizedTo(['owner']);
+    final employer = await getEmployerByIdentifier(session, identifier);
+    await AuthServices.instance.authUsers.update(
+      session,
+      authUserId: employer.userProfile!.authUserId,
+      blocked: isBlocked,
+    );
+    await AuthServices.instance.tokenManager.revokeAllTokens(
+      session,
+      authUserId: employer.userProfile!.authUserId,
+    );
+    return true;
   }
 }

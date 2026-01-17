@@ -938,6 +938,31 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['accessId'],
                   ),
         ),
+        'blockEmployer': _i1.MethodConnector(
+          name: 'blockEmployer',
+          params: {
+            'identifier': _i1.ParameterDescription(
+              name: 'identifier',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'isBlocked': _i1.ParameterDescription(
+              name: 'isBlocked',
+              type: _i1.getType<bool>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['employer'] as _i10.EmployerEndpoint)
+                  .blockEmployer(
+                    session,
+                    params['identifier'],
+                    params['isBlocked'],
+                  ),
+        ),
       },
     );
     connectors['order'] = _i1.EndpointConnector(

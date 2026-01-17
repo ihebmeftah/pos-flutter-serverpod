@@ -45,6 +45,7 @@ employer:
   - getEmployers:
   - getEmployerByIdentifier:
   - assignAccessToEmployer:
+  - blockEmployer:
 order:
   - getOrdersByBuilingId:
   - getOrderById:

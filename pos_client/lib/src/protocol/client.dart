@@ -617,6 +617,18 @@ class EndpointEmployer extends _i1.EndpointRef {
       'accessId': accessId,
     },
   );
+
+  _i2.Future<bool> blockEmployer(
+    _i1.UuidValue identifier,
+    bool isBlocked,
+  ) => caller.callServerEndpoint<bool>(
+    'employer',
+    'blockEmployer',
+    {
+      'identifier': identifier,
+      'isBlocked': isBlocked,
+    },
+  );
 }
 
 /// {@category Endpoint}
