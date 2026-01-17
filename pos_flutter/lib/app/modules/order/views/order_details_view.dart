@@ -11,6 +11,7 @@ import '../../../extensions/currency.extension.dart';
 import '../controllers/order_details_controller.dart';
 import '../widgets/order_item_status_buttons.dart';
 import '../widgets/order_payment_button.dart';
+import '../widgets/order_item_overview_sheet.dart';
 
 class OrderDetailsView extends GetView<OrderDetailsController> {
   const OrderDetailsView({super.key});
@@ -35,75 +36,87 @@ class OrderDetailsView extends GetView<OrderDetailsController> {
                       return GetBuilder<OrderDetailsController>(
                         id: controller.order!.items![index].id!,
                         builder: (_) {
+                          final item = controller.order!.items![index];
                           return Container(
                             margin: const EdgeInsets.only(bottom: 12),
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: controller
-                                    .order!
-                                    .items![index]
-                                    .itemStatus
-                                    .color,
+                                color: item.itemStatus.color,
+                                width: 2,
                               ),
-                              color: controller
-                                  .order!
-                                  .items![index]
-                                  .itemStatus
-                                  .color50,
-                              borderRadius: BorderRadius.circular(12),
+                              color: item.itemStatus.color50,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: item.itemStatus.color50,
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
                             child: Column(
-                              crossAxisAlignment: .start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                /// Item Header
                                 Row(
-                                  spacing: 5,
-                                  crossAxisAlignment: .center,
-                                  mainAxisAlignment: .center,
+                                  spacing: 10,
                                   children: [
-                                    Icon(
-                                      Icons.restaurant,
-                                      color: controller
-                                          .order!
-                                          .items![index]
-                                          .itemStatus
-                                          .color700,
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: item.itemStatus.color700,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Icon(
+                                        Icons.restaurant,
+                                        color: item.itemStatus.color50,
+                                        size: 24,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        item.article.name.capitalize!,
+                                        style: context.textTheme.titleLarge
+                                            ?.copyWith(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: item.itemStatus.color700,
+                                            ),
+                                      ),
                                     ),
                                     Text(
-                                      controller
-                                          .order!
-                                          .items![index]
-                                          .article
-                                          .name
-                                          .capitalize!,
-                                      style: context.textTheme.titleLarge
-                                          ?.copyWith(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: controller
-                                                .order!
-                                                .items![index]
-                                                .itemStatus
-                                                .color700,
-                                          ),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      '${controller.order!.items![index].article.price.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
+                                      '${item.article.price.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
                                       style: context.textTheme.titleLarge
                                           ?.copyWith(
                                             fontWeight: FontWeight.bold,
-                                            color: controller
-                                                .order!
-                                                .items![index]
-                                                .itemStatus
-                                                .color700,
+                                            fontSize: 18,
+                                            color: item.itemStatus.color700,
                                           ),
+                                    ),
+                                    TextButton.icon(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        side: BorderSide(
+                                          color: item.itemStatus.color700,
+                                        ),
+                                        foregroundColor:
+                                            item.itemStatus.color700,
+                                      ),
+                                      onPressed: () => Get.bottomSheet(
+                                        OrderItemOverviewSheet(orderItem: item),
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                      icon: Icon(Icons.info_outline),
+                                      label: Text("Overview"),
                                     ),
                                   ],
                                 ),
+
+                                /// Action Buttons
                                 OrderItemStatusButtons(
-                                  orderItem: controller.order!.items![index],
+                                  orderItem: item,
                                   index: index,
                                 ),
                               ],
