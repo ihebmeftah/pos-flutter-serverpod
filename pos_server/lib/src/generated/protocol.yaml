@@ -46,6 +46,10 @@ employer:
   - getEmployerByIdentifier:
   - assignAccessToEmployer:
   - blockEmployer:
+ingredient:
+  - getIngredientsByBuildingId:
+  - createIngredient:
+  - getIngredintById:
 order:
   - getOrdersByBuilingId:
   - getOrderById:

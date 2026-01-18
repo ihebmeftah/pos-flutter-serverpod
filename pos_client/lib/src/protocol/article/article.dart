@@ -12,7 +12,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../cateogrie/categorie.dart' as _i2;
-import 'package:pos_client/src/protocol/protocol.dart' as _i3;
+import '../article/article_composition.dart' as _i3;
+import 'package:pos_client/src/protocol/protocol.dart' as _i4;
 
 abstract class Article implements _i1.SerializableModel {
   Article._({
@@ -22,6 +23,7 @@ abstract class Article implements _i1.SerializableModel {
     required this.price,
     required this.categorieId,
     this.categorie,
+    this.composition,
   }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Article({
@@ -31,6 +33,7 @@ abstract class Article implements _i1.SerializableModel {
     required double price,
     required _i1.UuidValue categorieId,
     _i2.Categorie? categorie,
+    List<_i3.ArticleComposition>? composition,
   }) = _ArticleImpl;
 
   factory Article.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -46,8 +49,13 @@ abstract class Article implements _i1.SerializableModel {
       ),
       categorie: jsonSerialization['categorie'] == null
           ? null
-          : _i3.Protocol().deserialize<_i2.Categorie>(
+          : _i4.Protocol().deserialize<_i2.Categorie>(
               jsonSerialization['categorie'],
+            ),
+      composition: jsonSerialization['composition'] == null
+          ? null
+          : _i4.Protocol().deserialize<List<_i3.ArticleComposition>>(
+              jsonSerialization['composition'],
             ),
     );
   }
@@ -65,6 +73,8 @@ abstract class Article implements _i1.SerializableModel {
 
   _i2.Categorie? categorie;
 
+  List<_i3.ArticleComposition>? composition;
+
   /// Returns a shallow copy of this [Article]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -75,6 +85,7 @@ abstract class Article implements _i1.SerializableModel {
     double? price,
     _i1.UuidValue? categorieId,
     _i2.Categorie? categorie,
+    List<_i3.ArticleComposition>? composition,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -86,6 +97,8 @@ abstract class Article implements _i1.SerializableModel {
       'price': price,
       'categorieId': categorieId.toJson(),
       if (categorie != null) 'categorie': categorie?.toJson(),
+      if (composition != null)
+        'composition': composition?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -105,6 +118,7 @@ class _ArticleImpl extends Article {
     required double price,
     required _i1.UuidValue categorieId,
     _i2.Categorie? categorie,
+    List<_i3.ArticleComposition>? composition,
   }) : super._(
          id: id,
          name: name,
@@ -112,6 +126,7 @@ class _ArticleImpl extends Article {
          price: price,
          categorieId: categorieId,
          categorie: categorie,
+         composition: composition,
        );
 
   /// Returns a shallow copy of this [Article]
@@ -125,6 +140,7 @@ class _ArticleImpl extends Article {
     double? price,
     _i1.UuidValue? categorieId,
     Object? categorie = _Undefined,
+    Object? composition = _Undefined,
   }) {
     return Article(
       id: id ?? this.id,
@@ -135,6 +151,9 @@ class _ArticleImpl extends Article {
       categorie: categorie is _i2.Categorie?
           ? categorie
           : this.categorie?.copyWith(),
+      composition: composition is List<_i3.ArticleComposition>?
+          ? composition
+          : this.composition?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

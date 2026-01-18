@@ -17,30 +17,6 @@ class InventoryView extends GetView<InventoryController> {
         child: Column(
           spacing: 10,
           children: [
-            Theme(
-              data: Theme.of(context).copyWith(
-                textButtonTheme: TextButtonThemeData(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ),
-              child: Row(
-                spacing: 5,
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    child: Text("Ingredients"),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text("Articles Composition"),
-                  ),
-                ],
-              ),
-            ),
-
             /// Out stock ingredient Section
             Row(
               mainAxisAlignment: .spaceBetween,
@@ -50,7 +26,7 @@ class InventoryView extends GetView<InventoryController> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => Get.toNamed(Routes.INGREDIENT),
                   child: Text("View All"),
                 ),
               ],

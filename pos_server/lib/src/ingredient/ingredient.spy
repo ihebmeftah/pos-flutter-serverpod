@@ -1,0 +1,9 @@
+class: Ingredient
+table: ingredients
+fields:
+  id: UuidValue, defaultPersist=random, defaultModel=random
+  name: String,
+  unit: UnitsType,
+  currentStock: double,
+  thresholdStock: double,
+  buildingId: UuidValue, relation(parent=building, onDelete=cascade)

@@ -1,0 +1,10 @@
+enum: UnitsType
+serialized: byName
+values:
+  - piece
+  - kg
+  - gram
+  - liter
+  - ml
+  - pack
+  - box

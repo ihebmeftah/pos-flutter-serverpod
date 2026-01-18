@@ -26,12 +26,13 @@ import 'package:pos_client/src/protocol/caisse/caisse.dart' as _i10;
 import 'package:pos_client/src/protocol/cateogrie/categorie.dart' as _i11;
 import 'package:pos_client/src/protocol/employer/create_employer.dto.dart'
     as _i12;
-import 'package:pos_client/src/protocol/order/order.dart' as _i13;
-import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i14;
-import 'package:pos_client/src/protocol/order/order_item.dart' as _i15;
+import 'package:pos_client/src/protocol/ingredient/ingredient.dart' as _i13;
+import 'package:pos_client/src/protocol/order/order.dart' as _i14;
+import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i15;
+import 'package:pos_client/src/protocol/order/order_item.dart' as _i16;
 import 'package:pos_client/src/protocol/order/order_item_status_enum.dart'
-    as _i16;
-import 'protocol.dart' as _i17;
+    as _i17;
+import 'protocol.dart' as _i18;
 
 /// {@category Endpoint}
 class EndpointAccess extends _i1.EndpointRef {
@@ -632,6 +633,43 @@ class EndpointEmployer extends _i1.EndpointRef {
 }
 
 /// {@category Endpoint}
+class EndpointIngredient extends _i1.EndpointRef {
+  EndpointIngredient(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'ingredient';
+
+  /// Get Ingredients by building id
+  /// required [buildingId] buildingId The id of the building
+  /// Returns a list of [Ingredient] ingredients
+  _i2.Future<List<_i13.Ingredient>> getIngredientsByBuildingId(
+    _i1.UuidValue buildingId,
+  ) => caller.callServerEndpoint<List<_i13.Ingredient>>(
+    'ingredient',
+    'getIngredientsByBuildingId',
+    {'buildingId': buildingId},
+  );
+
+  /// Create new ingredient
+  /// required [ingredient] The ingredient to create
+  /// Returns the created [Ingredient] ingredient
+  /// allow for owner users only
+  _i2.Future<_i13.Ingredient> createIngredient(_i13.Ingredient ingredient) =>
+      caller.callServerEndpoint<_i13.Ingredient>(
+        'ingredient',
+        'createIngredient',
+        {'ingredient': ingredient},
+      );
+
+  _i2.Future<_i13.Ingredient> getIngredintById(_i1.UuidValue id) =>
+      caller.callServerEndpoint<_i13.Ingredient>(
+        'ingredient',
+        'getIngredintById',
+        {'id': id},
+      );
+}
+
+/// {@category Endpoint}
 class EndpointOrder extends _i1.EndpointRef {
   EndpointOrder(_i1.EndpointCaller caller) : super(caller);
 
@@ -645,10 +683,10 @@ class EndpointOrder extends _i1.EndpointRef {
   /// Returns:
   /// - A list of orders for the building
   /// Only owner and employers are allowed for this endpoint
-  _i2.Future<List<_i13.Order>> getOrdersByBuilingId(
+  _i2.Future<List<_i14.Order>> getOrdersByBuilingId(
     _i1.UuidValue buildingId,
-    _i14.OrderStatus? orderStatus,
-  ) => caller.callServerEndpoint<List<_i13.Order>>(
+    _i15.OrderStatus? orderStatus,
+  ) => caller.callServerEndpoint<List<_i14.Order>>(
     'order',
     'getOrdersByBuilingId',
     {
@@ -662,8 +700,8 @@ class EndpointOrder extends _i1.EndpointRef {
   /// - [id]: The id of the order
   /// Returns:
   /// - The order with the given id
-  _i2.Future<_i13.Order> getOrderById(_i1.UuidValue id) =>
-      caller.callServerEndpoint<_i13.Order>(
+  _i2.Future<_i14.Order> getOrderById(_i1.UuidValue id) =>
+      caller.callServerEndpoint<_i14.Order>(
         'order',
         'getOrderById',
         {'id': id},
@@ -676,24 +714,24 @@ class EndpointOrder extends _i1.EndpointRef {
   /// - The created order
   /// Only employer allowed for this endpoint
   /// Employer should have access to order creation
-  _i2.Future<_i13.Order> createOrder(_i13.Order order) =>
-      caller.callServerEndpoint<_i13.Order>(
+  _i2.Future<_i14.Order> createOrder(_i14.Order order) =>
+      caller.callServerEndpoint<_i14.Order>(
         'order',
         'createOrder',
         {'order': order},
       );
 
-  _i2.Future<_i13.Order?> getOrderCurrOfTable(_i1.UuidValue tableId) =>
-      caller.callServerEndpoint<_i13.Order?>(
+  _i2.Future<_i14.Order?> getOrderCurrOfTable(_i1.UuidValue tableId) =>
+      caller.callServerEndpoint<_i14.Order?>(
         'order',
         'getOrderCurrOfTable',
         {'tableId': tableId},
       );
 
-  _i2.Future<List<_i13.Order>> getOrdersOfTable(
+  _i2.Future<List<_i14.Order>> getOrdersOfTable(
     _i1.UuidValue tableId,
-    _i14.OrderStatus? orderStatus,
-  ) => caller.callServerEndpoint<List<_i13.Order>>(
+    _i15.OrderStatus? orderStatus,
+  ) => caller.callServerEndpoint<List<_i14.Order>>(
     'order',
     'getOrdersOfTable',
     {
@@ -717,10 +755,10 @@ class EndpointOrderItem extends _i1.EndpointRef {
   /// Returns:
   /// - The updated order with the appended items
   /// Employer should have access to append items
-  _i2.Future<_i13.Order> appendItemsToOrder(
+  _i2.Future<_i14.Order> appendItemsToOrder(
     _i1.UuidValue orderId,
-    List<_i15.OrderItem> orderItems,
-  ) => caller.callServerEndpoint<_i13.Order>(
+    List<_i16.OrderItem> orderItems,
+  ) => caller.callServerEndpoint<_i14.Order>(
     'orderItem',
     'appendItemsToOrder',
     {
@@ -736,11 +774,11 @@ class EndpointOrderItem extends _i1.EndpointRef {
   /// - [newStatus]: The new status to be set for the order items
   /// Returns:
   /// - A list of updated OrderItem objects
-  _i2.Future<List<_i15.OrderItem>> changeOrderItemsStatus(
+  _i2.Future<List<_i16.OrderItem>> changeOrderItemsStatus(
     List<_i1.UuidValue> orderItemIds,
-    _i16.OrderItemStatus newStatus,
+    _i17.OrderItemStatus newStatus,
     _i1.UuidValue buildingId,
-  ) => caller.callServerEndpoint<List<_i15.OrderItem>>(
+  ) => caller.callServerEndpoint<List<_i16.OrderItem>>(
     'orderItem',
     'changeOrderItemsStatus',
     {
@@ -750,11 +788,11 @@ class EndpointOrderItem extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<List<_i15.OrderItem>> payOrderItem(
+  _i2.Future<List<_i16.OrderItem>> payOrderItem(
     _i1.UuidValue orderId,
     List<_i1.UuidValue> orderItemPayedIds,
     _i1.UuidValue buildingId,
-  ) => caller.callServerEndpoint<List<_i15.OrderItem>>(
+  ) => caller.callServerEndpoint<List<_i16.OrderItem>>(
     'orderItem',
     'payOrderItem',
     {
@@ -764,10 +802,10 @@ class EndpointOrderItem extends _i1.EndpointRef {
     },
   );
 
-  _i2.Future<_i13.Order> payAllItems(
+  _i2.Future<_i14.Order> payAllItems(
     _i1.UuidValue orderId,
     _i1.UuidValue buildingId,
-  ) => caller.callServerEndpoint<_i13.Order>(
+  ) => caller.callServerEndpoint<_i14.Order>(
     'orderItem',
     'payAllItems',
     {
@@ -816,7 +854,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i17.Protocol(),
+         _i18.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -834,6 +872,7 @@ class Client extends _i1.ServerpodClientShared {
     caisse = EndpointCaisse(this);
     categorie = EndpointCategorie(this);
     employer = EndpointEmployer(this);
+    ingredient = EndpointIngredient(this);
     order = EndpointOrder(this);
     orderItem = EndpointOrderItem(this);
     stats = EndpointStats(this);
@@ -858,6 +897,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointEmployer employer;
 
+  late final EndpointIngredient ingredient;
+
   late final EndpointOrder order;
 
   late final EndpointOrderItem orderItem;
@@ -877,6 +918,7 @@ class Client extends _i1.ServerpodClientShared {
     'caisse': caisse,
     'categorie': categorie,
     'employer': employer,
+    'ingredient': ingredient,
     'order': order,
     'orderItem': orderItem,
     'stats': stats,

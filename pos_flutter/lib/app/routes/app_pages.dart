@@ -33,6 +33,10 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/index/bindings/index_binding.dart';
 import '../modules/index/views/index_view.dart';
+import '../modules/ingredient/bindings/ingredient_binding.dart';
+import '../modules/ingredient/bindings/ingredient_form_binding.dart';
+import '../modules/ingredient/views/ingredient_form_view.dart';
+import '../modules/ingredient/views/ingredient_view.dart';
 import '../modules/inventory/bindings/inventory_binding.dart';
 import '../modules/inventory/views/inventory_view.dart';
 import '../modules/notfound/bindings/notfound_binding.dart';
@@ -185,6 +189,16 @@ class AppPages {
       name: _Paths.ACCESS_FORM,
       page: () => const AccessFormView(),
       binding: AccessFormBinding(),
+    ),
+    GetPage(
+      name: _Paths.INGREDIENT,
+      page: () => const IngredientView(),
+      binding: IngredientBinding(),
+    ),
+    GetPage(
+      name: _Paths.INGREDIENT_FORM,
+      page: () => const IngredientFormView(),
+      binding: IngredientFormBinding(),
     ),
   ];
 

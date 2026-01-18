@@ -6,6 +6,7 @@ fields:
   description: String?
   price: double,
   categorie: Categorie?, relation(onDelete=setNull)
+  composition: List<ArticleComposition>?, relation(optional)
 
 indexes:
   article_categorieId_idx:

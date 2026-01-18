@@ -13,7 +13,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../cateogrie/categorie.dart' as _i2;
-import 'package:pos_server/src/generated/protocol.dart' as _i3;
+import '../article/article_composition.dart' as _i3;
+import 'package:pos_server/src/generated/protocol.dart' as _i4;
 
 abstract class Article
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -24,6 +25,7 @@ abstract class Article
     required this.price,
     required this.categorieId,
     this.categorie,
+    this.composition,
   }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Article({
@@ -33,6 +35,7 @@ abstract class Article
     required double price,
     required _i1.UuidValue categorieId,
     _i2.Categorie? categorie,
+    List<_i3.ArticleComposition>? composition,
   }) = _ArticleImpl;
 
   factory Article.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -48,8 +51,13 @@ abstract class Article
       ),
       categorie: jsonSerialization['categorie'] == null
           ? null
-          : _i3.Protocol().deserialize<_i2.Categorie>(
+          : _i4.Protocol().deserialize<_i2.Categorie>(
               jsonSerialization['categorie'],
+            ),
+      composition: jsonSerialization['composition'] == null
+          ? null
+          : _i4.Protocol().deserialize<List<_i3.ArticleComposition>>(
+              jsonSerialization['composition'],
             ),
     );
   }
@@ -71,6 +79,8 @@ abstract class Article
 
   _i2.Categorie? categorie;
 
+  List<_i3.ArticleComposition>? composition;
+
   @override
   _i1.Table<_i1.UuidValue> get table => t;
 
@@ -84,6 +94,7 @@ abstract class Article
     double? price,
     _i1.UuidValue? categorieId,
     _i2.Categorie? categorie,
+    List<_i3.ArticleComposition>? composition,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -95,6 +106,8 @@ abstract class Article
       'price': price,
       'categorieId': categorieId.toJson(),
       if (categorie != null) 'categorie': categorie?.toJson(),
+      if (composition != null)
+        'composition': composition?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -108,11 +121,21 @@ abstract class Article
       'price': price,
       'categorieId': categorieId.toJson(),
       if (categorie != null) 'categorie': categorie?.toJsonForProtocol(),
+      if (composition != null)
+        'composition': composition?.toJson(
+          valueToJson: (v) => v.toJsonForProtocol(),
+        ),
     };
   }
 
-  static ArticleInclude include({_i2.CategorieInclude? categorie}) {
-    return ArticleInclude._(categorie: categorie);
+  static ArticleInclude include({
+    _i2.CategorieInclude? categorie,
+    _i3.ArticleCompositionIncludeList? composition,
+  }) {
+    return ArticleInclude._(
+      categorie: categorie,
+      composition: composition,
+    );
   }
 
   static ArticleIncludeList includeList({
@@ -151,6 +174,7 @@ class _ArticleImpl extends Article {
     required double price,
     required _i1.UuidValue categorieId,
     _i2.Categorie? categorie,
+    List<_i3.ArticleComposition>? composition,
   }) : super._(
          id: id,
          name: name,
@@ -158,6 +182,7 @@ class _ArticleImpl extends Article {
          price: price,
          categorieId: categorieId,
          categorie: categorie,
+         composition: composition,
        );
 
   /// Returns a shallow copy of this [Article]
@@ -171,6 +196,7 @@ class _ArticleImpl extends Article {
     double? price,
     _i1.UuidValue? categorieId,
     Object? categorie = _Undefined,
+    Object? composition = _Undefined,
   }) {
     return Article(
       id: id ?? this.id,
@@ -181,6 +207,9 @@ class _ArticleImpl extends Article {
       categorie: categorie is _i2.Categorie?
           ? categorie
           : this.categorie?.copyWith(),
+      composition: composition is List<_i3.ArticleComposition>?
+          ? composition
+          : this.composition?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }
@@ -244,6 +273,10 @@ class ArticleTable extends _i1.Table<_i1.UuidValue> {
 
   _i2.CategorieTable? _categorie;
 
+  _i3.ArticleCompositionTable? ___composition;
+
+  _i1.ManyRelation<_i3.ArticleCompositionTable>? _composition;
+
   _i2.CategorieTable get categorie {
     if (_categorie != null) return _categorie!;
     _categorie = _i1.createRelationTable(
@@ -255,6 +288,38 @@ class ArticleTable extends _i1.Table<_i1.UuidValue> {
           _i2.CategorieTable(tableRelation: foreignTableRelation),
     );
     return _categorie!;
+  }
+
+  _i3.ArticleCompositionTable get __composition {
+    if (___composition != null) return ___composition!;
+    ___composition = _i1.createRelationTable(
+      relationFieldName: '__composition',
+      field: Article.t.id,
+      foreignField: _i3.ArticleComposition.t.$_articleCompositionArticleId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i3.ArticleCompositionTable(tableRelation: foreignTableRelation),
+    );
+    return ___composition!;
+  }
+
+  _i1.ManyRelation<_i3.ArticleCompositionTable> get composition {
+    if (_composition != null) return _composition!;
+    var relationTable = _i1.createRelationTable(
+      relationFieldName: 'composition',
+      field: Article.t.id,
+      foreignField: _i3.ArticleComposition.t.$_articleCompositionArticleId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i3.ArticleCompositionTable(tableRelation: foreignTableRelation),
+    );
+    _composition = _i1.ManyRelation<_i3.ArticleCompositionTable>(
+      tableWithRelations: relationTable,
+      table: _i3.ArticleCompositionTable(
+        tableRelation: relationTable.tableRelation!.lastRelation,
+      ),
+    );
+    return _composition!;
   }
 
   @override
@@ -271,19 +336,31 @@ class ArticleTable extends _i1.Table<_i1.UuidValue> {
     if (relationField == 'categorie') {
       return categorie;
     }
+    if (relationField == 'composition') {
+      return __composition;
+    }
     return null;
   }
 }
 
 class ArticleInclude extends _i1.IncludeObject {
-  ArticleInclude._({_i2.CategorieInclude? categorie}) {
+  ArticleInclude._({
+    _i2.CategorieInclude? categorie,
+    _i3.ArticleCompositionIncludeList? composition,
+  }) {
     _categorie = categorie;
+    _composition = composition;
   }
 
   _i2.CategorieInclude? _categorie;
 
+  _i3.ArticleCompositionIncludeList? _composition;
+
   @override
-  Map<String, _i1.Include?> get includes => {'categorie': _categorie};
+  Map<String, _i1.Include?> get includes => {
+    'categorie': _categorie,
+    'composition': _composition,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => Article.t;
@@ -312,7 +389,13 @@ class ArticleIncludeList extends _i1.IncludeList {
 class ArticleRepository {
   const ArticleRepository._();
 
+  final attach = const ArticleAttachRepository._();
+
   final attachRow = const ArticleAttachRowRepository._();
+
+  final detach = const ArticleDetachRepository._();
+
+  final detachRow = const ArticleDetachRowRepository._();
 
   /// Returns a list of [Article]s matching the given query parameters.
   ///
@@ -570,6 +653,40 @@ class ArticleRepository {
   }
 }
 
+class ArticleAttachRepository {
+  const ArticleAttachRepository._();
+
+  /// Creates a relation between this [Article] and the given [ArticleComposition]s
+  /// by setting each [ArticleComposition]'s foreign key `_articleCompositionArticleId` to refer to this [Article].
+  Future<void> composition(
+    _i1.Session session,
+    Article article,
+    List<_i3.ArticleComposition> articleComposition, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (articleComposition.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('articleComposition.id');
+    }
+    if (article.id == null) {
+      throw ArgumentError.notNull('article.id');
+    }
+
+    var $articleComposition = articleComposition
+        .map(
+          (e) => _i3.ArticleCompositionImplicit(
+            e,
+            $_articleCompositionArticleId: article.id,
+          ),
+        )
+        .toList();
+    await session.db.update<_i3.ArticleComposition>(
+      $articleComposition,
+      columns: [_i3.ArticleComposition.t.$_articleCompositionArticleId],
+      transaction: transaction,
+    );
+  }
+}
+
 class ArticleAttachRowRepository {
   const ArticleAttachRowRepository._();
 
@@ -592,6 +709,94 @@ class ArticleAttachRowRepository {
     await session.db.updateRow<Article>(
       $article,
       columns: [Article.t.categorieId],
+      transaction: transaction,
+    );
+  }
+
+  /// Creates a relation between this [Article] and the given [ArticleComposition]
+  /// by setting the [ArticleComposition]'s foreign key `_articleCompositionArticleId` to refer to this [Article].
+  Future<void> composition(
+    _i1.Session session,
+    Article article,
+    _i3.ArticleComposition articleComposition, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (articleComposition.id == null) {
+      throw ArgumentError.notNull('articleComposition.id');
+    }
+    if (article.id == null) {
+      throw ArgumentError.notNull('article.id');
+    }
+
+    var $articleComposition = _i3.ArticleCompositionImplicit(
+      articleComposition,
+      $_articleCompositionArticleId: article.id,
+    );
+    await session.db.updateRow<_i3.ArticleComposition>(
+      $articleComposition,
+      columns: [_i3.ArticleComposition.t.$_articleCompositionArticleId],
+      transaction: transaction,
+    );
+  }
+}
+
+class ArticleDetachRepository {
+  const ArticleDetachRepository._();
+
+  /// Detaches the relation between this [Article] and the given [ArticleComposition]
+  /// by setting the [ArticleComposition]'s foreign key `_articleCompositionArticleId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> composition(
+    _i1.Session session,
+    List<_i3.ArticleComposition> articleComposition, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (articleComposition.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('articleComposition.id');
+    }
+
+    var $articleComposition = articleComposition
+        .map(
+          (e) => _i3.ArticleCompositionImplicit(
+            e,
+            $_articleCompositionArticleId: null,
+          ),
+        )
+        .toList();
+    await session.db.update<_i3.ArticleComposition>(
+      $articleComposition,
+      columns: [_i3.ArticleComposition.t.$_articleCompositionArticleId],
+      transaction: transaction,
+    );
+  }
+}
+
+class ArticleDetachRowRepository {
+  const ArticleDetachRowRepository._();
+
+  /// Detaches the relation between this [Article] and the given [ArticleComposition]
+  /// by setting the [ArticleComposition]'s foreign key `_articleCompositionArticleId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> composition(
+    _i1.Session session,
+    _i3.ArticleComposition articleComposition, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (articleComposition.id == null) {
+      throw ArgumentError.notNull('articleComposition.id');
+    }
+
+    var $articleComposition = _i3.ArticleCompositionImplicit(
+      articleComposition,
+      $_articleCompositionArticleId: null,
+    );
+    await session.db.updateRow<_i3.ArticleComposition>(
+      $articleComposition,
+      columns: [_i3.ArticleComposition.t.$_articleCompositionArticleId],
       transaction: transaction,
     );
   }

@@ -29,6 +29,8 @@ abstract class Routes {
   static const NOTFOUND = _Paths.NOTFOUND;
   static const ACCESS = _Paths.ACCESS;
   static const ACCESS_FORM = _Paths.ACCESS_FORM;
+  static const INGREDIENT = _Paths.INGREDIENT;
+  static const INGREDIENT_FORM = _Paths.INGREDIENT_FORM;
 }
 
 abstract class _Paths {
@@ -56,4 +58,6 @@ abstract class _Paths {
   static const NOTFOUND = '/404';
   static const ACCESS = '/access';
   static const ACCESS_FORM = '/access-form';
+  static const INGREDIENT = '/ingredient';
+  static const INGREDIENT_FORM = '/ingredient-form';
 }
