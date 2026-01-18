@@ -49,7 +49,7 @@ class OrderEndpoint extends Endpoint {
               },
             ));
 
-        /// Employer ih has access to consult all orders or only his own orders
+        // Employer ih has access to consult all orders or only his own orders
         if (session.isOwner || (employer?.access?.consultAllOrders == true)) {
           if (orderStatus != null) return base & t.status.equals(orderStatus);
           return base;
@@ -111,10 +111,10 @@ class OrderEndpoint extends Endpoint {
     Session session,
     Order order,
   ) async {
-    /// Only employer allowed for this endpoint
+    // Only employer allowed for this endpoint
     session.authorizedTo(['employer']);
 
-    /// Employer should have access to order creation
+    // Employer should have access to order creation
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,
@@ -126,7 +126,7 @@ class OrderEndpoint extends Endpoint {
       );
     }
 
-    /// Order must have at least one item
+    // Order must have at least one item
     if (order.items == null || order.items!.isEmpty) {
       throw AppException(
         errorType: ExceptionType.BadRequest,
@@ -134,7 +134,7 @@ class OrderEndpoint extends Endpoint {
       );
     }
 
-    /// Check if table allows multi orders
+    // Check if table allows multi orders
     final building = await BuildingEndpoint().getBuildingById(
       session,
       order.btable!.buildingId,
@@ -152,7 +152,7 @@ class OrderEndpoint extends Endpoint {
       }
     }
 
-    /// Create the order
+    // Create the order
     order.status = OrderStatus.progress;
     Order orderCreated = await Order.db.insertRow(
       session,
@@ -163,7 +163,7 @@ class OrderEndpoint extends Endpoint {
       order.items!,
     );
 
-    /// Attach items to the order
+    // Attach items to the order
     await Order.db.attach.items(session, orderCreated, itemsCreated);
     return orderCreated;
   }

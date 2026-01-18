@@ -143,6 +143,18 @@ class FormBuildingView extends GetView<FormBuildingController> {
                           spacing: 10,
                           children: [
                             GetBuilder<FormBuildingController>(
+                              id: 'strictMode',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: ("Strict Mode"),
+                                  description:
+                                      "Enforce strict order and payment protocols",
+                                  value: controller.strictMode,
+                                  onChanged: controller.changeStrictMode,
+                                );
+                              },
+                            ),
+                            GetBuilder<FormBuildingController>(
                               id: 'tableMultiOrder',
                               builder: (_) {
                                 return AppSwitchtile(

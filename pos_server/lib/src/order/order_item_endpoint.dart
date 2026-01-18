@@ -97,10 +97,11 @@ class OrderItemEndpoint extends Endpoint {
     Session session,
     List<UuidValue> orderItemIds,
     OrderItemStatus newStatus,
+    UuidValue buildingId,
   ) async {
     session.authorizedTo(['employer']);
 
-    /// Check if employer has access to change the status
+    // Check if employer has access to change the status
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,
@@ -113,7 +114,7 @@ class OrderItemEndpoint extends Endpoint {
         );
       }
     } else {
-      if (employer.access == null || employer.access?.takeOrder == false) {
+      if (employer.access == null || employer.access?.serveOrder == false) {
         throw AppException(
           errorType: ExceptionType.Forbidden,
           message: 'You are not authorized to change items status',
@@ -121,13 +122,44 @@ class OrderItemEndpoint extends Endpoint {
       }
     }
 
-    /// Fetch order items and update their status
+    // Fetch order items and update their status
     List<OrderItem> orderItems = await OrderItem.db.find(
       session,
       where: (val) => val.id.inSet(orderItemIds.toSet()),
     );
+    final Building building = await BuildingEndpoint().getBuildingById(
+      session,
+      buildingId,
+    );
     for (OrderItem item in orderItems) {
       if (item.itemStatus != newStatus) {
+        if (building.strictMode) {
+          // Enforce status workflow in strict mode
+          if (newStatus == OrderItemStatus.picked &&
+              item.itemStatus != OrderItemStatus.progress) {
+            throw AppException(
+              errorType: ExceptionType.Forbidden,
+              message:
+                  'Item ${item.article.name} must be in progress status before picking in strict mode',
+            );
+          }
+          if (newStatus == OrderItemStatus.ready &&
+              item.itemStatus != OrderItemStatus.picked) {
+            throw AppException(
+              errorType: ExceptionType.Forbidden,
+              message:
+                  'Item ${item.article.name} must be picked before marking as ready in strict mode',
+            );
+          }
+          if (newStatus == OrderItemStatus.served &&
+              item.itemStatus != OrderItemStatus.ready) {
+            throw AppException(
+              errorType: ExceptionType.Forbidden,
+              message:
+                  'Item ${item.article.name} must be ready before delivering in strict mode',
+            );
+          }
+        }
         item.itemStatus = newStatus;
         item.preparedById = employer.userProfile!.id;
         item.preaparedAt = DateTime.now();
@@ -152,7 +184,7 @@ class OrderItemEndpoint extends Endpoint {
     List<UuidValue> orderItemPayedIds,
     UuidValue buildingId,
   ) async {
-    /// verify employer access
+    // verify employer access
     session.authorizedTo(['employer']);
 
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
@@ -167,10 +199,23 @@ class OrderItemEndpoint extends Endpoint {
       );
     }
 
-    /// mark items as payed
+    // mark items as payed
     final order = await OrderEndpoint().getOrderById(session, orderId);
+    final Building building = await BuildingEndpoint().getBuildingById(
+      session,
+      buildingId,
+    );
     for (var item in order.items!) {
       if (orderItemPayedIds.contains(item.id)) {
+        if (building.strictMode) {
+          if (item.itemStatus != OrderItemStatus.served) {
+            throw AppException(
+              errorType: ExceptionType.Forbidden,
+              message:
+                  'You have item must be delivered before paying in strict mode, item: ${item.article.name}',
+            );
+          }
+        }
         item.itemStatus = OrderItemStatus.payed;
         item.payedToId = employer.userProfileId;
         item.payedAt = DateTime.now();
@@ -188,7 +233,7 @@ class OrderItemEndpoint extends Endpoint {
       ],
     );
 
-    /// if all items are payed mark order as payed
+    // if all items are payed mark order as payed
     if (!order.items!.any((i) => i.itemStatus != OrderItemStatus.payed)) {
       await OrderEndpoint().makeOrderPayed(
         session,
@@ -205,7 +250,7 @@ class OrderItemEndpoint extends Endpoint {
     UuidValue orderId,
     UuidValue buildingId,
   ) async {
-    /// verify employer access
+    // verify employer access
     session.authorizedTo(['employer']);
 
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
@@ -220,8 +265,23 @@ class OrderItemEndpoint extends Endpoint {
       );
     }
 
-    /// mark all items as payed
+    // mark all items as payed
     final order = await OrderEndpoint().getOrderById(session, orderId);
+    final Building building = await BuildingEndpoint().getBuildingById(
+      session,
+      buildingId,
+    );
+    if (building.strictMode) {
+      if (order.items!.any(
+        (item) => item.itemStatus != OrderItemStatus.served,
+      )) {
+        throw AppException(
+          errorType: ExceptionType.Forbidden,
+          message:
+              'All items must be delivered before paying the order in strict mode',
+        );
+      }
+    }
     for (var item in order.items!) {
       if (item.itemStatus != OrderItemStatus.payed) {
         item.itemStatus = OrderItemStatus.payed;

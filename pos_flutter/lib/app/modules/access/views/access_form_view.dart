@@ -167,13 +167,13 @@ class AccessFormView extends GetView<AccessFormController> {
                               },
                             ),
                             GetBuilder<AccessFormController>(
-                              id: 'takeOrder',
+                              id: 'serveOrder',
                               builder: (_) {
                                 return AppSwitchtile(
                                   title: 'Serve Orders',
                                   description: 'Mark items as served',
-                                  value: controller.takeOrder,
-                                  onChanged: controller.updateTakeOrder,
+                                  value: controller.serveOrder,
+                                  onChanged: controller.updateServeOrder,
                                 );
                               },
                             ),

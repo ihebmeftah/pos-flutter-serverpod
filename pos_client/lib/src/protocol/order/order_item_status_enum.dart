@@ -16,7 +16,7 @@ enum OrderItemStatus implements _i1.SerializableModel {
   progress,
   picked,
   ready,
-  delivered,
+  served,
   payed;
 
   static OrderItemStatus fromJson(String name) {
@@ -27,8 +27,8 @@ enum OrderItemStatus implements _i1.SerializableModel {
         return OrderItemStatus.picked;
       case 'ready':
         return OrderItemStatus.ready;
-      case 'delivered':
-        return OrderItemStatus.delivered;
+      case 'served':
+        return OrderItemStatus.served;
       case 'payed':
         return OrderItemStatus.payed;
       default:

@@ -1806,6 +1806,7 @@ class _OrderItemEndpoint {
     _i1.TestSessionBuilder sessionBuilder,
     List<_i2.UuidValue> orderItemIds,
     _i17.OrderItemStatus newStatus,
+    _i2.UuidValue buildingId,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1821,6 +1822,7 @@ class _OrderItemEndpoint {
           parameters: _i1.testObjectToJson({
             'orderItemIds': orderItemIds,
             'newStatus': newStatus,
+            'buildingId': buildingId,
           }),
           serializationManager: _serializationManager,
         );

@@ -64,10 +64,10 @@ class AccessFormController extends GetxController with StateMixin {
     update(['preparation']);
   }
 
-  bool takeOrder = false;
-  void updateTakeOrder(bool? value) {
-    takeOrder = value!;
-    update(['takeOrder']);
+  bool serveOrder = false;
+  void updateServeOrder(bool? value) {
+    serveOrder = value!;
+    update(['serveOrder']);
   }
 
   bool caisseManagement = false;
@@ -86,7 +86,7 @@ class AccessFormController extends GetxController with StateMixin {
     orderCreationNotif: orderCreationNotif,
     appendItems: appendItems,
     preparation: preparation,
-    takeOrder: takeOrder,
+    serveOrder: serveOrder,
     caisseManagement: caisseManagement,
     buildingId: LocalStorage().building!.id,
   );
@@ -135,7 +135,7 @@ class AccessFormController extends GetxController with StateMixin {
       orderCreationNotif = accessDetails.orderCreationNotif;
       appendItems = accessDetails.appendItems;
       preparation = accessDetails.preparation;
-      takeOrder = accessDetails.takeOrder;
+      serveOrder = accessDetails.serveOrder;
       caisseManagement = accessDetails.caisseManagement;
     } catch (e) {
       change(null, status: RxStatus.error("Failed to fetch access details"));

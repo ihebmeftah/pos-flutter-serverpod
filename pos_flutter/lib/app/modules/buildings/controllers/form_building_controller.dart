@@ -26,6 +26,7 @@ class FormBuildingController extends GetxController with StateMixin {
   bool tableMultiOrder = false;
   bool allowAppendingItemsToOrder = true;
   bool autoCloseOrdersAtClosingTime = false;
+  bool strictMode = true;
   bool active = false;
 
   @override
@@ -48,6 +49,7 @@ class FormBuildingController extends GetxController with StateMixin {
     allowAppendingItemsToOrder: allowAppendingItemsToOrder,
     lat: position?.latitude,
     long: position?.longitude,
+    strictMode: strictMode,
     //   dbName: name.text.toLowerCase().replaceAll(' ', '_'),
     tableMultiOrder: tableMultiOrder,
     authUserId: ServerpodClient.instance.auth.authInfo!.authUserId,
@@ -75,6 +77,11 @@ class FormBuildingController extends GetxController with StateMixin {
   void changeCurrencyCode(Currency? c) {
     currencyCode = c;
     update(['currencyCode']);
+  }
+
+  void changeStrictMode(bool? t) {
+    strictMode = t!;
+    update(['strictMode']);
   }
 
   Future<void> addBuilding() async {
@@ -149,6 +156,7 @@ class FormBuildingController extends GetxController with StateMixin {
         closingTime = buildingDetails.closingTime;
         currencyCode = buildingDetails.currencyCode;
         tableMultiOrder = buildingDetails.tableMultiOrder;
+        strictMode = buildingDetails.strictMode;
         allowAppendingItemsToOrder = buildingDetails.allowAppendingItemsToOrder;
         autoCloseOrdersAtClosingTime =
             buildingDetails.autoCloseOrdersAtClosingTime;

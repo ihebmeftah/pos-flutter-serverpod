@@ -75,7 +75,7 @@
         },
         {
           "__className__": "serverpod.ColumnDefinition",
-          "name": "takeOrder",
+          "name": "serveOrder",
           "columnType": 1,
           "isNullable": false,
           "dartType": "bool"

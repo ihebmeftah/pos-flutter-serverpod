@@ -112,7 +112,7 @@ class OrderPaymentButton extends GetView<OrderDetailsController> {
                     id: "pay",
                     builder: (_) {
                       return Text(
-                        'Pay (${controller.unpaidAmount.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol})',
+                        'Pay All(${controller.unpaidAmount.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol})',
                       );
                     },
                   ),
@@ -123,23 +123,22 @@ class OrderPaymentButton extends GetView<OrderDetailsController> {
                 ),
               ),
 
-            if (controller.order!.status == OrderStatus.payed &&
+            if (controller.order!.items!.any(
+                  (item) => item.itemStatus != OrderItemStatus.payed,
+                ) &&
                 Get.find<IndexController>().scope.contains(
                   "employer",
                 ))
-              Expanded(
-                flex: 2,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                  ),
-                  onPressed: controller.generateReciep,
-                  icon: const Icon(Icons.print),
-                  label: Text(
-                    "Print Receipt",
+              IconButton(
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
+                onPressed: controller.generateReciep,
+                icon: const Icon(Icons.print),
               ),
           ],
         ),

@@ -12,7 +12,7 @@ extension OrderItemStatusExtension on OrderItemStatus {
         return Colors.purple;
       case OrderItemStatus.ready:
         return Colors.orange;
-      case OrderItemStatus.delivered:
+      case OrderItemStatus.served:
         return Colors.blue;
       case OrderItemStatus.payed:
         return Colors.green;
@@ -27,7 +27,7 @@ extension OrderItemStatusExtension on OrderItemStatus {
         return Colors.purple.shade50;
       case OrderItemStatus.ready:
         return Colors.orange.shade50;
-      case OrderItemStatus.delivered:
+      case OrderItemStatus.served:
         return Colors.blue.shade50;
       case OrderItemStatus.payed:
         return Colors.green.shade50;
@@ -42,7 +42,7 @@ extension OrderItemStatusExtension on OrderItemStatus {
         return Colors.purple.shade700;
       case OrderItemStatus.ready:
         return Colors.orange.shade700;
-      case OrderItemStatus.delivered:
+      case OrderItemStatus.served:
         return Colors.blue.shade700;
       case OrderItemStatus.payed:
         return Colors.green.shade700;
@@ -57,7 +57,7 @@ extension OrderItemStatusExtension on OrderItemStatus {
         return "Picked for Preparation";
       case OrderItemStatus.ready:
         return "Ready for Delivery";
-      case OrderItemStatus.delivered:
+      case OrderItemStatus.served:
         return "Delivered";
       case OrderItemStatus.payed:
         return "Paid";

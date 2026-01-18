@@ -112,8 +112,8 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
         scopes: {Scope("owner")},
       );
 
-      /// Remove created token created in finishRegistration
-      /// and create a new one with the correct scopes
+      // Remove created token created in finishRegistration
+      // and create a new one with the correct scopes
       await AuthServices.instance.tokenManager.revokeAllTokens(
         session,
         authUserId: authSucessReg.authUserId,

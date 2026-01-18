@@ -93,11 +93,11 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
 
             /// Delivred Buttoon
             if (orderItem.itemStatus == OrderItemStatus.ready &&
-                (Get.find<IndexController>().currentUserAccess?.takeOrder ??
+                (Get.find<IndexController>().currentUserAccess?.serveOrder ??
                     true))
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: OrderItemStatus.delivered.color,
+                  backgroundColor: OrderItemStatus.served.color,
                   minimumSize: Size(Get.width / 3, 38),
                   maximumSize: Size(Get.width / 2.5, 38),
                 ),
@@ -107,11 +107,11 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
                         ) &&
                         (Get.find<IndexController>()
                                 .currentUserAccess
-                                ?.takeOrder ??
+                                ?.serveOrder ??
                             true)
                     ? () => controller.changeOrderItemsStatus(
                         index,
-                        OrderItemStatus.delivered,
+                        OrderItemStatus.served,
                       )
                     : null,
                 child: const Text(
@@ -120,11 +120,11 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
                 ),
               ),
 
-            if (orderItem.itemStatus == OrderItemStatus.delivered)
+            if (orderItem.itemStatus == OrderItemStatus.served)
               _currentStatus("Waiting for Payment"),
 
             /// Pay Buttoon
-            if (orderItem.itemStatus == OrderItemStatus.delivered &&
+            if (orderItem.itemStatus == OrderItemStatus.served &&
                 (Get.find<IndexController>()
                         .currentUserAccess
                         ?.orderItemsPayment ??

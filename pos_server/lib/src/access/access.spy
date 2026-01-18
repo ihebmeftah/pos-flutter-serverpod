@@ -10,7 +10,7 @@ fields:
   orderItemsPayment: bool
   appendItems: bool,
   preparation: bool,
-  takeOrder: bool,
+  serveOrder: bool,
   caisseManagement: bool
   buildingId: UuidValue, relation(parent=building)
 

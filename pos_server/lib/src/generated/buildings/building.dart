@@ -25,13 +25,15 @@ abstract class Building
     bool? tableMultiOrder,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
+    bool? strictMode,
     required this.currencyCode,
     this.long,
     this.lat,
   }) : id = id ?? _i1.Uuid().v4obj(),
        tableMultiOrder = tableMultiOrder ?? false,
        allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true,
-       autoCloseOrdersAtClosingTime = autoCloseOrdersAtClosingTime ?? false;
+       autoCloseOrdersAtClosingTime = autoCloseOrdersAtClosingTime ?? false,
+       strictMode = strictMode ?? false;
 
   factory Building({
     _i1.UuidValue? id,
@@ -43,6 +45,7 @@ abstract class Building
     bool? tableMultiOrder,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
+    bool? strictMode,
     required _i2.Currency currencyCode,
     double? long,
     double? lat,
@@ -71,6 +74,7 @@ abstract class Building
           jsonSerialization['allowAppendingItemsToOrder'] as bool?,
       autoCloseOrdersAtClosingTime:
           jsonSerialization['autoCloseOrdersAtClosingTime'] as bool?,
+      strictMode: jsonSerialization['strictMode'] as bool?,
       currencyCode: _i2.Currency.fromJson(
         (jsonSerialization['currencyCode'] as String),
       ),
@@ -110,6 +114,10 @@ abstract class Building
   /// auto close orders when closing time is reached
   bool autoCloseOrdersAtClosingTime;
 
+  /// strict mode for order processing
+  /// You can't make order or item as payed if they not passed by the need status (progress->picked->ready->served->payed)
+  bool strictMode;
+
   /// currency code for the building (e.g., USD, EUR).
   _i2.Currency currencyCode;
 
@@ -133,6 +141,7 @@ abstract class Building
     bool? tableMultiOrder,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
+    bool? strictMode,
     _i2.Currency? currencyCode,
     double? long,
     double? lat,
@@ -150,6 +159,7 @@ abstract class Building
       'tableMultiOrder': tableMultiOrder,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
       'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
+      'strictMode': strictMode,
       'currencyCode': currencyCode.toJson(),
       if (long != null) 'long': long,
       if (lat != null) 'lat': lat,
@@ -169,6 +179,7 @@ abstract class Building
       'tableMultiOrder': tableMultiOrder,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
       'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
+      'strictMode': strictMode,
       'currencyCode': currencyCode.toJson(),
       if (long != null) 'long': long,
       if (lat != null) 'lat': lat,
@@ -218,6 +229,7 @@ class _BuildingImpl extends Building {
     bool? tableMultiOrder,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
+    bool? strictMode,
     required _i2.Currency currencyCode,
     double? long,
     double? lat,
@@ -231,6 +243,7 @@ class _BuildingImpl extends Building {
          tableMultiOrder: tableMultiOrder,
          allowAppendingItemsToOrder: allowAppendingItemsToOrder,
          autoCloseOrdersAtClosingTime: autoCloseOrdersAtClosingTime,
+         strictMode: strictMode,
          currencyCode: currencyCode,
          long: long,
          lat: lat,
@@ -250,6 +263,7 @@ class _BuildingImpl extends Building {
     bool? tableMultiOrder,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
+    bool? strictMode,
     _i2.Currency? currencyCode,
     Object? long = _Undefined,
     Object? lat = _Undefined,
@@ -266,6 +280,7 @@ class _BuildingImpl extends Building {
           allowAppendingItemsToOrder ?? this.allowAppendingItemsToOrder,
       autoCloseOrdersAtClosingTime:
           autoCloseOrdersAtClosingTime ?? this.autoCloseOrdersAtClosingTime,
+      strictMode: strictMode ?? this.strictMode,
       currencyCode: currencyCode ?? this.currencyCode,
       long: long is double? ? long : this.long,
       lat: lat is double? ? lat : this.lat,
@@ -321,6 +336,11 @@ class BuildingUpdateTable extends _i1.UpdateTable<BuildingTable> {
         table.autoCloseOrdersAtClosingTime,
         value,
       );
+
+  _i1.ColumnValue<bool, bool> strictMode(bool value) => _i1.ColumnValue(
+    table.strictMode,
+    value,
+  );
 
   _i1.ColumnValue<_i2.Currency, _i2.Currency> currencyCode(
     _i2.Currency value,
@@ -378,6 +398,11 @@ class BuildingTable extends _i1.Table<_i1.UuidValue> {
       this,
       hasDefault: true,
     );
+    strictMode = _i1.ColumnBool(
+      'strictMode',
+      this,
+      hasDefault: true,
+    );
     currencyCode = _i1.ColumnEnum(
       'currencyCode',
       this,
@@ -419,6 +444,10 @@ class BuildingTable extends _i1.Table<_i1.UuidValue> {
   /// auto close orders when closing time is reached
   late final _i1.ColumnBool autoCloseOrdersAtClosingTime;
 
+  /// strict mode for order processing
+  /// You can't make order or item as payed if they not passed by the need status (progress->picked->ready->served->payed)
+  late final _i1.ColumnBool strictMode;
+
   /// currency code for the building (e.g., USD, EUR).
   late final _i1.ColumnEnum<_i2.Currency> currencyCode;
 
@@ -437,6 +466,7 @@ class BuildingTable extends _i1.Table<_i1.UuidValue> {
     tableMultiOrder,
     allowAppendingItemsToOrder,
     autoCloseOrdersAtClosingTime,
+    strictMode,
     currencyCode,
     long,
     lat,

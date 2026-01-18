@@ -42,7 +42,7 @@ CREATE TABLE "access" (
     "orderItemsPayment" boolean NOT NULL,
     "appendItems" boolean NOT NULL,
     "preparation" boolean NOT NULL,
-    "takeOrder" boolean NOT NULL,
+    "serveOrder" boolean NOT NULL,
     "caisseManagement" boolean NOT NULL,
     "buildingId" uuid NOT NULL
 );

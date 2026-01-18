@@ -112,6 +112,7 @@ class OrderDetailsController extends GetxController with StateMixin {
           .changeOrderItemsStatus(
             [order!.items![index].id],
             newStataus,
+            LocalStorage().building!.id,
           );
       order!.items![index] = items.first;
       change(order, status: RxStatus.success());

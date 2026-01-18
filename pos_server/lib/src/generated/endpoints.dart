@@ -1119,6 +1119,11 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<_i23.OrderItemStatus>(),
               nullable: false,
             ),
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
           },
           call:
               (
@@ -1129,6 +1134,7 @@ class Endpoints extends _i1.EndpointDispatch {
                     session,
                     params['orderItemIds'],
                     params['newStatus'],
+                    params['buildingId'],
                   ),
         ),
         'payOrderItem': _i1.MethodConnector(

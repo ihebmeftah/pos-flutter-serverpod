@@ -37,7 +37,7 @@ class BuildingEndpoint extends Endpoint {
     session.authorizedTo(["owner"]);
     final createdBuilding = await Building.db.insertRow(session, building);
 
-    /// Create default access for the building
+    // Create default access for the building
     final defaultAccess = [
       Access(
         name: 'waiter',
@@ -48,7 +48,7 @@ class BuildingEndpoint extends Endpoint {
         orderCreationNotif: false,
         preparation: false,
         appendItems: false,
-        takeOrder: true,
+        serveOrder: true,
         caisseManagement: false,
         buildingId: createdBuilding.id,
       ),
@@ -62,7 +62,7 @@ class BuildingEndpoint extends Endpoint {
         orderCreationNotif: false,
         preparation: false,
         appendItems: false,
-        takeOrder: false,
+        serveOrder: false,
         buildingId: createdBuilding.id,
       ),
       Access(
@@ -75,7 +75,7 @@ class BuildingEndpoint extends Endpoint {
         preparation: true,
         appendItems: false,
         caisseManagement: false,
-        takeOrder: false,
+        serveOrder: false,
         buildingId: createdBuilding.id,
       ),
     ];
@@ -86,7 +86,10 @@ class BuildingEndpoint extends Endpoint {
   /// Get a building by id
   /// required [buildingId] The id of the building
   /// Returns the [Building] building
-  Future<Building> getBuildingById(Session session, UuidValue buildingId) async {
+  Future<Building> getBuildingById(
+    Session session,
+    UuidValue buildingId,
+  ) async {
     Building? building = await Building.db.findById(session, buildingId);
     if (building == null) {
       throw AppException(

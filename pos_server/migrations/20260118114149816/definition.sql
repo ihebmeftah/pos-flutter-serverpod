@@ -33,7 +33,7 @@ volatile;
 -- Class Access as table access
 --
 CREATE TABLE "access" (
-    "id" bigserial PRIMARY KEY,
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "name" text NOT NULL,
     "consultAllOrders" boolean NOT NULL,
     "orderCreation" boolean NOT NULL,
@@ -43,35 +43,45 @@ CREATE TABLE "access" (
     "appendItems" boolean NOT NULL,
     "preparation" boolean NOT NULL,
     "serveOrder" boolean NOT NULL,
-    "buildingId" bigint
+    "caisseManagement" boolean NOT NULL,
+    "buildingId" uuid NOT NULL
 );
+
+-- Indexes
+CREATE INDEX "access_buildingId_idx" ON "access" USING btree ("buildingId");
 
 --
 -- Class Article as table article
 --
 CREATE TABLE "article" (
-    "id" bigserial PRIMARY KEY,
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "name" text NOT NULL,
     "description" text,
     "price" double precision NOT NULL,
-    "categorieId" bigint NOT NULL
+    "categorieId" uuid NOT NULL
 );
+
+-- Indexes
+CREATE INDEX "article_categorieId_idx" ON "article" USING btree ("categorieId");
 
 --
 -- Class BTable as table b_tables
 --
 CREATE TABLE "b_tables" (
-    "id" bigserial PRIMARY KEY,
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "number" bigint NOT NULL,
     "seatsMax" bigint NOT NULL DEFAULT 4,
-    "buildingId" bigint
+    "buildingId" uuid NOT NULL
 );
+
+-- Indexes
+CREATE INDEX "btables_buildingId_idx" ON "b_tables" USING btree ("buildingId");
 
 --
 -- Class Building as table building
 --
 CREATE TABLE "building" (
-    "id" bigserial PRIMARY KEY,
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "name" text NOT NULL,
     "address" text NOT NULL,
     "openingTime" timestamp without time zone NOT NULL,
@@ -80,64 +90,92 @@ CREATE TABLE "building" (
     "tableMultiOrder" boolean NOT NULL DEFAULT false,
     "allowAppendingItemsToOrder" boolean NOT NULL DEFAULT true,
     "autoCloseOrdersAtClosingTime" boolean NOT NULL DEFAULT false,
+    "strictMode" boolean NOT NULL DEFAULT false,
     "currencyCode" text NOT NULL,
     "long" double precision,
     "lat" double precision
 );
 
 --
+-- Class Caisse as table caisse
+--
+CREATE TABLE "caisse" (
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    "start" timestamp without time zone NOT NULL,
+    "end" timestamp without time zone,
+    "isClosed" boolean NOT NULL,
+    "buildingId" uuid NOT NULL,
+    "createdAt" timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+--
 -- Class Categorie as table categorie
 --
 CREATE TABLE "categorie" (
-    "id" bigserial PRIMARY KEY,
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "name" text NOT NULL,
-    "description" text NOT NULL,
-    "buildingId" bigint
+    "description" text,
+    "buildingId" uuid NOT NULL
 );
+
+-- Indexes
+CREATE INDEX "categorie_buildingId_idx" ON "categorie" USING btree ("buildingId");
 
 --
 -- Class Employer as table employers
 --
 CREATE TABLE "employers" (
-    "id" bigserial PRIMARY KEY,
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    "firstName" text NOT NULL,
+    "lastName" text NOT NULL,
+    "phone" bigint NOT NULL,
+    "phoneVerified" boolean NOT NULL,
+    "persoEmail" text NOT NULL,
+    "persoEmailVerified" boolean NOT NULL,
     "userProfileId" uuid NOT NULL,
-    "buildingId" bigint NOT NULL,
-    "accessId" bigint
+    "buildingId" uuid NOT NULL,
+    "accessId" uuid
 );
 
 -- Indexes
-CREATE UNIQUE INDEX "employer_profile_idx" ON "employers" USING btree ("userProfileId");
+CREATE UNIQUE INDEX "employer_profile_idx" ON "employers" USING btree ("userProfileId", "persoEmail", "phone");
+CREATE INDEX "employer_buildingId_idx" ON "employers" USING btree ("buildingId");
 
 --
 -- Class OrderItem as table order_items
 --
 CREATE TABLE "order_items" (
-    "id" bigserial PRIMARY KEY,
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "article" json NOT NULL,
     "itemStatus" text NOT NULL DEFAULT 'progress'::text,
-    "payed" boolean NOT NULL DEFAULT false,
     "passedById" uuid NOT NULL,
     "payedToId" uuid,
     "preparedById" uuid,
-    "orderId" bigint,
+    "orderId" uuid,
     "createdAt" timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" timestamp without time zone,
     "preaparedAt" timestamp without time zone,
     "payedAt" timestamp without time zone
 );
 
+-- Indexes
+CREATE INDEX "order_item_orderId_idx" ON "order_items" USING btree ("orderId");
+
 --
 -- Class Order as table orders
 --
 CREATE TABLE "orders" (
-    "id" bigserial PRIMARY KEY,
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "status" text NOT NULL DEFAULT 'progress'::text,
-    "btableId" bigint NOT NULL,
+    "btableId" uuid NOT NULL,
     "passedById" uuid NOT NULL,
     "closedbyId" uuid,
     "createdAt" timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" timestamp without time zone
 );
+
+-- Indexes
+CREATE INDEX "order_btableId_idx" ON "orders" USING btree ("btableId");
 
 --
 -- Class CloudStorageEntry as table serverpod_cloud_storage
@@ -574,7 +612,7 @@ ALTER TABLE ONLY "article"
     ADD CONSTRAINT "article_fk_0"
     FOREIGN KEY("categorieId")
     REFERENCES "categorie"("id")
-    ON DELETE NO ACTION
+    ON DELETE SET NULL
     ON UPDATE NO ACTION;
 
 --
@@ -598,6 +636,16 @@ ALTER TABLE ONLY "building"
     ON UPDATE NO ACTION;
 
 --
+-- Foreign relations for "caisse" table
+--
+ALTER TABLE ONLY "caisse"
+    ADD CONSTRAINT "caisse_fk_0"
+    FOREIGN KEY("buildingId")
+    REFERENCES "building"("id")
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION;
+
+--
 -- Foreign relations for "categorie" table
 --
 ALTER TABLE ONLY "categorie"
@@ -614,7 +662,7 @@ ALTER TABLE ONLY "employers"
     ADD CONSTRAINT "employers_fk_0"
     FOREIGN KEY("userProfileId")
     REFERENCES "serverpod_auth_core_profile"("id")
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION;
 ALTER TABLE ONLY "employers"
     ADD CONSTRAINT "employers_fk_1"
@@ -848,9 +896,9 @@ ALTER TABLE ONLY "serverpod_auth_core_session"
 -- MIGRATION VERSION FOR pos
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('pos', '20260115195111496', now())
+    VALUES ('pos', '20260118114149816', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20260115195111496', "timestamp" = now();
+    DO UPDATE SET "version" = '20260118114149816', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod

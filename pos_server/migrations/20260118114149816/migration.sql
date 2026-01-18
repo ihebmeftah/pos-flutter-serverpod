@@ -9,7 +9,7 @@ DROP TABLE "access" CASCADE;
 -- ACTION CREATE TABLE
 --
 CREATE TABLE "access" (
-    "id" bigserial PRIMARY KEY,
+    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "name" text NOT NULL,
     "consultAllOrders" boolean NOT NULL,
     "orderCreation" boolean NOT NULL,
@@ -19,9 +19,17 @@ CREATE TABLE "access" (
     "appendItems" boolean NOT NULL,
     "preparation" boolean NOT NULL,
     "serveOrder" boolean NOT NULL,
-    "buildingId" bigint
+    "caisseManagement" boolean NOT NULL,
+    "buildingId" uuid NOT NULL
 );
 
+-- Indexes
+CREATE INDEX "access_buildingId_idx" ON "access" USING btree ("buildingId");
+
+--
+-- ACTION ALTER TABLE
+--
+ALTER TABLE "building" ADD COLUMN "strictMode" boolean NOT NULL DEFAULT false;
 --
 -- ACTION CREATE FOREIGN KEY
 --
@@ -37,9 +45,9 @@ ALTER TABLE ONLY "access"
 -- MIGRATION VERSION FOR pos
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('pos', '20260114170416080', now())
+    VALUES ('pos', '20260118114149816', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20260114170416080', "timestamp" = now();
+    DO UPDATE SET "version" = '20260118114149816', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod

@@ -19,10 +19,10 @@
           {
             "__className__": "serverpod.ColumnDefinition",
             "name": "id",
-            "columnType": 6,
+            "columnType": 7,
             "isNullable": false,
-            "columnDefault": "nextval('access_id_seq'::regclass)",
-            "dartType": "int?"
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
           },
           {
             "__className__": "serverpod.ColumnDefinition",
@@ -89,10 +89,17 @@
           },
           {
             "__className__": "serverpod.ColumnDefinition",
+            "name": "caisseManagement",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
             "name": "buildingId",
-            "columnType": 6,
-            "isNullable": true,
-            "dartType": "int?"
+            "columnType": 7,
+            "isNullable": false,
+            "dartType": "UuidValue"
           }
         ],
         "foreignKeys": [
@@ -125,13 +132,63 @@
             "type": "btree",
             "isUnique": true,
             "isPrimary": true
+          },
+          {
+            "__className__": "serverpod.IndexDefinition",
+            "indexName": "access_buildingId_idx",
+            "elements": [
+              {
+                "__className__": "serverpod.IndexElementDefinition",
+                "type": 0,
+                "definition": "buildingId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
           }
         ],
         "managed": true
       }
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "alterTable",
+      "alterTable": {
+        "__className__": "serverpod.TableMigration",
+        "name": "building",
+        "schema": "public",
+        "addColumns": [
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "strictMode",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          }
+        ],
+        "deleteColumns": [],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": []
+      }
     }
   ],
   "warnings": [
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"serveOrder\" of table \"access\" will be dropped.",
+      "table": "access",
+      "columns": [
+        "serveOrder"
+      ],
+      "destrucive": true
+    },
     {
       "__className__": "serverpod.DatabaseMigrationWarning",
       "type": "tableDropped",

@@ -739,12 +739,14 @@ class EndpointOrderItem extends _i1.EndpointRef {
   _i2.Future<List<_i15.OrderItem>> changeOrderItemsStatus(
     List<_i1.UuidValue> orderItemIds,
     _i16.OrderItemStatus newStatus,
+    _i1.UuidValue buildingId,
   ) => caller.callServerEndpoint<List<_i15.OrderItem>>(
     'orderItem',
     'changeOrderItemsStatus',
     {
       'orderItemIds': orderItemIds,
       'newStatus': newStatus,
+      'buildingId': buildingId,
     },
   );
 

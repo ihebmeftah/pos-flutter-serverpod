@@ -397,6 +397,14 @@
         },
         {
           "__className__": "serverpod.ColumnDefinition",
+          "name": "strictMode",
+          "columnType": 1,
+          "isNullable": false,
+          "columnDefault": "false",
+          "dartType": "bool"
+        },
+        {
+          "__className__": "serverpod.ColumnDefinition",
           "name": "currencyCode",
           "columnType": 0,
           "isNullable": false,
@@ -714,7 +722,7 @@
             "id"
           ],
           "onUpdate": 3,
-          "onDelete": 3
+          "onDelete": 4
         },
         {
           "__className__": "serverpod.ForeignKeyDefinition",
@@ -3886,7 +3894,7 @@
     {
       "__className__": "serverpod.DatabaseMigrationVersion",
       "module": "pos",
-      "version": "20260117152334106"
+      "version": "20260118114149816"
     },
     {
       "__className__": "serverpod.DatabaseMigrationVersion",
