@@ -31,7 +31,7 @@ class OrderItemEndpoint extends Endpoint {
       session,
       session.authenticated!.authUserId,
     );
-    if (employer.access != null && employer.access?.appendItems == false) {
+    if (employer.access == null || employer.access?.appendItems == false) {
       throw AppException(
         errorType: ExceptionType.Forbidden,
         message: 'You don\'t have access to append items to orders',
@@ -109,14 +109,14 @@ class OrderItemEndpoint extends Endpoint {
       if (employer.access == null || employer.access?.preparation == false) {
         throw AppException(
           errorType: ExceptionType.Forbidden,
-          message: 'You are not authorizedTo to change items status',
+          message: 'You are not authorized to change items status',
         );
       }
     } else {
       if (employer.access == null || employer.access?.takeOrder == false) {
         throw AppException(
           errorType: ExceptionType.Forbidden,
-          message: 'You are not authorizedTo to change items status',
+          message: 'You are not authorized to change items status',
         );
       }
     }
@@ -163,7 +163,7 @@ class OrderItemEndpoint extends Endpoint {
         employer.access?.orderItemsPayment == false) {
       throw AppException(
         errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to pay order items',
+        message: 'You don\'t have access to get the payment of the items',
       );
     }
 
@@ -216,7 +216,7 @@ class OrderItemEndpoint extends Endpoint {
         employer.access?.orderItemsPayment == false) {
       throw AppException(
         errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to pay order items',
+        message: 'You don\'t have access to get the payment of the order',
       );
     }
 

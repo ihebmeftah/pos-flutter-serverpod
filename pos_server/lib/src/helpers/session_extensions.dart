@@ -16,6 +16,10 @@ extension SessionExtensions on Session {
     return currScope.any((scope) => scope.name == 'admin');
   }
 
+  bool get isEmployer {
+    return currScope.any((scope) => scope.name == 'employer');
+  }
+
   Set<Scope> authorizedTo(List<String> scopes) {
     if (currScope.any(
           (scope) => scopes.contains(scope.name),
@@ -24,7 +28,7 @@ extension SessionExtensions on Session {
       throw AppException(
         errorType: ExceptionType.Forbidden,
         message:
-            '${currScope.map((e) => e.name).join(', ')} not authorizedTo to perform this action.',
+            '${currScope.map((e) => e.name).join(', ')} not authorized to perform this action.',
       );
     }
     return currScope;

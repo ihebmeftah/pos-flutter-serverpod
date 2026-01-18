@@ -22,8 +22,9 @@ class OrderEndpoint extends Endpoint {
     UuidValue buildingId,
     OrderStatus? orderStatus,
   ) async {
+    session.authorizedTo(['owner', 'employer']);
     Employer? employer;
-    if (session.isAdmin) {
+    if (session.isEmployer) {
       employer = await EmployerEndpoint().getEmployerByIdentifier(
         session,
         session.authenticated!.authUserId,
@@ -49,8 +50,7 @@ class OrderEndpoint extends Endpoint {
             ));
 
         /// Employer ih has access to consult all orders or only his own orders
-        if (session.authenticated!.scopes.contains(Scope("owner")) ||
-            (employer?.access?.consultAllOrders ?? false)) {
+        if (session.isOwner || (employer?.access?.consultAllOrders == true)) {
           if (orderStatus != null) return base & t.status.equals(orderStatus);
           return base;
         } else {

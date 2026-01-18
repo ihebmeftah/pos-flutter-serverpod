@@ -102,7 +102,7 @@ class BuildingEndpoint extends Endpoint {
     final existingBuilding = await getBuildingById(session, building.id);
     if (existingBuilding.authUserId != session.authenticated?.authUserId) {
       throw AppException(
-        message: 'You are not authorizedTo to update this building',
+        message: 'You are not authorized to update this building',
         errorType: ExceptionType.Unauthorized,
       );
     }

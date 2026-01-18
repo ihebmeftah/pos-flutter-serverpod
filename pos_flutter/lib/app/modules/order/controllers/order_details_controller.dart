@@ -69,6 +69,9 @@ class OrderDetailsController extends GetxController with StateMixin {
           order!.items![index] = updatedItem;
         }
       }
+      if (order!.items!.every((i) => i.itemStatus == OrderItemStatus.payed)) {
+        order!.status = OrderStatus.payed;
+      }
       change(order, status: RxStatus.success());
       AppSnackbar.success(
         'Item ${item.article.name} has been paid successfully',

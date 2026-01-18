@@ -162,7 +162,6 @@ class FormBuildingView extends GetView<FormBuildingController> {
                                   title: ("Appending Items to Order"),
                                   description:
                                       "Allow adding more items to an existing order",
-
                                   value: controller.allowAppendingItemsToOrder,
                                   onChanged: controller
                                       .changeAllowAppendingItemsToOrder,

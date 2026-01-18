@@ -33,7 +33,7 @@ class NotfoundView extends GetView<NotfoundController> {
                 ),
               ),
               Text(
-                'This page not found or not authorizedTo to ${ServerpodClient.instance.auth.authInfo == null ? "you" : ServerpodClient.instance.auth.authInfo?.scopeNames.map((e) => e).join(', ')}',
+                'This page not found or not authorized to ${ServerpodClient.instance.auth.authInfo == null ? "you" : ServerpodClient.instance.auth.authInfo?.scopeNames.map((e) => e).join(', ')}',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
