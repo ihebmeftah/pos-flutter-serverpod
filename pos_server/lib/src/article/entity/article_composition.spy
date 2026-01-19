@@ -2,6 +2,6 @@ class: ArticleComposition
 table: article_compositions
 fields:
   id: UuidValue, defaultPersist=random, defaultModel=random
-  articleId: UuidValue, relation(parent=article, onDelete=cascade)
-  ingredients: List<Ingredient>?, relation
+  articleId: UuidValue?, relation(parent=article, onDelete=cascade), scope=serverOnly
+  ingredient: Ingredient?, relation
   quantity: double,

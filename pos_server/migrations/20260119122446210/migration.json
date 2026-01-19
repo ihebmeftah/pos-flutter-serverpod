@@ -1,0 +1,81 @@
+{
+  "__className__": "serverpod.DatabaseMigration",
+  "actions": [
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "alterTable",
+      "alterTable": {
+        "__className__": "serverpod.TableMigration",
+        "name": "article_compositions",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [
+          "articleId"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [
+          {
+            "__className__": "serverpod.ForeignKeyDefinition",
+            "constraintName": "article_compositions_fk_0",
+            "columns": [
+              "ingredientId"
+            ],
+            "referenceTable": "ingredients",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          },
+          {
+            "__className__": "serverpod.ForeignKeyDefinition",
+            "constraintName": "article_compositions_fk_1",
+            "columns": [
+              "_articleCompositionArticleId"
+            ],
+            "referenceTable": "article",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "deleteForeignKeys": [
+          "article_compositions_fk_2",
+          "article_compositions_fk_0",
+          "article_compositions_fk_1"
+        ],
+        "warnings": [
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"articleId\" of table \"article_compositions\" will be dropped.",
+            "table": "article_compositions",
+            "columns": [
+              "articleId"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"articleId\" of table \"article_compositions\" will be dropped.",
+      "table": "article_compositions",
+      "columns": [
+        "articleId"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

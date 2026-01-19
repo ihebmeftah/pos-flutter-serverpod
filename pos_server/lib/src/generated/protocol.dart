@@ -17,8 +17,8 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
 import 'access/access.dart' as _i5;
-import 'article/article.dart' as _i6;
-import 'article/article_composition.dart' as _i7;
+import 'article/entity/article.dart' as _i6;
+import 'article/entity/article_composition.dart' as _i7;
 import 'buildings/building.dart' as _i8;
 import 'buildings/currency_enum.dart' as _i9;
 import 'buildings_tables/building_tables.dart' as _i10;
@@ -36,7 +36,7 @@ import 'order/order_item.dart' as _i21;
 import 'order/order_item_status_enum.dart' as _i22;
 import 'order/order_status_enum.dart' as _i23;
 import 'package:pos_server/src/generated/access/access.dart' as _i24;
-import 'package:pos_server/src/generated/article/article.dart' as _i25;
+import 'package:pos_server/src/generated/article/entity/article.dart' as _i25;
 import 'package:pos_server/src/generated/employer/employer.dart' as _i26;
 import 'package:pos_server/src/generated/buildings/building.dart' as _i27;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
@@ -47,8 +47,8 @@ import 'package:pos_server/src/generated/ingredient/ingredient.dart' as _i31;
 import 'package:pos_server/src/generated/order/order.dart' as _i32;
 import 'package:pos_server/src/generated/order/order_item.dart' as _i33;
 export 'access/access.dart';
-export 'article/article.dart';
-export 'article/article_composition.dart';
+export 'article/entity/article.dart';
+export 'article/entity/article_composition.dart';
 export 'buildings/building.dart';
 export 'buildings/currency_enum.dart';
 export 'buildings_tables/building_tables.dart';
@@ -292,6 +292,12 @@ class Protocol extends _i1.SerializationManagerServer {
         _i2.ColumnDefinition(
           name: 'articleId',
           columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'ingredientId',
+          columnType: _i2.ColumnType.uuid,
           isNullable: false,
           dartType: 'UuidValue',
         ),
@@ -321,6 +327,16 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ForeignKeyDefinition(
           constraintName: 'article_compositions_fk_1',
+          columns: ['ingredientId'],
+          referenceTable: 'ingredients',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'article_compositions_fk_2',
           columns: ['_articleCompositionArticleId'],
           referenceTable: 'article',
           referenceTableSchema: 'public',
@@ -883,12 +899,6 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: false,
           dartType: 'UuidValue',
         ),
-        _i2.ColumnDefinition(
-          name: '_articleCompositionsIngredientsArticleCompositionsId',
-          columnType: _i2.ColumnType.uuid,
-          isNullable: true,
-          dartType: 'UuidValue?',
-        ),
       ],
       foreignKeys: [
         _i2.ForeignKeyDefinition(
@@ -899,16 +909,6 @@ class Protocol extends _i1.SerializationManagerServer {
           referenceColumns: ['id'],
           onUpdate: _i2.ForeignKeyAction.noAction,
           onDelete: _i2.ForeignKeyAction.cascade,
-          matchType: null,
-        ),
-        _i2.ForeignKeyDefinition(
-          constraintName: 'ingredients_fk_1',
-          columns: ['_articleCompositionsIngredientsArticleCompositionsId'],
-          referenceTable: 'article_compositions',
-          referenceTableSchema: 'public',
-          referenceColumns: ['id'],
-          onUpdate: _i2.ForeignKeyAction.noAction,
-          onDelete: _i2.ForeignKeyAction.noAction,
           matchType: null,
         ),
       ],
@@ -1347,18 +1347,6 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data != null
               ? (data as List)
                     .map((e) => deserialize<_i7.ArticleComposition>(e))
-                    .toList()
-              : null)
-          as T;
-    }
-    if (t == List<_i18.Ingredient>) {
-      return (data as List).map((e) => deserialize<_i18.Ingredient>(e)).toList()
-          as T;
-    }
-    if (t == _i1.getType<List<_i18.Ingredient>?>()) {
-      return (data != null
-              ? (data as List)
-                    .map((e) => deserialize<_i18.Ingredient>(e))
                     .toList()
               : null)
           as T;

@@ -1,3 +1,6 @@
+import 'package:pos_server/src/article/article_composition_endpoint.dart';
+import 'package:pos_server/src/cateogrie/categorie_endpoint.dart';
+
 import '../helpers/session_extensions.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -20,6 +23,9 @@ class ArticleEndpoint extends Endpoint {
       session,
       include: Article.include(
         categorie: Categorie.include(),
+        composition: ArticleComposition.includeList(
+          include: ArticleComposition.include(),
+        ),
       ),
       where: (a) {
         final base = a.categorie.buildingId.equals(buildingId);
@@ -39,16 +45,37 @@ class ArticleEndpoint extends Endpoint {
     Session session,
     Article article,
   ) async {
-    session.authorizedTo(['owner']);
-    await _checkArticleNameExist(
-      session,
-      article.name,
-      article.categorie!.buildingId,
-    );
-    return await Article.db.insertRow(
-      session,
-      article,
-    );
+    return await session.db.transaction((transaction) async {
+      session.authorizedTo(['owner']);
+      await _checkArticleNameExist(
+        session,
+        article.name,
+        article.categorie!.buildingId,
+      );
+      Article newArticle = await Article.db.insertRow(
+        session,
+        article,
+        transaction: transaction,
+      );
+      List<ArticleComposition> compositions = <ArticleComposition>[];
+      if (article.composition != null && article.composition!.isNotEmpty) {
+        compositions = await ArticleCompositionEndpoint()
+            .createArticleComposition(
+              session,
+              newArticle.id,
+              article.composition!,
+              transaction: transaction,
+            );
+      }
+      await Article.db.attach.composition(
+        session,
+        newArticle,
+        compositions,
+        transaction: transaction,
+      );
+      newArticle.composition = compositions;
+      return newArticle;
+    });
   }
 
   @doNotGenerate
@@ -95,22 +122,30 @@ class ArticleEndpoint extends Endpoint {
   /// Returns the updated [Article] article
   /// allow for owner users only
   Future<Article> updateArticle(
-    Session session, {
-    required Article article,
-  }) async {
+    Session session,
+    UuidValue id,
+    Article article,
+  ) async {
     session.authorizedTo(['owner']);
-    final existingArticle = await getArticleById(session, article.id);
+    final existingArticle = await getArticleById(session, id);
     if (existingArticle.name != article.name) {
       await _checkArticleNameExist(
         session,
         article.name,
-        article.categorie!.buildingId,
+        existingArticle.categorie!.buildingId,
       );
+    }
+    if (existingArticle.categorieId != article.categorieId) {
+      final categorie = await CategorieEndpoint().getCategorieById(
+        session,
+        article.categorieId,
+      );
+      existingArticle.categorie = categorie;
+      existingArticle.categorieId = categorie.id;
     }
     existingArticle.name = article.name;
     existingArticle.description = article.description;
     existingArticle.price = article.price;
-    existingArticle.categorieId = article.categorieId;
     return await Article.db.updateRow(
       session,
       existingArticle,

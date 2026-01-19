@@ -22,8 +22,7 @@ abstract class Ingredient
     required this.currentStock,
     required this.thresholdStock,
     required this.buildingId,
-  }) : id = id ?? _i1.Uuid().v4obj(),
-       _articleCompositionsIngredientsArticleCompositionsId = null;
+  }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Ingredient({
     _i1.UuidValue? id,
@@ -35,7 +34,7 @@ abstract class Ingredient
   }) = _IngredientImpl;
 
   factory Ingredient.fromJson(Map<String, dynamic> jsonSerialization) {
-    return IngredientImplicit._(
+    return Ingredient(
       id: jsonSerialization['id'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
@@ -46,13 +45,6 @@ abstract class Ingredient
       buildingId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['buildingId'],
       ),
-      $_articleCompositionsIngredientsArticleCompositionsId:
-          jsonSerialization['_articleCompositionsIngredientsArticleCompositionsId'] ==
-              null
-          ? null
-          : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['_articleCompositionsIngredientsArticleCompositionsId'],
-            ),
     );
   }
 
@@ -72,8 +64,6 @@ abstract class Ingredient
   double thresholdStock;
 
   _i1.UuidValue buildingId;
-
-  final _i1.UuidValue? _articleCompositionsIngredientsArticleCompositionsId;
 
   @override
   _i1.Table<_i1.UuidValue> get table => t;
@@ -99,9 +89,6 @@ abstract class Ingredient
       'currentStock': currentStock,
       'thresholdStock': thresholdStock,
       'buildingId': buildingId.toJson(),
-      if (_articleCompositionsIngredientsArticleCompositionsId != null)
-        '_articleCompositionsIngredientsArticleCompositionsId':
-            _articleCompositionsIngredientsArticleCompositionsId.toJson(),
     };
   }
 
@@ -177,57 +164,15 @@ class _IngredientImpl extends Ingredient {
     double? thresholdStock,
     _i1.UuidValue? buildingId,
   }) {
-    return IngredientImplicit._(
+    return Ingredient(
       id: id ?? this.id,
       name: name ?? this.name,
       unit: unit ?? this.unit,
       currentStock: currentStock ?? this.currentStock,
       thresholdStock: thresholdStock ?? this.thresholdStock,
       buildingId: buildingId ?? this.buildingId,
-      $_articleCompositionsIngredientsArticleCompositionsId:
-          this._articleCompositionsIngredientsArticleCompositionsId,
     );
   }
-}
-
-class IngredientImplicit extends _IngredientImpl {
-  IngredientImplicit._({
-    _i1.UuidValue? id,
-    required String name,
-    required _i2.UnitsType unit,
-    required double currentStock,
-    required double thresholdStock,
-    required _i1.UuidValue buildingId,
-    _i1.UuidValue? $_articleCompositionsIngredientsArticleCompositionsId,
-  }) : _articleCompositionsIngredientsArticleCompositionsId =
-           $_articleCompositionsIngredientsArticleCompositionsId,
-       super(
-         id: id,
-         name: name,
-         unit: unit,
-         currentStock: currentStock,
-         thresholdStock: thresholdStock,
-         buildingId: buildingId,
-       );
-
-  factory IngredientImplicit(
-    Ingredient ingredient, {
-    _i1.UuidValue? $_articleCompositionsIngredientsArticleCompositionsId,
-  }) {
-    return IngredientImplicit._(
-      id: ingredient.id,
-      name: ingredient.name,
-      unit: ingredient.unit,
-      currentStock: ingredient.currentStock,
-      thresholdStock: ingredient.thresholdStock,
-      buildingId: ingredient.buildingId,
-      $_articleCompositionsIngredientsArticleCompositionsId:
-          $_articleCompositionsIngredientsArticleCompositionsId,
-    );
-  }
-
-  @override
-  final _i1.UuidValue? _articleCompositionsIngredientsArticleCompositionsId;
 }
 
 class IngredientUpdateTable extends _i1.UpdateTable<IngredientTable> {
@@ -261,13 +206,6 @@ class IngredientUpdateTable extends _i1.UpdateTable<IngredientTable> {
     table.buildingId,
     value,
   );
-
-  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue>
-  $_articleCompositionsIngredientsArticleCompositionsId(_i1.UuidValue? value) =>
-      _i1.ColumnValue(
-        table.$_articleCompositionsIngredientsArticleCompositionsId,
-        value,
-      );
 }
 
 class IngredientTable extends _i1.Table<_i1.UuidValue> {
@@ -294,10 +232,6 @@ class IngredientTable extends _i1.Table<_i1.UuidValue> {
       'buildingId',
       this,
     );
-    $_articleCompositionsIngredientsArticleCompositionsId = _i1.ColumnUuid(
-      '_articleCompositionsIngredientsArticleCompositionsId',
-      this,
-    );
   }
 
   late final IngredientUpdateTable updateTable;
@@ -312,22 +246,8 @@ class IngredientTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnUuid buildingId;
 
-  late final _i1.ColumnUuid
-  $_articleCompositionsIngredientsArticleCompositionsId;
-
   @override
   List<_i1.Column> get columns => [
-    id,
-    name,
-    unit,
-    currentStock,
-    thresholdStock,
-    buildingId,
-    $_articleCompositionsIngredientsArticleCompositionsId,
-  ];
-
-  @override
-  List<_i1.Column> get managedColumns => [
     id,
     name,
     unit,

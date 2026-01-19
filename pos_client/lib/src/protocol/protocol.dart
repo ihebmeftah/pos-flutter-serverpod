@@ -12,8 +12,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'access/access.dart' as _i2;
-import 'article/article.dart' as _i3;
-import 'article/article_composition.dart' as _i4;
+import 'article/entity/article.dart' as _i3;
+import 'article/entity/article_composition.dart' as _i4;
 import 'buildings/building.dart' as _i5;
 import 'buildings/currency_enum.dart' as _i6;
 import 'buildings_tables/building_tables.dart' as _i7;
@@ -31,7 +31,7 @@ import 'order/order_item.dart' as _i18;
 import 'order/order_item_status_enum.dart' as _i19;
 import 'order/order_status_enum.dart' as _i20;
 import 'package:pos_client/src/protocol/access/access.dart' as _i21;
-import 'package:pos_client/src/protocol/article/article.dart' as _i22;
+import 'package:pos_client/src/protocol/article/entity/article.dart' as _i22;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i23;
 import 'package:pos_client/src/protocol/employer/employer.dart' as _i24;
@@ -46,8 +46,8 @@ import 'package:pos_client/src/protocol/order/order_item.dart' as _i31;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i32;
 export 'access/access.dart';
-export 'article/article.dart';
-export 'article/article_composition.dart';
+export 'article/entity/article.dart';
+export 'article/entity/article_composition.dart';
 export 'buildings/building.dart';
 export 'buildings/currency_enum.dart';
 export 'buildings_tables/building_tables.dart';
@@ -224,18 +224,6 @@ class Protocol extends _i1.SerializationManager {
       return (data != null
               ? (data as List)
                     .map((e) => deserialize<_i4.ArticleComposition>(e))
-                    .toList()
-              : null)
-          as T;
-    }
-    if (t == List<_i15.Ingredient>) {
-      return (data as List).map((e) => deserialize<_i15.Ingredient>(e)).toList()
-          as T;
-    }
-    if (t == _i1.getType<List<_i15.Ingredient>?>()) {
-      return (data != null
-              ? (data as List)
-                    .map((e) => deserialize<_i15.Ingredient>(e))
                     .toList()
               : null)
           as T;

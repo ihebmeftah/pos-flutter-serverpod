@@ -78,24 +78,24 @@ class IngredientFormView extends GetView<IngredientFormController> {
                           },
                         ),
                         AppFormField.label(
-                          label: "Minimum Stock threshold",
-                          hint: "Enter minimum stock",
-                          ctr: controller.minimumStock,
+                          label: "Threshold Stock",
+                          hint: "Enter threshold stock",
+                          ctr: controller.thresholdStock,
                           isNumeric: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "Minimum stock is required";
+                              return "Threshold stock is required";
                             }
                             if (num.tryParse(value) == null) {
                               return "Enter a valid number";
                             }
                             if (double.tryParse(
-                                  controller.minimumStock.text,
+                                  controller.thresholdStock.text,
                                 )! >
                                 double.tryParse(
                                   controller.currentStock.text,
                                 )!) {
-                              return "Minimum stock cannot be greater than current stock";
+                              return "Threshold stock cannot be greater than current stock";
                             }
                             return null;
                           },

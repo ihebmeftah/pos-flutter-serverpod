@@ -25,7 +25,7 @@ class IngredientFormController extends GetxController with StateMixin {
   final ingFormKey = GlobalKey<FormState>();
   final name = TextEditingController(),
       currentStock = TextEditingController(),
-      minimumStock = TextEditingController();
+      thresholdStock = TextEditingController();
   UnitsType? selectedUnit;
 
   void selectUnit(UnitsType? unit) {
@@ -37,7 +37,7 @@ class IngredientFormController extends GetxController with StateMixin {
     name: name.text,
     unit: selectedUnit!,
     currentStock: double.parse(currentStock.text),
-    thresholdStock: double.parse(minimumStock.text),
+    thresholdStock: double.parse(thresholdStock.text),
     buildingId: LocalStorage().building!.id,
   );
 
@@ -64,7 +64,7 @@ class IngredientFormController extends GetxController with StateMixin {
           .getIngredintById(id!);
       name.text = ingredient.name;
       currentStock.text = ingredient.currentStock.toString();
-      minimumStock.text = ingredient.thresholdStock.toString();
+      thresholdStock.text = ingredient.thresholdStock.toString();
       selectedUnit = ingredient.unit;
       change(null, status: RxStatus.success());
     } catch (e) {

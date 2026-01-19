@@ -11,8 +11,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import '../cateogrie/categorie.dart' as _i2;
-import '../article/article_composition.dart' as _i3;
+import '../../cateogrie/categorie.dart' as _i2;
+import '../../article/entity/article_composition.dart' as _i3;
 import 'package:pos_client/src/protocol/protocol.dart' as _i4;
 
 abstract class Article implements _i1.SerializableModel {

@@ -12,23 +12,25 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../ingredient/ingredient.dart' as _i2;
+import '../../ingredient/ingredient.dart' as _i2;
 import 'package:pos_server/src/generated/protocol.dart' as _i3;
 
 abstract class ArticleComposition
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   ArticleComposition._({
     _i1.UuidValue? id,
-    required this.articleId,
-    this.ingredients,
+    this.articleId,
+    required this.ingredientId,
+    this.ingredient,
     required this.quantity,
   }) : id = id ?? _i1.Uuid().v4obj(),
        _articleCompositionArticleId = null;
 
   factory ArticleComposition({
     _i1.UuidValue? id,
-    required _i1.UuidValue articleId,
-    List<_i2.Ingredient>? ingredients,
+    _i1.UuidValue? articleId,
+    required _i1.UuidValue ingredientId,
+    _i2.Ingredient? ingredient,
     required double quantity,
   }) = _ArticleCompositionImpl;
 
@@ -37,13 +39,16 @@ abstract class ArticleComposition
       id: jsonSerialization['id'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      articleId: _i1.UuidValueJsonExtension.fromJson(
-        jsonSerialization['articleId'],
-      ),
-      ingredients: jsonSerialization['ingredients'] == null
+      articleId: jsonSerialization['articleId'] == null
           ? null
-          : _i3.Protocol().deserialize<List<_i2.Ingredient>>(
-              jsonSerialization['ingredients'],
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['articleId']),
+      ingredientId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ingredientId'],
+      ),
+      ingredient: jsonSerialization['ingredient'] == null
+          ? null
+          : _i3.Protocol().deserialize<_i2.Ingredient>(
+              jsonSerialization['ingredient'],
             ),
       quantity: (jsonSerialization['quantity'] as num).toDouble(),
       $_articleCompositionArticleId:
@@ -62,9 +67,11 @@ abstract class ArticleComposition
   @override
   _i1.UuidValue id;
 
-  _i1.UuidValue articleId;
+  _i1.UuidValue? articleId;
 
-  List<_i2.Ingredient>? ingredients;
+  _i1.UuidValue ingredientId;
+
+  _i2.Ingredient? ingredient;
 
   double quantity;
 
@@ -79,7 +86,8 @@ abstract class ArticleComposition
   ArticleComposition copyWith({
     _i1.UuidValue? id,
     _i1.UuidValue? articleId,
-    List<_i2.Ingredient>? ingredients,
+    _i1.UuidValue? ingredientId,
+    _i2.Ingredient? ingredient,
     double? quantity,
   });
   @override
@@ -87,9 +95,9 @@ abstract class ArticleComposition
     return {
       '__className__': 'ArticleComposition',
       'id': id.toJson(),
-      'articleId': articleId.toJson(),
-      if (ingredients != null)
-        'ingredients': ingredients?.toJson(valueToJson: (v) => v.toJson()),
+      if (articleId != null) 'articleId': articleId?.toJson(),
+      'ingredientId': ingredientId.toJson(),
+      if (ingredient != null) 'ingredient': ingredient?.toJson(),
       'quantity': quantity,
       if (_articleCompositionArticleId != null)
         '_articleCompositionArticleId': _articleCompositionArticleId.toJson(),
@@ -101,19 +109,16 @@ abstract class ArticleComposition
     return {
       '__className__': 'ArticleComposition',
       'id': id.toJson(),
-      'articleId': articleId.toJson(),
-      if (ingredients != null)
-        'ingredients': ingredients?.toJson(
-          valueToJson: (v) => v.toJsonForProtocol(),
-        ),
+      'ingredientId': ingredientId.toJson(),
+      if (ingredient != null) 'ingredient': ingredient?.toJsonForProtocol(),
       'quantity': quantity,
     };
   }
 
   static ArticleCompositionInclude include({
-    _i2.IngredientIncludeList? ingredients,
+    _i2.IngredientInclude? ingredient,
   }) {
-    return ArticleCompositionInclude._(ingredients: ingredients);
+    return ArticleCompositionInclude._(ingredient: ingredient);
   }
 
   static ArticleCompositionIncludeList includeList({
@@ -147,13 +152,15 @@ class _Undefined {}
 class _ArticleCompositionImpl extends ArticleComposition {
   _ArticleCompositionImpl({
     _i1.UuidValue? id,
-    required _i1.UuidValue articleId,
-    List<_i2.Ingredient>? ingredients,
+    _i1.UuidValue? articleId,
+    required _i1.UuidValue ingredientId,
+    _i2.Ingredient? ingredient,
     required double quantity,
   }) : super._(
          id: id,
          articleId: articleId,
-         ingredients: ingredients,
+         ingredientId: ingredientId,
+         ingredient: ingredient,
          quantity: quantity,
        );
 
@@ -163,16 +170,18 @@ class _ArticleCompositionImpl extends ArticleComposition {
   @override
   ArticleComposition copyWith({
     _i1.UuidValue? id,
-    _i1.UuidValue? articleId,
-    Object? ingredients = _Undefined,
+    Object? articleId = _Undefined,
+    _i1.UuidValue? ingredientId,
+    Object? ingredient = _Undefined,
     double? quantity,
   }) {
     return ArticleCompositionImplicit._(
       id: id ?? this.id,
-      articleId: articleId ?? this.articleId,
-      ingredients: ingredients is List<_i2.Ingredient>?
-          ? ingredients
-          : this.ingredients?.map((e0) => e0.copyWith()).toList(),
+      articleId: articleId is _i1.UuidValue? ? articleId : this.articleId,
+      ingredientId: ingredientId ?? this.ingredientId,
+      ingredient: ingredient is _i2.Ingredient?
+          ? ingredient
+          : this.ingredient?.copyWith(),
       quantity: quantity ?? this.quantity,
       $_articleCompositionArticleId: this._articleCompositionArticleId,
     );
@@ -182,15 +191,17 @@ class _ArticleCompositionImpl extends ArticleComposition {
 class ArticleCompositionImplicit extends _ArticleCompositionImpl {
   ArticleCompositionImplicit._({
     _i1.UuidValue? id,
-    required _i1.UuidValue articleId,
-    List<_i2.Ingredient>? ingredients,
+    _i1.UuidValue? articleId,
+    required _i1.UuidValue ingredientId,
+    _i2.Ingredient? ingredient,
     required double quantity,
     _i1.UuidValue? $_articleCompositionArticleId,
   }) : _articleCompositionArticleId = $_articleCompositionArticleId,
        super(
          id: id,
          articleId: articleId,
-         ingredients: ingredients,
+         ingredientId: ingredientId,
+         ingredient: ingredient,
          quantity: quantity,
        );
 
@@ -201,7 +212,8 @@ class ArticleCompositionImplicit extends _ArticleCompositionImpl {
     return ArticleCompositionImplicit._(
       id: articleComposition.id,
       articleId: articleComposition.articleId,
-      ingredients: articleComposition.ingredients,
+      ingredientId: articleComposition.ingredientId,
+      ingredient: articleComposition.ingredient,
       quantity: articleComposition.quantity,
       $_articleCompositionArticleId: $_articleCompositionArticleId,
     );
@@ -216,9 +228,16 @@ class ArticleCompositionUpdateTable
   ArticleCompositionUpdateTable(super.table);
 
   _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> articleId(
-    _i1.UuidValue value,
+    _i1.UuidValue? value,
   ) => _i1.ColumnValue(
     table.articleId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> ingredientId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.ingredientId,
     value,
   );
 
@@ -243,6 +262,10 @@ class ArticleCompositionTable extends _i1.Table<_i1.UuidValue> {
       'articleId',
       this,
     );
+    ingredientId = _i1.ColumnUuid(
+      'ingredientId',
+      this,
+    );
     quantity = _i1.ColumnDouble(
       'quantity',
       this,
@@ -257,56 +280,32 @@ class ArticleCompositionTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnUuid articleId;
 
-  _i2.IngredientTable? ___ingredients;
+  late final _i1.ColumnUuid ingredientId;
 
-  _i1.ManyRelation<_i2.IngredientTable>? _ingredients;
+  _i2.IngredientTable? _ingredient;
 
   late final _i1.ColumnDouble quantity;
 
   late final _i1.ColumnUuid $_articleCompositionArticleId;
 
-  _i2.IngredientTable get __ingredients {
-    if (___ingredients != null) return ___ingredients!;
-    ___ingredients = _i1.createRelationTable(
-      relationFieldName: '__ingredients',
-      field: ArticleComposition.t.id,
-      foreignField: _i2
-          .Ingredient
-          .t
-          .$_articleCompositionsIngredientsArticleCompositionsId,
+  _i2.IngredientTable get ingredient {
+    if (_ingredient != null) return _ingredient!;
+    _ingredient = _i1.createRelationTable(
+      relationFieldName: 'ingredient',
+      field: ArticleComposition.t.ingredientId,
+      foreignField: _i2.Ingredient.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
           _i2.IngredientTable(tableRelation: foreignTableRelation),
     );
-    return ___ingredients!;
-  }
-
-  _i1.ManyRelation<_i2.IngredientTable> get ingredients {
-    if (_ingredients != null) return _ingredients!;
-    var relationTable = _i1.createRelationTable(
-      relationFieldName: 'ingredients',
-      field: ArticleComposition.t.id,
-      foreignField: _i2
-          .Ingredient
-          .t
-          .$_articleCompositionsIngredientsArticleCompositionsId,
-      tableRelation: tableRelation,
-      createTable: (foreignTableRelation) =>
-          _i2.IngredientTable(tableRelation: foreignTableRelation),
-    );
-    _ingredients = _i1.ManyRelation<_i2.IngredientTable>(
-      tableWithRelations: relationTable,
-      table: _i2.IngredientTable(
-        tableRelation: relationTable.tableRelation!.lastRelation,
-      ),
-    );
-    return _ingredients!;
+    return _ingredient!;
   }
 
   @override
   List<_i1.Column> get columns => [
     id,
     articleId,
+    ingredientId,
     quantity,
     $_articleCompositionArticleId,
   ];
@@ -315,27 +314,28 @@ class ArticleCompositionTable extends _i1.Table<_i1.UuidValue> {
   List<_i1.Column> get managedColumns => [
     id,
     articleId,
+    ingredientId,
     quantity,
   ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
-    if (relationField == 'ingredients') {
-      return __ingredients;
+    if (relationField == 'ingredient') {
+      return ingredient;
     }
     return null;
   }
 }
 
 class ArticleCompositionInclude extends _i1.IncludeObject {
-  ArticleCompositionInclude._({_i2.IngredientIncludeList? ingredients}) {
-    _ingredients = ingredients;
+  ArticleCompositionInclude._({_i2.IngredientInclude? ingredient}) {
+    _ingredient = ingredient;
   }
 
-  _i2.IngredientIncludeList? _ingredients;
+  _i2.IngredientInclude? _ingredient;
 
   @override
-  Map<String, _i1.Include?> get includes => {'ingredients': _ingredients};
+  Map<String, _i1.Include?> get includes => {'ingredient': _ingredient};
 
   @override
   _i1.Table<_i1.UuidValue> get table => ArticleComposition.t;
@@ -364,13 +364,7 @@ class ArticleCompositionIncludeList extends _i1.IncludeList {
 class ArticleCompositionRepository {
   const ArticleCompositionRepository._();
 
-  final attach = const ArticleCompositionAttachRepository._();
-
   final attachRow = const ArticleCompositionAttachRowRepository._();
-
-  final detach = const ArticleCompositionDetachRepository._();
-
-  final detachRow = const ArticleCompositionDetachRowRepository._();
 
   /// Returns a list of [ArticleComposition]s matching the given query parameters.
   ///
@@ -630,137 +624,30 @@ class ArticleCompositionRepository {
   }
 }
 
-class ArticleCompositionAttachRepository {
-  const ArticleCompositionAttachRepository._();
-
-  /// Creates a relation between this [ArticleComposition] and the given [Ingredient]s
-  /// by setting each [Ingredient]'s foreign key `_articleCompositionsIngredientsArticleCompositionsId` to refer to this [ArticleComposition].
-  Future<void> ingredients(
-    _i1.Session session,
-    ArticleComposition articleComposition,
-    List<_i2.Ingredient> ingredient, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (ingredient.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('ingredient.id');
-    }
-    if (articleComposition.id == null) {
-      throw ArgumentError.notNull('articleComposition.id');
-    }
-
-    var $ingredient = ingredient
-        .map(
-          (e) => _i2.IngredientImplicit(
-            e,
-            $_articleCompositionsIngredientsArticleCompositionsId:
-                articleComposition.id,
-          ),
-        )
-        .toList();
-    await session.db.update<_i2.Ingredient>(
-      $ingredient,
-      columns: [
-        _i2.Ingredient.t.$_articleCompositionsIngredientsArticleCompositionsId,
-      ],
-      transaction: transaction,
-    );
-  }
-}
-
 class ArticleCompositionAttachRowRepository {
   const ArticleCompositionAttachRowRepository._();
 
-  /// Creates a relation between this [ArticleComposition] and the given [Ingredient]
-  /// by setting the [Ingredient]'s foreign key `_articleCompositionsIngredientsArticleCompositionsId` to refer to this [ArticleComposition].
-  Future<void> ingredients(
+  /// Creates a relation between the given [ArticleComposition] and [Ingredient]
+  /// by setting the [ArticleComposition]'s foreign key `ingredientId` to refer to the [Ingredient].
+  Future<void> ingredient(
     _i1.Session session,
     ArticleComposition articleComposition,
     _i2.Ingredient ingredient, {
     _i1.Transaction? transaction,
   }) async {
-    if (ingredient.id == null) {
-      throw ArgumentError.notNull('ingredient.id');
-    }
     if (articleComposition.id == null) {
       throw ArgumentError.notNull('articleComposition.id');
     }
-
-    var $ingredient = _i2.IngredientImplicit(
-      ingredient,
-      $_articleCompositionsIngredientsArticleCompositionsId:
-          articleComposition.id,
-    );
-    await session.db.updateRow<_i2.Ingredient>(
-      $ingredient,
-      columns: [
-        _i2.Ingredient.t.$_articleCompositionsIngredientsArticleCompositionsId,
-      ],
-      transaction: transaction,
-    );
-  }
-}
-
-class ArticleCompositionDetachRepository {
-  const ArticleCompositionDetachRepository._();
-
-  /// Detaches the relation between this [ArticleComposition] and the given [Ingredient]
-  /// by setting the [Ingredient]'s foreign key `_articleCompositionsIngredientsArticleCompositionsId` to `null`.
-  ///
-  /// This removes the association between the two models without deleting
-  /// the related record.
-  Future<void> ingredients(
-    _i1.Session session,
-    List<_i2.Ingredient> ingredient, {
-    _i1.Transaction? transaction,
-  }) async {
-    if (ingredient.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('ingredient.id');
-    }
-
-    var $ingredient = ingredient
-        .map(
-          (e) => _i2.IngredientImplicit(
-            e,
-            $_articleCompositionsIngredientsArticleCompositionsId: null,
-          ),
-        )
-        .toList();
-    await session.db.update<_i2.Ingredient>(
-      $ingredient,
-      columns: [
-        _i2.Ingredient.t.$_articleCompositionsIngredientsArticleCompositionsId,
-      ],
-      transaction: transaction,
-    );
-  }
-}
-
-class ArticleCompositionDetachRowRepository {
-  const ArticleCompositionDetachRowRepository._();
-
-  /// Detaches the relation between this [ArticleComposition] and the given [Ingredient]
-  /// by setting the [Ingredient]'s foreign key `_articleCompositionsIngredientsArticleCompositionsId` to `null`.
-  ///
-  /// This removes the association between the two models without deleting
-  /// the related record.
-  Future<void> ingredients(
-    _i1.Session session,
-    _i2.Ingredient ingredient, {
-    _i1.Transaction? transaction,
-  }) async {
     if (ingredient.id == null) {
       throw ArgumentError.notNull('ingredient.id');
     }
 
-    var $ingredient = _i2.IngredientImplicit(
-      ingredient,
-      $_articleCompositionsIngredientsArticleCompositionsId: null,
+    var $articleComposition = articleComposition.copyWith(
+      ingredientId: ingredient.id,
     );
-    await session.db.updateRow<_i2.Ingredient>(
-      $ingredient,
-      columns: [
-        _i2.Ingredient.t.$_articleCompositionsIngredientsArticleCompositionsId,
-      ],
+    await session.db.updateRow<ArticleComposition>(
+      $articleComposition,
+      columns: [ArticleComposition.t.ingredientId],
       transaction: transaction,
     );
   }

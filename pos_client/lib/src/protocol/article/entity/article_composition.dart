@@ -11,21 +11,21 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import '../ingredient/ingredient.dart' as _i2;
+import '../../ingredient/ingredient.dart' as _i2;
 import 'package:pos_client/src/protocol/protocol.dart' as _i3;
 
 abstract class ArticleComposition implements _i1.SerializableModel {
   ArticleComposition._({
     _i1.UuidValue? id,
-    required this.articleId,
-    this.ingredients,
+    required this.ingredientId,
+    this.ingredient,
     required this.quantity,
   }) : id = id ?? _i1.Uuid().v4obj();
 
   factory ArticleComposition({
     _i1.UuidValue? id,
-    required _i1.UuidValue articleId,
-    List<_i2.Ingredient>? ingredients,
+    required _i1.UuidValue ingredientId,
+    _i2.Ingredient? ingredient,
     required double quantity,
   }) = _ArticleCompositionImpl;
 
@@ -34,13 +34,13 @@ abstract class ArticleComposition implements _i1.SerializableModel {
       id: jsonSerialization['id'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      articleId: _i1.UuidValueJsonExtension.fromJson(
-        jsonSerialization['articleId'],
+      ingredientId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['ingredientId'],
       ),
-      ingredients: jsonSerialization['ingredients'] == null
+      ingredient: jsonSerialization['ingredient'] == null
           ? null
-          : _i3.Protocol().deserialize<List<_i2.Ingredient>>(
-              jsonSerialization['ingredients'],
+          : _i3.Protocol().deserialize<_i2.Ingredient>(
+              jsonSerialization['ingredient'],
             ),
       quantity: (jsonSerialization['quantity'] as num).toDouble(),
     );
@@ -49,9 +49,9 @@ abstract class ArticleComposition implements _i1.SerializableModel {
   /// The id of the object.
   _i1.UuidValue id;
 
-  _i1.UuidValue articleId;
+  _i1.UuidValue ingredientId;
 
-  List<_i2.Ingredient>? ingredients;
+  _i2.Ingredient? ingredient;
 
   double quantity;
 
@@ -60,8 +60,8 @@ abstract class ArticleComposition implements _i1.SerializableModel {
   @_i1.useResult
   ArticleComposition copyWith({
     _i1.UuidValue? id,
-    _i1.UuidValue? articleId,
-    List<_i2.Ingredient>? ingredients,
+    _i1.UuidValue? ingredientId,
+    _i2.Ingredient? ingredient,
     double? quantity,
   });
   @override
@@ -69,9 +69,8 @@ abstract class ArticleComposition implements _i1.SerializableModel {
     return {
       '__className__': 'ArticleComposition',
       'id': id.toJson(),
-      'articleId': articleId.toJson(),
-      if (ingredients != null)
-        'ingredients': ingredients?.toJson(valueToJson: (v) => v.toJson()),
+      'ingredientId': ingredientId.toJson(),
+      if (ingredient != null) 'ingredient': ingredient?.toJson(),
       'quantity': quantity,
     };
   }
@@ -87,13 +86,13 @@ class _Undefined {}
 class _ArticleCompositionImpl extends ArticleComposition {
   _ArticleCompositionImpl({
     _i1.UuidValue? id,
-    required _i1.UuidValue articleId,
-    List<_i2.Ingredient>? ingredients,
+    required _i1.UuidValue ingredientId,
+    _i2.Ingredient? ingredient,
     required double quantity,
   }) : super._(
          id: id,
-         articleId: articleId,
-         ingredients: ingredients,
+         ingredientId: ingredientId,
+         ingredient: ingredient,
          quantity: quantity,
        );
 
@@ -103,16 +102,16 @@ class _ArticleCompositionImpl extends ArticleComposition {
   @override
   ArticleComposition copyWith({
     _i1.UuidValue? id,
-    _i1.UuidValue? articleId,
-    Object? ingredients = _Undefined,
+    _i1.UuidValue? ingredientId,
+    Object? ingredient = _Undefined,
     double? quantity,
   }) {
     return ArticleComposition(
       id: id ?? this.id,
-      articleId: articleId ?? this.articleId,
-      ingredients: ingredients is List<_i2.Ingredient>?
-          ? ingredients
-          : this.ingredients?.map((e0) => e0.copyWith()).toList(),
+      ingredientId: ingredientId ?? this.ingredientId,
+      ingredient: ingredient is _i2.Ingredient?
+          ? ingredient
+          : this.ingredient?.copyWith(),
       quantity: quantity ?? this.quantity,
     );
   }

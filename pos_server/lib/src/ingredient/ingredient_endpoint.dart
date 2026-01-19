@@ -67,4 +67,25 @@ class IngredientEndpoint extends Endpoint {
       );
     }
   }
+
+  /// Decrement stock in order
+  /// required [id] The id of the ingredient
+  /// required [qteUsed] The quantity used to decrement
+  /// Returns the updated [Ingredient] ingredient
+  Future<Ingredient> decrementStockInOrder(
+    Session session,
+    UuidValue id,
+    double qteUsed,
+  ) async {
+    final ingredient = await getIngredintById(session, id);
+    ingredient.currentStock -= qteUsed;
+    if (ingredient.currentStock < 0) {
+      ingredient.currentStock = 0;
+    }
+    return await Ingredient.db.updateRow(
+      session,
+      ingredient,
+      columns: (cls) => [cls.currentStock],
+    );
+  }
 }

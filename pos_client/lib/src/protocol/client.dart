@@ -13,7 +13,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:pos_client/src/protocol/access/access.dart' as _i3;
-import 'package:pos_client/src/protocol/article/article.dart' as _i4;
+import 'package:pos_client/src/protocol/article/entity/article.dart' as _i4;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i5;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
@@ -79,6 +79,14 @@ class EndpointAccess extends _i1.EndpointRef {
 }
 
 /// {@category Endpoint}
+class EndpointArticleComposition extends _i1.EndpointRef {
+  EndpointArticleComposition(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'articleComposition';
+}
+
+/// {@category Endpoint}
 class EndpointArticle extends _i1.EndpointRef {
   EndpointArticle(_i1.EndpointCaller caller) : super(caller);
 
@@ -126,12 +134,17 @@ class EndpointArticle extends _i1.EndpointRef {
   /// required [article] The article to update
   /// Returns the updated [Article] article
   /// allow for owner users only
-  _i2.Future<_i4.Article> updateArticle({required _i4.Article article}) =>
-      caller.callServerEndpoint<_i4.Article>(
-        'article',
-        'updateArticle',
-        {'article': article},
-      );
+  _i2.Future<_i4.Article> updateArticle(
+    _i1.UuidValue id,
+    _i4.Article article,
+  ) => caller.callServerEndpoint<_i4.Article>(
+    'article',
+    'updateArticle',
+    {
+      'id': id,
+      'article': article,
+    },
+  );
 }
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
@@ -667,6 +680,22 @@ class EndpointIngredient extends _i1.EndpointRef {
         'getIngredintById',
         {'id': id},
       );
+
+  /// Decrement stock in order
+  /// required [id] The id of the ingredient
+  /// required [qteUsed] The quantity used to decrement
+  /// Returns the updated [Ingredient] ingredient
+  _i2.Future<_i13.Ingredient> decrementStockInOrder(
+    _i1.UuidValue id,
+    double qteUsed,
+  ) => caller.callServerEndpoint<_i13.Ingredient>(
+    'ingredient',
+    'decrementStockInOrder',
+    {
+      'id': id,
+      'qteUsed': qteUsed,
+    },
+  );
 }
 
 /// {@category Endpoint}
@@ -864,6 +893,7 @@ class Client extends _i1.ServerpodClientShared {
              disconnectStreamsOnLostInternetConnection,
        ) {
     access = EndpointAccess(this);
+    articleComposition = EndpointArticleComposition(this);
     article = EndpointArticle(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
@@ -880,6 +910,8 @@ class Client extends _i1.ServerpodClientShared {
   }
 
   late final EndpointAccess access;
+
+  late final EndpointArticleComposition articleComposition;
 
   late final EndpointArticle article;
 
@@ -910,6 +942,7 @@ class Client extends _i1.ServerpodClientShared {
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
     'access': access,
+    'articleComposition': articleComposition,
     'article': article,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
