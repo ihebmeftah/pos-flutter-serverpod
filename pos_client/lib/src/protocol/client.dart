@@ -79,14 +79,6 @@ class EndpointAccess extends _i1.EndpointRef {
 }
 
 /// {@category Endpoint}
-class EndpointArticleComposition extends _i1.EndpointRef {
-  EndpointArticleComposition(_i1.EndpointCaller caller) : super(caller);
-
-  @override
-  String get name => 'articleComposition';
-}
-
-/// {@category Endpoint}
 class EndpointArticle extends _i1.EndpointRef {
   EndpointArticle(_i1.EndpointCaller caller) : super(caller);
 
@@ -680,22 +672,6 @@ class EndpointIngredient extends _i1.EndpointRef {
         'getIngredintById',
         {'id': id},
       );
-
-  /// Decrement stock in order
-  /// required [id] The id of the ingredient
-  /// required [qteUsed] The quantity used to decrement
-  /// Returns the updated [Ingredient] ingredient
-  _i2.Future<_i13.Ingredient> decrementStockInOrder(
-    _i1.UuidValue id,
-    double qteUsed,
-  ) => caller.callServerEndpoint<_i13.Ingredient>(
-    'ingredient',
-    'decrementStockInOrder',
-    {
-      'id': id,
-      'qteUsed': qteUsed,
-    },
-  );
 }
 
 /// {@category Endpoint}
@@ -893,7 +869,6 @@ class Client extends _i1.ServerpodClientShared {
              disconnectStreamsOnLostInternetConnection,
        ) {
     access = EndpointAccess(this);
-    articleComposition = EndpointArticleComposition(this);
     article = EndpointArticle(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
@@ -910,8 +885,6 @@ class Client extends _i1.ServerpodClientShared {
   }
 
   late final EndpointAccess access;
-
-  late final EndpointArticleComposition articleComposition;
 
   late final EndpointArticle article;
 
@@ -942,7 +915,6 @@ class Client extends _i1.ServerpodClientShared {
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
     'access': access,
-    'articleComposition': articleComposition,
     'article': article,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,

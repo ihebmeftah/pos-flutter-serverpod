@@ -16,7 +16,7 @@ class ServerpodClient extends GetxService {
     serverUrl = serverUrlFromEnv.isEmpty
         ? config.apiUrl ?? 'http://$localhost:8080/'
         : serverUrlFromEnv;
-    _client = Client('http://10.138.21.111:8080/')
+    _client = Client('http://10.74.110.111:8080/')
       ..connectivityMonitor = FlutterConnectivityMonitor()
       ..authSessionManager = FlutterAuthSessionManager();
     await _client.auth.initialize();

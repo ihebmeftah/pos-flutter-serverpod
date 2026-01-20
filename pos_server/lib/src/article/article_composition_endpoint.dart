@@ -1,3 +1,4 @@
+import 'package:pos_server/src/article/article_endpoint.dart';
 import 'package:pos_server/src/ingredient/ingredient_endpoint.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -20,25 +21,34 @@ class ArticleCompositionEndpoint extends Endpoint {
     Transaction? transaction,
   }) async {
     session.authorizedTo(['owner']);
-    final composition = <ArticleComposition>[];
     for (ArticleComposition compo in articleComposition) {
-      final ingredient = await IngredientEndpoint().getIngredintById(
+      await IngredientEndpoint().getIngredintById(
         session,
         compo.ingredientId,
-      );
-      composition.add(
-        ArticleComposition(
-          articleId: articleId,
-          ingredientId: ingredient.id,
-          ingredient: ingredient,
-          quantity: compo.quantity,
-        ),
       );
     }
     return await ArticleComposition.db.insert(
       session,
-      composition,
+      articleComposition,
       transaction: transaction,
+    );
+  }
+
+  /// Get Article Composition by article id
+  /// required [articleId] The id of the article
+  /// Returns a list of [ArticleComposition] compositions of the article
+  @doNotGenerate
+  Future<List<ArticleComposition>> getArticleCompositionByArticleId(
+    Session session,
+    UuidValue articleId,
+  ) async {
+    await ArticleEndpoint().getArticleById(
+      session,
+      articleId,
+    );
+    return await ArticleComposition.db.find(
+      session,
+      where: (ac) => ac.articleId.equals(articleId),
     );
   }
 }

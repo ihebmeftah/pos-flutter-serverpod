@@ -36,7 +36,7 @@ class IngredientEndpoint extends Endpoint {
             'Current stock cannot be less than threshold stock (${ingredient.thresholdStock})',
       );
     }
-    await _existIngredientName(session, ingredient.name);
+    await _existIngredientName(session, ingredient.name, ingredient.buildingId);
     return await Ingredient.db.insertRow(
       session,
       ingredient,
@@ -44,7 +44,10 @@ class IngredientEndpoint extends Endpoint {
   }
 
   Future<Ingredient> getIngredintById(Session session, UuidValue id) async {
-    final ingredient = await Ingredient.db.findById(session, id);
+    final ingredient = await Ingredient.db.findById(
+      session,
+      id,
+    );
     if (ingredient == null) {
       throw AppException(
         errorType: ExceptionType.NotFound,
@@ -55,10 +58,14 @@ class IngredientEndpoint extends Endpoint {
   }
 
   @doNotGenerate
-  Future<void> _existIngredientName(Session session, String name) async {
+  Future<void> _existIngredientName(
+    Session session,
+    String name,
+    UuidValue id,
+  ) async {
     final existe = await Ingredient.db.findFirstRow(
       session,
-      where: (i) => i.name.equals(name),
+      where: (i) => i.name.equals(name) & i.id.notEquals(id),
     );
     if (existe != null) {
       throw AppException(
@@ -72,11 +79,13 @@ class IngredientEndpoint extends Endpoint {
   /// required [id] The id of the ingredient
   /// required [qteUsed] The quantity used to decrement
   /// Returns the updated [Ingredient] ingredient
+  @doNotGenerate
   Future<Ingredient> decrementStockInOrder(
     Session session,
     UuidValue id,
-    double qteUsed,
-  ) async {
+    double qteUsed, {
+    Transaction? transaction,
+  }) async {
     final ingredient = await getIngredintById(session, id);
     ingredient.currentStock -= qteUsed;
     if (ingredient.currentStock < 0) {
@@ -85,6 +94,7 @@ class IngredientEndpoint extends Endpoint {
     return await Ingredient.db.updateRow(
       session,
       ingredient,
+      transaction: transaction,
       columns: (cls) => [cls.currentStock],
     );
   }

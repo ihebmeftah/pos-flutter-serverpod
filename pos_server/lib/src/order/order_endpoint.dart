@@ -1,3 +1,4 @@
+import 'package:pos_server/src/article/article_endpoint.dart';
 import 'package:pos_server/src/buildings/building_endpoint.dart';
 import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
@@ -5,6 +6,8 @@ import '../helpers/session_extensions.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import 'package:serverpod/serverpod.dart' as s;
 import 'package:serverpod_auth_idp_server/core.dart';
+
+import '../ingredient/ingredient_endpoint.dart';
 
 class OrderEndpoint extends Endpoint {
   @override
@@ -151,21 +154,55 @@ class OrderEndpoint extends Endpoint {
         );
       }
     }
+    final articles = <Article>[];
+    for (final item in order.items!) {
+      final existArticle = await ArticleEndpoint().getArticleById(
+        session,
+        item.article.id,
+      );
+      articles.add(existArticle);
+    }
+    session.log(articles.length.toString());
 
-    // Create the order
-    order.status = OrderStatus.progress;
-    Order orderCreated = await Order.db.insertRow(
-      session,
-      order,
-    );
-    List<OrderItem> itemsCreated = await OrderItem.db.insert(
-      session,
-      order.items!,
-    );
+    return await session.db.transaction((trs) async {
+      // Create the order
+      order.status = OrderStatus.progress;
+      Order orderCreated = await Order.db.insertRow(
+        session,
+        order,
+        transaction: trs,
+      );
+      List<OrderItem> itemsCreated = await OrderItem.db.insert(
+        session,
+        order.items!,
+        transaction: trs,
+      );
 
-    // Attach items to the order
-    await Order.db.attach.items(session, orderCreated, itemsCreated);
-    return orderCreated;
+      // Attach items to the order
+      await Order.db.attach.items(
+        session,
+        orderCreated,
+        itemsCreated,
+        transaction: trs,
+      );
+
+      /// dec the stock of the articles
+      for (final article in articles) {
+        // Count how many times this article appears in the order
+        final articleCount = order.items!
+            .where((item) => item.article.id == article.id)
+            .length;
+        for (final compo in article.composition ?? []) {
+          await IngredientEndpoint().decrementStockInOrder(
+            session,
+            compo.ingredientId,
+            compo.quantity * articleCount,
+            transaction: trs,
+          );
+        }
+      }
+      return orderCreated;
+    });
   }
 
   @doNotGenerate

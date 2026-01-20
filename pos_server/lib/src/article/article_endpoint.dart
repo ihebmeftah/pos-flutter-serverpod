@@ -23,9 +23,6 @@ class ArticleEndpoint extends Endpoint {
       session,
       include: Article.include(
         categorie: Categorie.include(),
-        composition: ArticleComposition.includeList(
-          include: ArticleComposition.include(),
-        ),
       ),
       where: (a) {
         final base = a.categorie.buildingId.equals(buildingId);
@@ -106,6 +103,11 @@ class ArticleEndpoint extends Endpoint {
       id,
       include: Article.include(
         categorie: Categorie.include(),
+        composition: ArticleComposition.includeList(
+          include: ArticleComposition.include(
+            ingredient: Ingredient.include(),
+          ),
+        ),
       ),
     );
     if (article == null) {

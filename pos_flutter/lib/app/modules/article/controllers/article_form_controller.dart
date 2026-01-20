@@ -57,7 +57,7 @@ class ArticleFormController extends GetxController with StateMixin {
       selectedCategory = categorieController.categories.firstWhereOrNull(
         (cat) => cat.id == article.categorieId,
       );
-
+      articleCompositions.assignAll(article.composition ?? []);
       change(article, status: RxStatus.success());
     } on AppException catch (e) {
       change(null, status: RxStatus.error(e.message));

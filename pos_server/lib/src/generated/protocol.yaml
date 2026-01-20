@@ -4,7 +4,6 @@ access:
   - getAccessesByBuildingId:
   - getAccessById:
   - deleteAccess:
-articleComposition:
 article:
   - getArticlesByBuildingId:
   - createArticle:
@@ -51,7 +50,6 @@ ingredient:
   - getIngredientsByBuildingId:
   - createIngredient:
   - getIngredintById:
-  - decrementStockInOrder:
 order:
   - getOrdersByBuilingId:
   - getOrderById:

@@ -44,9 +44,11 @@ class IngredientFormController extends GetxController with StateMixin {
   void createIngredient() async {
     try {
       if (ingFormKey.currentState!.validate()) {
-        await ServerpodClient.instance.ingredient.createIngredient(
-          ingredientDto,
-        );
+        if (id == null) {
+          await ServerpodClient.instance.ingredient.createIngredient(
+            ingredientDto,
+          );
+        } 
         await Get.find<IngredientController>().getIngredients();
         Get.back();
       }
