@@ -195,6 +195,7 @@ class OrderEndpoint extends Endpoint {
         newOrderItems,
         transaction: trs,
       );
+      newOrder.btable!.status = TableStatus.occupied;
       newOrder.items = newOrderItems;
       // Attach items to the order
       await Order.db.attach.items(
