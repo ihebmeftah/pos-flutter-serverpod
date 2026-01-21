@@ -1,0 +1,5 @@
+class: AppendItemsDto
+fields:
+  orderId: UuidValue
+  itemIds: List<UuidValue>
+  buildingId: UuidValue

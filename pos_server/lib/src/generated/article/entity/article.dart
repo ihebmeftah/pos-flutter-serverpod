@@ -12,7 +12,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../../cateogrie/categorie.dart' as _i2;
+import '../../cateogrie/entity/categorie.dart' as _i2;
 import '../../article/entity/article_composition.dart' as _i3;
 import 'package:pos_server/src/generated/protocol.dart' as _i4;
 

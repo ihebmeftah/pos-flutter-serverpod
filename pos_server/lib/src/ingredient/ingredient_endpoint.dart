@@ -43,10 +43,14 @@ class IngredientEndpoint extends Endpoint {
     );
   }
 
-  Future<Ingredient> getIngredintById(Session session, UuidValue id) async {
-    final ingredient = await Ingredient.db.findById(
+  Future<Ingredient> getIngredintById(
+    Session session,
+    UuidValue id,
+    UuidValue buildingId,
+  ) async {
+    final ingredient = await Ingredient.db.findFirstRow(
       session,
-      id,
+      where: (i) => i.id.equals(id) & i.buildingId.equals(buildingId),
     );
     if (ingredient == null) {
       throw AppException(
@@ -61,11 +65,11 @@ class IngredientEndpoint extends Endpoint {
   Future<void> _existIngredientName(
     Session session,
     String name,
-    UuidValue id,
+    UuidValue buildingId,
   ) async {
     final existe = await Ingredient.db.findFirstRow(
       session,
-      where: (i) => i.name.equals(name) & i.id.notEquals(id),
+      where: (i) => i.name.equals(name) & i.buildingId.notEquals(buildingId),
     );
     if (existe != null) {
       throw AppException(
@@ -83,10 +87,11 @@ class IngredientEndpoint extends Endpoint {
   Future<Ingredient> decrementStockInOrder(
     Session session,
     UuidValue id,
+    UuidValue buildingId,
     double qteUsed, {
     Transaction? transaction,
   }) async {
-    final ingredient = await getIngredintById(session, id);
+    final ingredient = await getIngredintById(session, id, buildingId);
     ingredient.currentStock -= qteUsed;
     if (ingredient.currentStock < 0) {
       ingredient.currentStock = 0;

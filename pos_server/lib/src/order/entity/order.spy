@@ -3,7 +3,7 @@ table: orders
 fields:
   id: UuidValue, defaultPersist=random, defaultModel=random
   status: OrderStatus, default=progress
-  btable: BTable?, relation(onDelete=cascade),required
+  btable: BTable?, relation(onDelete=cascade)
   # Relation with UserProfile to support future customer app integration
   passedBy:  module:serverpod_auth_core:UserProfile?,relation, 
   closedby:  module:serverpod_auth_core:UserProfile?,relation(optional)

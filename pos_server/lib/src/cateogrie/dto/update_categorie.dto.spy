@@ -1,0 +1,5 @@
+class: CreateCategorieDto
+fields:
+    name: String 
+    description: String
+    buildingId: UuidValue

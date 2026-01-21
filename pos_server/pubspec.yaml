@@ -19,7 +19,6 @@ serverpod:
   scripts:
     # Starts the server and applies migrations
     start: dart bin/main.dart --apply-migrations
-    g-start: serverpod generate && dart bin/main.dart --apply-migrations
     migration: dart bin/main.dart --create-migration
     reset: docker compose down -v && docker compose up --build -d && dart bin/main.dart --apply-migrations
 

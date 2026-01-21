@@ -12,11 +12,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../order/order_status_enum.dart' as _i2;
-import '../buildings_tables/building_tables.dart' as _i3;
+import '../../order/order_status_enum.dart' as _i2;
+import '../../buildings_tables/building_tables.dart' as _i3;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
-import '../order/order_item.dart' as _i5;
+import '../../order/entity/order_item.dart' as _i5;
 import 'package:pos_server/src/generated/protocol.dart' as _i6;
 
 abstract class Order
@@ -25,7 +25,7 @@ abstract class Order
     _i1.UuidValue? id,
     _i2.OrderStatus? status,
     required this.btableId,
-    required this.btable,
+    this.btable,
     required this.passedById,
     this.passedBy,
     this.closedbyId,
@@ -41,7 +41,7 @@ abstract class Order
     _i1.UuidValue? id,
     _i2.OrderStatus? status,
     required _i1.UuidValue btableId,
-    required _i3.BTable? btable,
+    _i3.BTable? btable,
     required _i1.UuidValue passedById,
     _i4.UserProfile? passedBy,
     _i1.UuidValue? closedbyId,
@@ -227,7 +227,7 @@ class _OrderImpl extends Order {
     _i1.UuidValue? id,
     _i2.OrderStatus? status,
     required _i1.UuidValue btableId,
-    required _i3.BTable? btable,
+    _i3.BTable? btable,
     required _i1.UuidValue passedById,
     _i4.UserProfile? passedBy,
     _i1.UuidValue? closedbyId,

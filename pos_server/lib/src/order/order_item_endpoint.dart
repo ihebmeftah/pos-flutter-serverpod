@@ -1,5 +1,6 @@
 import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
+import '../article/article_endpoint.dart';
 import '../helpers/session_extensions.dart';
 import 'package:pos_server/src/order/order_endpoint.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
@@ -20,11 +21,22 @@ class OrderItemEndpoint extends Endpoint {
   /// Employer should have access to append items
   Future<Order> appendItemsToOrder(
     Session session,
-    UuidValue orderId,
-    List<OrderItem> orderItems,
+    AppendItemsDto appendItemDto,
   ) async {
-    /// Only employer allowed for this endpoint
+    // Only employer allowed for this endpoint
     session.authorizedTo(['employer']);
+
+    /// Check if table allows appending items to order
+    final building = await BuildingEndpoint().getBuildingById(
+      session,
+      appendItemDto.buildingId,
+    );
+    if (building.allowAppendingItemsToOrder == false) {
+      throw AppException(
+        errorType: ExceptionType.Forbidden,
+        message: 'This building does not allow appending items to orders',
+      );
+    }
 
     /// Employer should have access to append items
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
@@ -39,7 +51,7 @@ class OrderItemEndpoint extends Endpoint {
     }
 
     /// Must provide at least one new item to append
-    if (orderItems.isEmpty) {
+    if (appendItemDto.itemIds.isEmpty) {
       throw AppException(
         errorType: ExceptionType.BadRequest,
         message: 'You must provide at least one new item to append',
@@ -47,30 +59,38 @@ class OrderItemEndpoint extends Endpoint {
     }
 
     /// Get the order by id
-    Order order = await OrderEndpoint().getOrderById(session, orderId);
+    Order order = await OrderEndpoint().getOrderById(
+      session,
+      appendItemDto.orderId,
+    );
     if (order.status == OrderStatus.payed) {
       throw AppException(
         errorType: ExceptionType.Forbidden,
         message: 'Cannot append items to a paid order',
       );
     }
-
-    /// Check if table allows appending items to order
-    final building = await BuildingEndpoint().getBuildingById(
-      session,
-      order.btable!.buildingId,
-    );
-    if (building.allowAppendingItemsToOrder == false) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'This building does not allow appending items to orders',
+    // Check if articles exist and belong to the building
+    final orderItem = <OrderItem>[];
+    for (final articleId in appendItemDto.itemIds) {
+      final existArticle = await ArticleEndpoint().getArticleById(
+        session,
+        articleId,
+        building.id,
+      );
+      orderItem.add(
+        OrderItem(
+          article: existArticle,
+          itemStatus: OrderItemStatus.progress,
+          createdAt: DateTime.now(),
+          passedById: employer.userProfileId,
+        ),
       );
     }
 
     /// Insert new items to the database
     final newOrderItems = await OrderItem.db.insert(
       session,
-      orderItems,
+      orderItem,
     );
 
     /// Attach new items to the order
@@ -161,8 +181,6 @@ class OrderItemEndpoint extends Endpoint {
           }
         }
         item.itemStatus = newStatus;
-        item.preparedById = employer.userProfile!.id;
-        item.preaparedAt = DateTime.now();
         item.updatedAt = DateTime.now();
       }
     }

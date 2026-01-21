@@ -11,8 +11,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import '../order/order_item_status_enum.dart' as _i2;
-import '../article/entity/article.dart' as _i3;
+import '../../order/order_item_status_enum.dart' as _i2;
+import '../../article/entity/article.dart' as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
 import 'package:pos_client/src/protocol/protocol.dart' as _i5;

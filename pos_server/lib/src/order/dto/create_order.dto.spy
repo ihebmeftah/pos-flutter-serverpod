@@ -1,0 +1,5 @@
+class: CreateOrderDto
+fields:
+    btableId: UuidValue
+    itemsIds: List<UuidValue> # articlesIds
+    buildingId: UuidValue

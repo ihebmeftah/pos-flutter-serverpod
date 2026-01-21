@@ -112,96 +112,114 @@ class OrderEndpoint extends Endpoint {
   /// Employer should have access to order creation
   Future<Order> createOrder(
     Session session,
-    Order order,
+    CreateOrderDto orderDto,
   ) async {
     // Only employer allowed for this endpoint
     session.authorizedTo(['employer']);
-
+    // CHeck buidling
+    final building = await BuildingEndpoint().getBuildingById(
+      session,
+      orderDto.buildingId,
+    );
+    // Check if table multi order is allowed
+    if (building.tableMultiOrder == false) {
+      final tableOrder = await OrderEndpoint().getOrderCurrOfTable(
+        session,
+        orderDto.btableId,
+      );
+      if (tableOrder != null) {
+        throw AppException(
+          errorType: ExceptionType.Forbidden,
+          message:
+              'Table ${tableOrder.btable!.number} already has an ongoing order',
+        );
+      }
+    }
     // Employer should have access to order creation
     final employer = await EmployerEndpoint().getEmployerByIdentifier(
       session,
       session.authenticated!.authUserId,
     );
+    // Check if employer belongs to the building
+    if (building.id != employer.buildingId) {
+      throw AppException(
+        errorType: ExceptionType.Forbidden,
+        message: 'You don\'t have access to create orders for this building',
+      );
+    }
+    // Check if employer has access to order creation
     if (employer.access == null || employer.access?.orderCreation == false) {
       throw AppException(
         errorType: ExceptionType.Forbidden,
         message: 'You don\'t have access to create orders',
       );
     }
-
     // Order must have at least one item
-    if (order.items == null || order.items!.isEmpty) {
+    if (orderDto.itemsIds.isEmpty) {
       throw AppException(
         errorType: ExceptionType.BadRequest,
         message: 'Order must have at least one item',
       );
     }
-
-    // Check if table allows multi orders
-    final building = await BuildingEndpoint().getBuildingById(
-      session,
-      order.btable!.buildingId,
-    );
-    if (building.tableMultiOrder == false) {
-      final tableOrder = await OrderEndpoint().getOrderCurrOfTable(
-        session,
-        order.btableId,
-      );
-      if (tableOrder != null) {
-        throw AppException(
-          errorType: ExceptionType.Forbidden,
-          message: 'Table ${order.btable!.number} already has an ongoing order',
-        );
-      }
-    }
+    // Check if articles exist and belong to the building
     final articles = <Article>[];
-    for (final item in order.items!) {
+    for (final articleId in orderDto.itemsIds) {
       final existArticle = await ArticleEndpoint().getArticleById(
         session,
-        item.article.id,
+        articleId,
+        building.id,
       );
       articles.add(existArticle);
     }
-    session.log(articles.length.toString());
-
     return await session.db.transaction((trs) async {
       // Create the order
-      order.status = OrderStatus.progress;
-      Order orderCreated = await Order.db.insertRow(
+      Order newOrder = Order(
+        btableId: orderDto.btableId,
+        passedById: employer.userProfileId,
+      );
+      newOrder = await Order.db.insertRow(
         session,
-        order,
+        newOrder,
         transaction: trs,
       );
-      List<OrderItem> itemsCreated = await OrderItem.db.insert(
+      // Create the order items
+      List<OrderItem> newOrderItems = articles.map((article) {
+        return OrderItem(
+          orderId: newOrder.id,
+          article: article,
+          passedById: employer.userProfileId,
+        );
+      }).toList();
+      newOrderItems = await OrderItem.db.insert(
         session,
-        order.items!,
+        newOrderItems,
         transaction: trs,
       );
-
+      newOrder.items = newOrderItems;
       // Attach items to the order
       await Order.db.attach.items(
         session,
-        orderCreated,
-        itemsCreated,
+        newOrder,
+        newOrderItems,
         transaction: trs,
       );
-
-      /// dec the stock of the articles
+      // Decrement the stock of the articles
       for (final article in articles) {
         // Count how many times this article appears in the order
-        final articleCount = order.items!
+        final articleCount = newOrderItems
             .where((item) => item.article.id == article.id)
             .length;
         for (final compo in article.composition ?? []) {
           await IngredientEndpoint().decrementStockInOrder(
             session,
             compo.ingredientId,
+            building.id,
             compo.quantity * articleCount,
             transaction: trs,
           );
         }
       }
-      return orderCreated;
+      return newOrder;
     });
   }
 

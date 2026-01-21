@@ -41,8 +41,7 @@ class AppFormField extends StatelessWidget {
          "If isOutsideLabel is false, label must not be null",
        );
   final bool isOutsideLabel, readOnly;
-  final String? label;
-  final String? hint;
+  final String? label, hint;
   final TextEditingController? ctr;
   final FormFieldValidator<String>? validator;
   final int? maxLines;

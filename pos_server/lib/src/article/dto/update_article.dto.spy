@@ -1,0 +1,6 @@
+class: UpdateArticleDto
+fields:
+  name: String
+  description: String?
+  price: double
+  categoryId: UuidValue

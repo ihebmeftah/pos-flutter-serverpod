@@ -48,7 +48,7 @@ class IngredientFormController extends GetxController with StateMixin {
           await ServerpodClient.instance.ingredient.createIngredient(
             ingredientDto,
           );
-        } 
+        }
         await Get.find<IngredientController>().getIngredients();
         Get.back();
       }
@@ -63,7 +63,7 @@ class IngredientFormController extends GetxController with StateMixin {
   Future<void> getIngredintById() async {
     try {
       final ingredient = await ServerpodClient.instance.ingredient
-          .getIngredintById(id!);
+          .getIngredintById(id!, LocalStorage().building!.id);
       name.text = ingredient.name;
       currentStock.text = ingredient.currentStock.toString();
       thresholdStock.text = ingredient.thresholdStock.toString();

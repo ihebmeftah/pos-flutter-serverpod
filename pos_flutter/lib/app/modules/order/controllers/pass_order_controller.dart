@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
-import 'package:pos_flutter/app/modules/index/controllers/index_controller.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 
 import '../../../components/app_snackbar.dart';
@@ -101,17 +100,12 @@ class PassOrderController extends GetxController with StateMixin {
     }
   }
 
-  Order get orderDto => Order(
+  CreateOrderDto get createOrderDto => CreateOrderDto(
     btableId: table!.id,
-    btable: table,
-    passedById: Get.find<IndexController>().userProfile.id!,
-    items: selectedArticles
+    buildingId: LocalStorage().building!.id,
+    itemsIds: selectedArticles
         .map(
-          (article) => OrderItem(
-            id: null,
-            article: article,
-            passedById: Get.find<IndexController>().userProfile.id!,
-          ),
+          (article) => article.id,
         )
         .toList(),
   );
@@ -120,7 +114,7 @@ class PassOrderController extends GetxController with StateMixin {
     try {
       //? Create new order when tabe available
       final passedOrder = await ServerpodClient.instance.order.createOrder(
-        orderDto,
+        createOrderDto,
       );
       /*  if (Get.isRegistered<TablesController>()) {
         Get.find<TablesController>().updateTable(passedOrder.btable!);
@@ -132,11 +126,15 @@ class PassOrderController extends GetxController with StateMixin {
     }
   }
 
+  AppendItemsDto get appendItemsDto => AppendItemsDto(
+    orderId: currOrder!.id,
+    itemIds: selectedArticles.map((a) => a.id).toList(),
+    buildingId: LocalStorage().building!.id,
+  );
   Future<void> appendItemToOrder() async {
     try {
       await ServerpodClient.instance.orderItem.appendItemsToOrder(
-        currOrder!.id,
-        orderDto.items!,
+        appendItemsDto,
       );
       Get.offAndToNamed("${Routes.ORDER_DETAILS}/${currOrder!.id}");
       AppSnackbar.success('Items added to existing order successfully');

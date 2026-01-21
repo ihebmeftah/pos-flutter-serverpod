@@ -8,7 +8,7 @@ fields:
   phoneVerified: bool,defaultModel=false
   persoEmail: String,
   persoEmailVerified: bool,defaultModel=false
-  userProfile: module:serverpod_auth_core:UserProfile?, relation(onDelete=cascade), required
+  userProfile: module:serverpod_auth_core:UserProfile?, relation(onDelete=cascade)
   building: Building?, relation(onDelete=cascade)
   access: Access?, relation(onDelete=setNull,optional)
 

@@ -124,26 +124,53 @@ class ArticleFormView extends GetView<ArticleFormController> {
                           children: [
                             GetX<ArticleFormController>(
                               builder: (ctr) => Column(
-                                children: List.generate(
-                                  controller.articleCompositions.length,
-                                  (index) {
-                                    final composition =
-                                        controller.articleCompositions[index];
-                                    return ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      title: Text(
-                                        composition.ingredient?.name ?? '',
-                                      ),
-                                      subtitle: Text(
-                                        'Quantity: ${composition.quantity} ${composition.ingredient?.unit.name ?? ''}',
-                                      ),
-                                      trailing: IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        onPressed: () {},
-                                      ),
-                                    );
-                                  },
-                                ),
+                                children: [
+                                  /// Existing compositions
+                                  ...List.generate(
+                                    controller.article?.composition?.length ??
+                                        0,
+                                    (index) {
+                                      final composition = controller
+                                          .article!
+                                          .composition![index];
+                                      return ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        title: Text(
+                                          composition.ingredient?.name ?? '',
+                                        ),
+                                        subtitle: Text(
+                                          'Quantity: ${composition.quantity} ${composition.ingredient?.unit.name ?? ''}',
+                                        ),
+                                        trailing: IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () {},
+                                        ),
+                                      );
+                                    },
+                                  ),
+
+                                  /// added compositions
+                                  ...List.generate(
+                                    controller.articleCompositions.length,
+                                    (index) {
+                                      final composition =
+                                          controller.articleCompositions[index];
+                                      return ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        title: Text(
+                                          composition.ingredient?.name ?? '',
+                                        ),
+                                        subtitle: Text(
+                                          'Quantity: ${composition.quantity} ${composition.ingredient?.unit.name ?? ''}',
+                                        ),
+                                        trailing: IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () {},
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                             TextButton.icon(

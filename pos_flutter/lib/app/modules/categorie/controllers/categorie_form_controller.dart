@@ -10,11 +10,18 @@ class CategorieFormController extends GetxController with StateMixin {
   UuidValue? get id => Get.parameters['id'] != null
       ? UuidValue.fromString(Get.parameters['id']!)
       : null;
+
+  /// The categorie being edited, null if creating a new categorie
+  Categorie? categorie;
   final catFormKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descController = TextEditingController();
-  Categorie get categorieDto => Categorie(
-    id: id,
+  CreateCategorieDto get createCategorieDto => CreateCategorieDto(
+    name: nameController.text,
+    description: descController.text,
+    buildingId: LocalStorage().building!.id,
+  );
+  UpdateCategorieDto get updateCategorieDto => UpdateCategorieDto(
     name: nameController.text,
     description: descController.text,
     buildingId: LocalStorage().building!.id,
@@ -31,10 +38,12 @@ class CategorieFormController extends GetxController with StateMixin {
   Future<void> getCategorieById() async {
     try {
       change(null, status: RxStatus.loading());
-      final categorie = await ServerpodClient.instance.categorie
-          .getCategorieById(id!);
-      nameController.text = categorie.name;
-      descController.text = categorie.description ?? "";
+      categorie = await ServerpodClient.instance.categorie.getCategorieById(
+        id!,
+        LocalStorage().building!.id,
+      );
+      nameController.text = categorie!.name;
+      descController.text = categorie!.description ?? '';
       change(categorie, status: RxStatus.success());
     } on AppException catch (e) {
       change(null, status: RxStatus.error(e.message));
@@ -49,11 +58,13 @@ class CategorieFormController extends GetxController with StateMixin {
         change(null, status: RxStatus.loading());
         if (id == null) {
           await ServerpodClient.instance.categorie.createCategorie(
-            categorieDto,
+            createCategorieDto,
           );
         } else {
           await ServerpodClient.instance.categorie.updateCategorie(
-            categorieDto,
+            categorie!.id,
+            LocalStorage().building!.id,
+            updateCategorieDto,
           );
         }
         AppSnackbar.success();

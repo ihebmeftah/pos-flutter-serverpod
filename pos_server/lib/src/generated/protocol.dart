@@ -17,36 +17,45 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
 import 'access/access.dart' as _i5;
-import 'article/entity/article.dart' as _i6;
-import 'article/entity/article_composition.dart' as _i7;
-import 'buildings/building.dart' as _i8;
-import 'buildings/currency_enum.dart' as _i9;
-import 'buildings_tables/building_tables.dart' as _i10;
-import 'buildings_tables/table_status_enum.dart' as _i11;
-import 'caisse/caisse.dart' as _i12;
-import 'cateogrie/categorie.dart' as _i13;
-import 'employer/create_employer.dto.dart' as _i14;
-import 'employer/employer.dart' as _i15;
-import 'exceptions/endpoint_exceptions.dart' as _i16;
-import 'exceptions/exceptiont_enums.dart' as _i17;
-import 'ingredient/ingredient.dart' as _i18;
-import 'ingredient/units_type.enum.dart' as _i19;
-import 'order/order.dart' as _i20;
-import 'order/order_item.dart' as _i21;
-import 'order/order_item_status_enum.dart' as _i22;
-import 'order/order_status_enum.dart' as _i23;
-import 'package:pos_server/src/generated/access/access.dart' as _i24;
-import 'package:pos_server/src/generated/article/entity/article.dart' as _i25;
-import 'package:pos_server/src/generated/employer/employer.dart' as _i26;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i27;
+import 'article/dto/create_article.dto.dart' as _i6;
+import 'article/dto/update_article.dto.dart' as _i7;
+import 'article/entity/article.dart' as _i8;
+import 'article/entity/article_composition.dart' as _i9;
+import 'buildings/building.dart' as _i10;
+import 'buildings/currency_enum.dart' as _i11;
+import 'buildings_tables/building_tables.dart' as _i12;
+import 'buildings_tables/table_status_enum.dart' as _i13;
+import 'caisse/caisse.dart' as _i14;
+import 'cateogrie/dto/create_categorie.dto.dart' as _i15;
+import 'cateogrie/dto/update_categorie.dto.dart' as _i16;
+import 'cateogrie/entity/categorie.dart' as _i17;
+import 'employer/create_employer.dto.dart' as _i18;
+import 'employer/employer.dart' as _i19;
+import 'exceptions/endpoint_exceptions.dart' as _i20;
+import 'exceptions/exceptiont_enums.dart' as _i21;
+import 'ingredient/ingredient.dart' as _i22;
+import 'ingredient/units_type.enum.dart' as _i23;
+import 'order/dto/append_items.dto.dart' as _i24;
+import 'order/dto/create_order.dto.dart' as _i25;
+import 'order/entity/order.dart' as _i26;
+import 'order/entity/order_item.dart' as _i27;
+import 'order/order_item_status_enum.dart' as _i28;
+import 'order/order_status_enum.dart' as _i29;
+import 'package:pos_server/src/generated/access/access.dart' as _i30;
+import 'package:pos_server/src/generated/article/entity/article.dart' as _i31;
+import 'package:pos_server/src/generated/employer/employer.dart' as _i32;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i33;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
-    as _i28;
-import 'package:pos_server/src/generated/caisse/caisse.dart' as _i29;
-import 'package:pos_server/src/generated/cateogrie/categorie.dart' as _i30;
-import 'package:pos_server/src/generated/ingredient/ingredient.dart' as _i31;
-import 'package:pos_server/src/generated/order/order.dart' as _i32;
-import 'package:pos_server/src/generated/order/order_item.dart' as _i33;
+    as _i34;
+import 'package:pos_server/src/generated/caisse/caisse.dart' as _i35;
+import 'package:pos_server/src/generated/cateogrie/entity/categorie.dart'
+    as _i36;
+import 'package:pos_server/src/generated/ingredient/ingredient.dart' as _i37;
+import 'package:pos_server/src/generated/order/entity/order.dart' as _i38;
+import 'package:pos_server/src/generated/order/entity/order_item.dart' as _i39;
 export 'access/access.dart';
+export 'article/dto/create_article.dto.dart';
+export 'article/dto/update_article.dto.dart';
 export 'article/entity/article.dart';
 export 'article/entity/article_composition.dart';
 export 'buildings/building.dart';
@@ -54,15 +63,19 @@ export 'buildings/currency_enum.dart';
 export 'buildings_tables/building_tables.dart';
 export 'buildings_tables/table_status_enum.dart';
 export 'caisse/caisse.dart';
-export 'cateogrie/categorie.dart';
+export 'cateogrie/dto/create_categorie.dto.dart';
+export 'cateogrie/dto/update_categorie.dto.dart';
+export 'cateogrie/entity/categorie.dart';
 export 'employer/create_employer.dto.dart';
 export 'employer/employer.dart';
 export 'exceptions/endpoint_exceptions.dart';
 export 'exceptions/exceptiont_enums.dart';
 export 'ingredient/ingredient.dart';
 export 'ingredient/units_type.enum.dart';
-export 'order/order.dart';
-export 'order/order_item.dart';
+export 'order/dto/append_items.dto.dart';
+export 'order/dto/create_order.dto.dart';
+export 'order/entity/order.dart';
+export 'order/entity/order_item.dart';
 export 'order/order_item_status_enum.dart';
 export 'order/order_status_enum.dart';
 
@@ -1226,155 +1239,197 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i5.Access) {
       return _i5.Access.fromJson(data) as T;
     }
-    if (t == _i6.Article) {
-      return _i6.Article.fromJson(data) as T;
+    if (t == _i6.CreateArticleDto) {
+      return _i6.CreateArticleDto.fromJson(data) as T;
     }
-    if (t == _i7.ArticleComposition) {
-      return _i7.ArticleComposition.fromJson(data) as T;
+    if (t == _i7.UpdateArticleDto) {
+      return _i7.UpdateArticleDto.fromJson(data) as T;
     }
-    if (t == _i8.Building) {
-      return _i8.Building.fromJson(data) as T;
+    if (t == _i8.Article) {
+      return _i8.Article.fromJson(data) as T;
     }
-    if (t == _i9.Currency) {
-      return _i9.Currency.fromJson(data) as T;
+    if (t == _i9.ArticleComposition) {
+      return _i9.ArticleComposition.fromJson(data) as T;
     }
-    if (t == _i10.BTable) {
-      return _i10.BTable.fromJson(data) as T;
+    if (t == _i10.Building) {
+      return _i10.Building.fromJson(data) as T;
     }
-    if (t == _i11.TableStatus) {
-      return _i11.TableStatus.fromJson(data) as T;
+    if (t == _i11.Currency) {
+      return _i11.Currency.fromJson(data) as T;
     }
-    if (t == _i12.Caisse) {
-      return _i12.Caisse.fromJson(data) as T;
+    if (t == _i12.BTable) {
+      return _i12.BTable.fromJson(data) as T;
     }
-    if (t == _i13.Categorie) {
-      return _i13.Categorie.fromJson(data) as T;
+    if (t == _i13.TableStatus) {
+      return _i13.TableStatus.fromJson(data) as T;
     }
-    if (t == _i14.CreateEmployerDTO) {
-      return _i14.CreateEmployerDTO.fromJson(data) as T;
+    if (t == _i14.Caisse) {
+      return _i14.Caisse.fromJson(data) as T;
     }
-    if (t == _i15.Employer) {
-      return _i15.Employer.fromJson(data) as T;
+    if (t == _i15.UpdateCategorieDto) {
+      return _i15.UpdateCategorieDto.fromJson(data) as T;
     }
-    if (t == _i16.AppException) {
-      return _i16.AppException.fromJson(data) as T;
+    if (t == _i16.CreateCategorieDto) {
+      return _i16.CreateCategorieDto.fromJson(data) as T;
     }
-    if (t == _i17.ExceptionType) {
-      return _i17.ExceptionType.fromJson(data) as T;
+    if (t == _i17.Categorie) {
+      return _i17.Categorie.fromJson(data) as T;
     }
-    if (t == _i18.Ingredient) {
-      return _i18.Ingredient.fromJson(data) as T;
+    if (t == _i18.CreateEmployerDTO) {
+      return _i18.CreateEmployerDTO.fromJson(data) as T;
     }
-    if (t == _i19.UnitsType) {
-      return _i19.UnitsType.fromJson(data) as T;
+    if (t == _i19.Employer) {
+      return _i19.Employer.fromJson(data) as T;
     }
-    if (t == _i20.Order) {
-      return _i20.Order.fromJson(data) as T;
+    if (t == _i20.AppException) {
+      return _i20.AppException.fromJson(data) as T;
     }
-    if (t == _i21.OrderItem) {
-      return _i21.OrderItem.fromJson(data) as T;
+    if (t == _i21.ExceptionType) {
+      return _i21.ExceptionType.fromJson(data) as T;
     }
-    if (t == _i22.OrderItemStatus) {
-      return _i22.OrderItemStatus.fromJson(data) as T;
+    if (t == _i22.Ingredient) {
+      return _i22.Ingredient.fromJson(data) as T;
     }
-    if (t == _i23.OrderStatus) {
-      return _i23.OrderStatus.fromJson(data) as T;
+    if (t == _i23.UnitsType) {
+      return _i23.UnitsType.fromJson(data) as T;
+    }
+    if (t == _i24.AppendItemsDto) {
+      return _i24.AppendItemsDto.fromJson(data) as T;
+    }
+    if (t == _i25.CreateOrderDto) {
+      return _i25.CreateOrderDto.fromJson(data) as T;
+    }
+    if (t == _i26.Order) {
+      return _i26.Order.fromJson(data) as T;
+    }
+    if (t == _i27.OrderItem) {
+      return _i27.OrderItem.fromJson(data) as T;
+    }
+    if (t == _i28.OrderItemStatus) {
+      return _i28.OrderItemStatus.fromJson(data) as T;
+    }
+    if (t == _i29.OrderStatus) {
+      return _i29.OrderStatus.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Access?>()) {
       return (data != null ? _i5.Access.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i6.Article?>()) {
-      return (data != null ? _i6.Article.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i6.CreateArticleDto?>()) {
+      return (data != null ? _i6.CreateArticleDto.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i7.ArticleComposition?>()) {
-      return (data != null ? _i7.ArticleComposition.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i7.UpdateArticleDto?>()) {
+      return (data != null ? _i7.UpdateArticleDto.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i8.Building?>()) {
-      return (data != null ? _i8.Building.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i8.Article?>()) {
+      return (data != null ? _i8.Article.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i9.Currency?>()) {
-      return (data != null ? _i9.Currency.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i9.ArticleComposition?>()) {
+      return (data != null ? _i9.ArticleComposition.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i10.BTable?>()) {
-      return (data != null ? _i10.BTable.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i10.Building?>()) {
+      return (data != null ? _i10.Building.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i11.TableStatus?>()) {
-      return (data != null ? _i11.TableStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.Currency?>()) {
+      return (data != null ? _i11.Currency.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i12.Caisse?>()) {
-      return (data != null ? _i12.Caisse.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.BTable?>()) {
+      return (data != null ? _i12.BTable.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i13.Categorie?>()) {
-      return (data != null ? _i13.Categorie.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i13.TableStatus?>()) {
+      return (data != null ? _i13.TableStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i14.CreateEmployerDTO?>()) {
-      return (data != null ? _i14.CreateEmployerDTO.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.Caisse?>()) {
+      return (data != null ? _i14.Caisse.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i15.Employer?>()) {
-      return (data != null ? _i15.Employer.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i15.UpdateCategorieDto?>()) {
+      return (data != null ? _i15.UpdateCategorieDto.fromJson(data) : null)
+          as T;
     }
-    if (t == _i1.getType<_i16.AppException?>()) {
-      return (data != null ? _i16.AppException.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i16.CreateCategorieDto?>()) {
+      return (data != null ? _i16.CreateCategorieDto.fromJson(data) : null)
+          as T;
     }
-    if (t == _i1.getType<_i17.ExceptionType?>()) {
-      return (data != null ? _i17.ExceptionType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i17.Categorie?>()) {
+      return (data != null ? _i17.Categorie.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i18.Ingredient?>()) {
-      return (data != null ? _i18.Ingredient.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i18.CreateEmployerDTO?>()) {
+      return (data != null ? _i18.CreateEmployerDTO.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i19.UnitsType?>()) {
-      return (data != null ? _i19.UnitsType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i19.Employer?>()) {
+      return (data != null ? _i19.Employer.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i20.Order?>()) {
-      return (data != null ? _i20.Order.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i20.AppException?>()) {
+      return (data != null ? _i20.AppException.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i21.OrderItem?>()) {
-      return (data != null ? _i21.OrderItem.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i21.ExceptionType?>()) {
+      return (data != null ? _i21.ExceptionType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i22.OrderItemStatus?>()) {
-      return (data != null ? _i22.OrderItemStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i22.Ingredient?>()) {
+      return (data != null ? _i22.Ingredient.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i23.OrderStatus?>()) {
-      return (data != null ? _i23.OrderStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i23.UnitsType?>()) {
+      return (data != null ? _i23.UnitsType.fromJson(data) : null) as T;
     }
-    if (t == List<_i7.ArticleComposition>) {
+    if (t == _i1.getType<_i24.AppendItemsDto?>()) {
+      return (data != null ? _i24.AppendItemsDto.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i25.CreateOrderDto?>()) {
+      return (data != null ? _i25.CreateOrderDto.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i26.Order?>()) {
+      return (data != null ? _i26.Order.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i27.OrderItem?>()) {
+      return (data != null ? _i27.OrderItem.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i28.OrderItemStatus?>()) {
+      return (data != null ? _i28.OrderItemStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i29.OrderStatus?>()) {
+      return (data != null ? _i29.OrderStatus.fromJson(data) : null) as T;
+    }
+    if (t == List<_i9.ArticleComposition>) {
       return (data as List)
-              .map((e) => deserialize<_i7.ArticleComposition>(e))
+              .map((e) => deserialize<_i9.ArticleComposition>(e))
               .toList()
           as T;
     }
-    if (t == _i1.getType<List<_i7.ArticleComposition>?>()) {
+    if (t == _i1.getType<List<_i9.ArticleComposition>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i7.ArticleComposition>(e))
+                    .map((e) => deserialize<_i9.ArticleComposition>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i21.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i21.OrderItem>(e)).toList()
+    if (t == List<_i1.UuidValue>) {
+      return (data as List).map((e) => deserialize<_i1.UuidValue>(e)).toList()
           as T;
     }
-    if (t == _i1.getType<List<_i21.OrderItem>?>()) {
+    if (t == List<_i27.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i27.OrderItem>(e)).toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i27.OrderItem>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i21.OrderItem>(e))
+                    .map((e) => deserialize<_i27.OrderItem>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i24.Access>) {
-      return (data as List).map((e) => deserialize<_i24.Access>(e)).toList()
+    if (t == List<_i30.Access>) {
+      return (data as List).map((e) => deserialize<_i30.Access>(e)).toList()
           as T;
     }
-    if (t == List<_i25.Article>) {
-      return (data as List).map((e) => deserialize<_i25.Article>(e)).toList()
+    if (t == List<_i31.Article>) {
+      return (data as List).map((e) => deserialize<_i31.Article>(e)).toList()
           as T;
     }
     if (t ==
         _i1
             .getType<
-              ({_i4.AuthSuccess authSuccess, _i26.Employer? employer})
+              ({_i4.AuthSuccess authSuccess, _i32.Employer? employer})
             >()) {
       return (
             authSuccess: deserialize<_i4.AuthSuccess>(
@@ -1382,40 +1437,40 @@ class Protocol extends _i1.SerializationManagerServer {
             ),
             employer: ((data)['n'] as Map)['employer'] == null
                 ? null
-                : deserialize<_i26.Employer>(data['n']['employer']),
+                : deserialize<_i32.Employer>(data['n']['employer']),
           )
           as T;
     }
-    if (t == List<_i27.Building>) {
-      return (data as List).map((e) => deserialize<_i27.Building>(e)).toList()
+    if (t == List<_i33.Building>) {
+      return (data as List).map((e) => deserialize<_i33.Building>(e)).toList()
           as T;
     }
-    if (t == List<_i28.BTable>) {
-      return (data as List).map((e) => deserialize<_i28.BTable>(e)).toList()
+    if (t == List<_i34.BTable>) {
+      return (data as List).map((e) => deserialize<_i34.BTable>(e)).toList()
           as T;
     }
-    if (t == List<_i29.Caisse>) {
-      return (data as List).map((e) => deserialize<_i29.Caisse>(e)).toList()
+    if (t == List<_i35.Caisse>) {
+      return (data as List).map((e) => deserialize<_i35.Caisse>(e)).toList()
           as T;
     }
-    if (t == List<_i30.Categorie>) {
-      return (data as List).map((e) => deserialize<_i30.Categorie>(e)).toList()
+    if (t == List<_i36.Categorie>) {
+      return (data as List).map((e) => deserialize<_i36.Categorie>(e)).toList()
           as T;
     }
-    if (t == List<_i26.Employer>) {
-      return (data as List).map((e) => deserialize<_i26.Employer>(e)).toList()
+    if (t == List<_i32.Employer>) {
+      return (data as List).map((e) => deserialize<_i32.Employer>(e)).toList()
           as T;
     }
-    if (t == List<_i31.Ingredient>) {
-      return (data as List).map((e) => deserialize<_i31.Ingredient>(e)).toList()
+    if (t == List<_i37.Ingredient>) {
+      return (data as List).map((e) => deserialize<_i37.Ingredient>(e)).toList()
           as T;
     }
-    if (t == List<_i32.Order>) {
-      return (data as List).map((e) => deserialize<_i32.Order>(e)).toList()
+    if (t == List<_i38.Order>) {
+      return (data as List).map((e) => deserialize<_i38.Order>(e)).toList()
           as T;
     }
-    if (t == List<_i33.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i33.OrderItem>(e)).toList()
+    if (t == List<_i39.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i39.OrderItem>(e)).toList()
           as T;
     }
     if (t == List<_i1.UuidValue>) {
@@ -1437,24 +1492,30 @@ class Protocol extends _i1.SerializationManagerServer {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _i5.Access => 'Access',
-      _i6.Article => 'Article',
-      _i7.ArticleComposition => 'ArticleComposition',
-      _i8.Building => 'Building',
-      _i9.Currency => 'Currency',
-      _i10.BTable => 'BTable',
-      _i11.TableStatus => 'TableStatus',
-      _i12.Caisse => 'Caisse',
-      _i13.Categorie => 'Categorie',
-      _i14.CreateEmployerDTO => 'CreateEmployerDTO',
-      _i15.Employer => 'Employer',
-      _i16.AppException => 'AppException',
-      _i17.ExceptionType => 'ExceptionType',
-      _i18.Ingredient => 'Ingredient',
-      _i19.UnitsType => 'UnitsType',
-      _i20.Order => 'Order',
-      _i21.OrderItem => 'OrderItem',
-      _i22.OrderItemStatus => 'OrderItemStatus',
-      _i23.OrderStatus => 'OrderStatus',
+      _i6.CreateArticleDto => 'CreateArticleDto',
+      _i7.UpdateArticleDto => 'UpdateArticleDto',
+      _i8.Article => 'Article',
+      _i9.ArticleComposition => 'ArticleComposition',
+      _i10.Building => 'Building',
+      _i11.Currency => 'Currency',
+      _i12.BTable => 'BTable',
+      _i13.TableStatus => 'TableStatus',
+      _i14.Caisse => 'Caisse',
+      _i15.UpdateCategorieDto => 'UpdateCategorieDto',
+      _i16.CreateCategorieDto => 'CreateCategorieDto',
+      _i17.Categorie => 'Categorie',
+      _i18.CreateEmployerDTO => 'CreateEmployerDTO',
+      _i19.Employer => 'Employer',
+      _i20.AppException => 'AppException',
+      _i21.ExceptionType => 'ExceptionType',
+      _i22.Ingredient => 'Ingredient',
+      _i23.UnitsType => 'UnitsType',
+      _i24.AppendItemsDto => 'AppendItemsDto',
+      _i25.CreateOrderDto => 'CreateOrderDto',
+      _i26.Order => 'Order',
+      _i27.OrderItem => 'OrderItem',
+      _i28.OrderItemStatus => 'OrderItemStatus',
+      _i29.OrderStatus => 'OrderStatus',
       _ => null,
     };
   }
@@ -1471,41 +1532,53 @@ class Protocol extends _i1.SerializationManagerServer {
     switch (data) {
       case _i5.Access():
         return 'Access';
-      case _i6.Article():
+      case _i6.CreateArticleDto():
+        return 'CreateArticleDto';
+      case _i7.UpdateArticleDto():
+        return 'UpdateArticleDto';
+      case _i8.Article():
         return 'Article';
-      case _i7.ArticleComposition():
+      case _i9.ArticleComposition():
         return 'ArticleComposition';
-      case _i8.Building():
+      case _i10.Building():
         return 'Building';
-      case _i9.Currency():
+      case _i11.Currency():
         return 'Currency';
-      case _i10.BTable():
+      case _i12.BTable():
         return 'BTable';
-      case _i11.TableStatus():
+      case _i13.TableStatus():
         return 'TableStatus';
-      case _i12.Caisse():
+      case _i14.Caisse():
         return 'Caisse';
-      case _i13.Categorie():
+      case _i15.UpdateCategorieDto():
+        return 'UpdateCategorieDto';
+      case _i16.CreateCategorieDto():
+        return 'CreateCategorieDto';
+      case _i17.Categorie():
         return 'Categorie';
-      case _i14.CreateEmployerDTO():
+      case _i18.CreateEmployerDTO():
         return 'CreateEmployerDTO';
-      case _i15.Employer():
+      case _i19.Employer():
         return 'Employer';
-      case _i16.AppException():
+      case _i20.AppException():
         return 'AppException';
-      case _i17.ExceptionType():
+      case _i21.ExceptionType():
         return 'ExceptionType';
-      case _i18.Ingredient():
+      case _i22.Ingredient():
         return 'Ingredient';
-      case _i19.UnitsType():
+      case _i23.UnitsType():
         return 'UnitsType';
-      case _i20.Order():
+      case _i24.AppendItemsDto():
+        return 'AppendItemsDto';
+      case _i25.CreateOrderDto():
+        return 'CreateOrderDto';
+      case _i26.Order():
         return 'Order';
-      case _i21.OrderItem():
+      case _i27.OrderItem():
         return 'OrderItem';
-      case _i22.OrderItemStatus():
+      case _i28.OrderItemStatus():
         return 'OrderItemStatus';
-      case _i23.OrderStatus():
+      case _i29.OrderStatus():
         return 'OrderStatus';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -1532,59 +1605,77 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Access') {
       return deserialize<_i5.Access>(data['data']);
     }
+    if (dataClassName == 'CreateArticleDto') {
+      return deserialize<_i6.CreateArticleDto>(data['data']);
+    }
+    if (dataClassName == 'UpdateArticleDto') {
+      return deserialize<_i7.UpdateArticleDto>(data['data']);
+    }
     if (dataClassName == 'Article') {
-      return deserialize<_i6.Article>(data['data']);
+      return deserialize<_i8.Article>(data['data']);
     }
     if (dataClassName == 'ArticleComposition') {
-      return deserialize<_i7.ArticleComposition>(data['data']);
+      return deserialize<_i9.ArticleComposition>(data['data']);
     }
     if (dataClassName == 'Building') {
-      return deserialize<_i8.Building>(data['data']);
+      return deserialize<_i10.Building>(data['data']);
     }
     if (dataClassName == 'Currency') {
-      return deserialize<_i9.Currency>(data['data']);
+      return deserialize<_i11.Currency>(data['data']);
     }
     if (dataClassName == 'BTable') {
-      return deserialize<_i10.BTable>(data['data']);
+      return deserialize<_i12.BTable>(data['data']);
     }
     if (dataClassName == 'TableStatus') {
-      return deserialize<_i11.TableStatus>(data['data']);
+      return deserialize<_i13.TableStatus>(data['data']);
     }
     if (dataClassName == 'Caisse') {
-      return deserialize<_i12.Caisse>(data['data']);
+      return deserialize<_i14.Caisse>(data['data']);
+    }
+    if (dataClassName == 'UpdateCategorieDto') {
+      return deserialize<_i15.UpdateCategorieDto>(data['data']);
+    }
+    if (dataClassName == 'CreateCategorieDto') {
+      return deserialize<_i16.CreateCategorieDto>(data['data']);
     }
     if (dataClassName == 'Categorie') {
-      return deserialize<_i13.Categorie>(data['data']);
+      return deserialize<_i17.Categorie>(data['data']);
     }
     if (dataClassName == 'CreateEmployerDTO') {
-      return deserialize<_i14.CreateEmployerDTO>(data['data']);
+      return deserialize<_i18.CreateEmployerDTO>(data['data']);
     }
     if (dataClassName == 'Employer') {
-      return deserialize<_i15.Employer>(data['data']);
+      return deserialize<_i19.Employer>(data['data']);
     }
     if (dataClassName == 'AppException') {
-      return deserialize<_i16.AppException>(data['data']);
+      return deserialize<_i20.AppException>(data['data']);
     }
     if (dataClassName == 'ExceptionType') {
-      return deserialize<_i17.ExceptionType>(data['data']);
+      return deserialize<_i21.ExceptionType>(data['data']);
     }
     if (dataClassName == 'Ingredient') {
-      return deserialize<_i18.Ingredient>(data['data']);
+      return deserialize<_i22.Ingredient>(data['data']);
     }
     if (dataClassName == 'UnitsType') {
-      return deserialize<_i19.UnitsType>(data['data']);
+      return deserialize<_i23.UnitsType>(data['data']);
+    }
+    if (dataClassName == 'AppendItemsDto') {
+      return deserialize<_i24.AppendItemsDto>(data['data']);
+    }
+    if (dataClassName == 'CreateOrderDto') {
+      return deserialize<_i25.CreateOrderDto>(data['data']);
     }
     if (dataClassName == 'Order') {
-      return deserialize<_i20.Order>(data['data']);
+      return deserialize<_i26.Order>(data['data']);
     }
     if (dataClassName == 'OrderItem') {
-      return deserialize<_i21.OrderItem>(data['data']);
+      return deserialize<_i27.OrderItem>(data['data']);
     }
     if (dataClassName == 'OrderItemStatus') {
-      return deserialize<_i22.OrderItemStatus>(data['data']);
+      return deserialize<_i28.OrderItemStatus>(data['data']);
     }
     if (dataClassName == 'OrderStatus') {
-      return deserialize<_i23.OrderStatus>(data['data']);
+      return deserialize<_i29.OrderStatus>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1624,26 +1715,26 @@ class Protocol extends _i1.SerializationManagerServer {
     switch (t) {
       case _i5.Access:
         return _i5.Access.t;
-      case _i6.Article:
-        return _i6.Article.t;
-      case _i7.ArticleComposition:
-        return _i7.ArticleComposition.t;
-      case _i8.Building:
-        return _i8.Building.t;
-      case _i10.BTable:
-        return _i10.BTable.t;
-      case _i12.Caisse:
-        return _i12.Caisse.t;
-      case _i13.Categorie:
-        return _i13.Categorie.t;
-      case _i15.Employer:
-        return _i15.Employer.t;
-      case _i18.Ingredient:
-        return _i18.Ingredient.t;
-      case _i20.Order:
-        return _i20.Order.t;
-      case _i21.OrderItem:
-        return _i21.OrderItem.t;
+      case _i8.Article:
+        return _i8.Article.t;
+      case _i9.ArticleComposition:
+        return _i9.ArticleComposition.t;
+      case _i10.Building:
+        return _i10.Building.t;
+      case _i12.BTable:
+        return _i12.BTable.t;
+      case _i14.Caisse:
+        return _i14.Caisse.t;
+      case _i17.Categorie:
+        return _i17.Categorie.t;
+      case _i19.Employer:
+        return _i19.Employer.t;
+      case _i22.Ingredient:
+        return _i22.Ingredient.t;
+      case _i26.Order:
+        return _i26.Order.t;
+      case _i27.OrderItem:
+        return _i27.OrderItem.t;
     }
     return null;
   }
@@ -1664,7 +1755,7 @@ class Protocol extends _i1.SerializationManagerServer {
     if (record == null) {
       return null;
     }
-    if (record is ({_i4.AuthSuccess authSuccess, _i26.Employer? employer})) {
+    if (record is ({_i4.AuthSuccess authSuccess, _i32.Employer? employer})) {
       return {
         "n": {
           "authSuccess": record.authSuccess,

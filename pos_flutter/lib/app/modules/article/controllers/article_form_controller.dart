@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/components/app_snackbar.dart';
+import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/modules/article/controllers/article_controller.dart';
 
 import '../../../../config/serverpod_client.dart';
@@ -17,6 +18,17 @@ class ArticleFormController extends GetxController with StateMixin {
   UuidValue? get id => Get.parameters['id'] != null
       ? UuidValue.fromString(Get.parameters['id']!)
       : null;
+
+  /// The article being edited, null if creating a new article
+  Article? article;
+
+  /// Forms and Controllers
+  final artFormKey = GlobalKey<FormState>();
+  final name = TextEditingController(),
+      description = TextEditingController(),
+      price = TextEditingController();
+  Categorie? selectedCategory;
+
   @override
   void onInit() async {
     await categorieController.getCategories();
@@ -28,36 +40,35 @@ class ArticleFormController extends GetxController with StateMixin {
     super.onInit();
   }
 
-  final artFormKey = GlobalKey<FormState>();
-  final name = TextEditingController(),
-      description = TextEditingController(),
-      price = TextEditingController();
-  Categorie? selectedCategory;
-
-  Article get articleDto => Article(
-    id: id,
+  CreateArticleDto get createArticleDto => CreateArticleDto(
     name: name.text,
     description: description.text,
     price: double.parse(price.text),
-    categorieId: selectedCategory!.id,
-    categorie: selectedCategory,
-    composition: articleCompositions,
+    categoryId: selectedCategory!.id,
+    buildingId: LocalStorage().building!.id,
+    composition: articleCompositions.toList(),
+  );
+
+  UpdateArticleDto get updateArticleDto => UpdateArticleDto(
+    name: name.text,
+    description: description.text,
+    price: double.parse(price.text),
+    categoryId: selectedCategory!.id,
   );
 
   Future<void> getArticleById() async {
     try {
       change(null, status: RxStatus.loading());
-      final article = await ServerpodClient.instance.article.getArticleById(
+      article = await ServerpodClient.instance.article.getArticleById(
         id!,
+        LocalStorage().building!.id,
       );
-      name.text = article.name;
-      description.text = article.description ?? "";
-      price.text = article.price.toString();
-      await categorieController.getCategories();
-      selectedCategory = categorieController.categories.firstWhereOrNull(
-        (cat) => cat.id == article.categorieId,
+      name.text = article!.name;
+      description.text = article!.description ?? '';
+      price.text = article!.price.toString();
+      selectedCategory = categorieController.categories.firstWhere(
+        (cat) => cat.id == article!.categorieId,
       );
-      articleCompositions.assignAll(article.composition ?? []);
       change(article, status: RxStatus.success());
     } on AppException catch (e) {
       change(null, status: RxStatus.error(e.message));
@@ -72,12 +83,13 @@ class ArticleFormController extends GetxController with StateMixin {
         change(null, status: RxStatus.loading());
         if (id == null) {
           await ServerpodClient.instance.article.createArticle(
-            articleDto,
+            createArticleDto,
           );
         } else {
           await ServerpodClient.instance.article.updateArticle(
             id!,
-            articleDto,
+            LocalStorage().building!.id,
+            updateArticleDto,
           );
         }
         AppSnackbar.success();
@@ -173,8 +185,8 @@ class ArticleFormController extends GetxController with StateMixin {
                     if (formKey.currentState!.validate()) {
                       articleCompositions.add(
                         ArticleComposition(
-                          ingredient: selectedIngredient,
                           ingredientId: selectedIngredient!.id,
+                          ingredient: selectedIngredient,
                           quantity: double.parse(quantityController.text),
                         ),
                       );
