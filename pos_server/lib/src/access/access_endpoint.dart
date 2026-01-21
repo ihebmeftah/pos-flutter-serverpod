@@ -8,13 +8,15 @@ class AccessEndpoint extends Endpoint {
   Set<Scope> get requiredScopes => {Scope("owner")};
 
   Future<Access> createAccess(Session session, Access access) async {
-    await checkAccessExist(session, access);
+    await checkAccessNameExist(session, access.name, access.buildingId);
     return await Access.db.insertRow(session, access);
   }
 
   Future<Access> updateAccess(Session session, Access access) async {
     final oldAccess = await getAccessById(session, access.id);
-    if (oldAccess.name != access.name) await checkAccessExist(session, access);
+    if (oldAccess.name != access.name) {
+      await checkAccessNameExist(session, access.name, access.buildingId);
+    }
     return await Access.db.updateRow(session, access);
   }
 
@@ -39,15 +41,19 @@ class AccessEndpoint extends Endpoint {
   }
 
   @doNotGenerate
-  Future<void> checkAccessExist(Session session, Access access) async {
+  Future<void> checkAccessNameExist(
+    Session session,
+    String name,
+    UuidValue buildingId,
+  ) async {
     final existingAccess = await Access.db.findFirstRow(
       session,
-      where: (t) => t.name.ilike(access.name),
+      where: (t) => t.name.ilike(name) & t.buildingId.equals(buildingId),
     );
     if (existingAccess != null) {
       throw AppException(
         errorType: ExceptionType.Conflict,
-        message: 'Access with name ${access.name} already exists.',
+        message: 'Access with name $name already exists.',
       );
     }
   }
