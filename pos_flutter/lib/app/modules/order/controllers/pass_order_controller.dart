@@ -116,9 +116,6 @@ class PassOrderController extends GetxController with StateMixin {
       final passedOrder = await ServerpodClient.instance.order.createOrder(
         createOrderDto,
       );
-      /*  if (Get.isRegistered<TablesController>()) {
-        Get.find<TablesController>().updateTable(passedOrder.btable!);
-      }*/
       Get.offAndToNamed("${Routes.ORDER_DETAILS}/${passedOrder.id}");
       AppSnackbar.success('Order created successfully');
     } catch (e) {
