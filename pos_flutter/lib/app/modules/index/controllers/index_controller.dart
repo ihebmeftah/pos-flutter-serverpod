@@ -17,7 +17,6 @@ class IndexController extends GetxController with StateMixin<UserProfile> {
   Employer? employer;
   Access? get currentUserAccess => employer?.access;
   Set<String> scope = <String>{};
-  CashRegister? currentCashRegister;
 
   @override
   void onInit() async {

@@ -143,36 +143,6 @@ class IndexView extends GetView<IndexController> {
       ),
       appBar: AppBar(
         title: Text('POS ${LocalStorage().building!.name.capitalize}'),
-        bottom: LocalStorage().building!.orderWithCashRegister == true
-            ? PreferredSize(
-                preferredSize: Size.fromHeight(30),
-                child: Container(
-                  width: double.infinity,
-                  color: Colors.brown.shade100,
-                  padding: EdgeInsets.all(8.0),
-                  child: GetBuilder<IndexController>(
-                    id: 'cashRegister',
-                    builder: (_) {
-                      return LocalStorage().building!.orderWithCashRegister ==
-                              true
-                          ? Text(
-                              controller.currentCashRegister == null
-                                  ? "No active Cash Register"
-                                  : 'Cash Register started at  ${controller.currentCashRegister?.start.toShortDateTimeString}'
-                                        .toUpperCase(),
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.brown,
-                              ),
-                            )
-                          : SizedBox();
-                    },
-                  ),
-                ),
-              )
-            : null,
       ),
 
       bottomNavigationBar: GetBuilder<IndexController>(
