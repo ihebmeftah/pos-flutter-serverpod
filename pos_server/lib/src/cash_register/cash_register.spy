@@ -1,0 +1,9 @@
+class: CashRegister
+table: cash_register
+fields:
+    id: UuidValue, defaultPersist=random, defaultModel=random
+    start: DateTime
+    end: DateTime?
+    isClosed: bool
+    buildingId: UuidValue, relation(parent=building)
+    createdAt: DateTime,default=now

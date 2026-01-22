@@ -3,7 +3,7 @@ BEGIN;
 --
 -- ACTION ALTER TABLE
 --
-ALTER TABLE "access" ALTER COLUMN "caisseManagement" DROP DEFAULT;
+ALTER TABLE "access" ALTER COLUMN "cashRegister" DROP DEFAULT;
 
 --
 -- MIGRATION VERSION FOR pos

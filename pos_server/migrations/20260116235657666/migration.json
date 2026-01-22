@@ -13,7 +13,7 @@
         "modifyColumns": [
           {
             "__className__": "serverpod.ColumnMigration",
-            "columnName": "caisseManagement",
+            "columnName": "cashRegister",
             "addNullable": false,
             "removeNullable": false,
             "changeDefault": true

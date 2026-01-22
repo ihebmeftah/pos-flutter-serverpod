@@ -17,7 +17,7 @@ import '../auth/email_idp_endpoint.dart' as _i4;
 import '../auth/jwt_refresh_endpoint.dart' as _i5;
 import '../buildings/building_endpoint.dart' as _i6;
 import '../buildings_tables/building_tables_endpoint.dart' as _i7;
-import '../caisse/caisse_endpoint.dart' as _i8;
+import '../cash_register/cash_register_endpoint.dart' as _i8;
 import '../cateogrie/categorie_endpoint.dart' as _i9;
 import '../employer/employer_endpoint.dart' as _i10;
 import '../ingredient/ingredient_endpoint.dart' as _i11;
@@ -90,10 +90,10 @@ class Endpoints extends _i1.EndpointDispatch {
           'buildingTables',
           null,
         ),
-      'caisse': _i8.CaisseEndpoint()
+      'cashRegister': _i8.CashRegisterEndpoint()
         ..initialize(
           server,
-          'caisse',
+          'cashRegister',
           null,
         ),
       'categorie': _i9.CategorieEndpoint()
@@ -701,6 +701,28 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['building'],
                   ),
         ),
+        'watchUpdateBuildings': _i1.MethodStreamConnector(
+          name: 'watchUpdateBuildings',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          streamParams: {},
+          returnType: _i1.MethodStreamReturnType.streamType,
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['building'] as _i6.BuildingEndpoint)
+                  .watchUpdateBuildings(
+                    session,
+                    params['buildingId'],
+                  ),
+        ),
       },
     );
     connectors['buildingTables'] = _i1.EndpointConnector(
@@ -761,12 +783,12 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    connectors['caisse'] = _i1.EndpointConnector(
-      name: 'caisse',
-      endpoint: endpoints['caisse']!,
+    connectors['cashRegister'] = _i1.EndpointConnector(
+      name: 'cashRegister',
+      endpoint: endpoints['cashRegister']!,
       methodConnectors: {
-        'getCaisses': _i1.MethodConnector(
-          name: 'getCaisses',
+        'getCashRegisters': _i1.MethodConnector(
+          name: 'getCashRegisters',
           params: {
             'buildingId': _i1.ParameterDescription(
               name: 'buildingId',
@@ -778,13 +800,14 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['caisse'] as _i8.CaisseEndpoint).getCaisses(
-                session,
-                params['buildingId'],
-              ),
+              ) async => (endpoints['cashRegister'] as _i8.CashRegisterEndpoint)
+                  .getCashRegisters(
+                    session,
+                    params['buildingId'],
+                  ),
         ),
-        'createCaisse': _i1.MethodConnector(
-          name: 'createCaisse',
+        'createCashRegister': _i1.MethodConnector(
+          name: 'createCashRegister',
           params: {
             'buildingId': _i1.ParameterDescription(
               name: 'buildingId',
@@ -796,8 +819,68 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async =>
-                  (endpoints['caisse'] as _i8.CaisseEndpoint).createCaisse(
+              ) async => (endpoints['cashRegister'] as _i8.CashRegisterEndpoint)
+                  .createCashRegister(
+                    session,
+                    params['buildingId'],
+                  ),
+        ),
+        'closeLastCashRegister': _i1.MethodConnector(
+          name: 'closeLastCashRegister',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['cashRegister'] as _i8.CashRegisterEndpoint)
+                  .closeLastCashRegister(
+                    session,
+                    params['buildingId'],
+                  ),
+        ),
+        'getCurrentCashRegister': _i1.MethodConnector(
+          name: 'getCurrentCashRegister',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['cashRegister'] as _i8.CashRegisterEndpoint)
+                  .getCurrentCashRegister(
+                    session,
+                    params['buildingId'],
+                  ),
+        ),
+        'watchCashRegisters': _i1.MethodStreamConnector(
+          name: 'watchCashRegisters',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          streamParams: {},
+          returnType: _i1.MethodStreamReturnType.streamType,
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['cashRegister'] as _i8.CashRegisterEndpoint)
+                  .watchCashRegisters(
                     session,
                     params['buildingId'],
                   ),

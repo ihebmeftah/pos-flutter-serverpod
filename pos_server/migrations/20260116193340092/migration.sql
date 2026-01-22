@@ -3,7 +3,7 @@ BEGIN;
 --
 -- ACTION ALTER TABLE
 --
-ALTER TABLE "access" ADD COLUMN "caisseManagement" boolean NOT NULL DEFAULT false;
+ALTER TABLE "access" ADD COLUMN "cashRegister" boolean NOT NULL DEFAULT false;
 --
 -- ACTION CREATE TABLE
 --

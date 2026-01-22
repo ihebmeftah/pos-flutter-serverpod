@@ -19,6 +19,8 @@ import '../modules/buildings/bindings/buildings_binding.dart';
 import '../modules/buildings/bindings/form_building_binding.dart';
 import '../modules/buildings/views/buildings_view.dart';
 import '../modules/buildings/views/form_building_view.dart';
+import '../modules/cash_register/bindings/cash_register_binding.dart';
+import '../modules/cash_register/views/cash_register_view.dart';
 import '../modules/categorie/bindings/categorie_binding.dart';
 import '../modules/categorie/bindings/categorie_form_binding.dart';
 import '../modules/categorie/views/categorie_form_view.dart';
@@ -98,6 +100,12 @@ class AppPages {
           binding: OrderBinding(),
         ),
       ],
+    ),
+
+    GetPage(
+      name: _Paths.CASH_REGISTER,
+      page: () => const CashRegisterView(),
+      binding: CashRegisterBinding(),
     ),
   ];
 

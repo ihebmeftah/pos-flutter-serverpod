@@ -31,6 +31,7 @@ abstract class Routes {
   static const ACCESS_FORM = _Paths.ACCESS_FORM;
   static const INGREDIENT = _Paths.INGREDIENT;
   static const INGREDIENT_FORM = _Paths.INGREDIENT_FORM;
+  static const CASH_REGISTER = _Paths.CASH_REGISTER;
 }
 
 abstract class _Paths {
@@ -60,4 +61,5 @@ abstract class _Paths {
   static const ACCESS_FORM = '/access-form';
   static const INGREDIENT = '/ingredient';
   static const INGREDIENT_FORM = '/ingredient-form';
+  static const CASH_REGISTER = '/cash-register';
 }

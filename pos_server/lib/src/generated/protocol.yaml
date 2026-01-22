@@ -29,12 +29,16 @@ building:
   - createBuilding:
   - getBuildingById:
   - updateBuilding:
+  - watchUpdateBuildings:
 buildingTables:
   - getTablesByBuildingId:
   - createTables:
-caisse:
-  - getCaisses:
-  - createCaisse:
+cashRegister:
+  - getCashRegisters:
+  - createCashRegister:
+  - closeLastCashRegister:
+  - getCurrentCashRegister:
+  - watchCashRegisters:
 categorie:
   - getCategories:
   - getCategorieById:

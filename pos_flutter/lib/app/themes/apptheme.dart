@@ -14,7 +14,7 @@ class AppTheme {
       titleTextStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: Colors.black,
+        color: Colors.brown,
       ),
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.transparent,
@@ -64,7 +64,7 @@ class AppTheme {
     cardTheme: CardThemeData(
       shadowColor: Colors.brown.withValues(alpha: 0.1),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      margin:  EdgeInsets.zero,
+      margin: EdgeInsets.zero,
       elevation: 5,
       color: Colors.white70,
     ),

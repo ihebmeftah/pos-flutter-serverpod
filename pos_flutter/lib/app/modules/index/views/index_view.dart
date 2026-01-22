@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/extensions/datetime.extension.dart';
 import 'package:pos_flutter/app/modules/inventory/views/inventory_view.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
@@ -52,7 +53,7 @@ class IndexView extends GetView<IndexController> {
       drawer: GetBuilder<IndexController>(
         builder: (ctr) {
           return controller.status.isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? SizedBox()
               : Drawer(
                   child: Column(
                     children: [
@@ -73,6 +74,37 @@ class IndexView extends GetView<IndexController> {
                             'Current : ${LocalStorage().building?.name ?? "None"}',
                           ),
                           onTap: () => Get.offAllNamed(Routes.BUILDINGS),
+                        ),
+                      if (!Get.find<IndexController>().scope.contains(
+                        "employer",
+                      ))
+                        ListTile(
+                          leading: Icon(Icons.edit_location),
+                          title: Text(
+                            'Edit current Building ${LocalStorage().building?.name ?? "None"}',
+                          ),
+                          onTap: () => Get.toNamed(
+                            Routes.FORM_BUILDING,
+                            parameters: {
+                              'id': LocalStorage().building!.id.toString(),
+                            },
+                          ),
+                        ),
+                      if (Get.find<IndexController>().scope.contains(
+                            "admin",
+                          ) ||
+                          controller
+                                  .currentUserAccess
+                                  ?.cashRegisterManagement ==
+                              true)
+                        ListTile(
+                          leading: Icon(Icons.point_of_sale),
+                          title: Text(
+                            "Cash register control",
+                          ),
+                          onTap: () => Get.toNamed(
+                            Routes.CASH_REGISTER,
+                          ),
                         ),
                       if (!Get.find<IndexController>().scope.contains(
                         "employer",
@@ -110,18 +142,39 @@ class IndexView extends GetView<IndexController> {
         },
       ),
       appBar: AppBar(
-        centerTitle: false,
-        actions: [],
-        title: Text(
-          'building : ${LocalStorage().building?.name ?? "None"}'.toUpperCase(),
-          maxLines: 1,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.brown,
-          ),
-        ),
+        title: Text('POS ${LocalStorage().building!.name.capitalize}'),
+        bottom: LocalStorage().building!.orderWithCashRegister == true
+            ? PreferredSize(
+                preferredSize: Size.fromHeight(30),
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.brown.shade100,
+                  padding: EdgeInsets.all(8.0),
+                  child: GetBuilder<IndexController>(
+                    id: 'cashRegister',
+                    builder: (_) {
+                      return LocalStorage().building!.orderWithCashRegister ==
+                              true
+                          ? Text(
+                              controller.currentCashRegister == null
+                                  ? "No active Cash Register"
+                                  : 'Cash Register started at  ${controller.currentCashRegister?.start.toShortDateTimeString}'
+                                        .toUpperCase(),
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.brown,
+                              ),
+                            )
+                          : SizedBox();
+                    },
+                  ),
+                ),
+              )
+            : null,
       ),
+
       bottomNavigationBar: GetBuilder<IndexController>(
         builder: (l) {
           return controller.status.isLoading

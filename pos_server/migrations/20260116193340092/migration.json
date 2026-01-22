@@ -11,7 +11,7 @@
         "addColumns": [
           {
             "__className__": "serverpod.ColumnDefinition",
-            "name": "caisseManagement",
+            "name": "cashRegister",
             "columnType": 1,
             "isNullable": false,
             "columnDefault": "false",

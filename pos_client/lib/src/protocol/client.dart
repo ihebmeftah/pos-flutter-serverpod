@@ -26,7 +26,8 @@ import 'package:pos_client/src/protocol/employer/employer.dart' as _i9;
 import 'package:pos_client/src/protocol/buildings/building.dart' as _i10;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
     as _i11;
-import 'package:pos_client/src/protocol/caisse/caisse.dart' as _i12;
+import 'package:pos_client/src/protocol/cash_register/cash_register.dart'
+    as _i12;
 import 'package:pos_client/src/protocol/cateogrie/entity/categorie.dart'
     as _i13;
 import 'package:pos_client/src/protocol/cateogrie/dto/update_categorie.dto.dart'
@@ -475,6 +476,16 @@ class EndpointBuilding extends _i1.EndpointRef {
         'updateBuilding',
         {'building': building},
       );
+
+  _i2.Stream<_i10.Building> watchUpdateBuildings(
+    _i1.UuidValue buildingId,
+  ) => caller
+      .callStreamingServerEndpoint<_i2.Stream<_i10.Building>, _i10.Building>(
+        'building',
+        'watchUpdateBuildings',
+        {'buildingId': buildingId},
+        {},
+      );
 }
 
 /// Building Tables Endpoint
@@ -520,24 +531,52 @@ class EndpointBuildingTables extends _i1.EndpointRef {
 }
 
 /// {@category Endpoint}
-class EndpointCaisse extends _i1.EndpointRef {
-  EndpointCaisse(_i1.EndpointCaller caller) : super(caller);
+class EndpointCashRegister extends _i1.EndpointRef {
+  EndpointCashRegister(_i1.EndpointCaller caller) : super(caller);
 
   @override
-  String get name => 'caisse';
+  String get name => 'cashRegister';
 
-  _i2.Future<List<_i12.Caisse>> getCaisses(_i1.UuidValue buildingId) =>
-      caller.callServerEndpoint<List<_i12.Caisse>>(
-        'caisse',
-        'getCaisses',
+  _i2.Future<List<_i12.CashRegister>> getCashRegisters(
+    _i1.UuidValue buildingId,
+  ) => caller.callServerEndpoint<List<_i12.CashRegister>>(
+    'cashRegister',
+    'getCashRegisters',
+    {'buildingId': buildingId},
+  );
+
+  _i2.Future<_i12.CashRegister> createCashRegister(_i1.UuidValue buildingId) =>
+      caller.callServerEndpoint<_i12.CashRegister>(
+        'cashRegister',
+        'createCashRegister',
         {'buildingId': buildingId},
       );
 
-  _i2.Future<_i12.Caisse> createCaisse(_i1.UuidValue buildingId) =>
-      caller.callServerEndpoint<_i12.Caisse>(
-        'caisse',
-        'createCaisse',
+  _i2.Future<_i12.CashRegister> closeLastCashRegister(
+    _i1.UuidValue buildingId,
+  ) => caller.callServerEndpoint<_i12.CashRegister>(
+    'cashRegister',
+    'closeLastCashRegister',
+    {'buildingId': buildingId},
+  );
+
+  _i2.Future<_i12.CashRegister?> getCurrentCashRegister(
+    _i1.UuidValue buildingId,
+  ) => caller.callServerEndpoint<_i12.CashRegister?>(
+    'cashRegister',
+    'getCurrentCashRegister',
+    {'buildingId': buildingId},
+  );
+
+  _i2.Stream<_i12.CashRegister> watchCashRegisters(_i1.UuidValue buildingId) =>
+      caller.callStreamingServerEndpoint<
+        _i2.Stream<_i12.CashRegister>,
+        _i12.CashRegister
+      >(
+        'cashRegister',
+        'watchCashRegisters',
         {'buildingId': buildingId},
+        {},
       );
 }
 
@@ -914,7 +953,7 @@ class Client extends _i1.ServerpodClientShared {
     jwtRefresh = EndpointJwtRefresh(this);
     building = EndpointBuilding(this);
     buildingTables = EndpointBuildingTables(this);
-    caisse = EndpointCaisse(this);
+    cashRegister = EndpointCashRegister(this);
     categorie = EndpointCategorie(this);
     employer = EndpointEmployer(this);
     ingredient = EndpointIngredient(this);
@@ -936,7 +975,7 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointBuildingTables buildingTables;
 
-  late final EndpointCaisse caisse;
+  late final EndpointCashRegister cashRegister;
 
   late final EndpointCategorie categorie;
 
@@ -960,7 +999,7 @@ class Client extends _i1.ServerpodClientShared {
     'jwtRefresh': jwtRefresh,
     'building': building,
     'buildingTables': buildingTables,
-    'caisse': caisse,
+    'cashRegister': cashRegister,
     'categorie': categorie,
     'employer': employer,
     'ingredient': ingredient,

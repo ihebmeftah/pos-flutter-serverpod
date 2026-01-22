@@ -27,7 +27,8 @@ import 'package:pos_server/src/generated/protocol.dart' as _i10;
 import 'package:pos_server/src/generated/buildings/building.dart' as _i11;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
     as _i12;
-import 'package:pos_server/src/generated/caisse/caisse.dart' as _i13;
+import 'package:pos_server/src/generated/cash_register/cash_register.dart'
+    as _i13;
 import 'package:pos_server/src/generated/cateogrie/entity/categorie.dart'
     as _i14;
 import 'package:pos_server/src/generated/cateogrie/dto/update_categorie.dto.dart'
@@ -165,7 +166,7 @@ class TestEndpoints {
 
   late final _BuildingTablesEndpoint buildingTables;
 
-  late final _CaisseEndpoint caisse;
+  late final _CashRegisterEndpoint cashRegister;
 
   late final _CategorieEndpoint categorie;
 
@@ -211,7 +212,7 @@ class _InternalTestEndpoints extends TestEndpoints
       endpoints,
       serializationManager,
     );
-    caisse = _CaisseEndpoint(
+    cashRegister = _CashRegisterEndpoint(
       endpoints,
       serializationManager,
     );
@@ -1148,6 +1149,38 @@ class _BuildingEndpoint {
       }
     });
   }
+
+  _i3.Stream<_i11.Building> watchUpdateBuildings(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue buildingId,
+  ) {
+    var _localTestStreamManager = _i1.TestStreamManager<_i11.Building>();
+    _i1.callStreamFunctionAndHandleExceptions(
+      () async {
+        var _localUniqueSession =
+            (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+              endpoint: 'building',
+              method: 'watchUpdateBuildings',
+            );
+        var _localCallContext = await _endpointDispatch
+            .getMethodStreamCallContext(
+              createSessionCallback: (_) => _localUniqueSession,
+              endpointPath: 'building',
+              methodName: 'watchUpdateBuildings',
+              arguments: {'buildingId': buildingId},
+              requestedInputStreams: [],
+              serializationManager: _serializationManager,
+            );
+        await _localTestStreamManager.callStreamMethod(
+          _localCallContext,
+          _localUniqueSession,
+          {},
+        );
+      },
+      _localTestStreamManager.outputStreamController,
+    );
+    return _localTestStreamManager.outputStreamController.stream;
+  }
 }
 
 class _BuildingTablesEndpoint {
@@ -1229,8 +1262,8 @@ class _BuildingTablesEndpoint {
   }
 }
 
-class _CaisseEndpoint {
-  _CaisseEndpoint(
+class _CashRegisterEndpoint {
+  _CashRegisterEndpoint(
     this._endpointDispatch,
     this._serializationManager,
   );
@@ -1239,21 +1272,21 @@ class _CaisseEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<List<_i13.Caisse>> getCaisses(
+  _i3.Future<List<_i13.CashRegister>> getCashRegisters(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue buildingId,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-            endpoint: 'caisse',
-            method: 'getCaisses',
+            endpoint: 'cashRegister',
+            method: 'getCashRegisters',
           );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
-          endpointPath: 'caisse',
-          methodName: 'getCaisses',
+          endpointPath: 'cashRegister',
+          methodName: 'getCashRegisters',
           parameters: _i1.testObjectToJson({'buildingId': buildingId}),
           serializationManager: _serializationManager,
         );
@@ -1262,7 +1295,7 @@ class _CaisseEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i13.Caisse>>);
+                as _i3.Future<List<_i13.CashRegister>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1270,21 +1303,21 @@ class _CaisseEndpoint {
     });
   }
 
-  _i3.Future<_i13.Caisse> createCaisse(
+  _i3.Future<_i13.CashRegister> createCashRegister(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue buildingId,
   ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-            endpoint: 'caisse',
-            method: 'createCaisse',
+            endpoint: 'cashRegister',
+            method: 'createCashRegister',
           );
       try {
         var _localCallContext = await _endpointDispatch.getMethodCallContext(
           createSessionCallback: (_) => _localUniqueSession,
-          endpointPath: 'caisse',
-          methodName: 'createCaisse',
+          endpointPath: 'cashRegister',
+          methodName: 'createCashRegister',
           parameters: _i1.testObjectToJson({'buildingId': buildingId}),
           serializationManager: _serializationManager,
         );
@@ -1293,12 +1326,106 @@ class _CaisseEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i13.Caisse>);
+                as _i3.Future<_i13.CashRegister>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
       }
     });
+  }
+
+  _i3.Future<_i13.CashRegister> closeLastCashRegister(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue buildingId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'cashRegister',
+            method: 'closeLastCashRegister',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'cashRegister',
+          methodName: 'closeLastCashRegister',
+          parameters: _i1.testObjectToJson({'buildingId': buildingId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i13.CashRegister>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i13.CashRegister?> getCurrentCashRegister(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue buildingId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'cashRegister',
+            method: 'getCurrentCashRegister',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'cashRegister',
+          methodName: 'getCurrentCashRegister',
+          parameters: _i1.testObjectToJson({'buildingId': buildingId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i13.CashRegister?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Stream<_i13.CashRegister> watchCashRegisters(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue buildingId,
+  ) {
+    var _localTestStreamManager = _i1.TestStreamManager<_i13.CashRegister>();
+    _i1.callStreamFunctionAndHandleExceptions(
+      () async {
+        var _localUniqueSession =
+            (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+              endpoint: 'cashRegister',
+              method: 'watchCashRegisters',
+            );
+        var _localCallContext = await _endpointDispatch
+            .getMethodStreamCallContext(
+              createSessionCallback: (_) => _localUniqueSession,
+              endpointPath: 'cashRegister',
+              methodName: 'watchCashRegisters',
+              arguments: {'buildingId': buildingId},
+              requestedInputStreams: [],
+              serializationManager: _serializationManager,
+            );
+        await _localTestStreamManager.callStreamMethod(
+          _localCallContext,
+          _localUniqueSession,
+          {},
+        );
+      },
+      _localTestStreamManager.outputStreamController,
+    );
+    return _localTestStreamManager.outputStreamController.stream;
   }
 }
 

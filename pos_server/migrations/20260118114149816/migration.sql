@@ -19,7 +19,7 @@ CREATE TABLE "access" (
     "appendItems" boolean NOT NULL,
     "preparation" boolean NOT NULL,
     "serveOrder" boolean NOT NULL,
-    "caisseManagement" boolean NOT NULL,
+    "cashRegister" boolean NOT NULL,
     "buildingId" uuid NOT NULL
 );
 

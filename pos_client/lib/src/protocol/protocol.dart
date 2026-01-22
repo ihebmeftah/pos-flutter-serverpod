@@ -20,7 +20,7 @@ import 'buildings/building.dart' as _i7;
 import 'buildings/currency_enum.dart' as _i8;
 import 'buildings_tables/building_tables.dart' as _i9;
 import 'buildings_tables/table_status_enum.dart' as _i10;
-import 'caisse/caisse.dart' as _i11;
+import 'cash_register/cash_register.dart' as _i11;
 import 'cateogrie/dto/create_categorie.dto.dart' as _i12;
 import 'cateogrie/dto/update_categorie.dto.dart' as _i13;
 import 'cateogrie/entity/categorie.dart' as _i14;
@@ -44,7 +44,8 @@ import 'package:pos_client/src/protocol/employer/employer.dart' as _i30;
 import 'package:pos_client/src/protocol/buildings/building.dart' as _i31;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
     as _i32;
-import 'package:pos_client/src/protocol/caisse/caisse.dart' as _i33;
+import 'package:pos_client/src/protocol/cash_register/cash_register.dart'
+    as _i33;
 import 'package:pos_client/src/protocol/cateogrie/entity/categorie.dart'
     as _i34;
 import 'package:pos_client/src/protocol/ingredient/ingredient.dart' as _i35;
@@ -61,7 +62,7 @@ export 'buildings/building.dart';
 export 'buildings/currency_enum.dart';
 export 'buildings_tables/building_tables.dart';
 export 'buildings_tables/table_status_enum.dart';
-export 'caisse/caisse.dart';
+export 'cash_register/cash_register.dart';
 export 'cateogrie/dto/create_categorie.dto.dart';
 export 'cateogrie/dto/update_categorie.dto.dart';
 export 'cateogrie/entity/categorie.dart';
@@ -140,8 +141,8 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i10.TableStatus) {
       return _i10.TableStatus.fromJson(data) as T;
     }
-    if (t == _i11.Caisse) {
-      return _i11.Caisse.fromJson(data) as T;
+    if (t == _i11.CashRegister) {
+      return _i11.CashRegister.fromJson(data) as T;
     }
     if (t == _i12.UpdateCategorieDto) {
       return _i12.UpdateCategorieDto.fromJson(data) as T;
@@ -215,8 +216,8 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i10.TableStatus?>()) {
       return (data != null ? _i10.TableStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i11.Caisse?>()) {
-      return (data != null ? _i11.Caisse.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.CashRegister?>()) {
+      return (data != null ? _i11.CashRegister.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i12.UpdateCategorieDto?>()) {
       return (data != null ? _i12.UpdateCategorieDto.fromJson(data) : null)
@@ -326,8 +327,10 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i32.BTable>(e)).toList()
           as T;
     }
-    if (t == List<_i33.Caisse>) {
-      return (data as List).map((e) => deserialize<_i33.Caisse>(e)).toList()
+    if (t == List<_i33.CashRegister>) {
+      return (data as List)
+              .map((e) => deserialize<_i33.CashRegister>(e))
+              .toList()
           as T;
     }
     if (t == List<_i34.Categorie>) {
@@ -374,7 +377,7 @@ class Protocol extends _i1.SerializationManager {
       _i8.Currency => 'Currency',
       _i9.BTable => 'BTable',
       _i10.TableStatus => 'TableStatus',
-      _i11.Caisse => 'Caisse',
+      _i11.CashRegister => 'CashRegister',
       _i12.UpdateCategorieDto => 'UpdateCategorieDto',
       _i13.CreateCategorieDto => 'CreateCategorieDto',
       _i14.Categorie => 'Categorie',
@@ -422,8 +425,8 @@ class Protocol extends _i1.SerializationManager {
         return 'BTable';
       case _i10.TableStatus():
         return 'TableStatus';
-      case _i11.Caisse():
-        return 'Caisse';
+      case _i11.CashRegister():
+        return 'CashRegister';
       case _i12.UpdateCategorieDto():
         return 'UpdateCategorieDto';
       case _i13.CreateCategorieDto():
@@ -499,8 +502,8 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'TableStatus') {
       return deserialize<_i10.TableStatus>(data['data']);
     }
-    if (dataClassName == 'Caisse') {
-      return deserialize<_i11.Caisse>(data['data']);
+    if (dataClassName == 'CashRegister') {
+      return deserialize<_i11.CashRegister>(data['data']);
     }
     if (dataClassName == 'UpdateCategorieDto') {
       return deserialize<_i12.UpdateCategorieDto>(data['data']);

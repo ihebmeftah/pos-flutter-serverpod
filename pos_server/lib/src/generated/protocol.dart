@@ -25,7 +25,7 @@ import 'buildings/building.dart' as _i10;
 import 'buildings/currency_enum.dart' as _i11;
 import 'buildings_tables/building_tables.dart' as _i12;
 import 'buildings_tables/table_status_enum.dart' as _i13;
-import 'caisse/caisse.dart' as _i14;
+import 'cash_register/cash_register.dart' as _i14;
 import 'cateogrie/dto/create_categorie.dto.dart' as _i15;
 import 'cateogrie/dto/update_categorie.dto.dart' as _i16;
 import 'cateogrie/entity/categorie.dart' as _i17;
@@ -47,7 +47,8 @@ import 'package:pos_server/src/generated/employer/employer.dart' as _i32;
 import 'package:pos_server/src/generated/buildings/building.dart' as _i33;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
     as _i34;
-import 'package:pos_server/src/generated/caisse/caisse.dart' as _i35;
+import 'package:pos_server/src/generated/cash_register/cash_register.dart'
+    as _i35;
 import 'package:pos_server/src/generated/cateogrie/entity/categorie.dart'
     as _i36;
 import 'package:pos_server/src/generated/ingredient/ingredient.dart' as _i37;
@@ -62,7 +63,7 @@ export 'buildings/building.dart';
 export 'buildings/currency_enum.dart';
 export 'buildings_tables/building_tables.dart';
 export 'buildings_tables/table_status_enum.dart';
-export 'caisse/caisse.dart';
+export 'cash_register/cash_register.dart';
 export 'cateogrie/dto/create_categorie.dto.dart';
 export 'cateogrie/dto/update_categorie.dto.dart';
 export 'cateogrie/entity/categorie.dart';
@@ -155,7 +156,7 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'bool',
         ),
         _i2.ColumnDefinition(
-          name: 'caisseManagement',
+          name: 'cashRegisterManagement',
           columnType: _i2.ColumnType.boolean,
           isNullable: false,
           dartType: 'bool',
@@ -502,6 +503,13 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'false',
         ),
         _i2.ColumnDefinition(
+          name: 'orderWithCashRegister',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
           name: 'allowAppendingItemsToOrder',
           columnType: _i2.ColumnType.boolean,
           isNullable: false,
@@ -571,8 +579,8 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
-      name: 'caisse',
-      dartName: 'Caisse',
+      name: 'cash_register',
+      dartName: 'CashRegister',
       schema: 'public',
       module: 'pos',
       columns: [
@@ -617,7 +625,7 @@ class Protocol extends _i1.SerializationManagerServer {
       ],
       foreignKeys: [
         _i2.ForeignKeyDefinition(
-          constraintName: 'caisse_fk_0',
+          constraintName: 'cash_register_fk_0',
           columns: ['buildingId'],
           referenceTable: 'building',
           referenceTableSchema: 'public',
@@ -629,7 +637,7 @@ class Protocol extends _i1.SerializationManagerServer {
       ],
       indexes: [
         _i2.IndexDefinition(
-          indexName: 'caisse_pkey',
+          indexName: 'cash_register_pkey',
           tableSpace: null,
           elements: [
             _i2.IndexElementDefinition(
@@ -1263,8 +1271,8 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i13.TableStatus) {
       return _i13.TableStatus.fromJson(data) as T;
     }
-    if (t == _i14.Caisse) {
-      return _i14.Caisse.fromJson(data) as T;
+    if (t == _i14.CashRegister) {
+      return _i14.CashRegister.fromJson(data) as T;
     }
     if (t == _i15.UpdateCategorieDto) {
       return _i15.UpdateCategorieDto.fromJson(data) as T;
@@ -1338,8 +1346,8 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i13.TableStatus?>()) {
       return (data != null ? _i13.TableStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i14.Caisse?>()) {
-      return (data != null ? _i14.Caisse.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.CashRegister?>()) {
+      return (data != null ? _i14.CashRegister.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i15.UpdateCategorieDto?>()) {
       return (data != null ? _i15.UpdateCategorieDto.fromJson(data) : null)
@@ -1449,8 +1457,10 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data as List).map((e) => deserialize<_i34.BTable>(e)).toList()
           as T;
     }
-    if (t == List<_i35.Caisse>) {
-      return (data as List).map((e) => deserialize<_i35.Caisse>(e)).toList()
+    if (t == List<_i35.CashRegister>) {
+      return (data as List)
+              .map((e) => deserialize<_i35.CashRegister>(e))
+              .toList()
           as T;
     }
     if (t == List<_i36.Categorie>) {
@@ -1500,7 +1510,7 @@ class Protocol extends _i1.SerializationManagerServer {
       _i11.Currency => 'Currency',
       _i12.BTable => 'BTable',
       _i13.TableStatus => 'TableStatus',
-      _i14.Caisse => 'Caisse',
+      _i14.CashRegister => 'CashRegister',
       _i15.UpdateCategorieDto => 'UpdateCategorieDto',
       _i16.CreateCategorieDto => 'CreateCategorieDto',
       _i17.Categorie => 'Categorie',
@@ -1548,8 +1558,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'BTable';
       case _i13.TableStatus():
         return 'TableStatus';
-      case _i14.Caisse():
-        return 'Caisse';
+      case _i14.CashRegister():
+        return 'CashRegister';
       case _i15.UpdateCategorieDto():
         return 'UpdateCategorieDto';
       case _i16.CreateCategorieDto():
@@ -1629,8 +1639,8 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'TableStatus') {
       return deserialize<_i13.TableStatus>(data['data']);
     }
-    if (dataClassName == 'Caisse') {
-      return deserialize<_i14.Caisse>(data['data']);
+    if (dataClassName == 'CashRegister') {
+      return deserialize<_i14.CashRegister>(data['data']);
     }
     if (dataClassName == 'UpdateCategorieDto') {
       return deserialize<_i15.UpdateCategorieDto>(data['data']);
@@ -1723,8 +1733,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i10.Building.t;
       case _i12.BTable:
         return _i12.BTable.t;
-      case _i14.Caisse:
-        return _i14.Caisse.t;
+      case _i14.CashRegister:
+        return _i14.CashRegister.t;
       case _i17.Categorie:
         return _i17.Categorie.t;
       case _i19.Employer:
