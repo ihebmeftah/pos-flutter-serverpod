@@ -4,7 +4,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/components/app_snackbar.dart';
+import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/modules/buildings/controllers/buildings_controller.dart';
+import 'package:pos_flutter/app/routes/app_pages.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
 import '../../../../config/serverpod_client.dart';
@@ -28,7 +30,7 @@ class FormBuildingController extends GetxController with StateMixin {
   bool autoCloseOrdersAtClosingTime = false;
   bool strictMode = true;
   bool active = false;
-
+  bool orderWithCashRegister = true;
   @override
   void onInit() async {
     if (id != null) {
@@ -50,6 +52,7 @@ class FormBuildingController extends GetxController with StateMixin {
     lat: position?.latitude,
     long: position?.longitude,
     strictMode: strictMode,
+    orderWithCashRegister: orderWithCashRegister,
     //   dbName: name.text.toLowerCase().replaceAll(' ', '_'),
     tableMultiOrder: tableMultiOrder,
     authUserId: ServerpodClient.instance.auth.authInfo!.authUserId,
@@ -57,6 +60,11 @@ class FormBuildingController extends GetxController with StateMixin {
   void changeTableMultiOrder(bool? t) {
     tableMultiOrder = t!;
     update(['tableMultiOrder']);
+  }
+
+  void changeOrderWithCashRegister(bool? t) {
+    orderWithCashRegister = t!;
+    update(['orderWithCashRegister']);
   }
 
   void changeActive(bool? t) {
@@ -89,9 +97,13 @@ class FormBuildingController extends GetxController with StateMixin {
       if (addFormkey.currentState!.validate()) {
         change(null, status: RxStatus.loading());
         if (id != null) {
-          await ServerpodClient.instance.building.updateBuilding(
-            addDto,
-          );
+          final building = await ServerpodClient.instance.building
+              .updateBuilding(
+                addDto,
+              );
+          if (Get.previousRoute != Routes.BUILDINGS) {
+            LocalStorage().saveBuilding(building);
+          }
         } else {
           await ServerpodClient.instance.building.createBuilding(
             addDto,

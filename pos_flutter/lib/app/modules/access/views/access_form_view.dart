@@ -134,13 +134,14 @@ class AccessFormView extends GetView<AccessFormController> {
                               },
                             ),
                             GetBuilder<AccessFormController>(
-                              id: 'caisseManagement',
+                              id: 'cashRegisterManagement',
                               builder: (_) {
                                 return AppSwitchtile(
                                   title: 'Manage Cash Register',
                                   description: 'Access cash register controls',
-                                  value: controller.caisseManagement,
-                                  onChanged: controller.updateCaisseManagement,
+                                  value: controller.cashRegisterManagement,
+                                  onChanged:
+                                      controller.updateCashRegisterManagement,
                                 );
                               },
                             ),

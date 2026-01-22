@@ -155,6 +155,19 @@ class FormBuildingView extends GetView<FormBuildingController> {
                               },
                             ),
                             GetBuilder<FormBuildingController>(
+                              id: 'orderWithCashRegister',
+                              builder: (_) {
+                                return AppSwitchtile(
+                                  title: ("Order With Cash Register"),
+                                  description:
+                                      "Require orders to be associated with a cash register",
+                                  value: controller.orderWithCashRegister,
+                                  onChanged:
+                                      controller.changeOrderWithCashRegister,
+                                );
+                              },
+                            ),
+                            GetBuilder<FormBuildingController>(
                               id: 'tableMultiOrder',
                               builder: (_) {
                                 return AppSwitchtile(

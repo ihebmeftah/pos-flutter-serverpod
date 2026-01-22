@@ -24,7 +24,7 @@ abstract class Access implements _i1.SerializableModel {
     required this.appendItems,
     required this.preparation,
     required this.serveOrder,
-    required this.caisseManagement,
+    required this.cashRegisterManagement,
     required this.buildingId,
   }) : id = id ?? _i1.Uuid().v4obj();
 
@@ -39,7 +39,7 @@ abstract class Access implements _i1.SerializableModel {
     required bool appendItems,
     required bool preparation,
     required bool serveOrder,
-    required bool caisseManagement,
+    required bool cashRegisterManagement,
     required _i1.UuidValue buildingId,
   }) = _AccessImpl;
 
@@ -57,7 +57,8 @@ abstract class Access implements _i1.SerializableModel {
       appendItems: jsonSerialization['appendItems'] as bool,
       preparation: jsonSerialization['preparation'] as bool,
       serveOrder: jsonSerialization['serveOrder'] as bool,
-      caisseManagement: jsonSerialization['caisseManagement'] as bool,
+      cashRegisterManagement:
+          jsonSerialization['cashRegisterManagement'] as bool,
       buildingId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['buildingId'],
       ),
@@ -85,7 +86,7 @@ abstract class Access implements _i1.SerializableModel {
 
   bool serveOrder;
 
-  bool caisseManagement;
+  bool cashRegisterManagement;
 
   _i1.UuidValue buildingId;
 
@@ -103,7 +104,7 @@ abstract class Access implements _i1.SerializableModel {
     bool? appendItems,
     bool? preparation,
     bool? serveOrder,
-    bool? caisseManagement,
+    bool? cashRegisterManagement,
     _i1.UuidValue? buildingId,
   });
   @override
@@ -120,7 +121,7 @@ abstract class Access implements _i1.SerializableModel {
       'appendItems': appendItems,
       'preparation': preparation,
       'serveOrder': serveOrder,
-      'caisseManagement': caisseManagement,
+      'cashRegisterManagement': cashRegisterManagement,
       'buildingId': buildingId.toJson(),
     };
   }
@@ -143,7 +144,7 @@ class _AccessImpl extends Access {
     required bool appendItems,
     required bool preparation,
     required bool serveOrder,
-    required bool caisseManagement,
+    required bool cashRegisterManagement,
     required _i1.UuidValue buildingId,
   }) : super._(
          id: id,
@@ -156,7 +157,7 @@ class _AccessImpl extends Access {
          appendItems: appendItems,
          preparation: preparation,
          serveOrder: serveOrder,
-         caisseManagement: caisseManagement,
+         cashRegisterManagement: cashRegisterManagement,
          buildingId: buildingId,
        );
 
@@ -175,7 +176,7 @@ class _AccessImpl extends Access {
     bool? appendItems,
     bool? preparation,
     bool? serveOrder,
-    bool? caisseManagement,
+    bool? cashRegisterManagement,
     _i1.UuidValue? buildingId,
   }) {
     return Access(
@@ -189,7 +190,8 @@ class _AccessImpl extends Access {
       appendItems: appendItems ?? this.appendItems,
       preparation: preparation ?? this.preparation,
       serveOrder: serveOrder ?? this.serveOrder,
-      caisseManagement: caisseManagement ?? this.caisseManagement,
+      cashRegisterManagement:
+          cashRegisterManagement ?? this.cashRegisterManagement,
       buildingId: buildingId ?? this.buildingId,
     );
   }

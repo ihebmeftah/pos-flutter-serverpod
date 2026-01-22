@@ -22,6 +22,7 @@ abstract class Building implements _i1.SerializableModel {
     required this.closingTime,
     this.authUserId,
     bool? tableMultiOrder,
+    bool? orderWithCashRegister,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -30,6 +31,7 @@ abstract class Building implements _i1.SerializableModel {
     this.lat,
   }) : id = id ?? _i1.Uuid().v4obj(),
        tableMultiOrder = tableMultiOrder ?? false,
+       orderWithCashRegister = orderWithCashRegister ?? false,
        allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true,
        autoCloseOrdersAtClosingTime = autoCloseOrdersAtClosingTime ?? false,
        strictMode = strictMode ?? false;
@@ -42,6 +44,7 @@ abstract class Building implements _i1.SerializableModel {
     required DateTime closingTime,
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
+    bool? orderWithCashRegister,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -69,6 +72,8 @@ abstract class Building implements _i1.SerializableModel {
               jsonSerialization['authUserId'],
             ),
       tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool?,
+      orderWithCashRegister:
+          jsonSerialization['orderWithCashRegister'] as bool?,
       allowAppendingItemsToOrder:
           jsonSerialization['allowAppendingItemsToOrder'] as bool?,
       autoCloseOrdersAtClosingTime:
@@ -103,6 +108,10 @@ abstract class Building implements _i1.SerializableModel {
   /// Indicates whether the building supports multiple orders per table.
   bool tableMultiOrder;
 
+  /// Indicates whether the building supports orders with cash registers.
+  /// evrey order shoud be linked to cash register of day
+  bool orderWithCashRegister;
+
   /// Indicates whether items can be appended to an existing order.
   bool allowAppendingItemsToOrder;
 
@@ -131,6 +140,7 @@ abstract class Building implements _i1.SerializableModel {
     DateTime? closingTime,
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
+    bool? orderWithCashRegister,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -149,6 +159,7 @@ abstract class Building implements _i1.SerializableModel {
       'closingTime': closingTime.toJson(),
       if (authUserId != null) 'authUserId': authUserId?.toJson(),
       'tableMultiOrder': tableMultiOrder,
+      'orderWithCashRegister': orderWithCashRegister,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
       'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
       'strictMode': strictMode,
@@ -175,6 +186,7 @@ class _BuildingImpl extends Building {
     required DateTime closingTime,
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
+    bool? orderWithCashRegister,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -189,6 +201,7 @@ class _BuildingImpl extends Building {
          closingTime: closingTime,
          authUserId: authUserId,
          tableMultiOrder: tableMultiOrder,
+         orderWithCashRegister: orderWithCashRegister,
          allowAppendingItemsToOrder: allowAppendingItemsToOrder,
          autoCloseOrdersAtClosingTime: autoCloseOrdersAtClosingTime,
          strictMode: strictMode,
@@ -209,6 +222,7 @@ class _BuildingImpl extends Building {
     DateTime? closingTime,
     Object? authUserId = _Undefined,
     bool? tableMultiOrder,
+    bool? orderWithCashRegister,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -224,6 +238,8 @@ class _BuildingImpl extends Building {
       closingTime: closingTime ?? this.closingTime,
       authUserId: authUserId is _i1.UuidValue? ? authUserId : this.authUserId,
       tableMultiOrder: tableMultiOrder ?? this.tableMultiOrder,
+      orderWithCashRegister:
+          orderWithCashRegister ?? this.orderWithCashRegister,
       allowAppendingItemsToOrder:
           allowAppendingItemsToOrder ?? this.allowAppendingItemsToOrder,
       autoCloseOrdersAtClosingTime:

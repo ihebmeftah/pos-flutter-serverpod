@@ -11,7 +11,7 @@ fields:
   appendItems: bool,
   preparation: bool,
   serveOrder: bool,
-  caisseManagement: bool
+  cashRegisterManagement: bool
   buildingId: UuidValue, relation(parent=building)
 
 

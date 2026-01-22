@@ -14,6 +14,9 @@ fields:
   authUserId: UuidValue?, relation(parent=serverpod_auth_core_user),
   ### Indicates whether the building supports multiple orders per table.
   tableMultiOrder: bool, default=false
+  ### Indicates whether the building supports orders with cash registers.
+  ### evrey order shoud be linked to cash register of day
+  orderWithCashRegister: bool, default=false
   ### Indicates whether items can be appended to an existing order.
   allowAppendingItemsToOrder: bool, default=true
   ### auto close orders when closing time is reached

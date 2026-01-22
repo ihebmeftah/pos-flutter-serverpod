@@ -25,7 +25,7 @@ abstract class Access
     required this.appendItems,
     required this.preparation,
     required this.serveOrder,
-    required this.caisseManagement,
+    required this.cashRegisterManagement,
     required this.buildingId,
   }) : id = id ?? _i1.Uuid().v4obj();
 
@@ -40,7 +40,7 @@ abstract class Access
     required bool appendItems,
     required bool preparation,
     required bool serveOrder,
-    required bool caisseManagement,
+    required bool cashRegisterManagement,
     required _i1.UuidValue buildingId,
   }) = _AccessImpl;
 
@@ -58,7 +58,8 @@ abstract class Access
       appendItems: jsonSerialization['appendItems'] as bool,
       preparation: jsonSerialization['preparation'] as bool,
       serveOrder: jsonSerialization['serveOrder'] as bool,
-      caisseManagement: jsonSerialization['caisseManagement'] as bool,
+      cashRegisterManagement:
+          jsonSerialization['cashRegisterManagement'] as bool,
       buildingId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['buildingId'],
       ),
@@ -90,7 +91,7 @@ abstract class Access
 
   bool serveOrder;
 
-  bool caisseManagement;
+  bool cashRegisterManagement;
 
   _i1.UuidValue buildingId;
 
@@ -111,7 +112,7 @@ abstract class Access
     bool? appendItems,
     bool? preparation,
     bool? serveOrder,
-    bool? caisseManagement,
+    bool? cashRegisterManagement,
     _i1.UuidValue? buildingId,
   });
   @override
@@ -128,7 +129,7 @@ abstract class Access
       'appendItems': appendItems,
       'preparation': preparation,
       'serveOrder': serveOrder,
-      'caisseManagement': caisseManagement,
+      'cashRegisterManagement': cashRegisterManagement,
       'buildingId': buildingId.toJson(),
     };
   }
@@ -147,7 +148,7 @@ abstract class Access
       'appendItems': appendItems,
       'preparation': preparation,
       'serveOrder': serveOrder,
-      'caisseManagement': caisseManagement,
+      'cashRegisterManagement': cashRegisterManagement,
       'buildingId': buildingId.toJson(),
     };
   }
@@ -194,7 +195,7 @@ class _AccessImpl extends Access {
     required bool appendItems,
     required bool preparation,
     required bool serveOrder,
-    required bool caisseManagement,
+    required bool cashRegisterManagement,
     required _i1.UuidValue buildingId,
   }) : super._(
          id: id,
@@ -207,7 +208,7 @@ class _AccessImpl extends Access {
          appendItems: appendItems,
          preparation: preparation,
          serveOrder: serveOrder,
-         caisseManagement: caisseManagement,
+         cashRegisterManagement: cashRegisterManagement,
          buildingId: buildingId,
        );
 
@@ -226,7 +227,7 @@ class _AccessImpl extends Access {
     bool? appendItems,
     bool? preparation,
     bool? serveOrder,
-    bool? caisseManagement,
+    bool? cashRegisterManagement,
     _i1.UuidValue? buildingId,
   }) {
     return Access(
@@ -240,7 +241,8 @@ class _AccessImpl extends Access {
       appendItems: appendItems ?? this.appendItems,
       preparation: preparation ?? this.preparation,
       serveOrder: serveOrder ?? this.serveOrder,
-      caisseManagement: caisseManagement ?? this.caisseManagement,
+      cashRegisterManagement:
+          cashRegisterManagement ?? this.cashRegisterManagement,
       buildingId: buildingId ?? this.buildingId,
     );
   }
@@ -294,10 +296,11 @@ class AccessUpdateTable extends _i1.UpdateTable<AccessTable> {
     value,
   );
 
-  _i1.ColumnValue<bool, bool> caisseManagement(bool value) => _i1.ColumnValue(
-    table.caisseManagement,
-    value,
-  );
+  _i1.ColumnValue<bool, bool> cashRegisterManagement(bool value) =>
+      _i1.ColumnValue(
+        table.cashRegisterManagement,
+        value,
+      );
 
   _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> buildingId(
     _i1.UuidValue value,
@@ -346,8 +349,8 @@ class AccessTable extends _i1.Table<_i1.UuidValue> {
       'serveOrder',
       this,
     );
-    caisseManagement = _i1.ColumnBool(
-      'caisseManagement',
+    cashRegisterManagement = _i1.ColumnBool(
+      'cashRegisterManagement',
       this,
     );
     buildingId = _i1.ColumnUuid(
@@ -376,7 +379,7 @@ class AccessTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnBool serveOrder;
 
-  late final _i1.ColumnBool caisseManagement;
+  late final _i1.ColumnBool cashRegisterManagement;
 
   late final _i1.ColumnUuid buildingId;
 
@@ -392,7 +395,7 @@ class AccessTable extends _i1.Table<_i1.UuidValue> {
     appendItems,
     preparation,
     serveOrder,
-    caisseManagement,
+    cashRegisterManagement,
     buildingId,
   ];
 }

@@ -2,6 +2,7 @@ import 'package:pos_server/src/access/access_endpoint.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
+import '../cash_register/cash_register_endpoint.dart';
 import '../generated/protocol.dart';
 import '../helpers/session_extensions.dart';
 
@@ -36,7 +37,6 @@ class BuildingEndpoint extends Endpoint {
   Future<Building> createBuilding(Session session, Building building) async {
     session.authorizedTo(["owner"]);
     final createdBuilding = await Building.db.insertRow(session, building);
-
     // Create default access for the building
     final defaultAccess = [
       Access(
@@ -49,7 +49,7 @@ class BuildingEndpoint extends Endpoint {
         preparation: false,
         appendItems: false,
         serveOrder: true,
-        caisseManagement: false,
+        cashRegisterManagement: false,
         buildingId: createdBuilding.id,
       ),
       Access(
@@ -58,7 +58,7 @@ class BuildingEndpoint extends Endpoint {
         orderPayment: true,
         orderItemsPayment: true,
         consultAllOrders: true,
-        caisseManagement: true,
+        cashRegisterManagement: true,
         orderCreationNotif: false,
         preparation: false,
         appendItems: false,
@@ -74,7 +74,7 @@ class BuildingEndpoint extends Endpoint {
         orderCreationNotif: false,
         preparation: true,
         appendItems: false,
-        caisseManagement: false,
+        cashRegisterManagement: false,
         serveOrder: false,
         buildingId: createdBuilding.id,
       ),
@@ -109,7 +109,30 @@ class BuildingEndpoint extends Endpoint {
         errorType: ExceptionType.Unauthorized,
       );
     }
-    await Building.db.updateRow(session, building);
-    return building;
+    final updatedBuilding = await Building.db.updateRow(session, building);
+    if (updatedBuilding.orderWithCashRegister == false) {
+      await CashRegisterEndpoint().closeLastCashRegister(
+        session,
+        updatedBuilding.id,
+      );
+    }
+    await session.messages.postMessage(
+      '${updateBuildingChannel}_${building.id}',
+      updatedBuilding,
+    );
+    return updatedBuilding;
+  }
+
+  final String updateBuildingChannel = 'buildings_update';
+  Stream<Building> watchUpdateBuildings(
+    Session session,
+    UuidValue buildingId,
+  ) async* {
+    final stream = session.messages.createStream<Building>(
+      '${updateBuildingChannel}_${buildingId.toString()}',
+    );
+    await for (final message in stream) {
+      yield message;
+    }
   }
 }

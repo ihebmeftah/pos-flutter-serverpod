@@ -23,6 +23,7 @@ abstract class Building
     required this.closingTime,
     this.authUserId,
     bool? tableMultiOrder,
+    bool? orderWithCashRegister,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -31,6 +32,7 @@ abstract class Building
     this.lat,
   }) : id = id ?? _i1.Uuid().v4obj(),
        tableMultiOrder = tableMultiOrder ?? false,
+       orderWithCashRegister = orderWithCashRegister ?? false,
        allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true,
        autoCloseOrdersAtClosingTime = autoCloseOrdersAtClosingTime ?? false,
        strictMode = strictMode ?? false;
@@ -43,6 +45,7 @@ abstract class Building
     required DateTime closingTime,
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
+    bool? orderWithCashRegister,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -70,6 +73,8 @@ abstract class Building
               jsonSerialization['authUserId'],
             ),
       tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool?,
+      orderWithCashRegister:
+          jsonSerialization['orderWithCashRegister'] as bool?,
       allowAppendingItemsToOrder:
           jsonSerialization['allowAppendingItemsToOrder'] as bool?,
       autoCloseOrdersAtClosingTime:
@@ -108,6 +113,10 @@ abstract class Building
   /// Indicates whether the building supports multiple orders per table.
   bool tableMultiOrder;
 
+  /// Indicates whether the building supports orders with cash registers.
+  /// evrey order shoud be linked to cash register of day
+  bool orderWithCashRegister;
+
   /// Indicates whether items can be appended to an existing order.
   bool allowAppendingItemsToOrder;
 
@@ -139,6 +148,7 @@ abstract class Building
     DateTime? closingTime,
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
+    bool? orderWithCashRegister,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -157,6 +167,7 @@ abstract class Building
       'closingTime': closingTime.toJson(),
       if (authUserId != null) 'authUserId': authUserId?.toJson(),
       'tableMultiOrder': tableMultiOrder,
+      'orderWithCashRegister': orderWithCashRegister,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
       'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
       'strictMode': strictMode,
@@ -177,6 +188,7 @@ abstract class Building
       'closingTime': closingTime.toJson(),
       if (authUserId != null) 'authUserId': authUserId?.toJson(),
       'tableMultiOrder': tableMultiOrder,
+      'orderWithCashRegister': orderWithCashRegister,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
       'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
       'strictMode': strictMode,
@@ -227,6 +239,7 @@ class _BuildingImpl extends Building {
     required DateTime closingTime,
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
+    bool? orderWithCashRegister,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -241,6 +254,7 @@ class _BuildingImpl extends Building {
          closingTime: closingTime,
          authUserId: authUserId,
          tableMultiOrder: tableMultiOrder,
+         orderWithCashRegister: orderWithCashRegister,
          allowAppendingItemsToOrder: allowAppendingItemsToOrder,
          autoCloseOrdersAtClosingTime: autoCloseOrdersAtClosingTime,
          strictMode: strictMode,
@@ -261,6 +275,7 @@ class _BuildingImpl extends Building {
     DateTime? closingTime,
     Object? authUserId = _Undefined,
     bool? tableMultiOrder,
+    bool? orderWithCashRegister,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -276,6 +291,8 @@ class _BuildingImpl extends Building {
       closingTime: closingTime ?? this.closingTime,
       authUserId: authUserId is _i1.UuidValue? ? authUserId : this.authUserId,
       tableMultiOrder: tableMultiOrder ?? this.tableMultiOrder,
+      orderWithCashRegister:
+          orderWithCashRegister ?? this.orderWithCashRegister,
       allowAppendingItemsToOrder:
           allowAppendingItemsToOrder ?? this.allowAppendingItemsToOrder,
       autoCloseOrdersAtClosingTime:
@@ -324,6 +341,12 @@ class BuildingUpdateTable extends _i1.UpdateTable<BuildingTable> {
     table.tableMultiOrder,
     value,
   );
+
+  _i1.ColumnValue<bool, bool> orderWithCashRegister(bool value) =>
+      _i1.ColumnValue(
+        table.orderWithCashRegister,
+        value,
+      );
 
   _i1.ColumnValue<bool, bool> allowAppendingItemsToOrder(bool value) =>
       _i1.ColumnValue(
@@ -388,6 +411,11 @@ class BuildingTable extends _i1.Table<_i1.UuidValue> {
       this,
       hasDefault: true,
     );
+    orderWithCashRegister = _i1.ColumnBool(
+      'orderWithCashRegister',
+      this,
+      hasDefault: true,
+    );
     allowAppendingItemsToOrder = _i1.ColumnBool(
       'allowAppendingItemsToOrder',
       this,
@@ -438,6 +466,10 @@ class BuildingTable extends _i1.Table<_i1.UuidValue> {
   /// Indicates whether the building supports multiple orders per table.
   late final _i1.ColumnBool tableMultiOrder;
 
+  /// Indicates whether the building supports orders with cash registers.
+  /// evrey order shoud be linked to cash register of day
+  late final _i1.ColumnBool orderWithCashRegister;
+
   /// Indicates whether items can be appended to an existing order.
   late final _i1.ColumnBool allowAppendingItemsToOrder;
 
@@ -464,6 +496,7 @@ class BuildingTable extends _i1.Table<_i1.UuidValue> {
     closingTime,
     authUserId,
     tableMultiOrder,
+    orderWithCashRegister,
     allowAppendingItemsToOrder,
     autoCloseOrdersAtClosingTime,
     strictMode,
