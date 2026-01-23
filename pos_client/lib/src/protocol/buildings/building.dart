@@ -23,6 +23,7 @@ abstract class Building implements _i1.SerializableModel {
     this.authUserId,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
+    int? cashRegisterLimitPerDay,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -32,6 +33,7 @@ abstract class Building implements _i1.SerializableModel {
   }) : id = id ?? _i1.Uuid().v4obj(),
        tableMultiOrder = tableMultiOrder ?? false,
        orderWithCashRegister = orderWithCashRegister ?? false,
+       cashRegisterLimitPerDay = cashRegisterLimitPerDay ?? 3,
        allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true,
        autoCloseOrdersAtClosingTime = autoCloseOrdersAtClosingTime ?? false,
        strictMode = strictMode ?? false;
@@ -45,6 +47,7 @@ abstract class Building implements _i1.SerializableModel {
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
+    int? cashRegisterLimitPerDay,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -74,6 +77,8 @@ abstract class Building implements _i1.SerializableModel {
       tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool?,
       orderWithCashRegister:
           jsonSerialization['orderWithCashRegister'] as bool?,
+      cashRegisterLimitPerDay:
+          jsonSerialization['cashRegisterLimitPerDay'] as int?,
       allowAppendingItemsToOrder:
           jsonSerialization['allowAppendingItemsToOrder'] as bool?,
       autoCloseOrdersAtClosingTime:
@@ -112,6 +117,8 @@ abstract class Building implements _i1.SerializableModel {
   /// evrey order shoud be linked to cash register of day
   bool orderWithCashRegister;
 
+  int cashRegisterLimitPerDay;
+
   /// Indicates whether items can be appended to an existing order.
   bool allowAppendingItemsToOrder;
 
@@ -141,6 +148,7 @@ abstract class Building implements _i1.SerializableModel {
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
+    int? cashRegisterLimitPerDay,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -160,6 +168,7 @@ abstract class Building implements _i1.SerializableModel {
       if (authUserId != null) 'authUserId': authUserId?.toJson(),
       'tableMultiOrder': tableMultiOrder,
       'orderWithCashRegister': orderWithCashRegister,
+      'cashRegisterLimitPerDay': cashRegisterLimitPerDay,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
       'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
       'strictMode': strictMode,
@@ -187,6 +196,7 @@ class _BuildingImpl extends Building {
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
+    int? cashRegisterLimitPerDay,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -202,6 +212,7 @@ class _BuildingImpl extends Building {
          authUserId: authUserId,
          tableMultiOrder: tableMultiOrder,
          orderWithCashRegister: orderWithCashRegister,
+         cashRegisterLimitPerDay: cashRegisterLimitPerDay,
          allowAppendingItemsToOrder: allowAppendingItemsToOrder,
          autoCloseOrdersAtClosingTime: autoCloseOrdersAtClosingTime,
          strictMode: strictMode,
@@ -223,6 +234,7 @@ class _BuildingImpl extends Building {
     Object? authUserId = _Undefined,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
+    int? cashRegisterLimitPerDay,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -240,6 +252,8 @@ class _BuildingImpl extends Building {
       tableMultiOrder: tableMultiOrder ?? this.tableMultiOrder,
       orderWithCashRegister:
           orderWithCashRegister ?? this.orderWithCashRegister,
+      cashRegisterLimitPerDay:
+          cashRegisterLimitPerDay ?? this.cashRegisterLimitPerDay,
       allowAppendingItemsToOrder:
           allowAppendingItemsToOrder ?? this.allowAppendingItemsToOrder,
       autoCloseOrdersAtClosingTime:

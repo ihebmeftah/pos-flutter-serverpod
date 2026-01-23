@@ -1,5 +1,6 @@
 import 'package:pos_server/src/article/article_endpoint.dart';
 import 'package:pos_server/src/buildings/building_endpoint.dart';
+import 'package:pos_server/src/cash_register/cash_register_endpoint.dart';
 import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
 import '../helpers/session_extensions.dart';
@@ -22,17 +23,29 @@ class OrderEndpoint extends Endpoint {
   /// Only owner and employers are allowed for this endpoint
   Future<List<Order>> getOrdersByBuilingId(
     Session session,
-    UuidValue buildingId,
+    UuidValue buildingId, [
     OrderStatus? orderStatus,
-  ) async {
+    UuidValue? cashRegisterId,
+  ]) async {
     session.authorizedTo(['owner', 'employer']);
     Employer? employer;
+    CashRegister? currentCashRegister;
+
     if (session.isEmployer) {
       employer = await EmployerEndpoint().getEmployerByIdentifier(
         session,
         session.authenticated!.authUserId,
       );
+      if (employer.building!.orderWithCashRegister &&
+          !employer.access!.consultAllOrders) {
+        currentCashRegister = await CashRegisterEndpoint()
+            .getCurrentCashRegister(
+              session,
+              employer.building!,
+            );
+      }
     }
+
     return await Order.db.find(
       session,
       orderByList: (k) => [
@@ -40,28 +53,40 @@ class OrderEndpoint extends Endpoint {
         s.Order(column: k.status, orderDescending: true),
       ],
       where: (t) {
-        final base = t.btable.buildingId.equals(buildingId);
-        final currentUser =
-            (t.passedBy.authUserId.equals(session.authenticated!.authUserId) |
-            t.closedby.authUserId.equals(session.authenticated!.authUserId) |
-            t.items.any(
-              (item) {
-                return item.passedBy.authUserId.equals(
-                  session.authenticated!.authUserId,
-                );
-              },
-            ));
+        // Start with base building filter
+        var condition = t.btable.buildingId.equals(buildingId);
 
-        // Employer ih has access to consult all orders or only his own orders
-        if (session.isOwner || (employer?.access?.consultAllOrders == true)) {
-          if (orderStatus != null) return base & t.status.equals(orderStatus);
-          return base;
-        } else {
-          if (orderStatus != null) {
-            return base & t.status.equals(orderStatus) & currentUser;
-          }
-          return base & currentUser;
+        // Add order status filter if provided
+        if (orderStatus != null) {
+          condition = condition & t.status.equals(orderStatus);
         }
+
+        // Add cash register filter if applicable
+        if (currentCashRegister != null || cashRegisterId != null) {
+          condition =
+              condition &
+              t.cashRegisterId.equals(
+                currentCashRegister?.id ?? cashRegisterId,
+              );
+        }
+
+        // Add user filter for non-owners without consultAllOrders permission
+        final hasFullAccess =
+            session.isOwner || (employer?.access?.consultAllOrders == true);
+
+        if (!hasFullAccess) {
+          final currentUserFilter =
+              t.passedBy.authUserId.equals(session.authenticated!.authUserId) |
+              t.closedby.authUserId.equals(session.authenticated!.authUserId) |
+              t.items.any(
+                (item) => item.passedBy.authUserId.equals(
+                  session.authenticated!.authUserId,
+                ),
+              );
+          condition = condition & currentUserFilter;
+        }
+
+        return condition;
       },
       include: Order.include(
         btable: BTable.include(),
@@ -121,6 +146,13 @@ class OrderEndpoint extends Endpoint {
       session,
       orderDto.buildingId,
     );
+    CashRegister? currentCashRegister;
+    if (building.orderWithCashRegister) {
+      currentCashRegister = await CashRegisterEndpoint().getCurrentCashRegister(
+        session,
+        building,
+      );
+    }
     // Check if table multi order is allowed
     if (building.tableMultiOrder == false) {
       final tableOrder = await OrderEndpoint().getOrderCurrOfTable(
@@ -174,6 +206,8 @@ class OrderEndpoint extends Endpoint {
     return await session.db.transaction((trs) async {
       // Create the order
       Order newOrder = Order(
+        cashRegister: currentCashRegister,
+        cashRegisterId: currentCashRegister?.id,
         btableId: orderDto.btableId,
         passedById: employer.userProfileId,
       );
@@ -195,7 +229,6 @@ class OrderEndpoint extends Endpoint {
         newOrderItems,
         transaction: trs,
       );
-      newOrder.btable!.status = TableStatus.occupied;
       newOrder.items = newOrderItems;
       // Attach items to the order
       await Order.db.attach.items(

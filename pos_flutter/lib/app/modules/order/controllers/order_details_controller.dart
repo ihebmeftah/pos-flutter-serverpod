@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/components/app_snackbar.dart';
+import 'package:pos_flutter/app/modules/order/controllers/order_controller.dart';
+import 'package:pos_flutter/app/modules/tables/controllers/tables_controller.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
@@ -76,6 +78,12 @@ class OrderDetailsController extends GetxController with StateMixin {
       AppSnackbar.success(
         'Item ${item.article.name} has been paid successfully',
       );
+      if (Get.isRegistered<TablesController>()) {
+        Get.find<TablesController>().getTabels();
+      }
+      if (Get.isRegistered<OrderController>()) {
+        Get.find<OrderController>().getOrders();
+      }
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Forbidden) {
         AppSnackbar.info(e.message);
@@ -95,6 +103,12 @@ class OrderDetailsController extends GetxController with StateMixin {
       );
       AppSnackbar.success('All items have been paid successfully');
       change(order, status: RxStatus.success());
+      if (Get.isRegistered<TablesController>()) {
+        Get.find<TablesController>().getTabels();
+      }
+      if (Get.isRegistered<OrderController>()) {
+        Get.find<OrderController>().getOrders();
+      }
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Forbidden) {
         AppSnackbar.info(e.message);

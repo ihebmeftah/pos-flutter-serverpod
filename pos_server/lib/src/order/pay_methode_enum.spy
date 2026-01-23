@@ -1,0 +1,6 @@
+enum: PayMethode
+serialized: byName
+values:
+  - cash
+  - card
+  - mobilePayment

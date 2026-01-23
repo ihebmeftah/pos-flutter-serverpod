@@ -3,7 +3,8 @@ table: cash_register
 fields:
     id: UuidValue, defaultPersist=random, defaultModel=random
     start: DateTime
+    startAmount: double?, default=0.0
     end: DateTime?
+    endAmount: double?, default=0.0
     isClosed: bool
     buildingId: UuidValue, relation(parent=building)
-    createdAt: DateTime,default=now

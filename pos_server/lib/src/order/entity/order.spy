@@ -2,6 +2,7 @@ class: Order
 table: orders
 fields:
   id: UuidValue, defaultPersist=random, defaultModel=random
+  cashRegister: CashRegister?, relation(optional)
   status: OrderStatus, default=progress
   btable: BTable?, relation(onDelete=cascade)
   # Relation with UserProfile to support future customer app integration

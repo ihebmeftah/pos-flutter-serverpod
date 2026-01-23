@@ -37,7 +37,6 @@ cashRegister:
   - getCashRegisters:
   - createCashRegister:
   - closeLastCashRegister:
-  - getCurrentCashRegister:
   - watchCashRegisters:
 categorie:
   - getCategories:

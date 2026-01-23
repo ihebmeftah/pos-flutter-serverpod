@@ -814,6 +814,11 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
+            'startAmount': _i1.ParameterDescription(
+              name: 'startAmount',
+              type: _i1.getType<double?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -823,6 +828,7 @@ class Endpoints extends _i1.EndpointDispatch {
                   .createCashRegister(
                     session,
                     params['buildingId'],
+                    params['startAmount'],
                   ),
         ),
         'closeLastCashRegister': _i1.MethodConnector(
@@ -833,6 +839,11 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
+            'endAmount': _i1.ParameterDescription(
+              name: 'endAmount',
+              type: _i1.getType<double?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -842,25 +853,7 @@ class Endpoints extends _i1.EndpointDispatch {
                   .closeLastCashRegister(
                     session,
                     params['buildingId'],
-                  ),
-        ),
-        'getCurrentCashRegister': _i1.MethodConnector(
-          name: 'getCurrentCashRegister',
-          params: {
-            'buildingId': _i1.ParameterDescription(
-              name: 'buildingId',
-              type: _i1.getType<_i1.UuidValue>(),
-              nullable: false,
-            ),
-          },
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-              ) async => (endpoints['cashRegister'] as _i8.CashRegisterEndpoint)
-                  .getCurrentCashRegister(
-                    session,
-                    params['buildingId'],
+                    params['endAmount'],
                   ),
         ),
         'watchCashRegisters': _i1.MethodStreamConnector(
@@ -1186,6 +1179,11 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<_i24.OrderStatus?>(),
               nullable: true,
             ),
+            'cashRegisterId': _i1.ParameterDescription(
+              name: 'cashRegisterId',
+              type: _i1.getType<_i1.UuidValue?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -1196,6 +1194,7 @@ class Endpoints extends _i1.EndpointDispatch {
                     session,
                     params['buildingId'],
                     params['orderStatus'],
+                    params['cashRegisterId'],
                   ),
         ),
         'getOrderById': _i1.MethodConnector(

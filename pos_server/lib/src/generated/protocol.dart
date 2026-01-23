@@ -41,19 +41,20 @@ import 'order/entity/order.dart' as _i26;
 import 'order/entity/order_item.dart' as _i27;
 import 'order/order_item_status_enum.dart' as _i28;
 import 'order/order_status_enum.dart' as _i29;
-import 'package:pos_server/src/generated/access/access.dart' as _i30;
-import 'package:pos_server/src/generated/article/entity/article.dart' as _i31;
-import 'package:pos_server/src/generated/employer/employer.dart' as _i32;
-import 'package:pos_server/src/generated/buildings/building.dart' as _i33;
+import 'order/pay_methode_enum.dart' as _i30;
+import 'package:pos_server/src/generated/access/access.dart' as _i31;
+import 'package:pos_server/src/generated/article/entity/article.dart' as _i32;
+import 'package:pos_server/src/generated/employer/employer.dart' as _i33;
+import 'package:pos_server/src/generated/buildings/building.dart' as _i34;
 import 'package:pos_server/src/generated/buildings_tables/building_tables.dart'
-    as _i34;
-import 'package:pos_server/src/generated/cash_register/cash_register.dart'
     as _i35;
-import 'package:pos_server/src/generated/cateogrie/entity/categorie.dart'
+import 'package:pos_server/src/generated/cash_register/cash_register.dart'
     as _i36;
-import 'package:pos_server/src/generated/ingredient/ingredient.dart' as _i37;
-import 'package:pos_server/src/generated/order/entity/order.dart' as _i38;
-import 'package:pos_server/src/generated/order/entity/order_item.dart' as _i39;
+import 'package:pos_server/src/generated/cateogrie/entity/categorie.dart'
+    as _i37;
+import 'package:pos_server/src/generated/ingredient/ingredient.dart' as _i38;
+import 'package:pos_server/src/generated/order/entity/order.dart' as _i39;
+import 'package:pos_server/src/generated/order/entity/order_item.dart' as _i40;
 export 'access/access.dart';
 export 'article/dto/create_article.dto.dart';
 export 'article/dto/update_article.dto.dart';
@@ -79,6 +80,7 @@ export 'order/entity/order.dart';
 export 'order/entity/order_item.dart';
 export 'order/order_item_status_enum.dart';
 export 'order/order_status_enum.dart';
+export 'order/pay_methode_enum.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -510,6 +512,13 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'false',
         ),
         _i2.ColumnDefinition(
+          name: 'cashRegisterLimitPerDay',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '3',
+        ),
+        _i2.ColumnDefinition(
           name: 'allowAppendingItemsToOrder',
           columnType: _i2.ColumnType.boolean,
           isNullable: false,
@@ -598,10 +607,24 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'DateTime',
         ),
         _i2.ColumnDefinition(
+          name: 'startAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
           name: 'end',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: true,
           dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'endAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+          columnDefault: '0.0',
         ),
         _i2.ColumnDefinition(
           name: 'isClosed',
@@ -614,13 +637,6 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.uuid,
           isNullable: false,
           dartType: 'UuidValue',
-        ),
-        _i2.ColumnDefinition(
-          name: 'createdAt',
-          columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: false,
-          dartType: 'DateTime',
-          columnDefault: 'CURRENT_TIMESTAMP',
         ),
       ],
       foreignKeys: [
@@ -1025,6 +1041,13 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: true,
           dartType: 'DateTime?',
         ),
+        _i2.ColumnDefinition(
+          name: 'payMethode',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:PayMethode',
+          columnDefault: '\'cash\'::text',
+        ),
       ],
       foreignKeys: [
         _i2.ForeignKeyDefinition(
@@ -1112,6 +1135,12 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
+          name: 'cashRegisterId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
           name: 'status',
           columnType: _i2.ColumnType.text,
           isNullable: false,
@@ -1153,6 +1182,16 @@ class Protocol extends _i1.SerializationManagerServer {
       foreignKeys: [
         _i2.ForeignKeyDefinition(
           constraintName: 'orders_fk_0',
+          columns: ['cashRegisterId'],
+          referenceTable: 'cash_register',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'orders_fk_1',
           columns: ['btableId'],
           referenceTable: 'b_tables',
           referenceTableSchema: 'public',
@@ -1162,7 +1201,7 @@ class Protocol extends _i1.SerializationManagerServer {
           matchType: null,
         ),
         _i2.ForeignKeyDefinition(
-          constraintName: 'orders_fk_1',
+          constraintName: 'orders_fk_2',
           columns: ['passedById'],
           referenceTable: 'serverpod_auth_core_profile',
           referenceTableSchema: 'public',
@@ -1172,7 +1211,7 @@ class Protocol extends _i1.SerializationManagerServer {
           matchType: null,
         ),
         _i2.ForeignKeyDefinition(
-          constraintName: 'orders_fk_2',
+          constraintName: 'orders_fk_3',
           columns: ['closedbyId'],
           referenceTable: 'serverpod_auth_core_profile',
           referenceTableSchema: 'public',
@@ -1319,6 +1358,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i29.OrderStatus) {
       return _i29.OrderStatus.fromJson(data) as T;
     }
+    if (t == _i30.PayMethode) {
+      return _i30.PayMethode.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i5.Access?>()) {
       return (data != null ? _i5.Access.fromJson(data) : null) as T;
     }
@@ -1396,6 +1438,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i29.OrderStatus?>()) {
       return (data != null ? _i29.OrderStatus.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i30.PayMethode?>()) {
+      return (data != null ? _i30.PayMethode.fromJson(data) : null) as T;
+    }
     if (t == List<_i9.ArticleComposition>) {
       return (data as List)
               .map((e) => deserialize<_i9.ArticleComposition>(e))
@@ -1426,18 +1471,18 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == List<_i30.Access>) {
-      return (data as List).map((e) => deserialize<_i30.Access>(e)).toList()
+    if (t == List<_i31.Access>) {
+      return (data as List).map((e) => deserialize<_i31.Access>(e)).toList()
           as T;
     }
-    if (t == List<_i31.Article>) {
-      return (data as List).map((e) => deserialize<_i31.Article>(e)).toList()
+    if (t == List<_i32.Article>) {
+      return (data as List).map((e) => deserialize<_i32.Article>(e)).toList()
           as T;
     }
     if (t ==
         _i1
             .getType<
-              ({_i4.AuthSuccess authSuccess, _i32.Employer? employer})
+              ({_i4.AuthSuccess authSuccess, _i33.Employer? employer})
             >()) {
       return (
             authSuccess: deserialize<_i4.AuthSuccess>(
@@ -1445,42 +1490,42 @@ class Protocol extends _i1.SerializationManagerServer {
             ),
             employer: ((data)['n'] as Map)['employer'] == null
                 ? null
-                : deserialize<_i32.Employer>(data['n']['employer']),
+                : deserialize<_i33.Employer>(data['n']['employer']),
           )
           as T;
     }
-    if (t == List<_i33.Building>) {
-      return (data as List).map((e) => deserialize<_i33.Building>(e)).toList()
+    if (t == List<_i34.Building>) {
+      return (data as List).map((e) => deserialize<_i34.Building>(e)).toList()
           as T;
     }
-    if (t == List<_i34.BTable>) {
-      return (data as List).map((e) => deserialize<_i34.BTable>(e)).toList()
+    if (t == List<_i35.BTable>) {
+      return (data as List).map((e) => deserialize<_i35.BTable>(e)).toList()
           as T;
     }
-    if (t == List<_i35.CashRegister>) {
+    if (t == List<_i36.CashRegister>) {
       return (data as List)
-              .map((e) => deserialize<_i35.CashRegister>(e))
+              .map((e) => deserialize<_i36.CashRegister>(e))
               .toList()
           as T;
     }
-    if (t == List<_i36.Categorie>) {
-      return (data as List).map((e) => deserialize<_i36.Categorie>(e)).toList()
+    if (t == List<_i37.Categorie>) {
+      return (data as List).map((e) => deserialize<_i37.Categorie>(e)).toList()
           as T;
     }
-    if (t == List<_i32.Employer>) {
-      return (data as List).map((e) => deserialize<_i32.Employer>(e)).toList()
+    if (t == List<_i33.Employer>) {
+      return (data as List).map((e) => deserialize<_i33.Employer>(e)).toList()
           as T;
     }
-    if (t == List<_i37.Ingredient>) {
-      return (data as List).map((e) => deserialize<_i37.Ingredient>(e)).toList()
+    if (t == List<_i38.Ingredient>) {
+      return (data as List).map((e) => deserialize<_i38.Ingredient>(e)).toList()
           as T;
     }
-    if (t == List<_i38.Order>) {
-      return (data as List).map((e) => deserialize<_i38.Order>(e)).toList()
+    if (t == List<_i39.Order>) {
+      return (data as List).map((e) => deserialize<_i39.Order>(e)).toList()
           as T;
     }
-    if (t == List<_i39.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i39.OrderItem>(e)).toList()
+    if (t == List<_i40.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i40.OrderItem>(e)).toList()
           as T;
     }
     if (t == List<_i1.UuidValue>) {
@@ -1526,6 +1571,7 @@ class Protocol extends _i1.SerializationManagerServer {
       _i27.OrderItem => 'OrderItem',
       _i28.OrderItemStatus => 'OrderItemStatus',
       _i29.OrderStatus => 'OrderStatus',
+      _i30.PayMethode => 'PayMethode',
       _ => null,
     };
   }
@@ -1590,6 +1636,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'OrderItemStatus';
       case _i29.OrderStatus():
         return 'OrderStatus';
+      case _i30.PayMethode():
+        return 'PayMethode';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -1687,6 +1735,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'OrderStatus') {
       return deserialize<_i29.OrderStatus>(data['data']);
     }
+    if (dataClassName == 'PayMethode') {
+      return deserialize<_i30.PayMethode>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
       return _i2.Protocol().deserializeByClassName(data);
@@ -1765,7 +1816,7 @@ class Protocol extends _i1.SerializationManagerServer {
     if (record == null) {
       return null;
     }
-    if (record is ({_i4.AuthSuccess authSuccess, _i32.Employer? employer})) {
+    if (record is ({_i4.AuthSuccess authSuccess, _i33.Employer? employer})) {
       return {
         "n": {
           "authSuccess": record.authSuccess,

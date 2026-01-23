@@ -12,10 +12,11 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../../order/order_item_status_enum.dart' as _i2;
-import '../../article/entity/article.dart' as _i3;
+import '../../order/pay_methode_enum.dart' as _i3;
+import '../../article/entity/article.dart' as _i4;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i4;
-import 'package:pos_client/src/protocol/protocol.dart' as _i5;
+    as _i5;
+import 'package:pos_client/src/protocol/protocol.dart' as _i6;
 
 abstract class OrderItem implements _i1.SerializableModel {
   OrderItem._({
@@ -32,24 +33,27 @@ abstract class OrderItem implements _i1.SerializableModel {
     this.updatedAt,
     this.preaparedAt,
     this.payedAt,
+    _i3.PayMethode? payMethode,
   }) : id = id ?? _i1.Uuid().v4obj(),
        itemStatus = itemStatus ?? _i2.OrderItemStatus.progress,
-       createdAt = createdAt ?? DateTime.now();
+       createdAt = createdAt ?? DateTime.now(),
+       payMethode = payMethode ?? _i3.PayMethode.cash;
 
   factory OrderItem({
     _i1.UuidValue? id,
-    required _i3.Article article,
+    required _i4.Article article,
     _i2.OrderItemStatus? itemStatus,
     required _i1.UuidValue passedById,
-    _i4.UserProfile? passedBy,
+    _i5.UserProfile? passedBy,
     _i1.UuidValue? payedToId,
-    _i4.UserProfile? payedTo,
+    _i5.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
-    _i4.UserProfile? preparedBy,
+    _i5.UserProfile? preparedBy,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
     DateTime? payedAt,
+    _i3.PayMethode? payMethode,
   }) = _OrderItemImpl;
 
   factory OrderItem.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -57,7 +61,7 @@ abstract class OrderItem implements _i1.SerializableModel {
       id: jsonSerialization['id'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      article: _i5.Protocol().deserialize<_i3.Article>(
+      article: _i6.Protocol().deserialize<_i4.Article>(
         jsonSerialization['article'],
       ),
       itemStatus: jsonSerialization['itemStatus'] == null
@@ -70,7 +74,7 @@ abstract class OrderItem implements _i1.SerializableModel {
       ),
       passedBy: jsonSerialization['passedBy'] == null
           ? null
-          : _i5.Protocol().deserialize<_i4.UserProfile>(
+          : _i6.Protocol().deserialize<_i5.UserProfile>(
               jsonSerialization['passedBy'],
             ),
       payedToId: jsonSerialization['payedToId'] == null
@@ -78,7 +82,7 @@ abstract class OrderItem implements _i1.SerializableModel {
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['payedToId']),
       payedTo: jsonSerialization['payedTo'] == null
           ? null
-          : _i5.Protocol().deserialize<_i4.UserProfile>(
+          : _i6.Protocol().deserialize<_i5.UserProfile>(
               jsonSerialization['payedTo'],
             ),
       preparedById: jsonSerialization['preparedById'] == null
@@ -88,7 +92,7 @@ abstract class OrderItem implements _i1.SerializableModel {
             ),
       preparedBy: jsonSerialization['preparedBy'] == null
           ? null
-          : _i5.Protocol().deserialize<_i4.UserProfile>(
+          : _i6.Protocol().deserialize<_i5.UserProfile>(
               jsonSerialization['preparedBy'],
             ),
       createdAt: jsonSerialization['createdAt'] == null
@@ -105,27 +109,32 @@ abstract class OrderItem implements _i1.SerializableModel {
       payedAt: jsonSerialization['payedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['payedAt']),
+      payMethode: jsonSerialization['payMethode'] == null
+          ? null
+          : _i3.PayMethode.fromJson(
+              (jsonSerialization['payMethode'] as String),
+            ),
     );
   }
 
   /// The id of the object.
   _i1.UuidValue id;
 
-  _i3.Article article;
+  _i4.Article article;
 
   _i2.OrderItemStatus itemStatus;
 
   _i1.UuidValue passedById;
 
-  _i4.UserProfile? passedBy;
+  _i5.UserProfile? passedBy;
 
   _i1.UuidValue? payedToId;
 
-  _i4.UserProfile? payedTo;
+  _i5.UserProfile? payedTo;
 
   _i1.UuidValue? preparedById;
 
-  _i4.UserProfile? preparedBy;
+  _i5.UserProfile? preparedBy;
 
   DateTime createdAt;
 
@@ -135,23 +144,26 @@ abstract class OrderItem implements _i1.SerializableModel {
 
   DateTime? payedAt;
 
+  _i3.PayMethode payMethode;
+
   /// Returns a shallow copy of this [OrderItem]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   OrderItem copyWith({
     _i1.UuidValue? id,
-    _i3.Article? article,
+    _i4.Article? article,
     _i2.OrderItemStatus? itemStatus,
     _i1.UuidValue? passedById,
-    _i4.UserProfile? passedBy,
+    _i5.UserProfile? passedBy,
     _i1.UuidValue? payedToId,
-    _i4.UserProfile? payedTo,
+    _i5.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
-    _i4.UserProfile? preparedBy,
+    _i5.UserProfile? preparedBy,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
     DateTime? payedAt,
+    _i3.PayMethode? payMethode,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -170,6 +182,7 @@ abstract class OrderItem implements _i1.SerializableModel {
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
       if (preaparedAt != null) 'preaparedAt': preaparedAt?.toJson(),
       if (payedAt != null) 'payedAt': payedAt?.toJson(),
+      'payMethode': payMethode.toJson(),
     };
   }
 
@@ -184,18 +197,19 @@ class _Undefined {}
 class _OrderItemImpl extends OrderItem {
   _OrderItemImpl({
     _i1.UuidValue? id,
-    required _i3.Article article,
+    required _i4.Article article,
     _i2.OrderItemStatus? itemStatus,
     required _i1.UuidValue passedById,
-    _i4.UserProfile? passedBy,
+    _i5.UserProfile? passedBy,
     _i1.UuidValue? payedToId,
-    _i4.UserProfile? payedTo,
+    _i5.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
-    _i4.UserProfile? preparedBy,
+    _i5.UserProfile? preparedBy,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
     DateTime? payedAt,
+    _i3.PayMethode? payMethode,
   }) : super._(
          id: id,
          article: article,
@@ -210,6 +224,7 @@ class _OrderItemImpl extends OrderItem {
          updatedAt: updatedAt,
          preaparedAt: preaparedAt,
          payedAt: payedAt,
+         payMethode: payMethode,
        );
 
   /// Returns a shallow copy of this [OrderItem]
@@ -218,7 +233,7 @@ class _OrderItemImpl extends OrderItem {
   @override
   OrderItem copyWith({
     _i1.UuidValue? id,
-    _i3.Article? article,
+    _i4.Article? article,
     _i2.OrderItemStatus? itemStatus,
     _i1.UuidValue? passedById,
     Object? passedBy = _Undefined,
@@ -230,27 +245,29 @@ class _OrderItemImpl extends OrderItem {
     Object? updatedAt = _Undefined,
     Object? preaparedAt = _Undefined,
     Object? payedAt = _Undefined,
+    _i3.PayMethode? payMethode,
   }) {
     return OrderItem(
       id: id ?? this.id,
       article: article ?? this.article.copyWith(),
       itemStatus: itemStatus ?? this.itemStatus,
       passedById: passedById ?? this.passedById,
-      passedBy: passedBy is _i4.UserProfile?
+      passedBy: passedBy is _i5.UserProfile?
           ? passedBy
           : this.passedBy?.copyWith(),
       payedToId: payedToId is _i1.UuidValue? ? payedToId : this.payedToId,
-      payedTo: payedTo is _i4.UserProfile? ? payedTo : this.payedTo?.copyWith(),
+      payedTo: payedTo is _i5.UserProfile? ? payedTo : this.payedTo?.copyWith(),
       preparedById: preparedById is _i1.UuidValue?
           ? preparedById
           : this.preparedById,
-      preparedBy: preparedBy is _i4.UserProfile?
+      preparedBy: preparedBy is _i5.UserProfile?
           ? preparedBy
           : this.preparedBy?.copyWith(),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
       preaparedAt: preaparedAt is DateTime? ? preaparedAt : this.preaparedAt,
       payedAt: payedAt is DateTime? ? payedAt : this.payedAt,
+      payMethode: payMethode ?? this.payMethode,
     );
   }
 }

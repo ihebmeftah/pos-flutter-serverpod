@@ -7,6 +7,7 @@ import 'package:pos_flutter/config/serverpod_client.dart';
 import '../../../components/app_snackbar.dart';
 import '../../../data/local/local_storage.dart';
 import '../../../routes/app_pages.dart';
+import '../../tables/controllers/tables_controller.dart';
 import 'order_controller.dart';
 
 class PassOrderController extends GetxController with StateMixin {
@@ -86,10 +87,13 @@ class PassOrderController extends GetxController with StateMixin {
           await appendItemToOrder();
         }
       }
-      if (Get.isRegistered<OrderController>()) {
-        Get.find<OrderController>().onInit();
-      }
       reset();
+      if (Get.isRegistered<TablesController>()) {
+        Get.find<TablesController>().getTabels();
+      }
+      if (Get.isRegistered<OrderController>()) {
+        Get.find<OrderController>().getOrders();
+      }
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.Forbidden) {
         AppSnackbar.info(e.message);

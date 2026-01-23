@@ -12,15 +12,18 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../../order/order_status_enum.dart' as _i2;
-import '../../buildings_tables/building_tables.dart' as _i3;
+import '../../cash_register/cash_register.dart' as _i3;
+import '../../buildings_tables/building_tables.dart' as _i4;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i4;
-import '../../order/entity/order_item.dart' as _i5;
-import 'package:pos_client/src/protocol/protocol.dart' as _i6;
+    as _i5;
+import '../../order/entity/order_item.dart' as _i6;
+import 'package:pos_client/src/protocol/protocol.dart' as _i7;
 
 abstract class Order implements _i1.SerializableModel {
   Order._({
     _i1.UuidValue? id,
+    this.cashRegisterId,
+    this.cashRegister,
     _i2.OrderStatus? status,
     required this.btableId,
     this.btable,
@@ -37,14 +40,16 @@ abstract class Order implements _i1.SerializableModel {
 
   factory Order({
     _i1.UuidValue? id,
+    _i1.UuidValue? cashRegisterId,
+    _i3.CashRegister? cashRegister,
     _i2.OrderStatus? status,
     required _i1.UuidValue btableId,
-    _i3.BTable? btable,
+    _i4.BTable? btable,
     required _i1.UuidValue passedById,
-    _i4.UserProfile? passedBy,
+    _i5.UserProfile? passedBy,
     _i1.UuidValue? closedbyId,
-    _i4.UserProfile? closedby,
-    List<_i5.OrderItem>? items,
+    _i5.UserProfile? closedby,
+    List<_i6.OrderItem>? items,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _OrderImpl;
@@ -54,6 +59,16 @@ abstract class Order implements _i1.SerializableModel {
       id: jsonSerialization['id'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      cashRegisterId: jsonSerialization['cashRegisterId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['cashRegisterId'],
+            ),
+      cashRegister: jsonSerialization['cashRegister'] == null
+          ? null
+          : _i7.Protocol().deserialize<_i3.CashRegister>(
+              jsonSerialization['cashRegister'],
+            ),
       status: jsonSerialization['status'] == null
           ? null
           : _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
@@ -62,13 +77,13 @@ abstract class Order implements _i1.SerializableModel {
       ),
       btable: jsonSerialization['btable'] == null
           ? null
-          : _i6.Protocol().deserialize<_i3.BTable>(jsonSerialization['btable']),
+          : _i7.Protocol().deserialize<_i4.BTable>(jsonSerialization['btable']),
       passedById: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['passedById'],
       ),
       passedBy: jsonSerialization['passedBy'] == null
           ? null
-          : _i6.Protocol().deserialize<_i4.UserProfile>(
+          : _i7.Protocol().deserialize<_i5.UserProfile>(
               jsonSerialization['passedBy'],
             ),
       closedbyId: jsonSerialization['closedbyId'] == null
@@ -78,12 +93,12 @@ abstract class Order implements _i1.SerializableModel {
             ),
       closedby: jsonSerialization['closedby'] == null
           ? null
-          : _i6.Protocol().deserialize<_i4.UserProfile>(
+          : _i7.Protocol().deserialize<_i5.UserProfile>(
               jsonSerialization['closedby'],
             ),
       items: jsonSerialization['items'] == null
           ? null
-          : _i6.Protocol().deserialize<List<_i5.OrderItem>>(
+          : _i7.Protocol().deserialize<List<_i6.OrderItem>>(
               jsonSerialization['items'],
             ),
       createdAt: jsonSerialization['createdAt'] == null
@@ -98,21 +113,25 @@ abstract class Order implements _i1.SerializableModel {
   /// The id of the object.
   _i1.UuidValue id;
 
+  _i1.UuidValue? cashRegisterId;
+
+  _i3.CashRegister? cashRegister;
+
   _i2.OrderStatus status;
 
   _i1.UuidValue btableId;
 
-  _i3.BTable? btable;
+  _i4.BTable? btable;
 
   _i1.UuidValue passedById;
 
-  _i4.UserProfile? passedBy;
+  _i5.UserProfile? passedBy;
 
   _i1.UuidValue? closedbyId;
 
-  _i4.UserProfile? closedby;
+  _i5.UserProfile? closedby;
 
-  List<_i5.OrderItem>? items;
+  List<_i6.OrderItem>? items;
 
   DateTime createdAt;
 
@@ -123,14 +142,16 @@ abstract class Order implements _i1.SerializableModel {
   @_i1.useResult
   Order copyWith({
     _i1.UuidValue? id,
+    _i1.UuidValue? cashRegisterId,
+    _i3.CashRegister? cashRegister,
     _i2.OrderStatus? status,
     _i1.UuidValue? btableId,
-    _i3.BTable? btable,
+    _i4.BTable? btable,
     _i1.UuidValue? passedById,
-    _i4.UserProfile? passedBy,
+    _i5.UserProfile? passedBy,
     _i1.UuidValue? closedbyId,
-    _i4.UserProfile? closedby,
-    List<_i5.OrderItem>? items,
+    _i5.UserProfile? closedby,
+    List<_i6.OrderItem>? items,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -139,6 +160,8 @@ abstract class Order implements _i1.SerializableModel {
     return {
       '__className__': 'Order',
       'id': id.toJson(),
+      if (cashRegisterId != null) 'cashRegisterId': cashRegisterId?.toJson(),
+      if (cashRegister != null) 'cashRegister': cashRegister?.toJson(),
       'status': status.toJson(),
       'btableId': btableId.toJson(),
       if (btable != null) 'btable': btable?.toJson(),
@@ -163,18 +186,22 @@ class _Undefined {}
 class _OrderImpl extends Order {
   _OrderImpl({
     _i1.UuidValue? id,
+    _i1.UuidValue? cashRegisterId,
+    _i3.CashRegister? cashRegister,
     _i2.OrderStatus? status,
     required _i1.UuidValue btableId,
-    _i3.BTable? btable,
+    _i4.BTable? btable,
     required _i1.UuidValue passedById,
-    _i4.UserProfile? passedBy,
+    _i5.UserProfile? passedBy,
     _i1.UuidValue? closedbyId,
-    _i4.UserProfile? closedby,
-    List<_i5.OrderItem>? items,
+    _i5.UserProfile? closedby,
+    List<_i6.OrderItem>? items,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
          id: id,
+         cashRegisterId: cashRegisterId,
+         cashRegister: cashRegister,
          status: status,
          btableId: btableId,
          btable: btable,
@@ -193,6 +220,8 @@ class _OrderImpl extends Order {
   @override
   Order copyWith({
     _i1.UuidValue? id,
+    Object? cashRegisterId = _Undefined,
+    Object? cashRegister = _Undefined,
     _i2.OrderStatus? status,
     _i1.UuidValue? btableId,
     Object? btable = _Undefined,
@@ -206,18 +235,24 @@ class _OrderImpl extends Order {
   }) {
     return Order(
       id: id ?? this.id,
+      cashRegisterId: cashRegisterId is _i1.UuidValue?
+          ? cashRegisterId
+          : this.cashRegisterId,
+      cashRegister: cashRegister is _i3.CashRegister?
+          ? cashRegister
+          : this.cashRegister?.copyWith(),
       status: status ?? this.status,
       btableId: btableId ?? this.btableId,
-      btable: btable is _i3.BTable? ? btable : this.btable?.copyWith(),
+      btable: btable is _i4.BTable? ? btable : this.btable?.copyWith(),
       passedById: passedById ?? this.passedById,
-      passedBy: passedBy is _i4.UserProfile?
+      passedBy: passedBy is _i5.UserProfile?
           ? passedBy
           : this.passedBy?.copyWith(),
       closedbyId: closedbyId is _i1.UuidValue? ? closedbyId : this.closedbyId,
-      closedby: closedby is _i4.UserProfile?
+      closedby: closedby is _i5.UserProfile?
           ? closedby
           : this.closedby?.copyWith(),
-      items: items is List<_i5.OrderItem>?
+      items: items is List<_i6.OrderItem>?
           ? items
           : this.items?.map((e0) => e0.copyWith()).toList(),
       createdAt: createdAt ?? this.createdAt,

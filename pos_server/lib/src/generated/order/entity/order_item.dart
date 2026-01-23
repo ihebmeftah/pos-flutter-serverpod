@@ -13,10 +13,11 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../../order/order_item_status_enum.dart' as _i2;
-import '../../article/entity/article.dart' as _i3;
+import '../../order/pay_methode_enum.dart' as _i3;
+import '../../article/entity/article.dart' as _i4;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i4;
-import 'package:pos_server/src/generated/protocol.dart' as _i5;
+    as _i5;
+import 'package:pos_server/src/generated/protocol.dart' as _i6;
 
 abstract class OrderItem
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -35,25 +36,28 @@ abstract class OrderItem
     this.updatedAt,
     this.preaparedAt,
     this.payedAt,
+    _i3.PayMethode? payMethode,
   }) : id = id ?? _i1.Uuid().v4obj(),
        itemStatus = itemStatus ?? _i2.OrderItemStatus.progress,
-       createdAt = createdAt ?? DateTime.now();
+       createdAt = createdAt ?? DateTime.now(),
+       payMethode = payMethode ?? _i3.PayMethode.cash;
 
   factory OrderItem({
     _i1.UuidValue? id,
-    required _i3.Article article,
+    required _i4.Article article,
     _i2.OrderItemStatus? itemStatus,
     required _i1.UuidValue passedById,
-    _i4.UserProfile? passedBy,
+    _i5.UserProfile? passedBy,
     _i1.UuidValue? payedToId,
-    _i4.UserProfile? payedTo,
+    _i5.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
-    _i4.UserProfile? preparedBy,
+    _i5.UserProfile? preparedBy,
     _i1.UuidValue? orderId,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
     DateTime? payedAt,
+    _i3.PayMethode? payMethode,
   }) = _OrderItemImpl;
 
   factory OrderItem.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -61,7 +65,7 @@ abstract class OrderItem
       id: jsonSerialization['id'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      article: _i5.Protocol().deserialize<_i3.Article>(
+      article: _i6.Protocol().deserialize<_i4.Article>(
         jsonSerialization['article'],
       ),
       itemStatus: jsonSerialization['itemStatus'] == null
@@ -74,7 +78,7 @@ abstract class OrderItem
       ),
       passedBy: jsonSerialization['passedBy'] == null
           ? null
-          : _i5.Protocol().deserialize<_i4.UserProfile>(
+          : _i6.Protocol().deserialize<_i5.UserProfile>(
               jsonSerialization['passedBy'],
             ),
       payedToId: jsonSerialization['payedToId'] == null
@@ -82,7 +86,7 @@ abstract class OrderItem
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['payedToId']),
       payedTo: jsonSerialization['payedTo'] == null
           ? null
-          : _i5.Protocol().deserialize<_i4.UserProfile>(
+          : _i6.Protocol().deserialize<_i5.UserProfile>(
               jsonSerialization['payedTo'],
             ),
       preparedById: jsonSerialization['preparedById'] == null
@@ -92,7 +96,7 @@ abstract class OrderItem
             ),
       preparedBy: jsonSerialization['preparedBy'] == null
           ? null
-          : _i5.Protocol().deserialize<_i4.UserProfile>(
+          : _i6.Protocol().deserialize<_i5.UserProfile>(
               jsonSerialization['preparedBy'],
             ),
       orderId: jsonSerialization['orderId'] == null
@@ -112,6 +116,11 @@ abstract class OrderItem
       payedAt: jsonSerialization['payedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['payedAt']),
+      payMethode: jsonSerialization['payMethode'] == null
+          ? null
+          : _i3.PayMethode.fromJson(
+              (jsonSerialization['payMethode'] as String),
+            ),
     );
   }
 
@@ -122,21 +131,21 @@ abstract class OrderItem
   @override
   _i1.UuidValue id;
 
-  _i3.Article article;
+  _i4.Article article;
 
   _i2.OrderItemStatus itemStatus;
 
   _i1.UuidValue passedById;
 
-  _i4.UserProfile? passedBy;
+  _i5.UserProfile? passedBy;
 
   _i1.UuidValue? payedToId;
 
-  _i4.UserProfile? payedTo;
+  _i5.UserProfile? payedTo;
 
   _i1.UuidValue? preparedById;
 
-  _i4.UserProfile? preparedBy;
+  _i5.UserProfile? preparedBy;
 
   _i1.UuidValue? orderId;
 
@@ -148,6 +157,8 @@ abstract class OrderItem
 
   DateTime? payedAt;
 
+  _i3.PayMethode payMethode;
+
   @override
   _i1.Table<_i1.UuidValue> get table => t;
 
@@ -156,19 +167,20 @@ abstract class OrderItem
   @_i1.useResult
   OrderItem copyWith({
     _i1.UuidValue? id,
-    _i3.Article? article,
+    _i4.Article? article,
     _i2.OrderItemStatus? itemStatus,
     _i1.UuidValue? passedById,
-    _i4.UserProfile? passedBy,
+    _i5.UserProfile? passedBy,
     _i1.UuidValue? payedToId,
-    _i4.UserProfile? payedTo,
+    _i5.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
-    _i4.UserProfile? preparedBy,
+    _i5.UserProfile? preparedBy,
     _i1.UuidValue? orderId,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
     DateTime? payedAt,
+    _i3.PayMethode? payMethode,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -188,6 +200,7 @@ abstract class OrderItem
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
       if (preaparedAt != null) 'preaparedAt': preaparedAt?.toJson(),
       if (payedAt != null) 'payedAt': payedAt?.toJson(),
+      'payMethode': payMethode.toJson(),
     };
   }
 
@@ -208,13 +221,14 @@ abstract class OrderItem
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
       if (preaparedAt != null) 'preaparedAt': preaparedAt?.toJson(),
       if (payedAt != null) 'payedAt': payedAt?.toJson(),
+      'payMethode': payMethode.toJson(),
     };
   }
 
   static OrderItemInclude include({
-    _i4.UserProfileInclude? passedBy,
-    _i4.UserProfileInclude? payedTo,
-    _i4.UserProfileInclude? preparedBy,
+    _i5.UserProfileInclude? passedBy,
+    _i5.UserProfileInclude? payedTo,
+    _i5.UserProfileInclude? preparedBy,
   }) {
     return OrderItemInclude._(
       passedBy: passedBy,
@@ -254,19 +268,20 @@ class _Undefined {}
 class _OrderItemImpl extends OrderItem {
   _OrderItemImpl({
     _i1.UuidValue? id,
-    required _i3.Article article,
+    required _i4.Article article,
     _i2.OrderItemStatus? itemStatus,
     required _i1.UuidValue passedById,
-    _i4.UserProfile? passedBy,
+    _i5.UserProfile? passedBy,
     _i1.UuidValue? payedToId,
-    _i4.UserProfile? payedTo,
+    _i5.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
-    _i4.UserProfile? preparedBy,
+    _i5.UserProfile? preparedBy,
     _i1.UuidValue? orderId,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
     DateTime? payedAt,
+    _i3.PayMethode? payMethode,
   }) : super._(
          id: id,
          article: article,
@@ -282,6 +297,7 @@ class _OrderItemImpl extends OrderItem {
          updatedAt: updatedAt,
          preaparedAt: preaparedAt,
          payedAt: payedAt,
+         payMethode: payMethode,
        );
 
   /// Returns a shallow copy of this [OrderItem]
@@ -290,7 +306,7 @@ class _OrderItemImpl extends OrderItem {
   @override
   OrderItem copyWith({
     _i1.UuidValue? id,
-    _i3.Article? article,
+    _i4.Article? article,
     _i2.OrderItemStatus? itemStatus,
     _i1.UuidValue? passedById,
     Object? passedBy = _Undefined,
@@ -303,21 +319,22 @@ class _OrderItemImpl extends OrderItem {
     Object? updatedAt = _Undefined,
     Object? preaparedAt = _Undefined,
     Object? payedAt = _Undefined,
+    _i3.PayMethode? payMethode,
   }) {
     return OrderItem(
       id: id ?? this.id,
       article: article ?? this.article.copyWith(),
       itemStatus: itemStatus ?? this.itemStatus,
       passedById: passedById ?? this.passedById,
-      passedBy: passedBy is _i4.UserProfile?
+      passedBy: passedBy is _i5.UserProfile?
           ? passedBy
           : this.passedBy?.copyWith(),
       payedToId: payedToId is _i1.UuidValue? ? payedToId : this.payedToId,
-      payedTo: payedTo is _i4.UserProfile? ? payedTo : this.payedTo?.copyWith(),
+      payedTo: payedTo is _i5.UserProfile? ? payedTo : this.payedTo?.copyWith(),
       preparedById: preparedById is _i1.UuidValue?
           ? preparedById
           : this.preparedById,
-      preparedBy: preparedBy is _i4.UserProfile?
+      preparedBy: preparedBy is _i5.UserProfile?
           ? preparedBy
           : this.preparedBy?.copyWith(),
       orderId: orderId is _i1.UuidValue? ? orderId : this.orderId,
@@ -325,6 +342,7 @@ class _OrderItemImpl extends OrderItem {
       updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
       preaparedAt: preaparedAt is DateTime? ? preaparedAt : this.preaparedAt,
       payedAt: payedAt is DateTime? ? payedAt : this.payedAt,
+      payMethode: payMethode ?? this.payMethode,
     );
   }
 }
@@ -332,7 +350,7 @@ class _OrderItemImpl extends OrderItem {
 class OrderItemUpdateTable extends _i1.UpdateTable<OrderItemTable> {
   OrderItemUpdateTable(super.table);
 
-  _i1.ColumnValue<_i3.Article, _i3.Article> article(_i3.Article value) =>
+  _i1.ColumnValue<_i4.Article, _i4.Article> article(_i4.Article value) =>
       _i1.ColumnValue(
         table.article,
         value,
@@ -395,12 +413,19 @@ class OrderItemUpdateTable extends _i1.UpdateTable<OrderItemTable> {
         table.payedAt,
         value,
       );
+
+  _i1.ColumnValue<_i3.PayMethode, _i3.PayMethode> payMethode(
+    _i3.PayMethode value,
+  ) => _i1.ColumnValue(
+    table.payMethode,
+    value,
+  );
 }
 
 class OrderItemTable extends _i1.Table<_i1.UuidValue> {
   OrderItemTable({super.tableRelation}) : super(tableName: 'order_items') {
     updateTable = OrderItemUpdateTable(this);
-    article = _i1.ColumnSerializable<_i3.Article>(
+    article = _i1.ColumnSerializable<_i4.Article>(
       'article',
       this,
     );
@@ -443,25 +468,31 @@ class OrderItemTable extends _i1.Table<_i1.UuidValue> {
       'payedAt',
       this,
     );
+    payMethode = _i1.ColumnEnum(
+      'payMethode',
+      this,
+      _i1.EnumSerialization.byName,
+      hasDefault: true,
+    );
   }
 
   late final OrderItemUpdateTable updateTable;
 
-  late final _i1.ColumnSerializable<_i3.Article> article;
+  late final _i1.ColumnSerializable<_i4.Article> article;
 
   late final _i1.ColumnEnum<_i2.OrderItemStatus> itemStatus;
 
   late final _i1.ColumnUuid passedById;
 
-  _i4.UserProfileTable? _passedBy;
+  _i5.UserProfileTable? _passedBy;
 
   late final _i1.ColumnUuid payedToId;
 
-  _i4.UserProfileTable? _payedTo;
+  _i5.UserProfileTable? _payedTo;
 
   late final _i1.ColumnUuid preparedById;
 
-  _i4.UserProfileTable? _preparedBy;
+  _i5.UserProfileTable? _preparedBy;
 
   late final _i1.ColumnUuid orderId;
 
@@ -473,41 +504,43 @@ class OrderItemTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnDateTime payedAt;
 
-  _i4.UserProfileTable get passedBy {
+  late final _i1.ColumnEnum<_i3.PayMethode> payMethode;
+
+  _i5.UserProfileTable get passedBy {
     if (_passedBy != null) return _passedBy!;
     _passedBy = _i1.createRelationTable(
       relationFieldName: 'passedBy',
       field: OrderItem.t.passedById,
-      foreignField: _i4.UserProfile.t.id,
+      foreignField: _i5.UserProfile.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i4.UserProfileTable(tableRelation: foreignTableRelation),
+          _i5.UserProfileTable(tableRelation: foreignTableRelation),
     );
     return _passedBy!;
   }
 
-  _i4.UserProfileTable get payedTo {
+  _i5.UserProfileTable get payedTo {
     if (_payedTo != null) return _payedTo!;
     _payedTo = _i1.createRelationTable(
       relationFieldName: 'payedTo',
       field: OrderItem.t.payedToId,
-      foreignField: _i4.UserProfile.t.id,
+      foreignField: _i5.UserProfile.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i4.UserProfileTable(tableRelation: foreignTableRelation),
+          _i5.UserProfileTable(tableRelation: foreignTableRelation),
     );
     return _payedTo!;
   }
 
-  _i4.UserProfileTable get preparedBy {
+  _i5.UserProfileTable get preparedBy {
     if (_preparedBy != null) return _preparedBy!;
     _preparedBy = _i1.createRelationTable(
       relationFieldName: 'preparedBy',
       field: OrderItem.t.preparedById,
-      foreignField: _i4.UserProfile.t.id,
+      foreignField: _i5.UserProfile.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i4.UserProfileTable(tableRelation: foreignTableRelation),
+          _i5.UserProfileTable(tableRelation: foreignTableRelation),
     );
     return _preparedBy!;
   }
@@ -525,6 +558,7 @@ class OrderItemTable extends _i1.Table<_i1.UuidValue> {
     updatedAt,
     preaparedAt,
     payedAt,
+    payMethode,
   ];
 
   @override
@@ -544,20 +578,20 @@ class OrderItemTable extends _i1.Table<_i1.UuidValue> {
 
 class OrderItemInclude extends _i1.IncludeObject {
   OrderItemInclude._({
-    _i4.UserProfileInclude? passedBy,
-    _i4.UserProfileInclude? payedTo,
-    _i4.UserProfileInclude? preparedBy,
+    _i5.UserProfileInclude? passedBy,
+    _i5.UserProfileInclude? payedTo,
+    _i5.UserProfileInclude? preparedBy,
   }) {
     _passedBy = passedBy;
     _payedTo = payedTo;
     _preparedBy = preparedBy;
   }
 
-  _i4.UserProfileInclude? _passedBy;
+  _i5.UserProfileInclude? _passedBy;
 
-  _i4.UserProfileInclude? _payedTo;
+  _i5.UserProfileInclude? _payedTo;
 
-  _i4.UserProfileInclude? _preparedBy;
+  _i5.UserProfileInclude? _preparedBy;
 
   @override
   Map<String, _i1.Include?> get includes => {
@@ -861,7 +895,7 @@ class OrderItemAttachRowRepository {
   Future<void> passedBy(
     _i1.Session session,
     OrderItem orderItem,
-    _i4.UserProfile passedBy, {
+    _i5.UserProfile passedBy, {
     _i1.Transaction? transaction,
   }) async {
     if (orderItem.id == null) {
@@ -884,7 +918,7 @@ class OrderItemAttachRowRepository {
   Future<void> payedTo(
     _i1.Session session,
     OrderItem orderItem,
-    _i4.UserProfile payedTo, {
+    _i5.UserProfile payedTo, {
     _i1.Transaction? transaction,
   }) async {
     if (orderItem.id == null) {
@@ -907,7 +941,7 @@ class OrderItemAttachRowRepository {
   Future<void> preparedBy(
     _i1.Session session,
     OrderItem orderItem,
-    _i4.UserProfile preparedBy, {
+    _i5.UserProfile preparedBy, {
     _i1.Transaction? transaction,
   }) async {
     if (orderItem.id == null) {

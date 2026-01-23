@@ -24,6 +24,7 @@ abstract class Building
     this.authUserId,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
+    int? cashRegisterLimitPerDay,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -33,6 +34,7 @@ abstract class Building
   }) : id = id ?? _i1.Uuid().v4obj(),
        tableMultiOrder = tableMultiOrder ?? false,
        orderWithCashRegister = orderWithCashRegister ?? false,
+       cashRegisterLimitPerDay = cashRegisterLimitPerDay ?? 3,
        allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true,
        autoCloseOrdersAtClosingTime = autoCloseOrdersAtClosingTime ?? false,
        strictMode = strictMode ?? false;
@@ -46,6 +48,7 @@ abstract class Building
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
+    int? cashRegisterLimitPerDay,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -75,6 +78,8 @@ abstract class Building
       tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool?,
       orderWithCashRegister:
           jsonSerialization['orderWithCashRegister'] as bool?,
+      cashRegisterLimitPerDay:
+          jsonSerialization['cashRegisterLimitPerDay'] as int?,
       allowAppendingItemsToOrder:
           jsonSerialization['allowAppendingItemsToOrder'] as bool?,
       autoCloseOrdersAtClosingTime:
@@ -117,6 +122,8 @@ abstract class Building
   /// evrey order shoud be linked to cash register of day
   bool orderWithCashRegister;
 
+  int cashRegisterLimitPerDay;
+
   /// Indicates whether items can be appended to an existing order.
   bool allowAppendingItemsToOrder;
 
@@ -149,6 +156,7 @@ abstract class Building
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
+    int? cashRegisterLimitPerDay,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -168,6 +176,7 @@ abstract class Building
       if (authUserId != null) 'authUserId': authUserId?.toJson(),
       'tableMultiOrder': tableMultiOrder,
       'orderWithCashRegister': orderWithCashRegister,
+      'cashRegisterLimitPerDay': cashRegisterLimitPerDay,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
       'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
       'strictMode': strictMode,
@@ -189,6 +198,7 @@ abstract class Building
       if (authUserId != null) 'authUserId': authUserId?.toJson(),
       'tableMultiOrder': tableMultiOrder,
       'orderWithCashRegister': orderWithCashRegister,
+      'cashRegisterLimitPerDay': cashRegisterLimitPerDay,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
       'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
       'strictMode': strictMode,
@@ -240,6 +250,7 @@ class _BuildingImpl extends Building {
     _i1.UuidValue? authUserId,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
+    int? cashRegisterLimitPerDay,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -255,6 +266,7 @@ class _BuildingImpl extends Building {
          authUserId: authUserId,
          tableMultiOrder: tableMultiOrder,
          orderWithCashRegister: orderWithCashRegister,
+         cashRegisterLimitPerDay: cashRegisterLimitPerDay,
          allowAppendingItemsToOrder: allowAppendingItemsToOrder,
          autoCloseOrdersAtClosingTime: autoCloseOrdersAtClosingTime,
          strictMode: strictMode,
@@ -276,6 +288,7 @@ class _BuildingImpl extends Building {
     Object? authUserId = _Undefined,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
+    int? cashRegisterLimitPerDay,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -293,6 +306,8 @@ class _BuildingImpl extends Building {
       tableMultiOrder: tableMultiOrder ?? this.tableMultiOrder,
       orderWithCashRegister:
           orderWithCashRegister ?? this.orderWithCashRegister,
+      cashRegisterLimitPerDay:
+          cashRegisterLimitPerDay ?? this.cashRegisterLimitPerDay,
       allowAppendingItemsToOrder:
           allowAppendingItemsToOrder ?? this.allowAppendingItemsToOrder,
       autoCloseOrdersAtClosingTime:
@@ -345,6 +360,12 @@ class BuildingUpdateTable extends _i1.UpdateTable<BuildingTable> {
   _i1.ColumnValue<bool, bool> orderWithCashRegister(bool value) =>
       _i1.ColumnValue(
         table.orderWithCashRegister,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> cashRegisterLimitPerDay(int value) =>
+      _i1.ColumnValue(
+        table.cashRegisterLimitPerDay,
         value,
       );
 
@@ -416,6 +437,11 @@ class BuildingTable extends _i1.Table<_i1.UuidValue> {
       this,
       hasDefault: true,
     );
+    cashRegisterLimitPerDay = _i1.ColumnInt(
+      'cashRegisterLimitPerDay',
+      this,
+      hasDefault: true,
+    );
     allowAppendingItemsToOrder = _i1.ColumnBool(
       'allowAppendingItemsToOrder',
       this,
@@ -470,6 +496,8 @@ class BuildingTable extends _i1.Table<_i1.UuidValue> {
   /// evrey order shoud be linked to cash register of day
   late final _i1.ColumnBool orderWithCashRegister;
 
+  late final _i1.ColumnInt cashRegisterLimitPerDay;
+
   /// Indicates whether items can be appended to an existing order.
   late final _i1.ColumnBool allowAppendingItemsToOrder;
 
@@ -497,6 +525,7 @@ class BuildingTable extends _i1.Table<_i1.UuidValue> {
     authUserId,
     tableMultiOrder,
     orderWithCashRegister,
+    cashRegisterLimitPerDay,
     allowAppendingItemsToOrder,
     autoCloseOrdersAtClosingTime,
     strictMode,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-import 'package:pos_flutter/app/extensions/datetime.extension.dart';
 import 'package:pos_flutter/app/modules/inventory/views/inventory_view.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 

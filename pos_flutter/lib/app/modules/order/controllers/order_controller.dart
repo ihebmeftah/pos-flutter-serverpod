@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
+import 'package:pos_flutter/app/modules/index/controllers/index_controller.dart';
 
 import '../../../../config/serverpod_client.dart';
 import '../../../routes/app_pages.dart';
@@ -38,6 +40,29 @@ class OrderController extends GetxController with StateMixin {
             );
       }
       change(orders, status: RxStatus.success());
+    } on AppException catch (e) {
+      if (e.errorType == ExceptionType.NotFound) {
+        change(null, status: RxStatus.empty());
+        Get.defaultDialog(
+          barrierDismissible: false,
+          title: 'Cash Register Error',
+          middleText: e.message,
+          actions: [
+            if (Get.find<IndexController>()
+                .currentUserAccess!
+                .cashRegisterManagement)
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                  Get.toNamed(Routes.CASH_REGISTER);
+                },
+                child: Text('Go to Cash Registers'),
+              ),
+          ],
+        );
+      } else {
+        change(null, status: RxStatus.error('Failed to load orders'));
+      }
     } catch (e) {
       change(null, status: RxStatus.error('Failed to load orders'));
     }

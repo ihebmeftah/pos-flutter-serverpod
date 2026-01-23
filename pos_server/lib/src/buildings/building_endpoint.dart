@@ -2,7 +2,6 @@ import 'package:pos_server/src/access/access_endpoint.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
-import '../cash_register/cash_register_endpoint.dart';
 import '../generated/protocol.dart';
 import '../helpers/session_extensions.dart';
 
@@ -110,12 +109,6 @@ class BuildingEndpoint extends Endpoint {
       );
     }
     final updatedBuilding = await Building.db.updateRow(session, building);
-    if (updatedBuilding.orderWithCashRegister == false) {
-      await CashRegisterEndpoint().closeLastCashRegister(
-        session,
-        updatedBuilding.id,
-      );
-    }
     await session.messages.postMessage(
       '${updateBuildingChannel}_${building.id}',
       updatedBuilding,

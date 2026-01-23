@@ -17,6 +17,7 @@ fields:
   ### Indicates whether the building supports orders with cash registers.
   ### evrey order shoud be linked to cash register of day
   orderWithCashRegister: bool, default=false
+  cashRegisterLimitPerDay: int, default=3
   ### Indicates whether items can be appended to an existing order.
   allowAppendingItemsToOrder: bool, default=true
   ### auto close orders when closing time is reached

@@ -12,7 +12,7 @@ fields:
     updatedAt: DateTime?, #
     preaparedAt: DateTime?, ### the last value when item status changed to ready
     payedAt: DateTime?, ### the last value when the payed is true
-
+    payMethode: PayMethode,default=cash
 
 indexes:
     order_item_orderId_idx:

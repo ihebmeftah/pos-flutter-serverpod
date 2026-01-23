@@ -1,78 +1,65 @@
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 class AppSnackbar {
   AppSnackbar._();
 
-  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> success([
+  static void success([
     String? message,
-  ]) => ScaffoldMessenger.of(Get.context!).showSnackBar(
-    SnackBar(
-      showCloseIcon: true,
-      content: Row(
-        spacing: 5,
-        children: [
-          Icon(
-            Icons.check_circle,
-            color: Colors.green.shade100,
-          ),
-          Expanded(
-            child: Text(
-              message ?? "Operation completed successfully",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+  ]) => ElegantNotification.success(
+    icon: Icon(Icons.done, color: Colors.green.shade100),
+    background: Colors.green.shade600,
+    showProgressIndicator: false,
+    animation: AnimationType.fromRight,
+    title: const Text(
+      'Success',
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
       ),
-      backgroundColor: Colors.green,
     ),
-  );
+    description: Text(
+      message ?? "Operation completed successfully.",
+      style: const TextStyle(color: Colors.white),
+    ),
+  ).show(Get.context!);
 
-  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> error([
+  static void error([
     String? message,
-  ]) => ScaffoldMessenger.of(Get.context!).showSnackBar(
-    SnackBar(
-      showCloseIcon: true,
-      content: Row(
-        spacing: 5,
-        children: [
-          Icon(
-            Icons.error,
-            color: Colors.red.shade100,
-          ),
-          Expanded(
-            child: Text(
-              message ?? "Operation failed, please try again",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+  ]) => ElegantNotification.error(
+    icon: Icon(Icons.warning_amber, color: Colors.red.shade100),
+    background: Colors.red.shade600,
+    showProgressIndicator: false,
+    animation: AnimationType.fromRight,
+    title: const Text(
+      'Error',
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
       ),
-      backgroundColor: Colors.red,
     ),
-  );
+    description: Text(
+      message ?? "Oops! Something went wrong, please try again.",
+      style: const TextStyle(color: Colors.white),
+    ),
+  ).show(Get.context!);
 
-  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> info(
+  static void info(
     String message,
-  ) => ScaffoldMessenger.of(Get.context!).showSnackBar(
-    SnackBar(
-      showCloseIcon: true,
-      content: Row(
-        spacing: 5,
-        children: [
-          Icon(
-            Icons.info,
-            color: Colors.blue.shade100,
-          ),
-          Expanded(
-            child: Text(
-              message,
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+  ) => ElegantNotification.info(
+    icon: Icon(Icons.info, color: Colors.green.shade100),
+    background: Colors.green.shade600,
+    showProgressIndicator: false,
+    animation: AnimationType.fromRight,
+    title: const Text(
+      'Info',
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
       ),
-      backgroundColor: Colors.blue,
     ),
-  );
+    description: Text(message, style: const TextStyle(color: Colors.white)),
+  ).show(Get.context!);
 }

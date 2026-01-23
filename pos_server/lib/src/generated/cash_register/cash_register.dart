@@ -17,20 +17,23 @@ abstract class CashRegister
   CashRegister._({
     _i1.UuidValue? id,
     required this.start,
+    double? startAmount,
     this.end,
+    double? endAmount,
     required this.isClosed,
     required this.buildingId,
-    DateTime? createdAt,
   }) : id = id ?? _i1.Uuid().v4obj(),
-       createdAt = createdAt ?? DateTime.now();
+       startAmount = startAmount ?? 0.0,
+       endAmount = endAmount ?? 0.0;
 
   factory CashRegister({
     _i1.UuidValue? id,
     required DateTime start,
+    double? startAmount,
     DateTime? end,
+    double? endAmount,
     required bool isClosed,
     required _i1.UuidValue buildingId,
-    DateTime? createdAt,
   }) = _CashRegisterImpl;
 
   factory CashRegister.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -39,16 +42,15 @@ abstract class CashRegister
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       start: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['start']),
+      startAmount: (jsonSerialization['startAmount'] as num?)?.toDouble(),
       end: jsonSerialization['end'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['end']),
+      endAmount: (jsonSerialization['endAmount'] as num?)?.toDouble(),
       isClosed: jsonSerialization['isClosed'] as bool,
       buildingId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['buildingId'],
       ),
-      createdAt: jsonSerialization['createdAt'] == null
-          ? null
-          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 
@@ -61,13 +63,15 @@ abstract class CashRegister
 
   DateTime start;
 
+  double? startAmount;
+
   DateTime? end;
+
+  double? endAmount;
 
   bool isClosed;
 
   _i1.UuidValue buildingId;
-
-  DateTime createdAt;
 
   @override
   _i1.Table<_i1.UuidValue> get table => t;
@@ -78,10 +82,11 @@ abstract class CashRegister
   CashRegister copyWith({
     _i1.UuidValue? id,
     DateTime? start,
+    double? startAmount,
     DateTime? end,
+    double? endAmount,
     bool? isClosed,
     _i1.UuidValue? buildingId,
-    DateTime? createdAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -89,10 +94,11 @@ abstract class CashRegister
       '__className__': 'CashRegister',
       'id': id.toJson(),
       'start': start.toJson(),
+      if (startAmount != null) 'startAmount': startAmount,
       if (end != null) 'end': end?.toJson(),
+      if (endAmount != null) 'endAmount': endAmount,
       'isClosed': isClosed,
       'buildingId': buildingId.toJson(),
-      'createdAt': createdAt.toJson(),
     };
   }
 
@@ -102,10 +108,11 @@ abstract class CashRegister
       '__className__': 'CashRegister',
       'id': id.toJson(),
       'start': start.toJson(),
+      if (startAmount != null) 'startAmount': startAmount,
       if (end != null) 'end': end?.toJson(),
+      if (endAmount != null) 'endAmount': endAmount,
       'isClosed': isClosed,
       'buildingId': buildingId.toJson(),
-      'createdAt': createdAt.toJson(),
     };
   }
 
@@ -145,17 +152,19 @@ class _CashRegisterImpl extends CashRegister {
   _CashRegisterImpl({
     _i1.UuidValue? id,
     required DateTime start,
+    double? startAmount,
     DateTime? end,
+    double? endAmount,
     required bool isClosed,
     required _i1.UuidValue buildingId,
-    DateTime? createdAt,
   }) : super._(
          id: id,
          start: start,
+         startAmount: startAmount,
          end: end,
+         endAmount: endAmount,
          isClosed: isClosed,
          buildingId: buildingId,
-         createdAt: createdAt,
        );
 
   /// Returns a shallow copy of this [CashRegister]
@@ -165,18 +174,20 @@ class _CashRegisterImpl extends CashRegister {
   CashRegister copyWith({
     _i1.UuidValue? id,
     DateTime? start,
+    Object? startAmount = _Undefined,
     Object? end = _Undefined,
+    Object? endAmount = _Undefined,
     bool? isClosed,
     _i1.UuidValue? buildingId,
-    DateTime? createdAt,
   }) {
     return CashRegister(
       id: id ?? this.id,
       start: start ?? this.start,
+      startAmount: startAmount is double? ? startAmount : this.startAmount,
       end: end is DateTime? ? end : this.end,
+      endAmount: endAmount is double? ? endAmount : this.endAmount,
       isClosed: isClosed ?? this.isClosed,
       buildingId: buildingId ?? this.buildingId,
-      createdAt: createdAt ?? this.createdAt,
     );
   }
 }
@@ -189,8 +200,18 @@ class CashRegisterUpdateTable extends _i1.UpdateTable<CashRegisterTable> {
     value,
   );
 
+  _i1.ColumnValue<double, double> startAmount(double? value) => _i1.ColumnValue(
+    table.startAmount,
+    value,
+  );
+
   _i1.ColumnValue<DateTime, DateTime> end(DateTime? value) => _i1.ColumnValue(
     table.end,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> endAmount(double? value) => _i1.ColumnValue(
+    table.endAmount,
     value,
   );
 
@@ -205,12 +226,6 @@ class CashRegisterUpdateTable extends _i1.UpdateTable<CashRegisterTable> {
     table.buildingId,
     value,
   );
-
-  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
-      _i1.ColumnValue(
-        table.createdAt,
-        value,
-      );
 }
 
 class CashRegisterTable extends _i1.Table<_i1.UuidValue> {
@@ -220,9 +235,19 @@ class CashRegisterTable extends _i1.Table<_i1.UuidValue> {
       'start',
       this,
     );
+    startAmount = _i1.ColumnDouble(
+      'startAmount',
+      this,
+      hasDefault: true,
+    );
     end = _i1.ColumnDateTime(
       'end',
       this,
+    );
+    endAmount = _i1.ColumnDouble(
+      'endAmount',
+      this,
+      hasDefault: true,
     );
     isClosed = _i1.ColumnBool(
       'isClosed',
@@ -232,33 +257,31 @@ class CashRegisterTable extends _i1.Table<_i1.UuidValue> {
       'buildingId',
       this,
     );
-    createdAt = _i1.ColumnDateTime(
-      'createdAt',
-      this,
-      hasDefault: true,
-    );
   }
 
   late final CashRegisterUpdateTable updateTable;
 
   late final _i1.ColumnDateTime start;
 
+  late final _i1.ColumnDouble startAmount;
+
   late final _i1.ColumnDateTime end;
+
+  late final _i1.ColumnDouble endAmount;
 
   late final _i1.ColumnBool isClosed;
 
   late final _i1.ColumnUuid buildingId;
 
-  late final _i1.ColumnDateTime createdAt;
-
   @override
   List<_i1.Column> get columns => [
     id,
     start,
+    startAmount,
     end,
+    endAmount,
     isClosed,
     buildingId,
-    createdAt,
   ];
 }
 

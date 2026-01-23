@@ -16,20 +16,23 @@ abstract class CashRegister implements _i1.SerializableModel {
   CashRegister._({
     _i1.UuidValue? id,
     required this.start,
+    double? startAmount,
     this.end,
+    double? endAmount,
     required this.isClosed,
     required this.buildingId,
-    DateTime? createdAt,
   }) : id = id ?? _i1.Uuid().v4obj(),
-       createdAt = createdAt ?? DateTime.now();
+       startAmount = startAmount ?? 0.0,
+       endAmount = endAmount ?? 0.0;
 
   factory CashRegister({
     _i1.UuidValue? id,
     required DateTime start,
+    double? startAmount,
     DateTime? end,
+    double? endAmount,
     required bool isClosed,
     required _i1.UuidValue buildingId,
-    DateTime? createdAt,
   }) = _CashRegisterImpl;
 
   factory CashRegister.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -38,16 +41,15 @@ abstract class CashRegister implements _i1.SerializableModel {
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       start: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['start']),
+      startAmount: (jsonSerialization['startAmount'] as num?)?.toDouble(),
       end: jsonSerialization['end'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['end']),
+      endAmount: (jsonSerialization['endAmount'] as num?)?.toDouble(),
       isClosed: jsonSerialization['isClosed'] as bool,
       buildingId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['buildingId'],
       ),
-      createdAt: jsonSerialization['createdAt'] == null
-          ? null
-          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 
@@ -56,13 +58,15 @@ abstract class CashRegister implements _i1.SerializableModel {
 
   DateTime start;
 
+  double? startAmount;
+
   DateTime? end;
+
+  double? endAmount;
 
   bool isClosed;
 
   _i1.UuidValue buildingId;
-
-  DateTime createdAt;
 
   /// Returns a shallow copy of this [CashRegister]
   /// with some or all fields replaced by the given arguments.
@@ -70,10 +74,11 @@ abstract class CashRegister implements _i1.SerializableModel {
   CashRegister copyWith({
     _i1.UuidValue? id,
     DateTime? start,
+    double? startAmount,
     DateTime? end,
+    double? endAmount,
     bool? isClosed,
     _i1.UuidValue? buildingId,
-    DateTime? createdAt,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -81,10 +86,11 @@ abstract class CashRegister implements _i1.SerializableModel {
       '__className__': 'CashRegister',
       'id': id.toJson(),
       'start': start.toJson(),
+      if (startAmount != null) 'startAmount': startAmount,
       if (end != null) 'end': end?.toJson(),
+      if (endAmount != null) 'endAmount': endAmount,
       'isClosed': isClosed,
       'buildingId': buildingId.toJson(),
-      'createdAt': createdAt.toJson(),
     };
   }
 
@@ -100,17 +106,19 @@ class _CashRegisterImpl extends CashRegister {
   _CashRegisterImpl({
     _i1.UuidValue? id,
     required DateTime start,
+    double? startAmount,
     DateTime? end,
+    double? endAmount,
     required bool isClosed,
     required _i1.UuidValue buildingId,
-    DateTime? createdAt,
   }) : super._(
          id: id,
          start: start,
+         startAmount: startAmount,
          end: end,
+         endAmount: endAmount,
          isClosed: isClosed,
          buildingId: buildingId,
-         createdAt: createdAt,
        );
 
   /// Returns a shallow copy of this [CashRegister]
@@ -120,18 +128,20 @@ class _CashRegisterImpl extends CashRegister {
   CashRegister copyWith({
     _i1.UuidValue? id,
     DateTime? start,
+    Object? startAmount = _Undefined,
     Object? end = _Undefined,
+    Object? endAmount = _Undefined,
     bool? isClosed,
     _i1.UuidValue? buildingId,
-    DateTime? createdAt,
   }) {
     return CashRegister(
       id: id ?? this.id,
       start: start ?? this.start,
+      startAmount: startAmount is double? ? startAmount : this.startAmount,
       end: end is DateTime? ? end : this.end,
+      endAmount: endAmount is double? ? endAmount : this.endAmount,
       isClosed: isClosed ?? this.isClosed,
       buildingId: buildingId ?? this.buildingId,
-      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

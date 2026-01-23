@@ -545,27 +545,28 @@ class EndpointCashRegister extends _i1.EndpointRef {
     {'buildingId': buildingId},
   );
 
-  _i2.Future<_i12.CashRegister> createCashRegister(_i1.UuidValue buildingId) =>
-      caller.callServerEndpoint<_i12.CashRegister>(
-        'cashRegister',
-        'createCashRegister',
-        {'buildingId': buildingId},
-      );
+  _i2.Future<_i12.CashRegister> createCashRegister(
+    _i1.UuidValue buildingId,
+    double? startAmount,
+  ) => caller.callServerEndpoint<_i12.CashRegister>(
+    'cashRegister',
+    'createCashRegister',
+    {
+      'buildingId': buildingId,
+      'startAmount': startAmount,
+    },
+  );
 
   _i2.Future<_i12.CashRegister> closeLastCashRegister(
     _i1.UuidValue buildingId,
+    double? endAmount,
   ) => caller.callServerEndpoint<_i12.CashRegister>(
     'cashRegister',
     'closeLastCashRegister',
-    {'buildingId': buildingId},
-  );
-
-  _i2.Future<_i12.CashRegister?> getCurrentCashRegister(
-    _i1.UuidValue buildingId,
-  ) => caller.callServerEndpoint<_i12.CashRegister?>(
-    'cashRegister',
-    'getCurrentCashRegister',
-    {'buildingId': buildingId},
+    {
+      'buildingId': buildingId,
+      'endAmount': endAmount,
+    },
   );
 
   _i2.Stream<_i12.CashRegister> watchCashRegisters(_i1.UuidValue buildingId) =>
@@ -772,14 +773,16 @@ class EndpointOrder extends _i1.EndpointRef {
   /// - A list of orders for the building
   /// Only owner and employers are allowed for this endpoint
   _i2.Future<List<_i18.Order>> getOrdersByBuilingId(
-    _i1.UuidValue buildingId,
+    _i1.UuidValue buildingId, [
     _i19.OrderStatus? orderStatus,
-  ) => caller.callServerEndpoint<List<_i18.Order>>(
+    _i1.UuidValue? cashRegisterId,
+  ]) => caller.callServerEndpoint<List<_i18.Order>>(
     'order',
     'getOrdersByBuilingId',
     {
       'buildingId': buildingId,
       'orderStatus': orderStatus,
+      'cashRegisterId': cashRegisterId,
     },
   );
 

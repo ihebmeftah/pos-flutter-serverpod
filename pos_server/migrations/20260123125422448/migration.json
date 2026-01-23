@@ -1,0 +1,91 @@
+{
+  "__className__": "serverpod.DatabaseMigration",
+  "actions": [
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "alterTable",
+      "alterTable": {
+        "__className__": "serverpod.TableMigration",
+        "name": "cash_register",
+        "schema": "public",
+        "addColumns": [
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "startAmount",
+            "columnType": 3,
+            "isNullable": true,
+            "columnDefault": "0.0",
+            "dartType": "double?"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "endAmount",
+            "columnType": 3,
+            "isNullable": true,
+            "columnDefault": "0.0",
+            "dartType": "double?"
+          }
+        ],
+        "deleteColumns": [
+          "createdAt"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "__className__": "serverpod.DatabaseMigrationWarning",
+            "type": "columnDropped",
+            "message": "Column \"createdAt\" of table \"cash_register\" will be dropped.",
+            "table": "cash_register",
+            "columns": [
+              "createdAt"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    },
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "alterTable",
+      "alterTable": {
+        "__className__": "serverpod.TableMigration",
+        "name": "order_items",
+        "schema": "public",
+        "addColumns": [
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "payMethode",
+            "columnType": 0,
+            "isNullable": false,
+            "columnDefault": "'cash'::text",
+            "dartType": "protocol:PayMethode"
+          }
+        ],
+        "deleteColumns": [],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": []
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "__className__": "serverpod.DatabaseMigrationWarning",
+      "type": "columnDropped",
+      "message": "Column \"createdAt\" of table \"cash_register\" will be dropped.",
+      "table": "cash_register",
+      "columns": [
+        "createdAt"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}
