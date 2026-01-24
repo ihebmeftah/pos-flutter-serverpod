@@ -12,7 +12,7 @@ class NotfoundView extends GetView<NotfoundController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(15),
         child: Center(
           child: Column(
             mainAxisAlignment: .center,

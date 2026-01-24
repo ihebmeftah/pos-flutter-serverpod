@@ -23,7 +23,7 @@ class TablesView extends GetView<TablesController> {
           ? AppBar(title: const Text('Tables'), centerTitle: true)
           : null,
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(15),
         child: controller.obx(
           (_) => Column(
             spacing: 5,

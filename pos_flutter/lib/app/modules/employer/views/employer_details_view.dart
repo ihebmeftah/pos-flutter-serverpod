@@ -21,7 +21,7 @@ class EmployerDetailsView extends GetView<EmployerDetailsController> {
         (state) {
           final employer = controller.employer!;
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(15),
             child: Column(
               spacing: 20,
               crossAxisAlignment: .stretch,

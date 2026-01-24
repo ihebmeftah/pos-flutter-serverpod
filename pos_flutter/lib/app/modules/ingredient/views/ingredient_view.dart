@@ -24,7 +24,7 @@ class IngredientView extends GetView<IngredientController> {
       ),
       body: controller.obx(
         (s) => Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(15),
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

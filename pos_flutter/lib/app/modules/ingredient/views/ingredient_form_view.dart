@@ -23,7 +23,7 @@ class IngredientFormView extends GetView<IngredientFormController> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(15),
                 child: Form(
                   key: controller.ingFormKey,
                   child: AppSectionCard(

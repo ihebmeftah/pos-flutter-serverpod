@@ -24,7 +24,7 @@ class AccessFormView extends GetView<AccessFormController> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(15),
                 child: Form(
                   key: controller.formKey,
                   child: Column(

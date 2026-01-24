@@ -278,7 +278,9 @@ class OrderItemEndpoint extends Endpoint {
     final order = await OrderEndpoint().getOrderById(session, orderId);
     if (building.strictMode) {
       if (order.items!.any(
-        (item) => item.itemStatus != OrderItemStatus.served,
+        (item) =>
+            item.itemStatus != OrderItemStatus.served ||
+            item.itemStatus != OrderItemStatus.payed,
       )) {
         throw AppException(
           errorType: ExceptionType.Forbidden,

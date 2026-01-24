@@ -47,7 +47,7 @@ class OrderView extends GetView<OrderController> {
           (state) => RefreshIndicator(
             onRefresh: controller.getOrders,
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(15),
               child: controller.orders.isEmpty
                   ? Appemptyscreen(
                       message: 'No orders found',

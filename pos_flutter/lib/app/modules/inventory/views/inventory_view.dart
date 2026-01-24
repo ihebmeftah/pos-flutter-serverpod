@@ -13,7 +13,7 @@ class InventoryView extends GetView<InventoryController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(15),
         child: Column(
           spacing: 10,
           children: [
@@ -166,7 +166,11 @@ class InventoryView extends GetView<InventoryController> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
-                                ctr.stats!.mostPopularArticles[index].article.name
+                                ctr
+                                    .stats!
+                                    .mostPopularArticles[index]
+                                    .article
+                                    .name
                                     .substring(0, 1)
                                     .toUpperCase(),
                                 style: TextStyle(
@@ -176,13 +180,18 @@ class InventoryView extends GetView<InventoryController> {
                               ),
                             ),
                             title: Text(
-                              ctr.stats!.mostPopularArticles[index].article.name,
+                              ctr
+                                  .stats!
+                                  .mostPopularArticles[index]
+                                  .article
+                                  .name,
                             ),
                             subtitle: Text(
                               ctr
                                       .stats!
                                       .mostPopularArticles[index]
-                                      .article.categorie
+                                      .article
+                                      .categorie
                                       ?.name ??
                                   "No Categorie",
                             ),

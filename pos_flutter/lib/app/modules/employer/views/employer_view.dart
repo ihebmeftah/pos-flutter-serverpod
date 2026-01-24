@@ -23,7 +23,7 @@ class EmployerView extends GetView<EmployerController> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(15),
         child: controller.obx(
           (state) => GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

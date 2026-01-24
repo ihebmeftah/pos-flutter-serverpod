@@ -19,7 +19,7 @@ class CategorieFormView extends GetView<CategorieFormController> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(15),
                 child: Form(
                   key: controller.catFormKey,
                   child: AppSectionCard(
