@@ -95,10 +95,8 @@ class PassOrderController extends GetxController with StateMixin {
         Get.find<OrderController>().getOrders();
       }
     } on AppException catch (e) {
-      if (e.errorType == ExceptionType.Forbidden) {
-        AppSnackbar.info(e.message);
-        return;
-      }
+      AppSnackbar.info(e.message);
+      return;
     } catch (e) {
       AppSnackbar.error('Failed to pass order');
     }

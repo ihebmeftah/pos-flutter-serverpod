@@ -104,7 +104,7 @@ class InventoryView extends GetView<InventoryController> {
                 builder: (ctr) {
                   return ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    itemCount: ctr.topCategories.length + 1,
+                    itemCount: ctr.stats!.mostPopularCategories.length + 1,
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 10),
                     itemBuilder: (context, index) => TextButton.icon(
@@ -123,7 +123,11 @@ class InventoryView extends GetView<InventoryController> {
                       label: Text(
                         index == 0
                             ? "Add"
-                            : ctr.topCategories[index - 1].key.name,
+                            : ctr
+                                  .stats!
+                                  .mostPopularCategories[index - 1]
+                                  .category
+                                  .name,
                       ),
                       icon: Icon(
                         index == 0 ? Icons.add : Icons.tag,
@@ -148,10 +152,10 @@ class InventoryView extends GetView<InventoryController> {
             Expanded(
               child: GetBuilder<HomeController>(
                 builder: (ctr) {
-                  return ctr.topArticles.isEmpty
+                  return ctr.stats!.mostPopularArticles.isEmpty
                       ? Appemptyscreen()
                       : ListView.builder(
-                          itemCount: ctr.topArticles.length,
+                          itemCount: ctr.stats!.mostPopularArticles.length,
                           itemBuilder: (context, index) => ListTile(
                             leading: Container(
                               width: 50,
@@ -162,7 +166,7 @@ class InventoryView extends GetView<InventoryController> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
-                                ctr.topArticles[index].key.name
+                                ctr.stats!.mostPopularArticles[index].article.name
                                     .substring(0, 1)
                                     .toUpperCase(),
                                 style: TextStyle(
@@ -171,9 +175,15 @@ class InventoryView extends GetView<InventoryController> {
                                 ),
                               ),
                             ),
-                            title: Text(ctr.topArticles[index].key.name),
+                            title: Text(
+                              ctr.stats!.mostPopularArticles[index].article.name,
+                            ),
                             subtitle: Text(
-                              ctr.topArticles[index].key.categorie?.name ??
+                              ctr
+                                      .stats!
+                                      .mostPopularArticles[index]
+                                      .article.categorie
+                                      ?.name ??
                                   "No Categorie",
                             ),
                           ),

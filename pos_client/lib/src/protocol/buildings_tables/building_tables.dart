@@ -17,16 +17,15 @@ abstract class BTable implements _i1.SerializableModel {
   BTable._({
     _i1.UuidValue? id,
     required this.number,
-    int? seatsMax,
+    required this.seatsMax,
     this.status,
     required this.buildingId,
-  }) : id = id ?? _i1.Uuid().v4obj(),
-       seatsMax = seatsMax ?? 4;
+  }) : id = id ?? _i1.Uuid().v4obj();
 
   factory BTable({
     _i1.UuidValue? id,
     required int number,
-    int? seatsMax,
+    required int seatsMax,
     _i2.TableStatus? status,
     required _i1.UuidValue buildingId,
   }) = _BTableImpl;
@@ -37,7 +36,7 @@ abstract class BTable implements _i1.SerializableModel {
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       number: jsonSerialization['number'] as int,
-      seatsMax: jsonSerialization['seatsMax'] as int?,
+      seatsMax: jsonSerialization['seatsMax'] as int,
       status: jsonSerialization['status'] == null
           ? null
           : _i2.TableStatus.fromJson((jsonSerialization['status'] as String)),
@@ -93,7 +92,7 @@ class _BTableImpl extends BTable {
   _BTableImpl({
     _i1.UuidValue? id,
     required int number,
-    int? seatsMax,
+    required int seatsMax,
     _i2.TableStatus? status,
     required _i1.UuidValue buildingId,
   }) : super._(

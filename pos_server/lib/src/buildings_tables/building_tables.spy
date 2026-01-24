@@ -4,7 +4,7 @@ fields:
   id: UuidValue, defaultPersist=random, defaultModel=random
   ### The number of the building.
   number: int
-  seatsMax: int,default=4
+  seatsMax: int
   status: TableStatus?,!persist ### This field is not persisted in the database.
   buildingId: UuidValue, relation(parent=building)
 

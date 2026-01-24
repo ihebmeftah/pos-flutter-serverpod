@@ -1,0 +1,4 @@
+class : ArticleCount
+fields:
+    article: Article
+    count: int

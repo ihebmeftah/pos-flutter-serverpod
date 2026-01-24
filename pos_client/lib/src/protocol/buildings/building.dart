@@ -21,22 +21,16 @@ abstract class Building implements _i1.SerializableModel {
     required this.openingTime,
     required this.closingTime,
     this.authUserId,
-    bool? tableMultiOrder,
-    bool? orderWithCashRegister,
-    int? cashRegisterLimitPerDay,
-    bool? allowAppendingItemsToOrder,
-    bool? autoCloseOrdersAtClosingTime,
-    bool? strictMode,
+    required this.tableMultiOrder,
+    required this.orderWithCashRegister,
+    this.cashRegisterLimitPerDay,
+    required this.allowAppendingItemsToOrder,
+    required this.autoCloseOrdersAtClosingTime,
+    required this.strictMode,
     required this.currencyCode,
     this.long,
     this.lat,
-  }) : id = id ?? _i1.Uuid().v4obj(),
-       tableMultiOrder = tableMultiOrder ?? false,
-       orderWithCashRegister = orderWithCashRegister ?? false,
-       cashRegisterLimitPerDay = cashRegisterLimitPerDay ?? 3,
-       allowAppendingItemsToOrder = allowAppendingItemsToOrder ?? true,
-       autoCloseOrdersAtClosingTime = autoCloseOrdersAtClosingTime ?? false,
-       strictMode = strictMode ?? false;
+  }) : id = id ?? _i1.Uuid().v4obj();
 
   factory Building({
     _i1.UuidValue? id,
@@ -45,12 +39,12 @@ abstract class Building implements _i1.SerializableModel {
     required DateTime openingTime,
     required DateTime closingTime,
     _i1.UuidValue? authUserId,
-    bool? tableMultiOrder,
-    bool? orderWithCashRegister,
+    required bool tableMultiOrder,
+    required bool orderWithCashRegister,
     int? cashRegisterLimitPerDay,
-    bool? allowAppendingItemsToOrder,
-    bool? autoCloseOrdersAtClosingTime,
-    bool? strictMode,
+    required bool allowAppendingItemsToOrder,
+    required bool autoCloseOrdersAtClosingTime,
+    required bool strictMode,
     required _i2.Currency currencyCode,
     double? long,
     double? lat,
@@ -74,16 +68,15 @@ abstract class Building implements _i1.SerializableModel {
           : _i1.UuidValueJsonExtension.fromJson(
               jsonSerialization['authUserId'],
             ),
-      tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool?,
-      orderWithCashRegister:
-          jsonSerialization['orderWithCashRegister'] as bool?,
+      tableMultiOrder: jsonSerialization['tableMultiOrder'] as bool,
+      orderWithCashRegister: jsonSerialization['orderWithCashRegister'] as bool,
       cashRegisterLimitPerDay:
           jsonSerialization['cashRegisterLimitPerDay'] as int?,
       allowAppendingItemsToOrder:
-          jsonSerialization['allowAppendingItemsToOrder'] as bool?,
+          jsonSerialization['allowAppendingItemsToOrder'] as bool,
       autoCloseOrdersAtClosingTime:
-          jsonSerialization['autoCloseOrdersAtClosingTime'] as bool?,
-      strictMode: jsonSerialization['strictMode'] as bool?,
+          jsonSerialization['autoCloseOrdersAtClosingTime'] as bool,
+      strictMode: jsonSerialization['strictMode'] as bool,
       currencyCode: _i2.Currency.fromJson(
         (jsonSerialization['currencyCode'] as String),
       ),
@@ -117,7 +110,8 @@ abstract class Building implements _i1.SerializableModel {
   /// evrey order shoud be linked to cash register of day
   bool orderWithCashRegister;
 
-  int cashRegisterLimitPerDay;
+  /// Maximum number of cash registers allowed per day.
+  int? cashRegisterLimitPerDay;
 
   /// Indicates whether items can be appended to an existing order.
   bool allowAppendingItemsToOrder;
@@ -168,7 +162,8 @@ abstract class Building implements _i1.SerializableModel {
       if (authUserId != null) 'authUserId': authUserId?.toJson(),
       'tableMultiOrder': tableMultiOrder,
       'orderWithCashRegister': orderWithCashRegister,
-      'cashRegisterLimitPerDay': cashRegisterLimitPerDay,
+      if (cashRegisterLimitPerDay != null)
+        'cashRegisterLimitPerDay': cashRegisterLimitPerDay,
       'allowAppendingItemsToOrder': allowAppendingItemsToOrder,
       'autoCloseOrdersAtClosingTime': autoCloseOrdersAtClosingTime,
       'strictMode': strictMode,
@@ -194,12 +189,12 @@ class _BuildingImpl extends Building {
     required DateTime openingTime,
     required DateTime closingTime,
     _i1.UuidValue? authUserId,
-    bool? tableMultiOrder,
-    bool? orderWithCashRegister,
+    required bool tableMultiOrder,
+    required bool orderWithCashRegister,
     int? cashRegisterLimitPerDay,
-    bool? allowAppendingItemsToOrder,
-    bool? autoCloseOrdersAtClosingTime,
-    bool? strictMode,
+    required bool allowAppendingItemsToOrder,
+    required bool autoCloseOrdersAtClosingTime,
+    required bool strictMode,
     required _i2.Currency currencyCode,
     double? long,
     double? lat,
@@ -234,7 +229,7 @@ class _BuildingImpl extends Building {
     Object? authUserId = _Undefined,
     bool? tableMultiOrder,
     bool? orderWithCashRegister,
-    int? cashRegisterLimitPerDay,
+    Object? cashRegisterLimitPerDay = _Undefined,
     bool? allowAppendingItemsToOrder,
     bool? autoCloseOrdersAtClosingTime,
     bool? strictMode,
@@ -252,8 +247,9 @@ class _BuildingImpl extends Building {
       tableMultiOrder: tableMultiOrder ?? this.tableMultiOrder,
       orderWithCashRegister:
           orderWithCashRegister ?? this.orderWithCashRegister,
-      cashRegisterLimitPerDay:
-          cashRegisterLimitPerDay ?? this.cashRegisterLimitPerDay,
+      cashRegisterLimitPerDay: cashRegisterLimitPerDay is int?
+          ? cashRegisterLimitPerDay
+          : this.cashRegisterLimitPerDay,
       allowAppendingItemsToOrder:
           allowAppendingItemsToOrder ?? this.allowAppendingItemsToOrder,
       autoCloseOrdersAtClosingTime:

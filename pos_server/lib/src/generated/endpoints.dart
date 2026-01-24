@@ -856,28 +856,6 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['endAmount'],
                   ),
         ),
-        'watchCashRegisters': _i1.MethodStreamConnector(
-          name: 'watchCashRegisters',
-          params: {
-            'buildingId': _i1.ParameterDescription(
-              name: 'buildingId',
-              type: _i1.getType<_i1.UuidValue>(),
-              nullable: false,
-            ),
-          },
-          streamParams: {},
-          returnType: _i1.MethodStreamReturnType.streamType,
-          call:
-              (
-                _i1.Session session,
-                Map<String, dynamic> params,
-                Map<String, Stream> streamParams,
-              ) => (endpoints['cashRegister'] as _i8.CashRegisterEndpoint)
-                  .watchCashRegisters(
-                    session,
-                    params['buildingId'],
-                  ),
-        ),
       },
     );
     connectors['categorie'] = _i1.EndpointConnector(
@@ -1395,7 +1373,18 @@ class Endpoints extends _i1.EndpointDispatch {
     connectors['stats'] = _i1.EndpointConnector(
       name: 'stats',
       endpoint: endpoints['stats']!,
-      methodConnectors: {},
+      methodConnectors: {
+        'getStats': _i1.MethodConnector(
+          name: 'getStats',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['stats'] as _i14.StatsEndpoint).getStats(session),
+        ),
+      },
     );
     modules['serverpod_auth_idp'] = _i28.Endpoints()
       ..initializeEndpoints(server);

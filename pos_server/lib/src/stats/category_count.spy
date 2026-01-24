@@ -1,0 +1,4 @@
+class : CategoryCount
+fields:
+    category: Categorie
+    count: int

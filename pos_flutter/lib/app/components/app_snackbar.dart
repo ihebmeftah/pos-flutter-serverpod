@@ -9,7 +9,8 @@ class AppSnackbar {
   static void success([
     String? message,
   ]) => ElegantNotification.success(
-    icon: Icon(Icons.done, color: Colors.green.shade100),
+    width: Get.width * 0.85,
+    height: Get.height * 0.15,
     background: Colors.green.shade600,
     showProgressIndicator: false,
     animation: AnimationType.fromRight,
@@ -29,7 +30,8 @@ class AppSnackbar {
   static void error([
     String? message,
   ]) => ElegantNotification.error(
-    icon: Icon(Icons.warning_amber, color: Colors.red.shade100),
+    width: Get.width * 0.85,
+    height: Get.height * 0.15,
     background: Colors.red.shade600,
     showProgressIndicator: false,
     animation: AnimationType.fromRight,
@@ -48,7 +50,9 @@ class AppSnackbar {
 
   static void info(
     String message,
-  ) => ElegantNotification.info(
+  ) => ElegantNotification(
+    width: Get.width * 0.85,
+    height: Get.height * 0.15,
     icon: Icon(Icons.info, color: Colors.blue.shade100),
     background: Colors.blue.shade600,
     showProgressIndicator: false,

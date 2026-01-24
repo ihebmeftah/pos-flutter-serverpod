@@ -22,6 +22,7 @@ class FormBuildingController extends GetxController with StateMixin {
   DateTime closingTime = DateTime.now().add(const Duration(hours: 14));
   final name = TextEditingController(),
       location = TextEditingController(),
+      cashRegisterLimitPerDay = TextEditingController(),
       opening = TextEditingController(),
       closing = TextEditingController();
   Currency? currencyCode;
@@ -54,6 +55,7 @@ class FormBuildingController extends GetxController with StateMixin {
     strictMode: strictMode,
     orderWithCashRegister: orderWithCashRegister,
     //   dbName: name.text.toLowerCase().replaceAll(' ', '_'),
+    cashRegisterLimitPerDay: int.tryParse(cashRegisterLimitPerDay.text),
     tableMultiOrder: tableMultiOrder,
     authUserId: ServerpodClient.instance.auth.authInfo!.authUserId,
   );
@@ -110,8 +112,10 @@ class FormBuildingController extends GetxController with StateMixin {
           );
         }
         AppSnackbar.success();
-        Get.find<BuildingsController>().onInit();
-        Get.back();
+        if (Get.isRegistered<BuildingsController>()) {
+          Get.find<BuildingsController>().onInit();
+          Get.back();
+        }
       }
       change(null, status: RxStatus.success());
     } on AppException catch (e) {

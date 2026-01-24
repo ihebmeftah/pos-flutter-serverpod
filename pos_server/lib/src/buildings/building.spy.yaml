@@ -13,18 +13,19 @@ fields:
   ### The ID of the authenticated user associated with this building.
   authUserId: UuidValue?, relation(parent=serverpod_auth_core_user),
   ### Indicates whether the building supports multiple orders per table.
-  tableMultiOrder: bool, default=false
+  tableMultiOrder: bool
   ### Indicates whether the building supports orders with cash registers.
   ### evrey order shoud be linked to cash register of day
-  orderWithCashRegister: bool, default=false
-  cashRegisterLimitPerDay: int, default=3
+  orderWithCashRegister: bool
+  ### Maximum number of cash registers allowed per day.
+  cashRegisterLimitPerDay: int?
   ### Indicates whether items can be appended to an existing order.
-  allowAppendingItemsToOrder: bool, default=true
+  allowAppendingItemsToOrder: bool
   ### auto close orders when closing time is reached
-  autoCloseOrdersAtClosingTime: bool, default=false
+  autoCloseOrdersAtClosingTime: bool
   ### strict mode for order processing
   ### You can't make order or item as payed if they not passed by the need status (progress->picked->ready->served->payed)
-  strictMode: bool, default=false
+  strictMode: bool
   ### currency code for the building (e.g., USD, EUR).
   currencyCode: Currency,
   long: double?

@@ -37,7 +37,6 @@ cashRegister:
   - getCashRegisters:
   - createCashRegister:
   - closeLastCashRegister:
-  - watchCashRegisters:
 categorie:
   - getCategories:
   - getCategorieById:
@@ -65,3 +64,4 @@ orderItem:
   - payOrderItem:
   - payAllItems:
 stats:
+  - getStats:

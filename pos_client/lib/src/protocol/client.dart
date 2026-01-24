@@ -46,7 +46,8 @@ import 'package:pos_client/src/protocol/order/dto/append_items.dto.dart'
 import 'package:pos_client/src/protocol/order/entity/order_item.dart' as _i22;
 import 'package:pos_client/src/protocol/order/order_item_status_enum.dart'
     as _i23;
-import 'protocol.dart' as _i24;
+import 'package:pos_client/src/protocol/stats/stats.dart' as _i24;
+import 'protocol.dart' as _i25;
 
 /// {@category Endpoint}
 class EndpointAccess extends _i1.EndpointRef {
@@ -695,23 +696,6 @@ class EndpointCashRegister extends _i1.EndpointRef {
       'endAmount': endAmount,
     },
   );
-
-  /// Streams real-time updates for cash registers in a building.
-  ///
-  /// [session] Current user session.
-  /// [buildingId] ID of the building to watch.
-  ///
-  /// Returns a stream of cash register updates.
-  _i2.Stream<_i12.CashRegister> watchCashRegisters(_i1.UuidValue buildingId) =>
-      caller.callStreamingServerEndpoint<
-        _i2.Stream<_i12.CashRegister>,
-        _i12.CashRegister
-      >(
-        'cashRegister',
-        'watchCashRegisters',
-        {'buildingId': buildingId},
-        {},
-      );
 }
 
 /// {@category Endpoint}
@@ -1124,6 +1108,13 @@ class EndpointStats extends _i1.EndpointRef {
 
   @override
   String get name => 'stats';
+
+  /// Compute stats from paid orders
+  _i2.Future<_i24.Stats> getStats() => caller.callServerEndpoint<_i24.Stats>(
+    'stats',
+    'getStats',
+    {},
+  );
 }
 
 class Modules {
@@ -1157,7 +1148,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i24.Protocol(),
+         _i25.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,

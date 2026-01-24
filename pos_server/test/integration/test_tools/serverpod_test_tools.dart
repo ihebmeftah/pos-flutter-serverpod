@@ -47,6 +47,7 @@ import 'package:pos_server/src/generated/order/dto/append_items.dto.dart'
 import 'package:pos_server/src/generated/order/entity/order_item.dart' as _i23;
 import 'package:pos_server/src/generated/order/order_item_status_enum.dart'
     as _i24;
+import 'package:pos_server/src/generated/stats/stats.dart' as _i25;
 import 'package:pos_server/src/generated/protocol.dart';
 import 'package:pos_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -1372,38 +1373,6 @@ class _CashRegisterEndpoint {
       }
     });
   }
-
-  _i3.Stream<_i13.CashRegister> watchCashRegisters(
-    _i1.TestSessionBuilder sessionBuilder,
-    _i2.UuidValue buildingId,
-  ) {
-    var _localTestStreamManager = _i1.TestStreamManager<_i13.CashRegister>();
-    _i1.callStreamFunctionAndHandleExceptions(
-      () async {
-        var _localUniqueSession =
-            (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
-              endpoint: 'cashRegister',
-              method: 'watchCashRegisters',
-            );
-        var _localCallContext = await _endpointDispatch
-            .getMethodStreamCallContext(
-              createSessionCallback: (_) => _localUniqueSession,
-              endpointPath: 'cashRegister',
-              methodName: 'watchCashRegisters',
-              arguments: {'buildingId': buildingId},
-              requestedInputStreams: [],
-              serializationManager: _serializationManager,
-            );
-        await _localTestStreamManager.callStreamMethod(
-          _localCallContext,
-          _localUniqueSession,
-          {},
-        );
-      },
-      _localTestStreamManager.outputStreamController,
-    );
-    return _localTestStreamManager.outputStreamController.stream;
-  }
 }
 
 class _CategorieEndpoint {
@@ -2164,7 +2133,39 @@ class _OrderItemEndpoint {
 
 class _StatsEndpoint {
   _StatsEndpoint(
-    _endpointDispatch,
-    _serializationManager,
+    this._endpointDispatch,
+    this._serializationManager,
   );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i25.Stats> getStats(_i1.TestSessionBuilder sessionBuilder) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'stats',
+            method: 'getStats',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'stats',
+          methodName: 'getStats',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i25.Stats>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }

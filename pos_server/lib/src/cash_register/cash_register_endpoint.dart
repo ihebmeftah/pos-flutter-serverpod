@@ -34,7 +34,28 @@ class CashRegisterEndpoint extends Endpoint {
     }
     return await CashRegister.db.find(
       session,
-      where: (t) => t.buildingId.equals(buildingId),
+      where: (t) {
+        // employer see all cash registers of current day only
+        if (currScope.contains(Scope("employer"))) {
+          return t.buildingId.equals(buildingId) &
+              t.start.between(
+                DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                ),
+                DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                  23,
+                  59,
+                  59,
+                ),
+              );
+        }
+        return t.buildingId.equals(buildingId);
+      },
       orderByList: (k) => [
         Order(column: k.start, orderDescending: true),
       ],
@@ -97,12 +118,14 @@ class CashRegisterEndpoint extends Endpoint {
           ),
     );
 
-    if (todeyCashRegisterNb >= building.cashRegisterLimitPerDay) {
-      throw AppException(
-        errorType: ExceptionType.Conflict,
-        message:
-            'Cash register limit per day reached for this building (${building.cashRegisterLimitPerDay})',
-      );
+    if (building.cashRegisterLimitPerDay != null) {
+      if (todeyCashRegisterNb >= building.cashRegisterLimitPerDay!) {
+        throw AppException(
+          errorType: ExceptionType.Conflict,
+          message:
+              'Cash register limit per day reached for this building (${building.cashRegisterLimitPerDay})',
+        );
+      }
     }
     final existCashRegisterNotClosed = await CashRegister.db.findFirstRow(
       session,
@@ -122,10 +145,6 @@ class CashRegisterEndpoint extends Endpoint {
         isClosed: false,
         buildingId: buildingId,
       ),
-    );
-    await session.messages.postMessage(
-      '${cashRegisterChannel}_${buildingId.toString()}',
-      newCashRegister,
     );
     return newCashRegister;
   }
@@ -186,30 +205,6 @@ class CashRegisterEndpoint extends Endpoint {
       current,
       columns: (cls) => [cls.isClosed, cls.end, cls.endAmount],
     );
-    await session.messages.postMessage(
-      '${cashRegisterChannel}_${buildingId.toString()}',
-      updatedCashRegister,
-    );
     return updatedCashRegister;
-  }
-
-  final String cashRegisterChannel = 'cashRegisters';
-
-  /// Streams real-time updates for cash registers in a building.
-  ///
-  /// [session] Current user session.
-  /// [buildingId] ID of the building to watch.
-  ///
-  /// Returns a stream of cash register updates.
-  Stream<CashRegister> watchCashRegisters(
-    Session session,
-    UuidValue buildingId,
-  ) async* {
-    final stream = session.messages.createStream<CashRegister>(
-      '${cashRegisterChannel}_${buildingId.toString()}',
-    );
-    await for (final message in stream) {
-      yield message;
-    }
   }
 }

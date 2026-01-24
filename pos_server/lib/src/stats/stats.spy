@@ -1,0 +1,10 @@
+class: Stats 
+fields:
+    totalOrders: int
+    totalArticles: int
+    totalCategories: int
+    paidOrdersCount: int
+    totalItemsSold: int
+    mostPopularArticles: List<ArticleCount>
+    mostPopularCategories: List<CategoryCount>
+    funds: Funds
