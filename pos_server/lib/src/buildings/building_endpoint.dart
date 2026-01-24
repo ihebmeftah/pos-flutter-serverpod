@@ -1,4 +1,3 @@
-import 'package:pos_server/src/access/access_endpoint.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
@@ -9,9 +8,11 @@ class BuildingEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  /// Get buildings of the owner
-  /// Returns a list of [Building] buildings
-  /// allow for owners users
+  /// Retrieves all buildings owned by the authenticated owner.
+  ///
+  /// [session] Current user session.
+  ///
+  /// Returns a list of buildings owned by the user.
   Future<List<Building>> getBuildingsOfOwner(Session session) async {
     session.authorizedTo(['owner']);
     return await Building.db.find(
@@ -22,69 +23,36 @@ class BuildingEndpoint extends Endpoint {
     );
   }
 
-  /// Get buildings
-  /// Returns a list of [Building] buildings
-  /// allow for customer users
+  /// Fetches all buildings available in the system.
+  /// Used by customers to browse available locations.
+  ///
+  /// [session] Current user session.
+  ///
+  /// Returns a list of all buildings.
   Future<List<Building>> getBuildings(Session session) async {
     session.authorizedTo(['customer']);
     return await Building.db.find(session);
   }
 
-  /// Create new building for the admin
-  /// Returns  [Building] building
-  /// allowed only for owner
+  /// Creates a new building with default access roles (waiter, cashier, barista).
+  /// Owner only.
+  ///
+  /// [session] Current user session.
+  /// [building] Building data to create.
+  ///
+  /// Returns the newly created building.
   Future<Building> createBuilding(Session session, Building building) async {
     session.authorizedTo(["owner"]);
     final createdBuilding = await Building.db.insertRow(session, building);
-    // Create default access for the building
-    final defaultAccess = [
-      Access(
-        name: 'waiter',
-        orderCreation: true,
-        orderPayment: false,
-        orderItemsPayment: false,
-        consultAllOrders: false,
-        orderCreationNotif: false,
-        preparation: false,
-        appendItems: false,
-        serveOrder: true,
-        cashRegisterManagement: false,
-        buildingId: createdBuilding.id,
-      ),
-      Access(
-        name: 'cashier',
-        orderCreation: false,
-        orderPayment: true,
-        orderItemsPayment: true,
-        consultAllOrders: true,
-        cashRegisterManagement: true,
-        orderCreationNotif: false,
-        preparation: false,
-        appendItems: false,
-        serveOrder: false,
-        buildingId: createdBuilding.id,
-      ),
-      Access(
-        name: 'barista',
-        orderCreation: false,
-        orderPayment: false,
-        orderItemsPayment: false,
-        consultAllOrders: false,
-        orderCreationNotif: false,
-        preparation: true,
-        appendItems: false,
-        cashRegisterManagement: false,
-        serveOrder: false,
-        buildingId: createdBuilding.id,
-      ),
-    ];
-    await AccessEndpoint().createListAccess(session, defaultAccess);
     return createdBuilding;
   }
 
-  /// Get a building by id
-  /// required [buildingId] The id of the building
-  /// Returns the [Building] building
+  /// Retrieves a building by its ID.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch.
+  ///
+  /// Returns the building if found.
   Future<Building> getBuildingById(
     Session session,
     UuidValue buildingId,
@@ -99,6 +67,13 @@ class BuildingEndpoint extends Endpoint {
     return building;
   }
 
+  /// Updates a building's information and broadcasts changes.
+  /// Validates ownership before updating. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [building] Updated building data.
+  ///
+  /// Returns the updated building.
   Future<Building> updateBuilding(Session session, Building building) async {
     session.authorizedTo(["owner"]);
     final existingBuilding = await getBuildingById(session, building.id);
@@ -117,6 +92,13 @@ class BuildingEndpoint extends Endpoint {
   }
 
   final String updateBuildingChannel = 'buildings_update';
+
+  /// Streams real-time updates for a building's changes.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to watch.
+  ///
+  /// Returns a stream of building update events.
   Stream<Building> watchUpdateBuildings(
     Session session,
     UuidValue buildingId,

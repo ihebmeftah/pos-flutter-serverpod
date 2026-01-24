@@ -1,7 +1,6 @@
-import 'package:pos_server/src/buildings/building_endpoint.dart';
-import 'package:pos_server/src/employer/employer_endpoint.dart';
 import '../generated/order/entity/order.dart' as orderentity;
 import '../helpers/session_extensions.dart';
+import '../helpers/endpoint_helpers.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 import '../generated/protocol.dart' hide Order;
@@ -9,23 +8,29 @@ import '../generated/protocol.dart' hide Order;
 class CashRegisterEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
+
+  /// Retrieves all cash registers for a building, ordered by start time.
+  /// Requires cash register management permission for employers.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch registers from.
+  ///
+  /// Returns a list of cash registers sorted by start time (descending).
   Future<List<CashRegister>> getCashRegisters(
     Session session,
     UuidValue buildingId,
   ) async {
     final currScope = session.authorizedTo(['employer', 'owner']);
     if (currScope.contains(Scope('employer'))) {
-      Employer employer = await EmployerEndpoint().getEmployerByIdentifier(
+      Employer employer = await EndpointHelpers.getEmployerByAuthUserId(
         session,
         session.authenticated!.authUserId,
       );
-      if (employer.access == null ||
-          employer.access?.cashRegisterManagement == false) {
-        throw AppException(
-          errorType: ExceptionType.Forbidden,
-          message: 'You don\'t have access to manage CashRegisters',
-        );
-      }
+      EndpointHelpers.verifyEmployerAccess(
+        employer,
+        (access) => access.cashRegisterManagement,
+        'manage CashRegisters',
+      );
     }
     return await CashRegister.db.find(
       session,
@@ -36,31 +41,38 @@ class CashRegisterEndpoint extends Endpoint {
     );
   }
 
+  /// Creates a new cash register session for the day.
+  /// Validates daily limit and ensures no other register is open. Employer only.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building.
+  /// [startAmount] Optional starting cash amount.
+  ///
+  /// Returns the newly created cash register.
   Future<CashRegister> createCashRegister(
     Session session,
     UuidValue buildingId,
     double? startAmount,
   ) async {
     session.authorizedTo(['employer']);
-    final Building building = await BuildingEndpoint().getBuildingById(
+    // Get employer with building included
+    Employer employer = await EndpointHelpers.getEmployerByAuthUserId(
       session,
-      buildingId,
+      session.authenticated!.authUserId,
     );
+    // Verify employer has access to manage cash registers
+    EndpointHelpers.verifyEmployerAccess(
+      employer,
+      (access) => access.cashRegisterManagement,
+      'manage CashRegisters',
+    );
+    // Verify employer belongs to this building
+    EndpointHelpers.verifyEmployerBuilding(employer, buildingId);
+    final building = employer.building!;
     if (!building.orderWithCashRegister) {
       throw AppException(
         errorType: ExceptionType.Forbidden,
         message: 'The building is not configured to use cash register system',
-      );
-    }
-    Employer employer = await EmployerEndpoint().getEmployerByIdentifier(
-      session,
-      session.authenticated!.authUserId,
-    );
-    if (employer.access == null ||
-        employer.access?.cashRegisterManagement == false) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to manage CashRegisters',
       );
     }
 
@@ -118,30 +130,46 @@ class CashRegisterEndpoint extends Endpoint {
     return newCashRegister;
   }
 
+  /// Closes the currently open cash register.
+  /// Validates all orders are paid before closing. Employer only.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building.
+  /// [endAmount] Optional ending cash amount.
+  ///
+  /// Returns the closed cash register with end time.
   Future<CashRegister> closeLastCashRegister(
     Session session,
     UuidValue buildingId,
     double? endAmount,
   ) async {
     session.authorizedTo(['employer']);
-    Employer employer = await EmployerEndpoint().getEmployerByIdentifier(
+    Employer employer = await EndpointHelpers.getEmployerByAuthUserId(
       session,
       session.authenticated!.authUserId,
     );
-    if (employer.access == null ||
-        employer.access?.cashRegisterManagement == false) {
+    EndpointHelpers.verifyEmployerAccess(
+      employer,
+      (access) => access.cashRegisterManagement,
+      'manage CashRegisters',
+    );
+    final current = await EndpointHelpers.getCurrentCashRegister(
+      session,
+      employer.building!,
+    );
+    if (current == null) {
       throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to manage CashRegisters',
+        errorType: ExceptionType.NotFound,
+        message: 'No opened CashRegister found for this building',
       );
     }
-    final current = await getCurrentCashRegister(session, employer.building!);
+    // Verify no unpaid orders exist
     final countUnpaidOrder = await orderentity.Order.db.count(
       session,
       where: (t) =>
           t.btable.buildingId.equals(buildingId) &
-          t.cashRegisterId.equals(current!.id) &
-          t.status.equals(OrderStatus.payed),
+          t.cashRegisterId.equals(current.id) &
+          t.status.notEquals(OrderStatus.payed),
     );
     if (countUnpaidOrder > 0) {
       throw AppException(
@@ -149,22 +177,13 @@ class CashRegisterEndpoint extends Endpoint {
         message: 'Cannot close cash register while there are unpaid orders',
       );
     }
-    final cashRegister = await CashRegister.db.findFirstRow(
-      session,
-      where: (t) => t.buildingId.equals(buildingId) & t.isClosed.equals(false),
-    );
-    if (cashRegister == null) {
-      throw AppException(
-        errorType: ExceptionType.NotFound,
-        message: 'No opened CashRegister found for this building',
-      );
-    }
-    cashRegister.endAmount = endAmount;
-    cashRegister.end = DateTime.now();
-    cashRegister.isClosed = true;
+    // Use the current cash register we already fetched
+    current.endAmount = endAmount;
+    current.end = DateTime.now();
+    current.isClosed = true;
     final updatedCashRegister = await CashRegister.db.updateRow(
       session,
-      cashRegister,
+      current,
       columns: (cls) => [cls.isClosed, cls.end, cls.endAmount],
     );
     await session.messages.postMessage(
@@ -174,29 +193,14 @@ class CashRegisterEndpoint extends Endpoint {
     return updatedCashRegister;
   }
 
-  @doNotGenerate
-  Future<CashRegister?> getCurrentCashRegister(
-    Session session,
-    Building building,
-  ) async {
-    if (!building.orderWithCashRegister) return null;
-    final existe = await CashRegister.db.findFirstRow(
-      session,
-      where: (t) => t.buildingId.equals(building.id) & t.isClosed.equals(false),
-    );
-    if (building.orderWithCashRegister) {
-      if (existe == null) {
-        throw AppException(
-          errorType: ExceptionType.NotFound,
-          message:
-              'No opened Cash register found for this building, please contact your administrator',
-        );
-      }
-    }
-    return existe;
-  }
-
   final String cashRegisterChannel = 'cashRegisters';
+
+  /// Streams real-time updates for cash registers in a building.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to watch.
+  ///
+  /// Returns a stream of cash register updates.
   Stream<CashRegister> watchCashRegisters(
     Session session,
     UuidValue buildingId,

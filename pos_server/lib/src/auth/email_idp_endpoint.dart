@@ -1,5 +1,5 @@
-import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
+import 'package:pos_server/src/helpers/endpoint_helpers.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
@@ -8,6 +8,12 @@ import 'package:serverpod_auth_idp_server/providers/email.dart';
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
+  /// Retrieves the user profile for the currently authenticated user.
+  /// Includes auth user and profile image information.
+  ///
+  /// [session] Current user session.
+  ///
+  /// Returns the user profile with related data.
   Future<UserProfile> getUserProfile(Session session) async {
     if (session.authenticated == null) {
       throw AppException(
@@ -33,8 +39,14 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
     return userProfile;
   }
 
-  /// A reworked login method that returns an Employer on successful login.
-  /// If the logged-in user is an admin, it returns null.
+  /// Authenticates a user and returns employer data if applicable.
+  /// Returns employer for employer scope, null for owner scope.
+  ///
+  /// [session] Current user session.
+  /// [email] User's email address.
+  /// [password] User's password.
+  ///
+  /// Returns auth success with employer data if user is an employer.
   Future<
     ({
       Employer? employer,
@@ -53,7 +65,7 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
         password: password,
       );
       if (authSuccess.scopeNames.contains(Scope("employer").name)) {
-        final employer = await EmployerEndpoint().getEmployerByIdentifier(
+        final employer = await EndpointHelpers.getEmployerByAuthUserId(
           session,
           authSuccess.authUserId,
         );
@@ -71,6 +83,13 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
     }
   }
 
+  /// Initiates user registration by sending a verification code.
+  /// Validates email uniqueness before starting registration.
+  ///
+  /// [session] Current user session.
+  /// [email] Email address to register.
+  ///
+  /// Returns the account request ID for verification.
   Future<UuidValue> registerReworked(
     Session session, {
     required String email,
@@ -88,7 +107,15 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
     return await super.startRegistration(session, email: email);
   }
 
-  ///Reworked verify registration code to assign owner scope
+  /// Completes registration by verifying code and assigning owner scope.
+  /// Revokes initial tokens and issues new ones with correct scopes.
+  ///
+  /// [session] Current user session.
+  /// [accountRequestId] ID from registration start.
+  /// [verificationCode] Code sent to user's email.
+  /// [password] Password for the new account.
+  ///
+  /// Returns auth success with owner scope.
   Future<AuthSuccess> verifyRegistrationCodeReworked(
     Session session, {
     required UuidValue accountRequestId,

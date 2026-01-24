@@ -1,32 +1,37 @@
-import 'package:pos_server/src/buildings/building_endpoint.dart';
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
 import '../helpers/session_extensions.dart';
+import '../helpers/endpoint_helpers.dart';
 
 class CategorieEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  /// Get all categories for a building
-  /// required [buildingId] buildingId The id of the building
-  /// Returns a list of [Categorie] categories
+  /// Fetches all categories belonging to a specific building.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch categories from.
+  ///
+  /// Returns a list of all categories for the building.
   Future<List<Categorie>> getCategories(
     Session session,
     UuidValue buildingId,
   ) async {
-    List<Categorie> categories = await Categorie.db.find(
+    return await Categorie.db.find(
       session,
       where: (c) => c.buildingId.equals(buildingId),
     );
-    return categories;
   }
 
-  /// Get categorie by id
-  /// required [id] The id of the categorie
-  /// required [buildingId] The id of the building
-  /// (ensure that users can only access categories that belong to buildings they have access to.)
-  /// Returns the [Categorie] categorie
+  /// Retrieves a specific category by ID.
+  /// Validates that category belongs to the specified building.
+  ///
+  /// [session] Current user session.
+  /// [id] Category ID to fetch.
+  /// [buildingId] Building ID for access validation.
+  ///
+  /// Returns the category if found and belongs to building.
   Future<Categorie> getCategorieById(
     Session session,
     UuidValue id,
@@ -45,20 +50,24 @@ class CategorieEndpoint extends Endpoint {
     return categorie;
   }
 
-  /// Create new categorie
-  /// required [categorie] The categorie to create
-  /// Returns the created [Categorie] categorie
-  /// allow for owner users only
+  /// Creates a new category for a building.
+  /// Validates name uniqueness and building ownership. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [categorieDto] Category data including name and description.
+  ///
+  /// Returns the newly created category.
   Future<Categorie> createCategorie(
     Session session,
     CreateCategorieDto categorieDto,
   ) async {
     session.authorizedTo(['owner']);
-    final building = await BuildingEndpoint().getBuildingById(
+    final building = await EndpointHelpers.verifyBuildingAccess(
       session,
       categorieDto.buildingId,
+      checkOwnership: true,
     );
-    await _checkCategorieNameExiste(
+    await EndpointHelpers.checkCategorieNameExists(
       session,
       categorieDto.name,
       building.id,
@@ -74,30 +83,15 @@ class CategorieEndpoint extends Endpoint {
     );
   }
 
-  @doNotGenerate
-  Future<void> _checkCategorieNameExiste(
-    Session session,
-    String name,
-    UuidValue buildingId,
-  ) async {
-    final existe = await Categorie.db.findFirstRow(
-      session,
-      where: (c) => c.name.ilike(name) & c.buildingId.equals(buildingId),
-    );
-    if (existe != null) {
-      throw AppException(
-        errorType: ExceptionType.Conflict,
-        message: 'Categorie with name $name already exists',
-      );
-    }
-  }
-
-  /// Update categorie
-  /// required [categorieDto] The categorie to update
-  /// required [id] The id of the categorie
-  /// required [buildingId] The id of the building
-  /// Returns the updated [Categorie] categorie
-  /// allow for owner users only
+  /// Updates an existing category's information.
+  /// Validates name uniqueness if changed. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [id] Category ID to update.
+  /// [buildingId] Building ID for access validation.
+  /// [categorieDto] Updated category data.
+  ///
+  /// Returns the updated category.
   Future<Categorie> updateCategorie(
     Session session,
     UuidValue id,
@@ -105,20 +99,23 @@ class CategorieEndpoint extends Endpoint {
     UpdateCategorieDto categorieDto,
   ) async {
     session.authorizedTo(['owner']);
-    final buildinge = await BuildingEndpoint().getBuildingById(
-      session,
-      buildingId,
-    );
+    // Get existing categorie (already verifies buildingId match)
     final existingCategorie = await getCategorieById(
       session,
       id,
-      buildinge.id,
+      buildingId,
+    );
+    // Verify building ownership
+    await EndpointHelpers.verifyBuildingAccess(
+      session,
+      buildingId,
+      checkOwnership: true,
     );
     if (existingCategorie.name != categorieDto.name) {
-      await _checkCategorieNameExiste(
+      await EndpointHelpers.checkCategorieNameExists(
         session,
         categorieDto.name,
-        buildinge.id,
+        buildingId,
       );
     }
     existingCategorie.name = categorieDto.name;

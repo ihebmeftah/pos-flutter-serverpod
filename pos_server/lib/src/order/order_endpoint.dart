@@ -1,9 +1,7 @@
 import 'package:pos_server/src/article/article_endpoint.dart';
-import 'package:pos_server/src/buildings/building_endpoint.dart';
-import 'package:pos_server/src/cash_register/cash_register_endpoint.dart';
-import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
 import '../helpers/session_extensions.dart';
+import '../helpers/endpoint_helpers.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import 'package:serverpod/serverpod.dart' as s;
 import 'package:serverpod_auth_idp_server/core.dart';
@@ -14,13 +12,15 @@ class OrderEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  /// Get all orders for a building
-  /// Parameters:
-  /// - [buildingId]: The id of the building
-  /// - [orderStatus]: The status of the orders to filter by (optional)
-  /// Returns:
-  /// - A list of orders for the building
-  /// Only owner and employers are allowed for this endpoint
+  /// Fetches all orders for a building with optional filters.
+  /// Employers see only their orders unless they have consultAllOrders permission.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch orders from.
+  /// [orderStatus] Optional status filter (payed, inprogress, etc.).
+  /// [cashRegisterId] Optional cash register filter.
+  ///
+  /// Returns a list of orders with items and related data.
   Future<List<Order>> getOrdersByBuilingId(
     Session session,
     UuidValue buildingId, [
@@ -32,17 +32,16 @@ class OrderEndpoint extends Endpoint {
     CashRegister? currentCashRegister;
 
     if (session.isEmployer) {
-      employer = await EmployerEndpoint().getEmployerByIdentifier(
+      employer = await EndpointHelpers.getEmployerByAuthUserId(
         session,
         session.authenticated!.authUserId,
       );
       if (employer.building!.orderWithCashRegister &&
           !employer.access!.consultAllOrders) {
-        currentCashRegister = await CashRegisterEndpoint()
-            .getCurrentCashRegister(
-              session,
-              employer.building!,
-            );
+        currentCashRegister = await EndpointHelpers.getCurrentCashRegister(
+          session,
+          employer.building!,
+        );
       }
     }
 
@@ -97,11 +96,13 @@ class OrderEndpoint extends Endpoint {
     );
   }
 
-  /// Get order by id
-  /// Parameters:
-  /// - [id]: The id of the order
-  /// Returns:
-  /// - The order with the given id
+  /// Retrieves a single order with all details.
+  /// Includes items, table info, and user profiles for who created/closed it.
+  ///
+  /// [session] Current user session.
+  /// [id] Order ID to fetch.
+  ///
+  /// Returns the order with all related data.
   Future<Order> getOrderById(Session session, UuidValue id) async {
     Order? order = await Order.db.findFirstRow(
       session,
@@ -128,27 +129,27 @@ class OrderEndpoint extends Endpoint {
     return order;
   }
 
-  /// Create a new order
-  /// Parameters:
-  /// - [order]: The order to be created
-  /// Returns:
-  /// - The created order
-  /// Only employer allowed for this endpoint
-  /// Employer should have access to order creation
+  /// Creates a new order with articles for a table.
+  /// Validates table availability, employer permissions, and article existence. Employer only.
+  ///
+  /// [session] Current user session.
+  /// [orderDto] Order data including table, building, and article IDs.
+  ///
+  /// Returns the newly created order with items.
   Future<Order> createOrder(
     Session session,
     CreateOrderDto orderDto,
   ) async {
     // Only employer allowed for this endpoint
     session.authorizedTo(['employer']);
-    // CHeck buidling
-    final building = await BuildingEndpoint().getBuildingById(
+    // Check building
+    final building = await EndpointHelpers.verifyBuildingAccess(
       session,
       orderDto.buildingId,
     );
     CashRegister? currentCashRegister;
     if (building.orderWithCashRegister) {
-      currentCashRegister = await CashRegisterEndpoint().getCurrentCashRegister(
+      currentCashRegister = await EndpointHelpers.getCurrentCashRegister(
         session,
         building,
       );
@@ -168,24 +169,17 @@ class OrderEndpoint extends Endpoint {
       }
     }
     // Employer should have access to order creation
-    final employer = await EmployerEndpoint().getEmployerByIdentifier(
+    final employer = await EndpointHelpers.getEmployerByAuthUserId(
       session,
       session.authenticated!.authUserId,
     );
-    // Check if employer belongs to the building
-    if (building.id != employer.buildingId) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to create orders for this building',
-      );
-    }
-    // Check if employer has access to order creation
-    if (employer.access == null || employer.access?.orderCreation == false) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to create orders',
-      );
-    }
+    // Check if employer belongs to the building and has access to order creation
+    EndpointHelpers.verifyEmployerBuilding(employer, building.id);
+    EndpointHelpers.verifyEmployerAccess(
+      employer,
+      (access) => access.orderCreation,
+      'create orders',
+    );
     // Order must have at least one item
     if (orderDto.itemsIds.isEmpty) {
       throw AppException(
@@ -257,6 +251,15 @@ class OrderEndpoint extends Endpoint {
     });
   }
 
+  /// Marks an order as paid and records who closed it.
+  /// Internal use only - called after all items are paid.
+  ///
+  /// [session] Current user session.
+  /// [order] Order to mark as paid.
+  /// [userProfileId] ID of user completing the payment.
+  /// [buildingId] Building ID for validation.
+  ///
+  /// Returns the updated order with paid status.
   @doNotGenerate
   Future<Order> makeOrderPayed(
     Session session,
@@ -278,6 +281,12 @@ class OrderEndpoint extends Endpoint {
     );
   }
 
+  /// Retrieves the current in-progress order for a specific table.
+  ///
+  /// [session] Current user session.
+  /// [tableId] ID of the table to check.
+  ///
+  /// Returns the current order for the table or null if table has no active order.
   Future<Order?> getOrderCurrOfTable(Session session, UuidValue tableId) async {
     session.authorizedTo(["owner", "employer"]);
     return await Order.db.findFirstRow(
@@ -298,6 +307,13 @@ class OrderEndpoint extends Endpoint {
     );
   }
 
+  /// Fetches all orders (past and present) for a specific table.
+  ///
+  /// [session] Current user session.
+  /// [tableId] ID of the table.
+  /// [orderStatus] Optional status filter.
+  ///
+  /// Returns a list of orders for the table.
   Future<List<Order>> getOrdersOfTable(
     Session session,
     UuidValue tableId,

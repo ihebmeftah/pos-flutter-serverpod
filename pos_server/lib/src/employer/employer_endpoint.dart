@@ -1,7 +1,7 @@
 import 'package:pos_server/src/access/access_endpoint.dart';
-import 'package:pos_server/src/buildings/building_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
 import '../helpers/session_extensions.dart';
+import '../helpers/endpoint_helpers.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
@@ -10,12 +10,13 @@ class EmployerEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  /// Create new employer account
-  /// required [userProfileData] The user profile data
-  /// required [password] The password for the account
-  /// required [buildingId] buildingId The id of the building
-  /// Returns the created [Employer] employer account
-  /// allow for iwner users only
+  /// Creates a new employer account with authentication credentials.
+  /// Validates email/phone uniqueness and requires building ownership. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [createEmployerDto] Employer data including credentials and building assignment.
+  ///
+  /// Returns the newly created employer account with profile.
   Future<Employer> createEmployerAccount(
     Session session,
     CreateEmployerDTO createEmployerDto,
@@ -23,9 +24,10 @@ class EmployerEndpoint extends Endpoint {
     session.authorizedTo(['owner']);
     final emailIdp = AuthServices.instance.emailIdp;
     return session.db.transaction<Employer>((transaction) async {
-      final building = await BuildingEndpoint().getBuildingById(
+      final building = await EndpointHelpers.verifyBuildingAccess(
         session,
         createEmployerDto.buildingId,
+        checkOwnership: true,
       );
       await _checkExistPersoEmail(session, createEmployerDto.persoEmail);
       await _checkExistPhone(session, createEmployerDto.phone);
@@ -72,6 +74,7 @@ class EmployerEndpoint extends Endpoint {
     });
   }
 
+  @doNotGenerate
   Future<void> _checkExistPersoEmail(Session session, String persoEmail) async {
     final existpersoEmail = await Employer.db.findFirstRow(
       session,
@@ -85,6 +88,7 @@ class EmployerEndpoint extends Endpoint {
     }
   }
 
+  @doNotGenerate
   Future<void> _checkExistPhone(Session session, int phone) async {
     final existPhone = await Employer.db.findFirstRow(
       session,
@@ -98,10 +102,13 @@ class EmployerEndpoint extends Endpoint {
     }
   }
 
-  /// Get employers by buildingId
-  /// Identifier can be a[buildingId]
-  /// Returns list of [Employer]
-  /// This enpoint need login and allowed only for owner
+  /// Retrieves all employers for a specific building.
+  /// Includes user profiles and access permissions. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch employers from.
+  ///
+  /// Returns a list of employers with profiles and access data.
   Future<List<Employer>> getEmployers(
     Session session,
     UuidValue buildingId,
@@ -117,10 +124,13 @@ class EmployerEndpoint extends Endpoint {
     );
   }
 
-  /// Get employer by identifier
-  /// Identifier can be a[authId] or [UserProfileId]
-  /// Returns [Employer] if found else throws exception
-  /// This enpoint need login and allowed for all users
+  /// Fetches an employer by authUserId, userProfileId, or employerId.
+  /// Includes full profile, building, and access information.
+  ///
+  /// [session] Current user session.
+  /// [identifier] Auth ID, profile ID, or employer ID.
+  ///
+  /// Returns the employer with all related data.
   Future<Employer> getEmployerByIdentifier(
     Session session,
     UuidValue identifier,
@@ -146,6 +156,13 @@ class EmployerEndpoint extends Endpoint {
     return employer;
   }
 
+  /// Assigns or updates access permissions for an employer.
+  ///
+  /// [session] Current user session.
+  /// [employerId] ID of the employer to update.
+  /// [accessId] ID of the access configuration to assign.
+  ///
+  /// Returns the updated employer with new access settings.
   Future<Employer> assignAccessToEmployer(
     Session session,
     UuidValue employerId,
@@ -168,6 +185,13 @@ class EmployerEndpoint extends Endpoint {
     );
   }
 
+  /// Blocks or unblocks an employer account and revokes all tokens.
+  ///
+  /// [session] Current user session.
+  /// [identifier] Auth ID, profile ID, or employer ID.
+  /// [isBlocked] True to block, false to unblock.
+  ///
+  /// Returns success status.
   Future<bool> blockEmployer(
     Session session,
     UuidValue identifier,

@@ -55,6 +55,13 @@ class EndpointAccess extends _i1.EndpointRef {
   @override
   String get name => 'access';
 
+  /// Creates a new access role for a building.
+  /// Validates name uniqueness within the building. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [access] Access configuration to create.
+  ///
+  /// Returns the newly created access role.
   _i2.Future<_i3.Access> createAccess(_i3.Access access) =>
       caller.callServerEndpoint<_i3.Access>(
         'access',
@@ -62,6 +69,13 @@ class EndpointAccess extends _i1.EndpointRef {
         {'access': access},
       );
 
+  /// Updates an existing access role's permissions.
+  /// Validates name uniqueness if name changed. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [access] Updated access configuration.
+  ///
+  /// Returns the updated access role.
   _i2.Future<_i3.Access> updateAccess(_i3.Access access) =>
       caller.callServerEndpoint<_i3.Access>(
         'access',
@@ -69,6 +83,12 @@ class EndpointAccess extends _i1.EndpointRef {
         {'access': access},
       );
 
+  /// Retrieves all access roles configured for a building.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building.
+  ///
+  /// Returns a list of access roles for the building.
   _i2.Future<List<_i3.Access>> getAccessesByBuildingId(
     _i1.UuidValue buildingId,
   ) => caller.callServerEndpoint<List<_i3.Access>>(
@@ -77,6 +97,12 @@ class EndpointAccess extends _i1.EndpointRef {
     {'buildingId': buildingId},
   );
 
+  /// Fetches a specific access role by ID.
+  ///
+  /// [session] Current user session.
+  /// [accessId] ID of the access role to fetch.
+  ///
+  /// Returns the access role if found.
   _i2.Future<_i3.Access> getAccessById(_i1.UuidValue accessId) =>
       caller.callServerEndpoint<_i3.Access>(
         'access',
@@ -84,6 +110,12 @@ class EndpointAccess extends _i1.EndpointRef {
         {'accessId': accessId},
       );
 
+  /// Deletes an access role from a building.
+  ///
+  /// [session] Current user session.
+  /// [accessId] ID of the access role to delete.
+  ///
+  /// Returns the deleted access role.
   _i2.Future<_i3.Access> deleteAccess(_i1.UuidValue accessId) =>
       caller.callServerEndpoint<_i3.Access>(
         'access',
@@ -99,10 +131,13 @@ class EndpointArticle extends _i1.EndpointRef {
   @override
   String get name => 'article';
 
-  /// Get Articles by building id
-  /// required [buildingId] buildingId The id of the building
-  /// optional [categoryId] The id of the category
-  /// Returns a list of [Article] articles
+  /// Retrieves all articles for a specific building, optionally filtered by category.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch articles from.
+  /// [categoryId] Optional category ID to filter articles.
+  ///
+  /// Returns a list of articles with category information included.
   _i2.Future<List<_i4.Article>> getArticlesByBuildingId(
     _i1.UuidValue buildingId, {
     _i1.UuidValue? categoryId,
@@ -115,10 +150,13 @@ class EndpointArticle extends _i1.EndpointRef {
     },
   );
 
-  /// Create new article
-  /// required [articleDto] The article to create
-  /// Returns the created [Article] article
-  /// allow for admin users only
+  /// Creates a new article with validated ingredients and category.
+  /// Requires owner authorization and verifies building ownership.
+  ///
+  /// [session] Current user session.
+  /// [articleDto] Article data including name, price, category, and composition.
+  ///
+  /// Returns the newly created article with compositions attached.
   _i2.Future<_i4.Article> createArticle(_i5.CreateArticleDto articleDto) =>
       caller.callServerEndpoint<_i4.Article>(
         'article',
@@ -126,9 +164,14 @@ class EndpointArticle extends _i1.EndpointRef {
         {'articleDto': articleDto},
       );
 
-  /// Get article by id
-  /// required [articleId] The id of the article
-  /// Returns the [Article] article
+  /// Retrieves a single article by ID with full details.
+  /// Includes category and ingredient composition information.
+  ///
+  /// [session] Current user session.
+  /// [id] Article ID to fetch.
+  /// [buildingId] Building ID for access validation.
+  ///
+  /// Returns the article with all related data included.
   _i2.Future<_i4.Article> getArticleById(
     _i1.UuidValue id,
     _i1.UuidValue buildingId,
@@ -141,12 +184,15 @@ class EndpointArticle extends _i1.EndpointRef {
     },
   );
 
-  /// Update article
-  /// required [articleDto] The article to update
-  /// required [id] The id of the article
-  /// required [buildingId] The id of the building
-  /// Returns the updated [Article] article
-  /// allow for owner users only
+  /// Updates an existing article's information.
+  /// Validates name uniqueness if changed. Requires owner authorization.
+  ///
+  /// [session] Current user session.
+  /// [id] Article ID to update.
+  /// [buildingId] Building ID for access validation.
+  /// [articleDto] Updated article data.
+  ///
+  /// Returns the updated article.
   _i2.Future<_i4.Article> updateArticle(
     _i1.UuidValue id,
     _i1.UuidValue buildingId,
@@ -172,6 +218,12 @@ class EndpointEmailIdp extends _i7.EndpointEmailIdpBase {
   @override
   String get name => 'emailIdp';
 
+  /// Retrieves the user profile for the currently authenticated user.
+  /// Includes auth user and profile image information.
+  ///
+  /// [session] Current user session.
+  ///
+  /// Returns the user profile with related data.
   _i2.Future<_i8.UserProfile> getUserProfile() =>
       caller.callServerEndpoint<_i8.UserProfile>(
         'emailIdp',
@@ -179,8 +231,14 @@ class EndpointEmailIdp extends _i7.EndpointEmailIdpBase {
         {},
       );
 
-  /// A reworked login method that returns an Employer on successful login.
-  /// If the logged-in user is an admin, it returns null.
+  /// Authenticates a user and returns employer data if applicable.
+  /// Returns employer for employer scope, null for owner scope.
+  ///
+  /// [session] Current user session.
+  /// [email] User's email address.
+  /// [password] User's password.
+  ///
+  /// Returns auth success with employer data if user is an employer.
   _i2.Future<({_i8.AuthSuccess authSuccess, _i9.Employer? employer})>
   loginReworked({
     required String email,
@@ -197,6 +255,13 @@ class EndpointEmailIdp extends _i7.EndpointEmailIdpBase {
         },
       );
 
+  /// Initiates user registration by sending a verification code.
+  /// Validates email uniqueness before starting registration.
+  ///
+  /// [session] Current user session.
+  /// [email] Email address to register.
+  ///
+  /// Returns the account request ID for verification.
   _i2.Future<_i1.UuidValue> registerReworked({required String email}) =>
       caller.callServerEndpoint<_i1.UuidValue>(
         'emailIdp',
@@ -204,7 +269,15 @@ class EndpointEmailIdp extends _i7.EndpointEmailIdpBase {
         {'email': email},
       );
 
-  ///Reworked verify registration code to assign owner scope
+  /// Completes registration by verifying code and assigning owner scope.
+  /// Revokes initial tokens and issues new ones with correct scopes.
+  ///
+  /// [session] Current user session.
+  /// [accountRequestId] ID from registration start.
+  /// [verificationCode] Code sent to user's email.
+  /// [password] Password for the new account.
+  ///
+  /// Returns auth success with owner scope.
   _i2.Future<_i8.AuthSuccess> verifyRegistrationCodeReworked({
     required _i1.UuidValue accountRequestId,
     required String verificationCode,
@@ -430,9 +503,11 @@ class EndpointBuilding extends _i1.EndpointRef {
   @override
   String get name => 'building';
 
-  /// Get buildings of the owner
-  /// Returns a list of [Building] buildings
-  /// allow for owners users
+  /// Retrieves all buildings owned by the authenticated owner.
+  ///
+  /// [session] Current user session.
+  ///
+  /// Returns a list of buildings owned by the user.
   _i2.Future<List<_i10.Building>> getBuildingsOfOwner() =>
       caller.callServerEndpoint<List<_i10.Building>>(
         'building',
@@ -440,9 +515,12 @@ class EndpointBuilding extends _i1.EndpointRef {
         {},
       );
 
-  /// Get buildings
-  /// Returns a list of [Building] buildings
-  /// allow for customer users
+  /// Fetches all buildings available in the system.
+  /// Used by customers to browse available locations.
+  ///
+  /// [session] Current user session.
+  ///
+  /// Returns a list of all buildings.
   _i2.Future<List<_i10.Building>> getBuildings() =>
       caller.callServerEndpoint<List<_i10.Building>>(
         'building',
@@ -450,9 +528,13 @@ class EndpointBuilding extends _i1.EndpointRef {
         {},
       );
 
-  /// Create new building for the admin
-  /// Returns  [Building] building
-  /// allowed only for owner
+  /// Creates a new building with default access roles (waiter, cashier, barista).
+  /// Owner only.
+  ///
+  /// [session] Current user session.
+  /// [building] Building data to create.
+  ///
+  /// Returns the newly created building.
   _i2.Future<_i10.Building> createBuilding(_i10.Building building) =>
       caller.callServerEndpoint<_i10.Building>(
         'building',
@@ -460,9 +542,12 @@ class EndpointBuilding extends _i1.EndpointRef {
         {'building': building},
       );
 
-  /// Get a building by id
-  /// required [buildingId] The id of the building
-  /// Returns the [Building] building
+  /// Retrieves a building by its ID.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch.
+  ///
+  /// Returns the building if found.
   _i2.Future<_i10.Building> getBuildingById(_i1.UuidValue buildingId) =>
       caller.callServerEndpoint<_i10.Building>(
         'building',
@@ -470,6 +555,13 @@ class EndpointBuilding extends _i1.EndpointRef {
         {'buildingId': buildingId},
       );
 
+  /// Updates a building's information and broadcasts changes.
+  /// Validates ownership before updating. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [building] Updated building data.
+  ///
+  /// Returns the updated building.
   _i2.Future<_i10.Building> updateBuilding(_i10.Building building) =>
       caller.callServerEndpoint<_i10.Building>(
         'building',
@@ -477,6 +569,12 @@ class EndpointBuilding extends _i1.EndpointRef {
         {'building': building},
       );
 
+  /// Streams real-time updates for a building's changes.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to watch.
+  ///
+  /// Returns a stream of building update events.
   _i2.Stream<_i10.Building> watchUpdateBuildings(
     _i1.UuidValue buildingId,
   ) => caller
@@ -497,10 +595,13 @@ class EndpointBuildingTables extends _i1.EndpointRef {
   @override
   String get name => 'buildingTables';
 
-  /// Get all tables for a building
-  /// required [buildingId] buildingId The id of the building
-  /// Returns a list of [BTable] tables
-  /// allow for all type of users (admin, employee, customer)
+  /// Fetches all tables for a building with current occupation status.
+  /// Checks for active orders to determine availability.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch tables from.
+  ///
+  /// Returns a list of tables with status (available/occupied).
   _i2.Future<List<_i11.BTable>> getTablesByBuildingId(
     _i1.UuidValue buildingId,
   ) => caller.callServerEndpoint<List<_i11.BTable>>(
@@ -509,12 +610,15 @@ class EndpointBuildingTables extends _i1.EndpointRef {
     {'buildingId': buildingId},
   );
 
-  /// Create multiple tables for a building
-  /// required [nbtables] number of tables to create
-  /// required [seatsMax] maximum number of seats per table
-  /// required [buildingId] buildingId The id of the building
-  /// Returns a list of created [BTable] tables
-  /// allow for admin users only
+  /// Creates multiple tables for a building with sequential numbering.
+  /// Continues numbering from existing table count. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [nbtables] Number of tables to create.
+  /// [seatsMax] Maximum seats per table.
+  /// [buildingId] ID of the building.
+  ///
+  /// Returns a list of newly created tables.
   _i2.Future<List<_i11.BTable>> createTables({
     required int nbtables,
     required int seatsMax,
@@ -537,6 +641,13 @@ class EndpointCashRegister extends _i1.EndpointRef {
   @override
   String get name => 'cashRegister';
 
+  /// Retrieves all cash registers for a building, ordered by start time.
+  /// Requires cash register management permission for employers.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch registers from.
+  ///
+  /// Returns a list of cash registers sorted by start time (descending).
   _i2.Future<List<_i12.CashRegister>> getCashRegisters(
     _i1.UuidValue buildingId,
   ) => caller.callServerEndpoint<List<_i12.CashRegister>>(
@@ -545,6 +656,14 @@ class EndpointCashRegister extends _i1.EndpointRef {
     {'buildingId': buildingId},
   );
 
+  /// Creates a new cash register session for the day.
+  /// Validates daily limit and ensures no other register is open. Employer only.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building.
+  /// [startAmount] Optional starting cash amount.
+  ///
+  /// Returns the newly created cash register.
   _i2.Future<_i12.CashRegister> createCashRegister(
     _i1.UuidValue buildingId,
     double? startAmount,
@@ -557,6 +676,14 @@ class EndpointCashRegister extends _i1.EndpointRef {
     },
   );
 
+  /// Closes the currently open cash register.
+  /// Validates all orders are paid before closing. Employer only.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building.
+  /// [endAmount] Optional ending cash amount.
+  ///
+  /// Returns the closed cash register with end time.
   _i2.Future<_i12.CashRegister> closeLastCashRegister(
     _i1.UuidValue buildingId,
     double? endAmount,
@@ -569,6 +696,12 @@ class EndpointCashRegister extends _i1.EndpointRef {
     },
   );
 
+  /// Streams real-time updates for cash registers in a building.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to watch.
+  ///
+  /// Returns a stream of cash register updates.
   _i2.Stream<_i12.CashRegister> watchCashRegisters(_i1.UuidValue buildingId) =>
       caller.callStreamingServerEndpoint<
         _i2.Stream<_i12.CashRegister>,
@@ -588,9 +721,12 @@ class EndpointCategorie extends _i1.EndpointRef {
   @override
   String get name => 'categorie';
 
-  /// Get all categories for a building
-  /// required [buildingId] buildingId The id of the building
-  /// Returns a list of [Categorie] categories
+  /// Fetches all categories belonging to a specific building.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch categories from.
+  ///
+  /// Returns a list of all categories for the building.
   _i2.Future<List<_i13.Categorie>> getCategories(_i1.UuidValue buildingId) =>
       caller.callServerEndpoint<List<_i13.Categorie>>(
         'categorie',
@@ -598,11 +734,14 @@ class EndpointCategorie extends _i1.EndpointRef {
         {'buildingId': buildingId},
       );
 
-  /// Get categorie by id
-  /// required [id] The id of the categorie
-  /// required [buildingId] The id of the building
-  /// (ensure that users can only access categories that belong to buildings they have access to.)
-  /// Returns the [Categorie] categorie
+  /// Retrieves a specific category by ID.
+  /// Validates that category belongs to the specified building.
+  ///
+  /// [session] Current user session.
+  /// [id] Category ID to fetch.
+  /// [buildingId] Building ID for access validation.
+  ///
+  /// Returns the category if found and belongs to building.
   _i2.Future<_i13.Categorie> getCategorieById(
     _i1.UuidValue id,
     _i1.UuidValue buildingId,
@@ -615,10 +754,13 @@ class EndpointCategorie extends _i1.EndpointRef {
     },
   );
 
-  /// Create new categorie
-  /// required [categorie] The categorie to create
-  /// Returns the created [Categorie] categorie
-  /// allow for owner users only
+  /// Creates a new category for a building.
+  /// Validates name uniqueness and building ownership. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [categorieDto] Category data including name and description.
+  ///
+  /// Returns the newly created category.
   _i2.Future<_i13.Categorie> createCategorie(
     _i14.CreateCategorieDto categorieDto,
   ) => caller.callServerEndpoint<_i13.Categorie>(
@@ -627,12 +769,15 @@ class EndpointCategorie extends _i1.EndpointRef {
     {'categorieDto': categorieDto},
   );
 
-  /// Update categorie
-  /// required [categorieDto] The categorie to update
-  /// required [id] The id of the categorie
-  /// required [buildingId] The id of the building
-  /// Returns the updated [Categorie] categorie
-  /// allow for owner users only
+  /// Updates an existing category's information.
+  /// Validates name uniqueness if changed. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [id] Category ID to update.
+  /// [buildingId] Building ID for access validation.
+  /// [categorieDto] Updated category data.
+  ///
+  /// Returns the updated category.
   _i2.Future<_i13.Categorie> updateCategorie(
     _i1.UuidValue id,
     _i1.UuidValue buildingId,
@@ -655,12 +800,13 @@ class EndpointEmployer extends _i1.EndpointRef {
   @override
   String get name => 'employer';
 
-  /// Create new employer account
-  /// required [userProfileData] The user profile data
-  /// required [password] The password for the account
-  /// required [buildingId] buildingId The id of the building
-  /// Returns the created [Employer] employer account
-  /// allow for iwner users only
+  /// Creates a new employer account with authentication credentials.
+  /// Validates email/phone uniqueness and requires building ownership. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [createEmployerDto] Employer data including credentials and building assignment.
+  ///
+  /// Returns the newly created employer account with profile.
   _i2.Future<_i9.Employer> createEmployerAccount(
     _i16.CreateEmployerDTO createEmployerDto,
   ) => caller.callServerEndpoint<_i9.Employer>(
@@ -669,10 +815,13 @@ class EndpointEmployer extends _i1.EndpointRef {
     {'createEmployerDto': createEmployerDto},
   );
 
-  /// Get employers by buildingId
-  /// Identifier can be a[buildingId]
-  /// Returns list of [Employer]
-  /// This enpoint need login and allowed only for owner
+  /// Retrieves all employers for a specific building.
+  /// Includes user profiles and access permissions. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch employers from.
+  ///
+  /// Returns a list of employers with profiles and access data.
   _i2.Future<List<_i9.Employer>> getEmployers(_i1.UuidValue buildingId) =>
       caller.callServerEndpoint<List<_i9.Employer>>(
         'employer',
@@ -680,10 +829,13 @@ class EndpointEmployer extends _i1.EndpointRef {
         {'buildingId': buildingId},
       );
 
-  /// Get employer by identifier
-  /// Identifier can be a[authId] or [UserProfileId]
-  /// Returns [Employer] if found else throws exception
-  /// This enpoint need login and allowed for all users
+  /// Fetches an employer by authUserId, userProfileId, or employerId.
+  /// Includes full profile, building, and access information.
+  ///
+  /// [session] Current user session.
+  /// [identifier] Auth ID, profile ID, or employer ID.
+  ///
+  /// Returns the employer with all related data.
   _i2.Future<_i9.Employer> getEmployerByIdentifier(_i1.UuidValue identifier) =>
       caller.callServerEndpoint<_i9.Employer>(
         'employer',
@@ -691,6 +843,13 @@ class EndpointEmployer extends _i1.EndpointRef {
         {'identifier': identifier},
       );
 
+  /// Assigns or updates access permissions for an employer.
+  ///
+  /// [session] Current user session.
+  /// [employerId] ID of the employer to update.
+  /// [accessId] ID of the access configuration to assign.
+  ///
+  /// Returns the updated employer with new access settings.
   _i2.Future<_i9.Employer> assignAccessToEmployer(
     _i1.UuidValue employerId,
     _i1.UuidValue accessId,
@@ -703,6 +862,13 @@ class EndpointEmployer extends _i1.EndpointRef {
     },
   );
 
+  /// Blocks or unblocks an employer account and revokes all tokens.
+  ///
+  /// [session] Current user session.
+  /// [identifier] Auth ID, profile ID, or employer ID.
+  /// [isBlocked] True to block, false to unblock.
+  ///
+  /// Returns success status.
   _i2.Future<bool> blockEmployer(
     _i1.UuidValue identifier,
     bool isBlocked,
@@ -723,9 +889,12 @@ class EndpointIngredient extends _i1.EndpointRef {
   @override
   String get name => 'ingredient';
 
-  /// Get Ingredients by building id
-  /// required [buildingId] buildingId The id of the building
-  /// Returns a list of [Ingredient] ingredients
+  /// Fetches all ingredients for a specific building.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch ingredients from.
+  ///
+  /// Returns a list of all ingredients in the building.
   _i2.Future<List<_i17.Ingredient>> getIngredientsByBuildingId(
     _i1.UuidValue buildingId,
   ) => caller.callServerEndpoint<List<_i17.Ingredient>>(
@@ -734,10 +903,13 @@ class EndpointIngredient extends _i1.EndpointRef {
     {'buildingId': buildingId},
   );
 
-  /// Create new ingredient
-  /// required [ingredient] The ingredient to create
-  /// Returns the created [Ingredient] ingredient
-  /// allow for owner users only
+  /// Creates a new ingredient for a building.
+  /// Validates stock levels and name uniqueness. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [ingredient] Ingredient data including stock levels.
+  ///
+  /// Returns the newly created ingredient.
   _i2.Future<_i17.Ingredient> createIngredient(_i17.Ingredient ingredient) =>
       caller.callServerEndpoint<_i17.Ingredient>(
         'ingredient',
@@ -745,6 +917,14 @@ class EndpointIngredient extends _i1.EndpointRef {
         {'ingredient': ingredient},
       );
 
+  /// Retrieves a specific ingredient by ID.
+  /// Validates that ingredient belongs to the specified building.
+  ///
+  /// [session] Current user session.
+  /// [id] Ingredient ID to fetch.
+  /// [buildingId] Building ID for access validation.
+  ///
+  /// Returns the ingredient if found and belongs to building.
   _i2.Future<_i17.Ingredient> getIngredintById(
     _i1.UuidValue id,
     _i1.UuidValue buildingId,
@@ -765,13 +945,15 @@ class EndpointOrder extends _i1.EndpointRef {
   @override
   String get name => 'order';
 
-  /// Get all orders for a building
-  /// Parameters:
-  /// - [buildingId]: The id of the building
-  /// - [orderStatus]: The status of the orders to filter by (optional)
-  /// Returns:
-  /// - A list of orders for the building
-  /// Only owner and employers are allowed for this endpoint
+  /// Fetches all orders for a building with optional filters.
+  /// Employers see only their orders unless they have consultAllOrders permission.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch orders from.
+  /// [orderStatus] Optional status filter (payed, inprogress, etc.).
+  /// [cashRegisterId] Optional cash register filter.
+  ///
+  /// Returns a list of orders with items and related data.
   _i2.Future<List<_i18.Order>> getOrdersByBuilingId(
     _i1.UuidValue buildingId, [
     _i19.OrderStatus? orderStatus,
@@ -786,11 +968,13 @@ class EndpointOrder extends _i1.EndpointRef {
     },
   );
 
-  /// Get order by id
-  /// Parameters:
-  /// - [id]: The id of the order
-  /// Returns:
-  /// - The order with the given id
+  /// Retrieves a single order with all details.
+  /// Includes items, table info, and user profiles for who created/closed it.
+  ///
+  /// [session] Current user session.
+  /// [id] Order ID to fetch.
+  ///
+  /// Returns the order with all related data.
   _i2.Future<_i18.Order> getOrderById(_i1.UuidValue id) =>
       caller.callServerEndpoint<_i18.Order>(
         'order',
@@ -798,13 +982,13 @@ class EndpointOrder extends _i1.EndpointRef {
         {'id': id},
       );
 
-  /// Create a new order
-  /// Parameters:
-  /// - [order]: The order to be created
-  /// Returns:
-  /// - The created order
-  /// Only employer allowed for this endpoint
-  /// Employer should have access to order creation
+  /// Creates a new order with articles for a table.
+  /// Validates table availability, employer permissions, and article existence. Employer only.
+  ///
+  /// [session] Current user session.
+  /// [orderDto] Order data including table, building, and article IDs.
+  ///
+  /// Returns the newly created order with items.
   _i2.Future<_i18.Order> createOrder(_i20.CreateOrderDto orderDto) =>
       caller.callServerEndpoint<_i18.Order>(
         'order',
@@ -812,6 +996,12 @@ class EndpointOrder extends _i1.EndpointRef {
         {'orderDto': orderDto},
       );
 
+  /// Retrieves the current in-progress order for a specific table.
+  ///
+  /// [session] Current user session.
+  /// [tableId] ID of the table to check.
+  ///
+  /// Returns the current order for the table or null if table has no active order.
   _i2.Future<_i18.Order?> getOrderCurrOfTable(_i1.UuidValue tableId) =>
       caller.callServerEndpoint<_i18.Order?>(
         'order',
@@ -819,6 +1009,13 @@ class EndpointOrder extends _i1.EndpointRef {
         {'tableId': tableId},
       );
 
+  /// Fetches all orders (past and present) for a specific table.
+  ///
+  /// [session] Current user session.
+  /// [tableId] ID of the table.
+  /// [orderStatus] Optional status filter.
+  ///
+  /// Returns a list of orders for the table.
   _i2.Future<List<_i18.Order>> getOrdersOfTable(
     _i1.UuidValue tableId,
     _i19.OrderStatus? orderStatus,
@@ -839,13 +1036,13 @@ class EndpointOrderItem extends _i1.EndpointRef {
   @override
   String get name => 'orderItem';
 
-  /// Append items to an existing order
-  /// Parameters:
-  /// - [orderId]: The id of the order to append items to
-  /// - [orderItems]: The list of items to append to the order
-  /// Returns:
-  /// - The updated order with the appended items
-  /// Employer should have access to append items
+  /// Appends new items to an existing unpaid order.
+  /// Validates building configuration, employer permissions, and article existence.
+  ///
+  /// [session] Current user session.
+  /// [appendItemDto] Order ID, building ID, and new item IDs to append.
+  ///
+  /// Returns the updated order with all items.
   _i2.Future<_i18.Order> appendItemsToOrder(
     _i21.AppendItemsDto appendItemDto,
   ) => caller.callServerEndpoint<_i18.Order>(
@@ -854,13 +1051,15 @@ class EndpointOrderItem extends _i1.EndpointRef {
     {'appendItemDto': appendItemDto},
   );
 
-  /// Change status of order items
-  /// items status should have this workflow (progress -> picked -> ready -> delivered)
-  /// Parameters:
-  /// - [orderItemIds]: List of order item IDs to be updated
-  /// - [newStatus]: The new status to be set for the order items
-  /// Returns:
-  /// - A list of updated OrderItem objects
+  /// Changes status of order items following workflow: progress → picked → ready → served.
+  /// Enforces strict mode workflow if enabled. Requires appropriate access.
+  ///
+  /// [session] Current user session.
+  /// [orderItemIds] List of item IDs to update.
+  /// [newStatus] New status to set (picked, ready, served).
+  /// [buildingId] Building ID for validation.
+  ///
+  /// Returns a list of updated order items.
   _i2.Future<List<_i22.OrderItem>> changeOrderItemsStatus(
     List<_i1.UuidValue> orderItemIds,
     _i23.OrderItemStatus newStatus,
@@ -875,6 +1074,15 @@ class EndpointOrderItem extends _i1.EndpointRef {
     },
   );
 
+  /// Marks specific order items as paid.
+  /// In strict mode, items must be served before payment.
+  ///
+  /// [session] Current user session.
+  /// [orderId] Order containing the items.
+  /// [orderItemPayedIds] List of item IDs to mark as paid.
+  /// [buildingId] Building ID for validation.
+  ///
+  /// Returns a list of paid order items.
   _i2.Future<List<_i22.OrderItem>> payOrderItem(
     _i1.UuidValue orderId,
     List<_i1.UuidValue> orderItemPayedIds,
@@ -889,6 +1097,14 @@ class EndpointOrderItem extends _i1.EndpointRef {
     },
   );
 
+  /// Pays all items in an order at once and marks order as complete.
+  /// In strict mode, all items must be served before payment.
+  ///
+  /// [session] Current user session.
+  /// [orderId] ID of the order to pay.
+  /// [buildingId] Building ID for validation.
+  ///
+  /// Returns the completed and paid order.
   _i2.Future<_i18.Order> payAllItems(
     _i1.UuidValue orderId,
     _i1.UuidValue buildingId,

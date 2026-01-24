@@ -1,8 +1,7 @@
-import 'package:pos_server/src/buildings/building_endpoint.dart';
 import 'package:pos_server/src/cateogrie/categorie_endpoint.dart';
-import 'package:serverpod_auth_idp_server/core.dart';
 
 import '../helpers/session_extensions.dart';
+import '../helpers/endpoint_helpers.dart';
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
@@ -12,10 +11,13 @@ class ArticleEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  /// Get Articles by building id
-  /// required [buildingId] buildingId The id of the building
-  /// optional [categoryId] The id of the category
-  /// Returns a list of [Article] articles
+  /// Retrieves all articles for a specific building, optionally filtered by category.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building to fetch articles from.
+  /// [categoryId] Optional category ID to filter articles.
+  ///
+  /// Returns a list of articles with category information included.
   Future<List<Article>> getArticlesByBuildingId(
     Session session,
     UuidValue buildingId, {
@@ -27,52 +29,50 @@ class ArticleEndpoint extends Endpoint {
         categorie: Categorie.include(),
       ),
       where: (a) {
-        final base = a.categorie.buildingId.equals(buildingId);
+        var condition = a.categorie.buildingId.equals(buildingId);
         if (categoryId != null) {
-          return base & a.categorieId.equals(categoryId);
+          condition = condition & a.categorieId.equals(categoryId);
         }
-        return a.categorie.buildingId.equals(buildingId);
+        return condition;
       },
     );
   }
 
-  /// Create new article
-  /// required [articleDto] The article to create
-  /// Returns the created [Article] article
-  /// allow for admin users only
+  /// Creates a new article with validated ingredients and category.
+  /// Requires owner authorization and verifies building ownership.
+  ///
+  /// [session] Current user session.
+  /// [articleDto] Article data including name, price, category, and composition.
+  ///
+  /// Returns the newly created article with compositions attached.
   Future<Article> createArticle(
     Session session,
     CreateArticleDto articleDto,
   ) async {
     session.authorizedTo(['owner']);
 
-    /// Verify that the building belongs to the authenticated user
-    final building = await BuildingEndpoint().getBuildingById(
+    // Validate building access and ownership
+    final building = await EndpointHelpers.verifyBuildingAccess(
       session,
       articleDto.buildingId,
+      checkOwnership: true,
     );
-    if (building.authUserId != session.authenticated!.authUserId) {
-      throw AppException(
-        errorType: ExceptionType.Unauthorized,
-        message: 'You are not authorized to add articles to this building',
-      );
-    }
 
-    /// Verify that the category exists and belongs to the building
+    // Ensure category exists and belongs to building
     final categorie = await CategorieEndpoint().getCategorieById(
       session,
       articleDto.categoryId,
       building.id,
     );
 
-    /// Verify that the article name does not already exist in the building
-    await _checkArticleNameExist(
+    // Check article name uniqueness within building
+    await EndpointHelpers.checkArticleNameExists(
       session,
       articleDto.name,
-      articleDto.buildingId,
+      building.id,
     );
 
-    /// Verify that all ingredients in the composition exist and belong to the building
+    // Validate all ingredients exist and belong to building
     List<ArticleComposition> compositions = <ArticleComposition>[];
     for (ArticleComposition compo in articleDto.composition) {
       await IngredientEndpoint().getIngredintById(
@@ -87,7 +87,7 @@ class ArticleEndpoint extends Endpoint {
       compositions.add(articleComposition);
     }
 
-    ///after verifing existing ,  Create the article
+    // Create article with validated data
     Article newArticle = Article(
       name: articleDto.name,
       description: articleDto.description,
@@ -100,17 +100,16 @@ class ArticleEndpoint extends Endpoint {
       newArticle,
     );
 
-    /// Create the article compositions
+    // Link ingredients to article
     await ArticleComposition.db.insert(
       session,
       compositions.map((e) {
-        /// set the article id
         e.articleId = newArticle.id;
         return e;
       }).toList(),
     );
 
-    /// Attach compositions to the article
+    // Attach and return complete article with compositions
     await Article.db.attach.composition(
       session,
       newArticle,
@@ -120,28 +119,14 @@ class ArticleEndpoint extends Endpoint {
     return newArticle;
   }
 
-  @doNotGenerate
-  Future<void> _checkArticleNameExist(
-    Session session,
-    String name,
-    UuidValue buildingId,
-  ) async {
-    final existe = await Article.db.findFirstRow(
-      session,
-      where: (a) =>
-          a.name.ilike(name) & a.categorie.buildingId.equals(buildingId),
-    );
-    if (existe != null) {
-      throw AppException(
-        errorType: ExceptionType.Conflict,
-        message: 'Article with name $name already exists',
-      );
-    }
-  }
-
-  /// Get article by id
-  /// required [articleId] The id of the article
-  /// Returns the [Article] article
+  /// Retrieves a single article by ID with full details.
+  /// Includes category and ingredient composition information.
+  ///
+  /// [session] Current user session.
+  /// [id] Article ID to fetch.
+  /// [buildingId] Building ID for access validation.
+  ///
+  /// Returns the article with all related data included.
   Future<Article> getArticleById(
     Session session,
     UuidValue id,
@@ -168,12 +153,15 @@ class ArticleEndpoint extends Endpoint {
     return article;
   }
 
-  /// Update article
-  /// required [articleDto] The article to update
-  /// required [id] The id of the article
-  /// required [buildingId] The id of the building
-  /// Returns the updated [Article] article
-  /// allow for owner users only
+  /// Updates an existing article's information.
+  /// Validates name uniqueness if changed. Requires owner authorization.
+  ///
+  /// [session] Current user session.
+  /// [id] Article ID to update.
+  /// [buildingId] Building ID for access validation.
+  /// [articleDto] Updated article data.
+  ///
+  /// Returns the updated article.
   Future<Article> updateArticle(
     Session session,
     UuidValue id,
@@ -181,23 +169,26 @@ class ArticleEndpoint extends Endpoint {
     UpdateArticleDto articleDto,
   ) async {
     session.authorizedTo(['owner']);
-    final building = await BuildingEndpoint().getBuildingById(
+    // Get existing article (already verifies buildingId match)
+    final existingArticle = await getArticleById(session, id, buildingId);
+    // Verify building ownership
+    await EndpointHelpers.verifyBuildingAccess(
       session,
       buildingId,
+      checkOwnership: true,
     );
-    final existingArticle = await getArticleById(session, id, building.id);
     if (existingArticle.name != articleDto.name) {
-      await _checkArticleNameExist(
+      await EndpointHelpers.checkArticleNameExists(
         session,
         articleDto.name,
-        building.id,
+        buildingId,
       );
     }
     if (existingArticle.categorieId != articleDto.categoryId) {
       final categorie = await CategorieEndpoint().getCategorieById(
         session,
         articleDto.categoryId,
-        building.id,
+        buildingId,
       );
       existingArticle.categorie = categorie;
       existingArticle.categorieId = categorie.id;

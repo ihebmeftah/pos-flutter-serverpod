@@ -49,8 +49,8 @@ class AppSnackbar {
   static void info(
     String message,
   ) => ElegantNotification.info(
-    icon: Icon(Icons.info, color: Colors.green.shade100),
-    background: Colors.green.shade600,
+    icon: Icon(Icons.info, color: Colors.blue.shade100),
+    background: Colors.blue.shade600,
     showProgressIndicator: false,
     animation: AnimationType.fromRight,
     title: const Text(

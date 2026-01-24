@@ -7,11 +7,25 @@ class AccessEndpoint extends Endpoint {
   @override
   Set<Scope> get requiredScopes => {Scope("owner")};
 
+  /// Creates a new access role for a building.
+  /// Validates name uniqueness within the building. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [access] Access configuration to create.
+  ///
+  /// Returns the newly created access role.
   Future<Access> createAccess(Session session, Access access) async {
     await checkAccessNameExist(session, access.name, access.buildingId);
     return await Access.db.insertRow(session, access);
   }
 
+  /// Updates an existing access role's permissions.
+  /// Validates name uniqueness if name changed. Owner only.
+  ///
+  /// [session] Current user session.
+  /// [access] Updated access configuration.
+  ///
+  /// Returns the updated access role.
   Future<Access> updateAccess(Session session, Access access) async {
     final oldAccess = await getAccessById(session, access.id);
     if (oldAccess.name != access.name) {
@@ -58,6 +72,12 @@ class AccessEndpoint extends Endpoint {
     }
   }
 
+  /// Retrieves all access roles configured for a building.
+  ///
+  /// [session] Current user session.
+  /// [buildingId] ID of the building.
+  ///
+  /// Returns a list of access roles for the building.
   Future<List<Access>> getAccessesByBuildingId(
     Session session,
     UuidValue buildingId,
@@ -68,6 +88,12 @@ class AccessEndpoint extends Endpoint {
     );
   }
 
+  /// Fetches a specific access role by ID.
+  ///
+  /// [session] Current user session.
+  /// [accessId] ID of the access role to fetch.
+  ///
+  /// Returns the access role if found.
   Future<Access> getAccessById(Session session, UuidValue accessId) async {
     final access = await Access.db.findById(
       session,
@@ -82,6 +108,12 @@ class AccessEndpoint extends Endpoint {
     return access;
   }
 
+  /// Deletes an access role from a building.
+  ///
+  /// [session] Current user session.
+  /// [accessId] ID of the access role to delete.
+  ///
+  /// Returns the deleted access role.
   Future<Access> deleteAccess(Session session, UuidValue accessId) async {
     final access = await getAccessById(
       session,

@@ -1,36 +1,38 @@
-import 'package:pos_server/src/employer/employer_endpoint.dart';
 import 'package:pos_server/src/generated/protocol.dart';
 import '../article/article_endpoint.dart';
 import '../helpers/session_extensions.dart';
+import '../helpers/endpoint_helpers.dart';
 import 'package:pos_server/src/order/order_endpoint.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import 'package:serverpod_auth_idp_server/core.dart';
-
-import '../buildings/building_endpoint.dart';
 
 class OrderItemEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  /// Append items to an existing order
-  /// Parameters:
-  /// - [orderId]: The id of the order to append items to
-  /// - [orderItems]: The list of items to append to the order
-  /// Returns:
-  /// - The updated order with the appended items
-  /// Employer should have access to append items
+  /// Appends new items to an existing unpaid order.
+  /// Validates building configuration, employer permissions, and article existence.
+  ///
+  /// [session] Current user session.
+  /// [appendItemDto] Order ID, building ID, and new item IDs to append.
+  ///
+  /// Returns the updated order with all items.
   Future<Order> appendItemsToOrder(
     Session session,
     AppendItemsDto appendItemDto,
   ) async {
-    // Only employer allowed for this endpoint
     session.authorizedTo(['employer']);
 
-    /// Check if table allows appending items to order
-    final building = await BuildingEndpoint().getBuildingById(
+    // Fetch employer with preloaded building and access data
+    final employer = await EndpointHelpers.getEmployerByAuthUserId(
       session,
-      appendItemDto.buildingId,
+      session.authenticated!.authUserId,
     );
+    // Ensure employer belongs to the target building
+    EndpointHelpers.verifyEmployerBuilding(employer, appendItemDto.buildingId);
+    final building = employer.building!;
+
+    // Validate building allows appending items
     if (building.allowAppendingItemsToOrder == false) {
       throw AppException(
         errorType: ExceptionType.Forbidden,
@@ -38,19 +40,14 @@ class OrderItemEndpoint extends Endpoint {
       );
     }
 
-    /// Employer should have access to append items
-    final employer = await EmployerEndpoint().getEmployerByIdentifier(
-      session,
-      session.authenticated!.authUserId,
+    // Verify employer has permission to append items
+    EndpointHelpers.verifyEmployerAccess(
+      employer,
+      (access) => access.appendItems,
+      'append items to orders',
     );
-    if (employer.access == null || employer.access?.appendItems == false) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to append items to orders',
-      );
-    }
 
-    /// Must provide at least one new item to append
+    // Validate at least one item is provided
     if (appendItemDto.itemIds.isEmpty) {
       throw AppException(
         errorType: ExceptionType.BadRequest,
@@ -58,7 +55,7 @@ class OrderItemEndpoint extends Endpoint {
       );
     }
 
-    /// Get the order by id
+    // Fetch order and verify it's not already paid
     Order order = await OrderEndpoint().getOrderById(
       session,
       appendItemDto.orderId,
@@ -69,7 +66,7 @@ class OrderItemEndpoint extends Endpoint {
         message: 'Cannot append items to a paid order',
       );
     }
-    // Check if articles exist and belong to the building
+    // Validate articles exist and create order items
     final orderItem = <OrderItem>[];
     for (final articleId in appendItemDto.itemIds) {
       final existArticle = await ArticleEndpoint().getArticleById(
@@ -87,16 +84,14 @@ class OrderItemEndpoint extends Endpoint {
       );
     }
 
-    /// Insert new items to the database
+    // Persist new order items to database
     final newOrderItems = await OrderItem.db.insert(
       session,
       orderItem,
     );
 
-    /// Attach new items to the order
+    // Link items to order and update timestamp
     await Order.db.attach.items(session, order, newOrderItems);
-
-    /// Update the order's updatedAt field
     order.updatedAt = DateTime.now();
     final orderUpdated = await Order.db.updateRow(
       session,
@@ -106,13 +101,15 @@ class OrderItemEndpoint extends Endpoint {
     return orderUpdated;
   }
 
-  /// Change status of order items
-  /// items status should have this workflow (progress -> picked -> ready -> delivered)
-  /// Parameters:
-  /// - [orderItemIds]: List of order item IDs to be updated
-  /// - [newStatus]: The new status to be set for the order items
-  /// Returns:
-  /// - A list of updated OrderItem objects
+  /// Changes status of order items following workflow: progress → picked → ready → served.
+  /// Enforces strict mode workflow if enabled. Requires appropriate access.
+  ///
+  /// [session] Current user session.
+  /// [orderItemIds] List of item IDs to update.
+  /// [newStatus] New status to set (picked, ready, served).
+  /// [buildingId] Building ID for validation.
+  ///
+  /// Returns a list of updated order items.
   Future<List<OrderItem>> changeOrderItemsStatus(
     Session session,
     List<UuidValue> orderItemIds,
@@ -121,25 +118,28 @@ class OrderItemEndpoint extends Endpoint {
   ) async {
     session.authorizedTo(['employer']);
 
-    // Check if employer has access to change the status
-    final employer = await EmployerEndpoint().getEmployerByIdentifier(
+    // Get employer with building included
+    final employer = await EndpointHelpers.getEmployerByAuthUserId(
       session,
       session.authenticated!.authUserId,
     );
+    // Verify employer belongs to this building
+    EndpointHelpers.verifyEmployerBuilding(employer, buildingId);
+    final building = employer.building!;
+
+    // Check if employer has access to change the status
     if (newStatus case OrderItemStatus.ready || OrderItemStatus.picked) {
-      if (employer.access == null || employer.access?.preparation == false) {
-        throw AppException(
-          errorType: ExceptionType.Forbidden,
-          message: 'You are not authorized to change items status',
-        );
-      }
+      EndpointHelpers.verifyEmployerAccess(
+        employer,
+        (access) => access.preparation,
+        'change items status',
+      );
     } else {
-      if (employer.access == null || employer.access?.serveOrder == false) {
-        throw AppException(
-          errorType: ExceptionType.Forbidden,
-          message: 'You are not authorized to change items status',
-        );
-      }
+      EndpointHelpers.verifyEmployerAccess(
+        employer,
+        (access) => access.serveOrder,
+        'change items status',
+      );
     }
 
     // Fetch order items and update their status
@@ -147,39 +147,13 @@ class OrderItemEndpoint extends Endpoint {
       session,
       where: (val) => val.id.inSet(orderItemIds.toSet()),
     );
-    final Building building = await BuildingEndpoint().getBuildingById(
-      session,
-      buildingId,
-    );
     for (OrderItem item in orderItems) {
       if (item.itemStatus != newStatus) {
-        if (building.strictMode) {
-          // Enforce status workflow in strict mode
-          if (newStatus == OrderItemStatus.picked &&
-              item.itemStatus != OrderItemStatus.progress) {
-            throw AppException(
-              errorType: ExceptionType.Forbidden,
-              message:
-                  'Item ${item.article.name} must be in progress status before picking in strict mode',
-            );
-          }
-          if (newStatus == OrderItemStatus.ready &&
-              item.itemStatus != OrderItemStatus.picked) {
-            throw AppException(
-              errorType: ExceptionType.Forbidden,
-              message:
-                  'Item ${item.article.name} must be picked before marking as ready in strict mode',
-            );
-          }
-          if (newStatus == OrderItemStatus.served &&
-              item.itemStatus != OrderItemStatus.ready) {
-            throw AppException(
-              errorType: ExceptionType.Forbidden,
-              message:
-                  'Item ${item.article.name} must be ready before delivering in strict mode',
-            );
-          }
-        }
+        EndpointHelpers.verifyStrictModeWorkflow(
+          building,
+          item,
+          newStatus,
+        );
         item.itemStatus = newStatus;
         item.updatedAt = DateTime.now();
       }
@@ -196,6 +170,15 @@ class OrderItemEndpoint extends Endpoint {
     );
   }
 
+  /// Marks specific order items as paid.
+  /// In strict mode, items must be served before payment.
+  ///
+  /// [session] Current user session.
+  /// [orderId] Order containing the items.
+  /// [orderItemPayedIds] List of item IDs to mark as paid.
+  /// [buildingId] Building ID for validation.
+  ///
+  /// Returns a list of paid order items.
   Future<List<OrderItem>> payOrderItem(
     Session session,
     UuidValue orderId,
@@ -205,24 +188,22 @@ class OrderItemEndpoint extends Endpoint {
     // verify employer access
     session.authorizedTo(['employer']);
 
-    final employer = await EmployerEndpoint().getEmployerByIdentifier(
+    final employer = await EndpointHelpers.getEmployerByAuthUserId(
       session,
       session.authenticated!.authUserId,
     );
-    if (employer.access == null ||
-        employer.access?.orderItemsPayment == false) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to get the payment of the items',
-      );
-    }
+    // Verify employer belongs to this building
+    EndpointHelpers.verifyEmployerBuilding(employer, buildingId);
+    final building = employer.building!;
+
+    EndpointHelpers.verifyEmployerAccess(
+      employer,
+      (access) => access.orderItemsPayment,
+      'get the payment of the items',
+    );
 
     // mark items as payed
     final order = await OrderEndpoint().getOrderById(session, orderId);
-    final Building building = await BuildingEndpoint().getBuildingById(
-      session,
-      buildingId,
-    );
     for (var item in order.items!) {
       if (orderItemPayedIds.contains(item.id)) {
         if (building.strictMode) {
@@ -263,6 +244,14 @@ class OrderItemEndpoint extends Endpoint {
     return updatedItems;
   }
 
+  /// Pays all items in an order at once and marks order as complete.
+  /// In strict mode, all items must be served before payment.
+  ///
+  /// [session] Current user session.
+  /// [orderId] ID of the order to pay.
+  /// [buildingId] Building ID for validation.
+  ///
+  /// Returns the completed and paid order.
   Future<Order> payAllItems(
     Session session,
     UuidValue orderId,
@@ -271,24 +260,22 @@ class OrderItemEndpoint extends Endpoint {
     // verify employer access
     session.authorizedTo(['employer']);
 
-    final employer = await EmployerEndpoint().getEmployerByIdentifier(
+    final employer = await EndpointHelpers.getEmployerByAuthUserId(
       session,
       session.authenticated!.authUserId,
     );
-    if (employer.access == null ||
-        employer.access?.orderItemsPayment == false) {
-      throw AppException(
-        errorType: ExceptionType.Forbidden,
-        message: 'You don\'t have access to get the payment of the order',
-      );
-    }
+    // Verify employer belongs to this building
+    EndpointHelpers.verifyEmployerBuilding(employer, buildingId);
+    final building = employer.building!;
+
+    EndpointHelpers.verifyEmployerAccess(
+      employer,
+      (access) => access.orderItemsPayment,
+      'get the payment of the order',
+    );
 
     // mark all items as payed
     final order = await OrderEndpoint().getOrderById(session, orderId);
-    final Building building = await BuildingEndpoint().getBuildingById(
-      session,
-      buildingId,
-    );
     if (building.strictMode) {
       if (order.items!.any(
         (item) => item.itemStatus != OrderItemStatus.served,
