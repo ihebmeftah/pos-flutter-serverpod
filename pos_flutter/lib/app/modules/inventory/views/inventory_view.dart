@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/modules/dashboard/controllers/dashboard_controller.dart';
 
 import '../../../components/appemptyscreen.dart';
 import '../../../routes/app_pages.dart';
-import '../../home/controllers/home_controller.dart';
 import '../controllers/inventory_controller.dart';
 
 class InventoryView extends GetView<InventoryController> {
@@ -100,7 +100,7 @@ class InventoryView extends GetView<InventoryController> {
             ),
             SizedBox(
               height: 40,
-              child: GetBuilder<HomeController>(
+              child: GetBuilder<DashboardController>(
                 builder: (ctr) {
                   return ListView.separated(
                     scrollDirection: Axis.horizontal,
@@ -150,7 +150,7 @@ class InventoryView extends GetView<InventoryController> {
               ],
             ),
             Expanded(
-              child: GetBuilder<HomeController>(
+              child: GetBuilder<DashboardController>(
                 builder: (ctr) {
                   return ctr.stats!.mostPopularArticles.isEmpty
                       ? Appemptyscreen()

@@ -11,7 +11,6 @@ abstract class Routes {
   static const LOGIN = _Paths.AUTHENTIFICATION + _Paths.LOGIN;
   static const BUILDINGS = _Paths.BUILDINGS;
   static const FORM_BUILDING = _Paths.FORM_BUILDING;
-  static const INDEX = _Paths.INDEX;
   static const ORDER = _Paths.ORDER;
   static const TABLES = _Paths.TABLES;
   static const PASS_ORDER = _Paths.ORDER + _Paths.PASS_ORDER;
@@ -32,6 +31,7 @@ abstract class Routes {
   static const INGREDIENT = _Paths.INGREDIENT;
   static const INGREDIENT_FORM = _Paths.INGREDIENT_FORM;
   static const CASH_REGISTER = _Paths.CASH_REGISTER;
+  static const DASHBOARD = _Paths.DASHBOARD;
 }
 
 abstract class _Paths {
@@ -42,7 +42,6 @@ abstract class _Paths {
   static const LOGIN = '/login';
   static const BUILDINGS = '/buildings';
   static const FORM_BUILDING = '/form-building';
-  static const INDEX = '/index';
   static const ORDER = '/order';
   static const TABLES = '/tables';
   static const PASS_ORDER = '/pass-order';
@@ -62,4 +61,5 @@ abstract class _Paths {
   static const INGREDIENT = '/ingredient';
   static const INGREDIENT_FORM = '/ingredient-form';
   static const CASH_REGISTER = '/cash-register';
+  static const DASHBOARD = '/dashboard';
 }

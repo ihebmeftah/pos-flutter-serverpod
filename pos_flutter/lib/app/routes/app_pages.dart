@@ -25,6 +25,8 @@ import '../modules/categorie/bindings/categorie_binding.dart';
 import '../modules/categorie/bindings/categorie_form_binding.dart';
 import '../modules/categorie/views/categorie_form_view.dart';
 import '../modules/categorie/views/categorie_view.dart';
+import '../modules/dashboard/bindings/dashboard_binding.dart';
+import '../modules/dashboard/views/dashboard_view.dart';
 import '../modules/employer/bindings/employer_binding.dart';
 import '../modules/employer/bindings/employer_details_binding.dart';
 import '../modules/employer/bindings/form_employer_binding.dart';
@@ -33,8 +35,6 @@ import '../modules/employer/views/employer_view.dart';
 import '../modules/employer/views/form_employer_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
-import '../modules/index/bindings/index_binding.dart';
-import '../modules/index/views/index_view.dart';
 import '../modules/ingredient/bindings/ingredient_binding.dart';
 import '../modules/ingredient/bindings/ingredient_form_binding.dart';
 import '../modules/ingredient/views/ingredient_form_view.dart';
@@ -101,7 +101,6 @@ class AppPages {
         ),
       ],
     ),
-
     GetPage(
       name: _Paths.CASH_REGISTER,
       page: () => const CashRegisterView(),
@@ -111,10 +110,10 @@ class AppPages {
 
   static final adminRoutes = [
     GetPage(
-      name: _Paths.INDEX,
-      page: () => const IndexView(),
+      name: _Paths.HOME,
+      page: () => const HomeView(),
       bindings: [
-        IndexBinding(),
+        DashboardBinding(),
         InventoryBinding(),
         HomeBinding(),
         TablesBinding(),
@@ -122,9 +121,9 @@ class AppPages {
       ],
     ),
     GetPage(
-      name: _Paths.HOME,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
+      name: _Paths.DASHBOARD,
+      page: () => const DashboardView(),
+      binding: DashboardBinding(),
     ),
     GetPage(
       name: _Paths.BUILDINGS,
@@ -212,10 +211,11 @@ class AppPages {
 
   static final employerRoutes = [
     GetPage(
-      name: _Paths.INDEX,
-      page: () => const IndexView(),
+      name: _Paths.HOME,
+      page: () => const HomeView(),
       bindings: [
-        IndexBinding(),
+        DashboardBinding(),
+        HomeBinding(),
         TablesBinding(),
         OrderBinding(),
       ],

@@ -1,415 +1,312 @@
-import 'package:fl_chart/fl_chart.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:pos_flutter/app/modules/dashboard/views/dashboard_view.dart';
+import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
+import '../../../../config/serverpod_client.dart';
+import '../../../data/local/local_storage.dart';
 import '../../../routes/app_pages.dart';
-import '../../../themes/apptheme.dart';
-import '../controllers/home_controller.dart';
-import '../widget/empty_stats_widget.dart';
-import '../widget/stats_card_widget.dart';
-import '../widget/top_item_widget.dart';
+import '../../home/controllers/home_controller.dart';
+import '../../inventory/views/inventory_view.dart';
+import '../../order/views/order_view.dart';
+import '../../tables/views/tables_view.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /*   floatingActionButton:
+          (controller.currentUserAccess?.orderCreation ?? true) &&
+              controller.scope.contains(
+                "employer",
+              )
+          ? FloatingActionButton(
+              onPressed: () => Get.toNamed(Routes.PASS_ORDER),
+              child: GetBuilder<PassOrderController>(
+                id: "table",
+                builder: (passOrderCtr) {
+                  return Badge(
+                    isLabelVisible: passOrderCtr.table != null,
+                    label: Text("!", style: TextStyle(color: Colors.white)),
+                    child: SvgPicture.asset(
+                      "assets/images/svg/order.svg",
+                      colorFilter: ColorFilter.mode(
+                        controller.currBnb == 1
+                            ? Theme.of(
+                                context,
+                              ).bottomNavigationBarTheme.selectedItemColor!
+                            : Theme.of(
+                                context,
+                              ).bottomNavigationBarTheme.unselectedItemColor!,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          : null, */
+      drawer: GetBuilder<HomeController>(
+        builder: (ctr) {
+          return controller.status.isLoading
+              ? SizedBox()
+              : Drawer(
+                  child: Column(
+                    children: [
+                      UserAccountsDrawerHeader(
+                        currentAccountPicture: CircleAvatar(),
+                        accountName: controller.userProfile.fullName != null
+                            ? Text('${controller.userProfile.fullName}')
+                            : null,
+                        accountEmail: Text('${controller.userProfile.email}'),
+                      ),
+                      if (!controller.scope.contains(
+                        "employer",
+                      ))
+                        ListTile(
+                          leading: Icon(Icons.place),
+                          title: Text('Buildings'),
+                          subtitle: Text(
+                            'Current : ${LocalStorage().building?.name ?? "None"}',
+                          ),
+                          onTap: () => Get.offAllNamed(Routes.BUILDINGS),
+                        ),
+                      if (!controller.scope.contains(
+                        "employer",
+                      ))
+                        ListTile(
+                          leading: Icon(Icons.edit_location),
+                          title: Text(
+                            'Edit ${LocalStorage().building?.name ?? "None"}',
+                          ),
+                          onTap: () => Get.toNamed(
+                            Routes.FORM_BUILDING,
+                            parameters: {
+                              'id': LocalStorage().building!.id.toString(),
+                            },
+                          ),
+                        ),
+                      if (controller.scope.contains(
+                            "admin",
+                          ) ||
+                          controller
+                                  .currentUserAccess
+                                  ?.cashRegisterManagement ==
+                              true)
+                        ListTile(
+                          leading: Icon(Icons.point_of_sale),
+                          title: Text(
+                            "Cash register control",
+                          ),
+                          onTap: () => Get.toNamed(
+                            Routes.CASH_REGISTER,
+                          ),
+                        ),
+                      if (!controller.scope.contains(
+                        "employer",
+                      ))
+                        ListTile(
+                          leading: Icon(Icons.person),
+                          title: Text('Employers'),
+                          onTap: () => Get.toNamed(Routes.EMPLOYER),
+                        ),
+                      if (controller.scope.contains(
+                        "owner",
+                      ))
+                        ListTile(
+                          leading: Icon(Icons.security),
+                          title: Text('Accesses'),
+                          onTap: () => Get.toNamed(Routes.ACCESS),
+                        ),
+                      Spacer(),
+                      SafeArea(
+                        child: ListTile(
+                          textColor: Colors.red,
+                          iconColor: Colors.red,
+                          leading: Icon(Icons.logout),
+                          title: Text('Logout'),
+                          onTap: () async {
+                            await LocalStorage().clear();
+                            await ServerpodClient.instance.auth.signOutDevice();
+                            Get.offAllNamed(Routes.AUTHENTIFICATION);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+        },
+      ),
+      appBar: AppBar(
+        title: Text('POS ${LocalStorage().building!.name.capitalize}'),
+      ),
+
+      bottomNavigationBar: GetBuilder<HomeController>(
+        builder: (l) {
+          return controller.status.isLoading
+              ? SizedBox()
+              : GetBuilder<HomeController>(
+                  id: "bottomNavigationBar",
+                  builder: (_) {
+                    return BottomNavigationBar(
+                      items: controller.scope.contains("employer")
+                          ? [
+                              BottomNavigationBarItem(
+                                icon: SvgPicture.asset(
+                                  "assets/images/svg/table.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    controller.currBnb == 0
+                                        ? Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .selectedItemColor!
+                                        : Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .unselectedItemColor!,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                label: 'Tables',
+                              ),
+
+                              BottomNavigationBarItem(
+                                icon: GestureDetector(
+                                  onTap: () {},
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    child: Icon(Icons.barcode_reader, size: 20),
+                                  ),
+                                ),
+                                label: 'Scan',
+                              ),
+                              BottomNavigationBarItem(
+                                icon: SvgPicture.asset(
+                                  "assets/images/svg/order.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    controller.currBnb == 2
+                                        ? Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .selectedItemColor!
+                                        : Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .unselectedItemColor!,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                label: 'Orders',
+                              ),
+                            ]
+                          : [
+                              BottomNavigationBarItem(
+                                icon: SvgPicture.asset(
+                                  "assets/images/svg/dashboard.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    controller.currBnb == 0
+                                        ? Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .selectedItemColor!
+                                        : Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .unselectedItemColor!,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                label: 'Dashboard',
+                              ),
+
+                              BottomNavigationBarItem(
+                                icon: SvgPicture.asset(
+                                  "assets/images/svg/inventory.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    controller.currBnb == 1
+                                        ? Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .selectedItemColor!
+                                        : Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .unselectedItemColor!,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                label: 'Inventory',
+                              ),
+
+                              BottomNavigationBarItem(
+                                icon: SvgPicture.asset(
+                                  "assets/images/svg/table.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    controller.currBnb == 2
+                                        ? Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .selectedItemColor!
+                                        : Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .unselectedItemColor!,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                label: 'Tables',
+                              ),
+
+                              BottomNavigationBarItem(
+                                icon: SvgPicture.asset(
+                                  "assets/images/svg/order.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    controller.currBnb == 3
+                                        ? Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .selectedItemColor!
+                                        : Theme.of(
+                                                context,
+                                              )
+                                              .bottomNavigationBarTheme
+                                              .unselectedItemColor!,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                label: 'Orders',
+                              ),
+                            ],
+                      currentIndex: controller.currBnb,
+                      onTap: controller.changeBnbContent,
+                    );
+                  },
+                );
+        },
+      ),
       body: controller.obx(
-        (_) => RefreshIndicator(
-          onRefresh: controller.getStats,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Revenue and Order Statistics Cards
-                Row(
-                  children: [
-                    Expanded(
-                      child: StatsCardWidget(
-                        title: 'Total Revenue',
-                        value:
-                            '${controller.stats?.funds.totalSales.toStringAsFixed(2)} DT',
-                        icon: FluentIcons.money_24_filled,
-                        color: AppTheme().primary,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: StatsCardWidget(
-                        title: 'Avg Order Value',
-                        value:
-                            '${controller.stats?.funds.avgOrderValue.toStringAsFixed(2)} DT',
-                        icon: FluentIcons.receipt_money_24_filled,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: StatsCardWidget(
-                        title: 'Total Orders',
-                        value: '${controller.stats?.totalOrders}',
-                        icon: FluentIcons.receipt_24_filled,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: StatsCardWidget(
-                        title: 'Paid Orders',
-                        value: '${controller.stats?.paidOrdersCount}',
-                        icon: FluentIcons.checkmark_circle_24_filled,
-                        color: Colors.orange,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-
-                // Order Status Chart
-                _buildChartSection(
-                  context,
-                  title: 'Order Status Distribution',
-                  child: _buildOrderStatusChart(context),
-                ),
-                const SizedBox(height: 24),
-
-                // Items Sold Chart
-                _buildChartSection(
-                  context,
-                  title: 'Business Overview',
-                  child: _buildBusinessOverviewChart(context),
-                ),
-                const SizedBox(height: 24),
-
-                // Top Articles Section
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Top Articles',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => Get.toNamed(Routes.ARTICLE),
-                      child: const Text('View All'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                controller.stats!.mostPopularArticles.isEmpty
-                    ? EmptyStatsWidget(
-                        message: 'No articles data yet',
-                        icon: FluentIcons.food_24_regular,
-                      )
-                    : Column(
-                        children: controller.stats!.mostPopularArticles.map((
-                          entry,
-                        ) {
-                          return TopItemWidget(
-                            title: entry.article.name,
-                            subtitle:
-                                entry.article.categorie?.name ?? 'No category',
-                            count: entry.count,
-                            price: entry.article.price,
-                            icon: FluentIcons.food_24_regular,
-                          );
-                        }).toList(),
-                      ),
-
-                const SizedBox(height: 24),
-
-                // Top Categories Section
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Top Categories',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => Get.toNamed(Routes.CATEGORIE),
-                      child: const Text('View All'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                controller.stats!.mostPopularCategories.isEmpty
-                    ? EmptyStatsWidget(
-                        message: 'No categories data yet',
-                        icon: FluentIcons.grid_24_regular,
-                      )
-                    : Column(
-                        children: controller.stats!.mostPopularCategories.map((
-                          entry,
-                        ) {
-                          return TopItemWidget(
-                            title: entry.category.name,
-                            subtitle: '${entry.count} orders',
-                            count: entry.count,
-                            icon: FluentIcons.grid_24_regular,
-                          );
-                        }).toList(),
-                      ),
-              ],
-            ),
-          ),
-        ),
-        onLoading: const Center(child: CircularProgressIndicator()),
-      ),
-    );
-  }
-
-  Widget _buildChartSection(
-    BuildContext context, {
-    required String title,
-    required Widget child,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          child,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOrderStatusChart(BuildContext context) {
-    final total = controller.stats!.totalOrders;
-    final paid = controller.stats!.paidOrdersCount;
-    final unpaid = total - paid;
-
-    if (total == 0) {
-      return EmptyStatsWidget(
-        message: 'No order data available',
-        icon: FluentIcons.chart_multiple_24_regular,
-      );
-    }
-
-    return SizedBox(
-      height: 200,
-      child: PieChart(
-        PieChartData(
-          sectionsSpace: 2,
-          centerSpaceRadius: 60,
-          sections: [
-            PieChartSectionData(
-              color: Colors.green,
-              value: paid.toDouble(),
-              title: '${((paid / total) * 100).toStringAsFixed(1)}%',
-              radius: 50,
-              titleStyle: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            PieChartSectionData(
-              color: Colors.orange,
-              value: unpaid.toDouble(),
-              title: '${((unpaid / total) * 100).toStringAsFixed(1)}%',
-              radius: 50,
-              titleStyle: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ],
+        (s) => PageView(
+          physics: NeverScrollableScrollPhysics(),
+          onPageChanged: controller.changeBnbContent,
+          controller: controller.pageVCtr,
+          children: controller.scope.contains("employer")
+              ? [TablesView(), SizedBox(), OrderView()]
+              : [DashboardView(), InventoryView(), TablesView(), OrderView()],
         ),
       ),
-    );
-  }
-
-  Widget _buildBusinessOverviewChart(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildBarIndicator(
-              context,
-              label: 'Articles',
-              value: controller.stats!.totalArticles,
-              color: Colors.blue,
-            ),
-            _buildBarIndicator(
-              context,
-              label: 'Categories',
-              value: controller.stats!.totalCategories,
-              color: Colors.purple,
-            ),
-            _buildBarIndicator(
-              context,
-              label: 'Items Sold',
-              value: controller.stats!.totalItemsSold,
-              color: Colors.teal,
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        SizedBox(
-          height: 200,
-          child: BarChart(
-            BarChartData(
-              alignment: BarChartAlignment.spaceAround,
-              maxY: _getMaxValue().toDouble(),
-              barTouchData: BarTouchData(enabled: false),
-              titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      switch (value.toInt()) {
-                        case 0:
-                          return const Text('Articles');
-                        case 1:
-                          return const Text('Categories');
-                        case 2:
-                          return const Text('Items Sold');
-                        default:
-                          return const Text('');
-                      }
-                    },
-                  ),
-                ),
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                    getTitlesWidget: (value, meta) {
-                      return Text(
-                        value.toInt().toString(),
-                        style: const TextStyle(fontSize: 10),
-                      );
-                    },
-                  ),
-                ),
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-              ),
-              gridData: FlGridData(show: true, drawVerticalLine: false),
-              borderData: FlBorderData(show: false),
-              barGroups: [
-                BarChartGroupData(
-                  x: 0,
-                  barRods: [
-                    BarChartRodData(
-                      toY: controller.stats!.totalArticles.toDouble(),
-                      color: Colors.blue,
-                      width: 20,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(6),
-                      ),
-                    ),
-                  ],
-                ),
-                BarChartGroupData(
-                  x: 1,
-                  barRods: [
-                    BarChartRodData(
-                      toY: controller.stats!.totalCategories.toDouble(),
-                      color: Colors.purple,
-                      width: 20,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(6),
-                      ),
-                    ),
-                  ],
-                ),
-                BarChartGroupData(
-                  x: 2,
-                  barRods: [
-                    BarChartRodData(
-                      toY: controller.stats!.totalItemsSold.toDouble(),
-                      color: Colors.teal,
-                      width: 20,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(6),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  int _getMaxValue() {
-    final values = [
-      controller.stats!.totalArticles,
-      controller.stats!.totalCategories,
-      controller.stats!.totalItemsSold,
-    ];
-    final max = values.reduce((a, b) => a > b ? a : b);
-    return (max * 1.2).ceil(); // Add 20% padding
-  }
-
-  Widget _buildBarIndicator(
-    BuildContext context, {
-    required String label,
-    required int value,
-    required Color color,
-  }) {
-    return Column(
-      children: [
-        Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
-        ),
-        Text(
-          value.toString(),
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-      ],
     );
   }
 }

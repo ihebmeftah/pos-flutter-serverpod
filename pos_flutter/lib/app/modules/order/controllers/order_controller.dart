@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
-import 'package:pos_flutter/app/modules/index/controllers/index_controller.dart';
+import 'package:pos_flutter/app/modules/home/controllers/home_controller.dart';
 
 import '../../../../config/serverpod_client.dart';
 import '../../../routes/app_pages.dart';
@@ -48,7 +48,7 @@ class OrderController extends GetxController with StateMixin {
           title: 'Cash Register Error',
           middleText: e.message,
           actions: [
-            if (Get.find<IndexController>()
+            if (Get.find<HomeController>()
                 .currentUserAccess!
                 .cashRegisterManagement)
               TextButton(

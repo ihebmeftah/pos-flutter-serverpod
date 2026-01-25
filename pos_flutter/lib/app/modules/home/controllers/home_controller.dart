@@ -1,25 +1,74 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
+import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 
 import '../../../../config/serverpod_client.dart';
+import '../../order/controllers/order_controller.dart';
+import '../../tables/controllers/tables_controller.dart';
 
-class HomeController extends GetxController with StateMixin<void> {
-  Stats? stats;
+class HomeController extends GetxController with StateMixin {
+  late UserProfile userProfile;
+  Employer? employer;
+  Access? get currentUserAccess => employer?.access;
+  Set<String> scope = <String>{};
+
   @override
-  void onInit() {
-    getStats();
+  void onInit() async {
+    await getUserProfile();
     super.onInit();
   }
 
-  Future<void> getStats() async {
+  Future<void> getUserProfile() async {
     try {
-      stats = await ServerpodClient.instance.stats.getStats(
-        LocalStorage().building!.id,
-      );
-      change(null, status: RxStatus.success());
+      change(null, status: RxStatus.loading());
+      userProfile = await ServerpodClient.instance.emailIdp.getUserProfile();
+      scope = userProfile.authUser!.scopeNames;
+      if (scope.contains("employer")) {
+        employer = await ServerpodClient.instance.employer
+            .getEmployerByIdentifier(userProfile.authUserId);
+        LocalStorage().saveBuilding(employer!.building!);
+      }
+      change(userProfile, status: RxStatus.success());
     } catch (e) {
-      print('Error fetching stats: $e');
+      change(null, status: RxStatus.error(e.toString()));
+    }
+  }
+
+  final pageVCtr = PageController();
+  int currBnb = 0;
+
+  void changeBnbContent(int index) {
+    if (index != currBnb) {
+      currBnb = index;
+      pageVCtr.jumpToPage(index);
+      update(["bottomNavigationBar"]);
+    }
+    if (scope.contains("owner")) {
+      if (index != 3) {
+        Get.delete<OrderController>();
+      } else if (index == 3) {
+        Get.put<OrderController>(OrderController());
+      }
+      if (index != 2) {
+        Get.delete<TablesController>();
+      } else if (index == 2) {
+        Get.put<TablesController>(TablesController());
+      }
+    } else {
+      if (scope.contains("employer")) {
+        if (index != 2) {
+          Get.delete<OrderController>();
+        } else if (index == 2) {
+          Get.put<OrderController>(OrderController());
+        }
+        if (index != 0) {
+          Get.delete<TablesController>();
+        } else if (index == 0) {
+          Get.put<TablesController>(TablesController());
+        }
+      }
     }
   }
 }

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/modules/home/controllers/home_controller.dart';
 import 'package:pos_flutter/app/modules/order/controllers/order_details_controller.dart';
 
 import '../../../extensions/status.extension.dart';
-import '../../index/controllers/index_controller.dart';
-
 class OrderItemStatusButtons extends GetView<OrderDetailsController> {
   const OrderItemStatusButtons({
     super.key,
@@ -29,7 +28,7 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
 
             /// Pick Buttoon
             if (orderItem.itemStatus == OrderItemStatus.progress &&
-                (Get.find<IndexController>().currentUserAccess?.preparation ??
+                (Get.find<HomeController>().currentUserAccess?.preparation ??
                     true))
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -38,10 +37,10 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
                   maximumSize: Size(Get.width / 2.5, 38),
                 ),
                 onPressed:
-                    Get.find<IndexController>().scope.contains(
+                    Get.find<HomeController>().scope.contains(
                           "employer",
                         ) &&
-                        (Get.find<IndexController>()
+                        (Get.find<HomeController>()
                                 .currentUserAccess
                                 ?.preparation ??
                             true)
@@ -61,7 +60,7 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
 
             /// Ready Buttoon
             if (orderItem.itemStatus == OrderItemStatus.picked &&
-                (Get.find<IndexController>().currentUserAccess?.preparation ??
+                (Get.find<HomeController>().currentUserAccess?.preparation ??
                     true))
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -70,10 +69,10 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
                   maximumSize: Size(Get.width / 2.5, 38),
                 ),
                 onPressed:
-                    Get.find<IndexController>().scope.contains(
+                    Get.find<HomeController>().scope.contains(
                           "employer",
                         ) &&
-                        (Get.find<IndexController>()
+                        (Get.find<HomeController>()
                                 .currentUserAccess
                                 ?.preparation ??
                             true)
@@ -93,7 +92,7 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
 
             /// Delivred Buttoon
             if (orderItem.itemStatus == OrderItemStatus.ready &&
-                (Get.find<IndexController>().currentUserAccess?.serveOrder ??
+                (Get.find<HomeController>().currentUserAccess?.serveOrder ??
                     true))
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -102,10 +101,10 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
                   maximumSize: Size(Get.width / 2.5, 38),
                 ),
                 onPressed:
-                    Get.find<IndexController>().scope.contains(
+                    Get.find<HomeController>().scope.contains(
                           "employer",
                         ) &&
-                        (Get.find<IndexController>()
+                        (Get.find<HomeController>()
                                 .currentUserAccess
                                 ?.serveOrder ??
                             true)
@@ -125,7 +124,7 @@ class OrderItemStatusButtons extends GetView<OrderDetailsController> {
 
             /// Pay Buttoon
             if (orderItem.itemStatus == OrderItemStatus.served &&
-                (Get.find<IndexController>()
+                (Get.find<HomeController>()
                         .currentUserAccess
                         ?.orderItemsPayment ??
                     true))

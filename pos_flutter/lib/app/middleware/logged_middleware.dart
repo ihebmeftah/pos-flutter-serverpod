@@ -12,7 +12,7 @@ class LoggedMiddleware extends GetMiddleware {
     if (ServerpodClient.instance.auth.authInfo!.scopeNames.contains(
       'employer',
     )) {
-      return RouteSettings(name: Routes.INDEX);
+      return RouteSettings(name: Routes.HOME);
     }
     return RouteSettings(name: Routes.BUILDINGS);
   }

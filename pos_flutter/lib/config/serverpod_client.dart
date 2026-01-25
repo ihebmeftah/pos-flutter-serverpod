@@ -22,7 +22,7 @@ class ServerpodClient extends GetxService {
       } else if (_client.auth.isAuthenticated) {
         if (Get.currentRoute.contains(Routes.AUTHENTIFICATION)) {
           if (_client.auth.authInfo!.scopeNames.contains('employer')) {
-            Get.offAllNamed(Routes.INDEX);
+            Get.offAllNamed(Routes.HOME);
           } else {
             Get.offAllNamed(Routes.BUILDINGS);
           }

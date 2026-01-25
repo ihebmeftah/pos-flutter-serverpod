@@ -31,6 +31,6 @@ class BuildingsController extends GetxController
 
   void consult(int index) async {
     await LocalStorage().saveBuilding(buildings[index]);
-    Get.offAllNamed(Routes.INDEX);
+    Get.offAllNamed(Routes.HOME);
   }
 }

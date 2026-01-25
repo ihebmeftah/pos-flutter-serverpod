@@ -4,7 +4,7 @@ import 'package:pos_client/pos_client.dart';
 
 import '../../../data/local/local_storage.dart';
 import '../../../extensions/currency.extension.dart';
-import '../../index/controllers/index_controller.dart';
+import '../../home/controllers/home_controller.dart';
 import '../controllers/order_details_controller.dart';
 
 class OrderPaymentButton extends GetView<OrderDetailsController> {
@@ -94,14 +94,14 @@ class OrderPaymentButton extends GetView<OrderDetailsController> {
               ),
             ),
             if (controller.order!.status != OrderStatus.payed &&
-                Get.find<IndexController>().scope.contains(
+                Get.find<HomeController>().scope.contains(
                   "employer",
                 ))
               Expanded(
                 flex: 2,
                 child: ElevatedButton.icon(
                   onPressed:
-                      (Get.find<IndexController>()
+                      (Get.find<HomeController>()
                               .currentUserAccess
                               ?.orderPayment ??
                           true)
@@ -126,7 +126,7 @@ class OrderPaymentButton extends GetView<OrderDetailsController> {
             if (controller.order!.items!.any(
                   (item) => item.itemStatus != OrderItemStatus.payed,
                 ) &&
-                Get.find<IndexController>().scope.contains(
+                Get.find<HomeController>().scope.contains(
                   "employer",
                 ))
               IconButton(

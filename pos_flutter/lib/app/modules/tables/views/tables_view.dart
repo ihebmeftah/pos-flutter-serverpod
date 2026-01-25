@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
-import 'package:pos_flutter/app/modules/index/controllers/index_controller.dart';
+import 'package:pos_flutter/app/modules/home/controllers/home_controller.dart';
 import 'package:pos_flutter/app/routes/app_pages.dart';
 
 import '../../../components/appbottomsheet.dart';
@@ -28,7 +28,7 @@ class TablesView extends GetView<TablesController> {
           (_) => Column(
             spacing: 5,
             children: [
-              if (Get.find<IndexController>().scope.contains("owner"))
+              if (Get.find<HomeController>().scope.contains("owner"))
                 TextButton.icon(
                   onPressed: controller.generateTablePdfQrcode,
                   label: const Text('Generate Tables QR Code'),
@@ -74,11 +74,11 @@ class TablesView extends GetView<TablesController> {
                           }
                           bottomSheet(
                             onConfirm:
-                                (Get.find<IndexController>()
+                                (Get.find<HomeController>()
                                             .currentUserAccess
                                             ?.orderCreation ??
                                         true) &&
-                                    Get.find<IndexController>().scope.contains(
+                                    Get.find<HomeController>().scope.contains(
                                       "employer",
                                     )
                                 ? () {
