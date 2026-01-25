@@ -3,16 +3,27 @@ import 'package:pos_server/src/generated/protocol.dart';
 
 class StatsEndpoint extends Endpoint {
   /// Compute stats from paid orders
-  Future<Stats> getStats(Session session) async {
+  Future<Stats> getStats(Session session, UuidValue buildingId) async {
     // Count totals
-    final totalOrders = await Order.db.count(session);
-    final totalArticles = await Article.db.count(session);
-    final totalCategories = await Categorie.db.count(session);
+    final totalOrders = await Order.db.count(
+      session,
+      where: (t) => t.btable.buildingId.equals(buildingId),
+    );
+    final totalArticles = await Article.db.count(
+      session,
+      where: (t) => t.categorie.buildingId.equals(buildingId),
+    );
+    final totalCategories = await Categorie.db.count(
+      session,
+      where: (t) => t.buildingId.equals(buildingId),
+    );
 
     // Get all paid orders with their items
     final paidOrders = await Order.db.find(
       session,
-      where: (t) => t.status.equals(OrderStatus.payed),
+      where: (t) =>
+          t.status.equals(OrderStatus.payed) &
+          t.btable.buildingId.equals(buildingId),
       include: Order.include(
         items: OrderItem.includeList(),
       ),

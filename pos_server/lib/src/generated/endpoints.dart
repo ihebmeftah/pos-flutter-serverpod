@@ -1376,13 +1376,21 @@ class Endpoints extends _i1.EndpointDispatch {
       methodConnectors: {
         'getStats': _i1.MethodConnector(
           name: 'getStats',
-          params: {},
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
           call:
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async =>
-                  (endpoints['stats'] as _i14.StatsEndpoint).getStats(session),
+              ) async => (endpoints['stats'] as _i14.StatsEndpoint).getStats(
+                session,
+                params['buildingId'],
+              ),
         ),
       },
     );

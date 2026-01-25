@@ -2141,7 +2141,10 @@ class _StatsEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i25.Stats> getStats(_i1.TestSessionBuilder sessionBuilder) async {
+  _i3.Future<_i25.Stats> getStats(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue buildingId,
+  ) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
@@ -2153,7 +2156,7 @@ class _StatsEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'stats',
           methodName: 'getStats',
-          parameters: _i1.testObjectToJson({}),
+          parameters: _i1.testObjectToJson({'buildingId': buildingId}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =

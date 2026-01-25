@@ -8,15 +8,10 @@ import 'app_config.dart';
 class ServerpodClient extends GetxService {
   static Client get instance => Get.find<ServerpodClient>()._client;
   late Client _client;
-  late String serverUrl;
 
   Future<ServerpodClient> initialize() async {
-    const serverUrlFromEnv = String.fromEnvironment('SERVER_URL');
     final config = await AppConfig.loadConfig();
-    serverUrl = serverUrlFromEnv.isEmpty
-        ? config.apiUrl ?? 'http://192.168.0.161:8080/'
-        : serverUrlFromEnv;
-    _client = Client('http://192.168.0.161:8080/')
+    _client = Client(config.apiUrl ?? 'http://localhost:8080')
       ..connectivityMonitor = FlutterConnectivityMonitor()
       ..authSessionManager = FlutterAuthSessionManager();
     await _client.auth.initialize();

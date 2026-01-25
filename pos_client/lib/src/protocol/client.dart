@@ -1110,11 +1110,12 @@ class EndpointStats extends _i1.EndpointRef {
   String get name => 'stats';
 
   /// Compute stats from paid orders
-  _i2.Future<_i24.Stats> getStats() => caller.callServerEndpoint<_i24.Stats>(
-    'stats',
-    'getStats',
-    {},
-  );
+  _i2.Future<_i24.Stats> getStats(_i1.UuidValue buildingId) =>
+      caller.callServerEndpoint<_i24.Stats>(
+        'stats',
+        'getStats',
+        {'buildingId': buildingId},
+      );
 }
 
 class Modules {

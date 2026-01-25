@@ -80,7 +80,7 @@ class IndexView extends GetView<IndexController> {
                         ListTile(
                           leading: Icon(Icons.edit_location),
                           title: Text(
-                            'Edit current Building ${LocalStorage().building?.name ?? "None"}',
+                            'Edit ${LocalStorage().building?.name ?? "None"}',
                           ),
                           onTap: () => Get.toNamed(
                             Routes.FORM_BUILDING,
