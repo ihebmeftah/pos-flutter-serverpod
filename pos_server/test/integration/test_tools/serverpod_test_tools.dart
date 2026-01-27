@@ -1261,6 +1261,76 @@ class _BuildingTablesEndpoint {
       }
     });
   }
+
+  _i3.Future<_i12.BTable> getTableById(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue tableId,
+    _i2.UuidValue buildingId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'buildingTables',
+            method: 'getTableById',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'buildingTables',
+          methodName: 'getTableById',
+          parameters: _i1.testObjectToJson({
+            'tableId': tableId,
+            'buildingId': buildingId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i12.BTable>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i12.BTable> mangeTableActivation(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue tableId,
+    _i2.UuidValue buildingId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'buildingTables',
+            method: 'mangeTableActivation',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'buildingTables',
+          methodName: 'mangeTableActivation',
+          parameters: _i1.testObjectToJson({
+            'tableId': tableId,
+            'buildingId': buildingId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i12.BTable>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }
 
 class _CashRegisterEndpoint {

@@ -781,6 +781,58 @@ class Endpoints extends _i1.EndpointDispatch {
                         buildingId: params['buildingId'],
                       ),
         ),
+        'getTableById': _i1.MethodConnector(
+          name: 'getTableById',
+          params: {
+            'tableId': _i1.ParameterDescription(
+              name: 'tableId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['buildingTables'] as _i7.BuildingTablesEndpoint)
+                      .getTableById(
+                        session,
+                        params['tableId'],
+                        params['buildingId'],
+                      ),
+        ),
+        'mangeTableActivation': _i1.MethodConnector(
+          name: 'mangeTableActivation',
+          params: {
+            'tableId': _i1.ParameterDescription(
+              name: 'tableId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['buildingTables'] as _i7.BuildingTablesEndpoint)
+                      .mangeTableActivation(
+                        session,
+                        params['tableId'],
+                        params['buildingId'],
+                      ),
+        ),
       },
     );
     connectors['cashRegister'] = _i1.EndpointConnector(

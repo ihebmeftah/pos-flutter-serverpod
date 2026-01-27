@@ -633,6 +633,30 @@ class EndpointBuildingTables extends _i1.EndpointRef {
       'buildingId': buildingId,
     },
   );
+
+  _i2.Future<_i11.BTable> getTableById(
+    _i1.UuidValue tableId,
+    _i1.UuidValue buildingId,
+  ) => caller.callServerEndpoint<_i11.BTable>(
+    'buildingTables',
+    'getTableById',
+    {
+      'tableId': tableId,
+      'buildingId': buildingId,
+    },
+  );
+
+  _i2.Future<_i11.BTable> mangeTableActivation(
+    _i1.UuidValue tableId,
+    _i1.UuidValue buildingId,
+  ) => caller.callServerEndpoint<_i11.BTable>(
+    'buildingTables',
+    'mangeTableActivation',
+    {
+      'tableId': tableId,
+      'buildingId': buildingId,
+    },
+  );
 }
 
 /// {@category Endpoint}

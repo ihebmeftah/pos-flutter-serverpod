@@ -65,7 +65,20 @@ extension OrderItemStatusExtension on OrderItemStatus {
   }
 }
 
-extension TableStatusExtension on TableStatus {
+extension TableStatusExtension on TableStatus? {
+  String get label {
+    switch (this) {
+      case TableStatus.available:
+        return "Available";
+      case TableStatus.occupied:
+        return "Occupied";
+      case TableStatus.reserved:
+        return "Reserved";
+      default:
+        return "Available";
+    }
+  }
+
   Color get color {
     switch (this) {
       case TableStatus.available:
@@ -74,6 +87,8 @@ extension TableStatusExtension on TableStatus {
         return Colors.red;
       case TableStatus.reserved:
         return Colors.orange;
+      default:
+        return Colors.green;
     }
   }
 
@@ -85,6 +100,8 @@ extension TableStatusExtension on TableStatus {
         return Colors.red.shade50;
       case TableStatus.reserved:
         return Colors.orange.shade50;
+      default:
+        return Colors.green.shade50;
     }
   }
 
@@ -96,6 +113,8 @@ extension TableStatusExtension on TableStatus {
         return Colors.red.shade700;
       case TableStatus.reserved:
         return Colors.orange.shade700;
+      default:
+        return Colors.green.shade700;
     }
   }
 }

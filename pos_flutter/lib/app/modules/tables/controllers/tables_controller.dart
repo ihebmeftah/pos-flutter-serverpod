@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/components/app_snackbar.dart';
 import 'package:pos_flutter/config/serverpod_client.dart';
 
 import '../../../data/local/local_storage.dart';
@@ -11,11 +12,15 @@ import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class TablesController extends GetxController with StateMixin<List<BTable>> {
-  final tables = <BTable>[].obs;
-  int get availableNb =>
-      tables.where((table) => table.status == TableStatus.available).length;
-  int get occupiedNb =>
-      tables.where((table) => table.status == TableStatus.occupied).length;
+  List<BTable> tables = <BTable>[];
+  final searchTables = <BTable>[].obs;
+
+  int get availableNb => searchTables
+      .where((table) => table.status == TableStatus.available)
+      .length;
+  int get occupiedNb => searchTables
+      .where((table) => table.status == TableStatus.occupied)
+      .length;
 
   @override
   void onInit() {
@@ -25,11 +30,11 @@ class TablesController extends GetxController with StateMixin<List<BTable>> {
 
   Future getTabels() async {
     try {
-      tables(
-        await ServerpodClient.instance.buildingTables.getTablesByBuildingId(
-          LocalStorage().building!.id,
-        ),
-      );
+      tables = await ServerpodClient.instance.buildingTables
+          .getTablesByBuildingId(
+            LocalStorage().building!.id,
+          );
+      searchTables(tables);
       if (tables.isEmpty) {
         change([], status: RxStatus.empty());
       } else {
@@ -41,7 +46,6 @@ class TablesController extends GetxController with StateMixin<List<BTable>> {
       change([], status: RxStatus.error('Failed to load tables'));
     }
   }
-
 
   void generateTablePdfQrcode() async {
     final pdf = pw.Document();
@@ -101,5 +105,48 @@ class TablesController extends GetxController with StateMixin<List<BTable>> {
       bytes: pdfDoc,
       filename: '${tables}_${LocalStorage().building!.name}.pdf',
     );
+  }
+
+  void changeTableActivation(int index) async {
+    try {
+      final updatedTable = await ServerpodClient.instance.buildingTables
+          .mangeTableActivation(
+            tables[index].id,
+            LocalStorage().building!.id,
+          );
+      tables[index] = updatedTable;
+      searchTables(tables);
+      searchTables.refresh();
+    } on AppException catch (e) {
+      AppSnackbar.info(e.message);
+    } catch (e) {
+      change([], status: RxStatus.error('Failed to change table activation'));
+    }
+  }
+
+  TableStatus? filterStatus;
+  void filterTablesBystatus(TableStatus? status) {
+    if (filterStatus == status) {
+      filterStatus = null;
+    } else {
+      filterStatus = status;
+    }
+    if (filterStatus == null) {
+      searchTables(tables);
+    } else {
+      searchTables(
+        tables.where((table) => table.status == filterStatus).toList(),
+      );
+    }
+    searchTables.refresh();
+  }
+
+  void showOnlyDescativateTables(bool show) {
+    if (show) {
+      searchTables(tables.where((table) => table.active == false).toList());
+    } else {
+      searchTables(tables);
+    }
+    searchTables.refresh();
   }
 }

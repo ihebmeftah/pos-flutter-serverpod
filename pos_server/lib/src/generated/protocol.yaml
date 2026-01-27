@@ -33,6 +33,8 @@ building:
 buildingTables:
   - getTablesByBuildingId:
   - createTables:
+  - getTableById:
+  - mangeTableActivation:
 cashRegister:
   - getCashRegisters:
   - createCashRegister:

@@ -1,4 +1,5 @@
 import 'package:pos_server/src/generated/protocol.dart';
+import 'package:pos_server/src/order/order_endpoint.dart';
 import '../helpers/session_extensions.dart';
 import 'package:serverpod/serverpod.dart';
 import '../generated/order/entity/order.dart' as orderentity;
@@ -23,7 +24,12 @@ class BuildingTablesEndpoint extends Endpoint {
     // Fetch all tables
     List<BTable> tables = await BTable.db.find(
       session,
-      where: (t) => t.buildingId.equals(buildingId),
+      where: (t) {
+        if (session.authenticated!.scopes.contains(Scope("employer"))) {
+          return t.buildingId.equals(buildingId) & t.active.equals(true);
+        }
+        return t.buildingId.equals(buildingId);
+      },
     );
 
     // Get all table IDs with active orders in one query
@@ -81,5 +87,56 @@ class BuildingTablesEndpoint extends Endpoint {
       session,
       bTables,
     );
+  }
+
+  Future<BTable> getTableById(
+    Session session,
+    UuidValue tableId,
+    UuidValue buildingId,
+  ) async {
+    BTable? table = await BTable.db.findFirstRow(
+      session,
+      where: (t) => t.id.equals(tableId) & t.buildingId.equals(buildingId),
+    );
+    if (table == null) {
+      throw AppException(
+        errorType: ExceptionType.NotFound,
+        message: 'Table not found',
+      );
+    }
+    final order = await OrderEndpoint().getOrderCurrOfTable(session, table.id);
+    if (order != null) {
+      table.status = TableStatus.occupied;
+    }
+    return table;
+  }
+
+  Future<BTable> mangeTableActivation(
+    Session session,
+    UuidValue tableId,
+    UuidValue buildingId,
+  ) async {
+    session.authorizedTo(['owner']);
+    final table = await getTableById(session, tableId, buildingId);
+    if (table.status == TableStatus.occupied) {
+      throw AppException(
+        errorType: ExceptionType.Forbidden,
+        message: 'Cannot change activation status of an occupied table',
+      );
+    }
+    final updatedTable = await BTable.db.updateById(
+      session,
+      table.id,
+      columnValues: (cls) {
+        return [cls.active(!table.active)];
+      },
+    );
+    if (updatedTable == null) {
+      throw AppException(
+        errorType: ExceptionType.Forbidden,
+        message: 'Somthing went wrong while table activation',
+      );
+    }
+    return updatedTable;
   }
 }

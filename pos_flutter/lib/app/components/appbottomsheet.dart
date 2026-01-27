@@ -13,6 +13,7 @@ void bottomSheet({
     padding: const EdgeInsets.all(20),
     child: Column(
       crossAxisAlignment: .start,
+      mainAxisSize: .min,
       spacing: 20,
       children: [
         if (topCloseButton)
@@ -25,7 +26,6 @@ void bottomSheet({
             ),
           ),
         ...children,
-        if (onConfirm != null || !topCloseButton) Spacer(),
         if (onConfirm != null)
           Center(
             child: ElevatedButton(
@@ -42,4 +42,5 @@ void bottomSheet({
   ),
   // isScrollControlled: true,
   backgroundColor: Colors.white,
+  isScrollControlled: false,
 );

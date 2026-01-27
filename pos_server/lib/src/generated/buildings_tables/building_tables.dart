@@ -19,9 +19,12 @@ abstract class BTable
     _i1.UuidValue? id,
     required this.number,
     required this.seatsMax,
-    this.status,
+    _i2.TableStatus? status,
     required this.buildingId,
-  }) : id = id ?? _i1.Uuid().v4obj();
+    bool? active,
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? _i2.TableStatus.available,
+       active = active ?? true;
 
   factory BTable({
     _i1.UuidValue? id,
@@ -29,6 +32,7 @@ abstract class BTable
     required int seatsMax,
     _i2.TableStatus? status,
     required _i1.UuidValue buildingId,
+    bool? active,
   }) = _BTableImpl;
 
   factory BTable.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -44,6 +48,7 @@ abstract class BTable
       buildingId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['buildingId'],
       ),
+      active: jsonSerialization['active'] as bool?,
     );
   }
 
@@ -63,6 +68,8 @@ abstract class BTable
 
   _i1.UuidValue buildingId;
 
+  bool active;
+
   @override
   _i1.Table<_i1.UuidValue> get table => t;
 
@@ -75,6 +82,7 @@ abstract class BTable
     int? seatsMax,
     _i2.TableStatus? status,
     _i1.UuidValue? buildingId,
+    bool? active,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -85,6 +93,7 @@ abstract class BTable
       'seatsMax': seatsMax,
       if (status != null) 'status': status?.toJson(),
       'buildingId': buildingId.toJson(),
+      'active': active,
     };
   }
 
@@ -97,6 +106,7 @@ abstract class BTable
       'seatsMax': seatsMax,
       if (status != null) 'status': status?.toJson(),
       'buildingId': buildingId.toJson(),
+      'active': active,
     };
   }
 
@@ -139,12 +149,14 @@ class _BTableImpl extends BTable {
     required int seatsMax,
     _i2.TableStatus? status,
     required _i1.UuidValue buildingId,
+    bool? active,
   }) : super._(
          id: id,
          number: number,
          seatsMax: seatsMax,
          status: status,
          buildingId: buildingId,
+         active: active,
        );
 
   /// Returns a shallow copy of this [BTable]
@@ -157,6 +169,7 @@ class _BTableImpl extends BTable {
     int? seatsMax,
     Object? status = _Undefined,
     _i1.UuidValue? buildingId,
+    bool? active,
   }) {
     return BTable(
       id: id ?? this.id,
@@ -164,6 +177,7 @@ class _BTableImpl extends BTable {
       seatsMax: seatsMax ?? this.seatsMax,
       status: status is _i2.TableStatus? ? status : this.status,
       buildingId: buildingId ?? this.buildingId,
+      active: active ?? this.active,
     );
   }
 }
@@ -187,6 +201,11 @@ class BTableUpdateTable extends _i1.UpdateTable<BTableTable> {
     table.buildingId,
     value,
   );
+
+  _i1.ColumnValue<bool, bool> active(bool value) => _i1.ColumnValue(
+    table.active,
+    value,
+  );
 }
 
 class BTableTable extends _i1.Table<_i1.UuidValue> {
@@ -204,6 +223,11 @@ class BTableTable extends _i1.Table<_i1.UuidValue> {
       'buildingId',
       this,
     );
+    active = _i1.ColumnBool(
+      'active',
+      this,
+      hasDefault: true,
+    );
   }
 
   late final BTableUpdateTable updateTable;
@@ -215,12 +239,15 @@ class BTableTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnUuid buildingId;
 
+  late final _i1.ColumnBool active;
+
   @override
   List<_i1.Column> get columns => [
     id,
     number,
     seatsMax,
     buildingId,
+    active,
   ];
 }
 

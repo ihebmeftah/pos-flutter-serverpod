@@ -43,14 +43,15 @@ class OrderController extends GetxController with StateMixin {
     } on AppException catch (e) {
       if (e.errorType == ExceptionType.NotFound) {
         change(null, status: RxStatus.empty());
+        if (Get.isDialogOpen == true) Get.back();
         Get.defaultDialog(
           barrierDismissible: false,
-          title: 'Cash Register Error',
+          title: 'No Cash Register started',
           middleText: e.message,
           actions: [
             if (Get.find<HomeController>()
                 .currentUserAccess!
-                .cashRegisterManagement)
+                .cashRegisterManagement) ...[
               TextButton(
                 onPressed: () {
                   Get.back();
@@ -58,6 +59,16 @@ class OrderController extends GetxController with StateMixin {
                 },
                 child: Text('Go to Cash Registers'),
               ),
+            ] else ...[
+              TextButton(
+                onPressed: getOrders,
+                child: Text('Retry'),
+              ),
+              TextButton(
+                onPressed: Get.back,
+                child: Text('Close'),
+              ),
+            ],
           ],
         );
       } else {

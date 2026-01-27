@@ -59,19 +59,19 @@ class DatabaseSeeder {
 
     final ownersData = [
       {
-        'email': 'owner1@cafedream.com',
+        'email': 'owner1@b1.com',
         'password': 'Owner123!',
         'userName': 'owner1',
         'fullName': 'John Dream',
       },
       {
-        'email': 'owner2@tuniscafe.tn',
+        'email': 'owner2@b2.tn',
         'password': 'Owner123!',
         'userName': 'owner2',
         'fullName': 'Ahmed Zitouna',
       },
       {
-        'email': 'owner3@bistroparis.fr',
+        'email': 'owner3@b3.fr',
         'password': 'Owner123!',
         'userName': 'owner3',
         'fullName': 'Marie Dupont',

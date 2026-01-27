@@ -5,9 +5,9 @@ fields:
   ### The number of the building.
   number: int
   seatsMax: int
-  status: TableStatus?,!persist ### This field is not persisted in the database.
+  status: TableStatus?,default=available, !persist ### This field is not persisted in the database.
   buildingId: UuidValue, relation(parent=building)
-
+  active: bool, default=true
 indexes:
   btables_buildingId_idx:
     fields: buildingId

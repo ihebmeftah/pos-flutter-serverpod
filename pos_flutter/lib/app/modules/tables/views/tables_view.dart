@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
+import 'package:pos_flutter/app/extensions/status.extension.dart';
 import 'package:pos_flutter/app/modules/home/controllers/home_controller.dart';
 import 'package:pos_flutter/app/routes/app_pages.dart';
 
@@ -61,15 +62,17 @@ class TablesView extends GetView<TablesController> {
                         ? 1
                         : 0.89,
                   ),
-                  itemCount: controller.tables.length,
+                  itemCount: controller.searchTables.length,
                   itemBuilder: (context, index) => GetBuilder<TablesController>(
-                    id: controller.tables[index].id,
+                    id: controller.searchTables[index].id,
                     builder: (_) {
                       return TableItemWidget(
                         onTap: () {
                           final passOrderCtr = Get.find<PassOrderController>();
                           if (Get.previousRoute == Routes.PASS_ORDER) {
-                            passOrderCtr.setTable(controller.tables[index]);
+                            passOrderCtr.setTable(
+                              controller.searchTables[index],
+                            );
                             return;
                           }
                           bottomSheet(
@@ -84,7 +87,7 @@ class TablesView extends GetView<TablesController> {
                                 ? () {
                                     Get.back();
                                     passOrderCtr.setTable(
-                                      controller.tables[index],
+                                      controller.searchTables[index],
                                     );
                                     Get.toNamed(Routes.PASS_ORDER);
                                   }
@@ -107,7 +110,7 @@ class TablesView extends GetView<TablesController> {
                                     crossAxisAlignment: .start,
                                     children: [
                                       Text(
-                                        "Table ${controller.tables[index].number}"
+                                        "Table ${controller.searchTables[index].number}"
                                             .toString(),
                                         style: const TextStyle(
                                           fontSize: 20,
@@ -115,7 +118,7 @@ class TablesView extends GetView<TablesController> {
                                         ),
                                       ),
                                       Text(
-                                        "Max seats ${controller.tables[index].seatsMax}",
+                                        "Max seats ${controller.searchTables[index].seatsMax}",
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: Colors.grey.shade600,
@@ -127,16 +130,20 @@ class TablesView extends GetView<TablesController> {
                                   Container(
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
-                                      color:
-                                          controller.tables[index].status ==
-                                              TableStatus.occupied
-                                          ? Colors.red.shade700
-                                          : Colors.greenAccent.shade700,
-                                      borderRadius: BorderRadius.circular(10),
+                                      color: controller
+                                          .searchTables[index]
+                                          .status
+                                          .color700,
+                                      borderRadius: BorderRadius.circular(
+                                        10,
+                                      ),
                                     ),
                                     child: Center(
                                       child: Text(
-                                        "${controller.tables[index].status?.name.capitalize}",
+                                        controller
+                                            .searchTables[index]
+                                            .status
+                                            .label,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w600,
@@ -147,11 +154,11 @@ class TablesView extends GetView<TablesController> {
                                 ],
                               ),
                               if (passOrderCtr.table ==
-                                  controller.tables[index])
+                                  controller.searchTables[index])
                                 ListTile(
                                   title: Text('Unselect Table'),
                                   onTap: () => passOrderCtr.setTable(
-                                    controller.tables[index],
+                                    controller.searchTables[index],
                                   ),
                                 ),
 
@@ -159,23 +166,43 @@ class TablesView extends GetView<TablesController> {
                                 ListTile(
                                   title: Text('Consult table orders'),
                                   onTap: () => Get.toNamed(
-                                    "${Routes.ORDERS_TABLES}/${controller.tables[index].id}",
+                                    "${Routes.ORDERS_TABLES}/${controller.searchTables[index].id}",
                                   ),
                                 ),
                               if (!LocalStorage().building!.tableMultiOrder &&
-                                  controller.tables[index].status ==
+                                  controller.searchTables[index].status ==
                                       TableStatus.occupied)
                                 ListTile(
-                                  title: Text('Consult table current order'),
+                                  title: Text(
+                                    'Consult table current order',
+                                  ),
                                   onTap: () => Get.toNamed(
-                                    "${Routes.ORDER_DETAILS}/${controller.tables[index].id}",
+                                    "${Routes.ORDER_DETAILS}/${controller.searchTables[index].id}",
                                     parameters: {'from': 'tables'},
                                   ),
+                                ),
+                              if (Get.find<HomeController>().scope.contains(
+                                "owner",
+                              ))
+                                GetX<TablesController>(
+                                  builder: (_) {
+                                    return SwitchListTile(
+                                      title: Text(
+                                        controller.searchTables[index].active
+                                            ? 'Deactivate Table'
+                                            : 'Activate Table',
+                                      ),
+                                      value:
+                                          controller.searchTables[index].active,
+                                      onChanged: (_) => controller
+                                          .changeTableActivation(index),
+                                    );
+                                  },
                                 ),
                             ],
                           );
                         },
-                        table: controller.tables[index],
+                        table: controller.searchTables[index],
                       );
                     },
                   ),
