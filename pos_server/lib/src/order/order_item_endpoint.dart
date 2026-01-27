@@ -284,7 +284,7 @@ class OrderItemEndpoint extends Endpoint {
     if (building.strictMode) {
       if (order.items!.any(
         (item) =>
-            item.itemStatus != OrderItemStatus.served ||
+            item.itemStatus != OrderItemStatus.served &&
             item.itemStatus != OrderItemStatus.payed,
       )) {
         throw AppException(
