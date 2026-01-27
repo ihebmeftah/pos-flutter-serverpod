@@ -104,26 +104,48 @@ class TableItemWidget extends StatelessWidget {
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Column(
-                          mainAxisAlignment: .center,
-                          children: [
-                            Text(
-                              "№${table.number}",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              "Max seats ${table.seatsMax}",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade50,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
+                        child: GetBuilder<PassOrderController>(
+                          id: "table",
+                          builder: (passOrderCtr) {
+                            return passOrderCtr.table?.id == table.id
+                                ? Column(
+                                    mainAxisAlignment: .center,
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        "Selected",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Column(
+                                    mainAxisAlignment: .center,
+                                    children: [
+                                      Text(
+                                        "№${table.number}",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Max seats ${table.seatsMax}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey.shade50,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                          },
                         ),
                       );
                     },
@@ -176,18 +198,6 @@ class TableItemWidget extends StatelessWidget {
                   },
                 );
               }),
-            ),
-            GetBuilder<PassOrderController>(
-              id: "table",
-              builder: (passOrderCtr) {
-                return passOrderCtr.table?.id == table.id
-                    ? Icon(
-                        Icons.check_circle,
-                        color: Colors.greenAccent.shade700,
-                        size: 30,
-                      )
-                    : Container();
-              },
             ),
           ],
         ),

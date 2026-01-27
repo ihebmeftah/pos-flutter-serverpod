@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:hyper_snackbar/hyper_snackbar.dart';
 
 import 'app/data/local/local_storage.dart';
 import 'app/routes/app_pages.dart';
@@ -15,6 +16,7 @@ void main() async {
     GetMaterialApp(
       title: "POS",
       theme: AppTheme().light,
+      navigatorKey: HyperSnackbar.navigatorKey,
       unknownRoute: AppPages.unknownRoute,
       debugShowCheckedModeBanner: false,
       darkTheme: AppTheme().dark,
