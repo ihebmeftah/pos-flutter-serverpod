@@ -36,8 +36,7 @@ class OrderEndpoint extends Endpoint {
         session,
         session.authenticated!.authUserId,
       );
-      if (employer.building!.orderWithCashRegister &&
-          !employer.access!.consultAllOrders) {
+      if (employer.building!.orderWithCashRegister) {
         currentCashRegister = await EndpointHelpers.getCurrentCashRegister(
           session,
           employer.building!,
@@ -78,9 +77,16 @@ class OrderEndpoint extends Endpoint {
               t.passedBy.authUserId.equals(session.authenticated!.authUserId) |
               t.closedby.authUserId.equals(session.authenticated!.authUserId) |
               t.items.any(
-                (item) => item.passedBy.authUserId.equals(
-                  session.authenticated!.authUserId,
-                ),
+                (item) =>
+                    item.passedBy.authUserId.equals(
+                      session.authenticated!.authUserId,
+                    ) |
+                    item.preparedBy.authUserId.equals(
+                      session.authenticated!.authUserId,
+                    ) |
+                    item.payedTo.authUserId.equals(
+                      session.authenticated!.authUserId,
+                    ),
               );
           condition = condition & currentUserFilter;
         }

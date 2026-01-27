@@ -155,6 +155,11 @@ class OrderItemEndpoint extends Endpoint {
           newStatus,
         );
         item.itemStatus = newStatus;
+        if (newStatus == OrderItemStatus.picked ||
+            newStatus == OrderItemStatus.ready) {
+          item.preparedById = employer.userProfileId;
+          item.preaparedAt = DateTime.now();
+        }
         item.updatedAt = DateTime.now();
       }
     }
