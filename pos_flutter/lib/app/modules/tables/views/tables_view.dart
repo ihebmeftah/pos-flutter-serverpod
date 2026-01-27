@@ -35,20 +35,34 @@ class TablesView extends GetView<TablesController> {
                   label: const Text('Generate Tables QR Code'),
                   icon: const Icon(Icons.qr_code),
                 ),
-              Row(
-                spacing: 20,
-                mainAxisAlignment: .center,
-                children: [
-                  TableStatusWidget(
-                    color: Colors.greenAccent,
-                    status: "Available (${controller.availableNb})",
-                  ),
-                  TableStatusWidget(
-                    color: Colors.brown.shade700,
-                    status: "Occupied (${controller.occupiedNb})",
-                  ),
-                  //   TableStatusWidget(color: Colors.red, status: "Reserved (3)"),
-                ],
+
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  spacing: 8,
+                  children: [
+                    ChoiceChip(
+                      label: const Text('All'),
+                      selected: controller.filterStatus == null,
+                      onSelected: (_) => controller.filterTablesBystatus(),
+                    ),
+                    ChoiceChip(
+                      label: Text('Available (${controller.availableNb})'),
+                      selected:
+                          controller.filterStatus == TableStatus.available,
+                      onSelected: (_) => controller.filterTablesBystatus(
+                        TableStatus.available,
+                      ),
+                    ),
+                    ChoiceChip(
+                      label: Text('Occupied (${controller.occupiedNb})'),
+                      selected: controller.filterStatus == TableStatus.occupied,
+                      onSelected: (_) => controller.filterTablesBystatus(
+                        TableStatus.occupied,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                 child: GridView.builder(
@@ -74,7 +88,7 @@ class TablesView extends GetView<TablesController> {
                               controller.searchTables[index],
                             );
                             return;
-                          } 
+                          }
                           bottomSheet(
                             onConfirm:
                                 (Get.find<HomeController>()

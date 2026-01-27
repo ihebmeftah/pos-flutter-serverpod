@@ -24,6 +24,8 @@ class BuildingTablesEndpoint extends Endpoint {
     // Fetch all tables
     List<BTable> tables = await BTable.db.find(
       session,
+      orderBy: (col) => col.number,
+      orderDescending: false,
       where: (t) {
         if (session.authenticated!.scopes.contains(Scope("employer"))) {
           return t.buildingId.equals(buildingId) & t.active.equals(true);

@@ -15,13 +15,16 @@ class TablesController extends GetxController with StateMixin<List<BTable>> {
   List<BTable> tables = <BTable>[];
   final searchTables = <BTable>[].obs;
 
-  int get availableNb => searchTables
-      .where((table) => table.status == TableStatus.available)
+  int get availableNb => tables
+      .where(
+        (table) => table.status == TableStatus.available,
+      )
       .length;
-  int get occupiedNb => searchTables
-      .where((table) => table.status == TableStatus.occupied)
+  int get occupiedNb => tables
+      .where(
+        (table) => table.status == TableStatus.occupied,
+      )
       .length;
-
   @override
   void onInit() {
     getTabels();
@@ -125,7 +128,7 @@ class TablesController extends GetxController with StateMixin<List<BTable>> {
   }
 
   TableStatus? filterStatus;
-  void filterTablesBystatus(TableStatus? status) {
+  void filterTablesBystatus([TableStatus? status]) {
     if (filterStatus == status) {
       filterStatus = null;
     } else {
@@ -138,15 +141,6 @@ class TablesController extends GetxController with StateMixin<List<BTable>> {
         tables.where((table) => table.status == filterStatus).toList(),
       );
     }
-    searchTables.refresh();
-  }
-
-  void showOnlyDescativateTables(bool show) {
-    if (show) {
-      searchTables(tables.where((table) => table.active == false).toList());
-    } else {
-      searchTables(tables);
-    }
-    searchTables.refresh();
+    change(null, status: RxStatus.success());
   }
 }
