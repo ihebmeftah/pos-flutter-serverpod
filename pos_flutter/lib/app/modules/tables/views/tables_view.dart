@@ -13,7 +13,6 @@ import '../../../data/local/local_storage.dart';
 import '../../order/controllers/pass_order_controller.dart';
 import '../controllers/tables_controller.dart';
 import '../widgets/tableitemwidget.dart';
-import '../widgets/tablestatuswidget.dart';
 
 class TablesView extends GetView<TablesController> {
   const TablesView({super.key});

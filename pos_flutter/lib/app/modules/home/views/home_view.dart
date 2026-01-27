@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -66,18 +67,15 @@ class HomeView extends GetView<HomeController> {
                         "employer",
                       ))
                         ListTile(
-                          leading: Icon(Icons.place),
+                          leading: Icon(FluentIcons.building_20_regular),
                           title: Text('Buildings'),
-                          subtitle: Text(
-                            'Current : ${LocalStorage().building?.name ?? "None"}',
-                          ),
                           onTap: () => Get.offAllNamed(Routes.BUILDINGS),
                         ),
                       if (!controller.scope.contains(
                         "employer",
                       ))
                         ListTile(
-                          leading: Icon(Icons.edit_location),
+                          leading: Icon(FluentIcons.edit_20_regular),
                           title: Text(
                             'Edit ${LocalStorage().building?.name ?? "None"}',
                           ),
@@ -96,7 +94,7 @@ class HomeView extends GetView<HomeController> {
                                   ?.cashRegisterManagement ==
                               true)
                         ListTile(
-                          leading: Icon(Icons.point_of_sale),
+                          leading: Icon(FluentIcons.money_calculator_20_filled),
                           title: Text(
                             "Cash register control",
                           ),
@@ -108,7 +106,7 @@ class HomeView extends GetView<HomeController> {
                         "employer",
                       ))
                         ListTile(
-                          leading: Icon(Icons.person),
+                          leading: Icon(FluentIcons.person_20_regular),
                           title: Text('Employers'),
                           onTap: () => Get.toNamed(Routes.EMPLOYER),
                         ),
@@ -116,7 +114,7 @@ class HomeView extends GetView<HomeController> {
                         "owner",
                       ))
                         ListTile(
-                          leading: Icon(Icons.security),
+                          leading: Icon(FluentIcons.key_20_regular),
                           title: Text('Accesses'),
                           onTap: () => Get.toNamed(Routes.ACCESS),
                         ),
