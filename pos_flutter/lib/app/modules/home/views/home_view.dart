@@ -94,7 +94,9 @@ class HomeView extends GetView<HomeController> {
                                   ?.cashRegisterManagement ==
                               true)
                         ListTile(
-                          leading: Icon(FluentIcons.money_calculator_20_filled),
+                          leading: Icon(
+                            FluentIcons.money_calculator_20_regular,
+                          ),
                           title: Text(
                             "Cash register control",
                           ),
