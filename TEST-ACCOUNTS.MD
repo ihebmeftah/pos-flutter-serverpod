@@ -398,53 +398,6 @@ dart run bin/seed_database.dart --config=development
 
 ## 🔑 Quick Reference Card
 
-| Building     | Owner Email   | Owner Password | Employee Password |
-| ------------ | ------------- | -------------- | ----------------- |
-| Café Dream   | owner1@b1.com | Owner123!      | Employee123!      |
-| Café Zitouna | owner2@b2.tn  | Owner123!      | Employee123!      |
-| Bistro Paris | owner3@b3.fr  | Owner123!      | Employee123!      |
-
-**Employee Email Pattern:** `[role][number]@example.com`
-
-- manager1@example.com, waiter1@example.com, chef1@example.com (Building 1)
-- manager2@example.com, waiter2@example.com, chef2@example.com (Building 2)
-- manager3@example.com, waiter3@example.com, chef3@example.com (Building 3)
-
----
-
-_Last Updated: January 2026_
-
-- Login as `owner1@b1.com` or any employee
-- Test multiple orders per table
-- Test adding items to existing orders
-- Test cash register with 5 register limit
-- Verify auto-close at 10 PM
-
-### Scenario 2: Strict Operations (Café Zitouna)
-
-- Login as `owner2@b2.tn` or any employee
-- Verify only one order per table
-- Test that appending items is blocked
-- Test cash register with 3 register limit
-- Verify strict mode controls
-
-### Scenario 3: No Cash Register (Bistro Paris)
-
-- Login as `owner3@b3.fr` or any employee
-- Test operations without cash register
-- Verify manual order closure
-- Test flexible order management
-
-### Role-Based Testing
-
-- **Manager:** Full workflow testing
-- **Waiter:** Order creation and service without payment
-- **Chef:** Kitchen preparation workflow only
-
----
-
-## 🔑 Quick Reference Card
-
 | Building     | Owner Email     | Owner Password | Employee Password |
 | ------------ | --------------- | -------------- | ----------------- |
 | Café Dream   | <owner1@b1.com> | Owner123!      | Employee123!      |
@@ -456,7 +409,3 @@ _Last Updated: January 2026_
 - <manager1@example.com>, <waiter1@example.com>, <chef1@example.com> (Building 1)
 - <manager2@example.com>, <waiter2@example.com>, <chef2@example.com> (Building 2)
 - <manager3@example.com>, <waiter3@example.com>, <chef3@example.com> (Building 3)
-
----
-
-_Last Updated: January 2026_
