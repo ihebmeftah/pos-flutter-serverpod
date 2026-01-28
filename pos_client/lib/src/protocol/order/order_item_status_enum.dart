@@ -17,7 +17,8 @@ enum OrderItemStatus implements _i1.SerializableModel {
   picked,
   ready,
   served,
-  payed;
+  payed,
+  cancelled;
 
   static OrderItemStatus fromJson(String name) {
     switch (name) {
@@ -31,6 +32,8 @@ enum OrderItemStatus implements _i1.SerializableModel {
         return OrderItemStatus.served;
       case 'payed':
         return OrderItemStatus.payed;
+      case 'cancelled':
+        return OrderItemStatus.cancelled;
       default:
         return OrderItemStatus.progress;
     }

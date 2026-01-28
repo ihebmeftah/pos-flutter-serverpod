@@ -7,3 +7,4 @@ values:
   - ready
   - served
   - payed
+  - cancelled

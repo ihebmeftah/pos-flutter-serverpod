@@ -16,6 +16,8 @@ extension OrderItemStatusExtension on OrderItemStatus {
         return Colors.blue;
       case OrderItemStatus.payed:
         return Colors.green;
+      case OrderItemStatus.cancelled:
+        return Colors.red;
     }
   }
 
@@ -31,6 +33,8 @@ extension OrderItemStatusExtension on OrderItemStatus {
         return Colors.blue.shade50;
       case OrderItemStatus.payed:
         return Colors.green.shade50;
+      case OrderItemStatus.cancelled:
+        return Colors.red.shade50;
     }
   }
 
@@ -46,6 +50,8 @@ extension OrderItemStatusExtension on OrderItemStatus {
         return Colors.blue.shade700;
       case OrderItemStatus.payed:
         return Colors.green.shade700;
+      case OrderItemStatus.cancelled:
+        return Colors.red.shade700;
     }
   }
 
@@ -61,6 +67,8 @@ extension OrderItemStatusExtension on OrderItemStatus {
         return "Delivered";
       case OrderItemStatus.payed:
         return "Paid";
+      case OrderItemStatus.cancelled:
+        return "Cancelled";
     }
   }
 }
@@ -128,6 +136,8 @@ extension OrderStatusExtension on OrderStatus {
         return Colors.blueGrey;
       case OrderStatus.payed:
         return Colors.green;
+      case OrderStatus.cancelled:
+        return Colors.red;
     }
   }
 
@@ -137,6 +147,8 @@ extension OrderStatusExtension on OrderStatus {
         return Colors.blueGrey.shade50;
       case OrderStatus.payed:
         return Colors.green.shade50;
+      case OrderStatus.cancelled:
+        return Colors.red.shade50;
     }
   }
 
@@ -146,6 +158,8 @@ extension OrderStatusExtension on OrderStatus {
         return Colors.blueGrey.shade100;
       case OrderStatus.payed:
         return Colors.green.shade100;
+      case OrderStatus.cancelled:
+        return Colors.red.shade100;
     }
   }
 
@@ -155,6 +169,8 @@ extension OrderStatusExtension on OrderStatus {
         return Colors.blueGrey.shade700;
       case OrderStatus.payed:
         return Colors.green.shade700;
+      case OrderStatus.cancelled:
+        return Colors.red.shade700;
     }
   }
 }
