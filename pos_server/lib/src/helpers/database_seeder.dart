@@ -599,74 +599,132 @@ class DatabaseSeeder {
   ) async {
     if (ingredients.isEmpty) return;
 
-    // Get relevant ingredients based on article name
-    List<Ingredient> relevantIngredients;
+    // Get relevant ingredients based on article name with appropriate quantities
+    List<Map<String, dynamic>> compositionData = [];
+    final articleName = article.name.toLowerCase();
 
-    if (article.name.toLowerCase().contains('coffee') ||
-        article.name.toLowerCase().contains('espresso') ||
-        article.name.toLowerCase().contains('latte') ||
-        article.name.toLowerCase().contains('cappuccino')) {
-      relevantIngredients = ingredients
-          .where(
-            (i) =>
-                i.name.contains('Coffee') ||
-                i.name.contains('Milk') ||
-                i.name.contains('Sugar'),
-          )
-          .take(2)
-          .toList();
-    } else if (article.name.toLowerCase().contains('sandwich')) {
-      relevantIngredients = ingredients
-          .where(
-            (i) =>
-                i.name.contains('Bread') ||
-                i.name.contains('Cheese') ||
-                i.name.contains('Chicken') ||
-                i.name.contains('Tomatoes'),
-          )
-          .take(3)
-          .toList();
-    } else if (article.name.toLowerCase().contains('salad')) {
-      relevantIngredients = ingredients
-          .where(
-            (i) =>
-                i.name.contains('Lettuce') ||
-                i.name.contains('Tomatoes') ||
-                i.name.contains('Chicken') ||
-                i.name.contains('Cheese'),
-          )
-          .take(3)
-          .toList();
-    } else if (article.name.toLowerCase().contains('juice')) {
-      relevantIngredients = ingredients
-          .where((i) => i.name.contains('Orange Juice'))
-          .take(1)
-          .toList();
-    } else if (article.name.toLowerCase().contains('chocolate') ||
-        article.name.toLowerCase().contains('cake') ||
-        article.name.toLowerCase().contains('brownie')) {
-      relevantIngredients = ingredients
-          .where(
-            (i) =>
-                i.name.contains('Chocolate') ||
-                i.name.contains('Sugar') ||
-                i.name.contains('Milk'),
-          )
-          .take(2)
-          .toList();
-    } else {
-      // Default: pick first 2 ingredients
-      relevantIngredients = ingredients.take(2).toList();
+    // Espresso-based drinks
+    if (articleName.contains('espresso')) {
+      compositionData = [
+        {'ingredient': 'Espresso Coffee', 'quantity': 0.02}, // 20g
+      ];
+    } else if (articleName.contains('cappuccino')) {
+      compositionData = [
+        {'ingredient': 'Espresso Coffee', 'quantity': 0.02}, // 20g
+        {'ingredient': 'Milk', 'quantity': 0.15}, // 150ml
+        {'ingredient': 'Sugar', 'quantity': 0.005}, // 5g
+      ];
+    } else if (articleName.contains('latte')) {
+      compositionData = [
+        {'ingredient': 'Espresso Coffee', 'quantity': 0.02}, // 20g
+        {'ingredient': 'Milk', 'quantity': 0.25}, // 250ml
+        {'ingredient': 'Sugar', 'quantity': 0.005}, // 5g
+      ];
+    } else if (articleName.contains('iced coffee')) {
+      compositionData = [
+        {'ingredient': 'Espresso Coffee', 'quantity': 0.025}, // 25g
+        {'ingredient': 'Milk', 'quantity': 0.2}, // 200ml
+        {'ingredient': 'Sugar', 'quantity': 0.01}, // 10g
+      ];
+    }
+    // Juices
+    else if (articleName.contains('orange juice')) {
+      compositionData = [
+        {'ingredient': 'Orange Juice', 'quantity': 0.3}, // 300ml
+      ];
+    } else if (articleName.contains('lemonade')) {
+      compositionData = [
+        {'ingredient': 'Sugar', 'quantity': 0.02}, // 20g
+      ];
+    }
+    // Sandwiches
+    else if (articleName.contains('club sandwich')) {
+      compositionData = [
+        {'ingredient': 'Bread', 'quantity': 3.0}, // 3 slices
+        {'ingredient': 'Chicken', 'quantity': 0.1}, // 100g
+        {'ingredient': 'Cheese', 'quantity': 0.03}, // 30g
+        {'ingredient': 'Tomatoes', 'quantity': 0.05}, // 50g
+        {'ingredient': 'Lettuce', 'quantity': 1.0}, // 1 piece
+      ];
+    } else if (articleName.contains('cheese sandwich')) {
+      compositionData = [
+        {'ingredient': 'Bread', 'quantity': 2.0}, // 2 slices
+        {'ingredient': 'Cheese', 'quantity': 0.08}, // 80g
+        {'ingredient': 'Tomatoes', 'quantity': 0.03}, // 30g
+      ];
+    } else if (articleName.contains('chicken sandwich')) {
+      compositionData = [
+        {'ingredient': 'Bread', 'quantity': 2.0}, // 2 slices
+        {'ingredient': 'Chicken', 'quantity': 0.12}, // 120g
+        {'ingredient': 'Lettuce', 'quantity': 1.0}, // 1 piece
+        {'ingredient': 'Tomatoes', 'quantity': 0.04}, // 40g
+      ];
+    }
+    // Salads
+    else if (articleName.contains('caesar salad')) {
+      compositionData = [
+        {'ingredient': 'Lettuce', 'quantity': 2.0}, // 2 pieces
+        {'ingredient': 'Chicken', 'quantity': 0.15}, // 150g
+        {'ingredient': 'Cheese', 'quantity': 0.03}, // 30g
+      ];
+    } else if (articleName.contains('greek salad')) {
+      compositionData = [
+        {'ingredient': 'Lettuce', 'quantity': 2.0}, // 2 pieces
+        {'ingredient': 'Tomatoes', 'quantity': 0.15}, // 150g
+        {'ingredient': 'Cheese', 'quantity': 0.08}, // 80g
+      ];
+    } else if (articleName.contains('chicken salad')) {
+      compositionData = [
+        {'ingredient': 'Lettuce', 'quantity': 2.0}, // 2 pieces
+        {'ingredient': 'Chicken', 'quantity': 0.2}, // 200g
+        {'ingredient': 'Tomatoes', 'quantity': 0.08}, // 80g
+      ];
+    }
+    // Desserts
+    else if (articleName.contains('chocolate cake')) {
+      compositionData = [
+        {'ingredient': 'Chocolate', 'quantity': 0.1}, // 100g
+        {'ingredient': 'Sugar', 'quantity': 0.05}, // 50g
+        {'ingredient': 'Milk', 'quantity': 0.05}, // 50ml
+      ];
+    } else if (articleName.contains('cheesecake')) {
+      compositionData = [
+        {'ingredient': 'Cheese', 'quantity': 0.15}, // 150g
+        {'ingredient': 'Sugar', 'quantity': 0.04}, // 40g
+        {'ingredient': 'Milk', 'quantity': 0.05}, // 50ml
+      ];
+    } else if (articleName.contains('brownie')) {
+      compositionData = [
+        {'ingredient': 'Chocolate', 'quantity': 0.08}, // 80g
+        {'ingredient': 'Sugar', 'quantity': 0.05}, // 50g
+      ];
+    }
+    // Default for any other items
+    else {
+      compositionData = [
+        {'ingredient': ingredients.first.name, 'quantity': 0.1},
+        if (ingredients.length > 1)
+          {'ingredient': ingredients[1].name, 'quantity': 0.05},
+      ];
     }
 
-    // Create compositions
-    for (final ingredient in relevantIngredients) {
-      final composition = ArticleComposition(
-        articleId: article.id,
-        ingredientId: ingredient.id,
-        quantity: 1.0, // Default quantity
-      );
-      await ArticleComposition.db.insertRow(session, composition);
+    // Create compositions based on the data
+    for (final data in compositionData) {
+      final ingredientName = data['ingredient'] as String;
+      final quantity = data['quantity'] as double;
+
+      final ingredient = ingredients
+          .where((i) => i.name == ingredientName)
+          .firstOrNull;
+
+      if (ingredient != null) {
+        final composition = ArticleComposition(
+          articleId: article.id,
+          ingredientId: ingredient.id,
+          quantity: quantity,
+        );
+        await ArticleComposition.db.insertRow(session, composition);
+      }
     }
   }
 }
