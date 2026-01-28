@@ -966,6 +966,8 @@ class EndpointOrder extends _i1.EndpointRef {
     _i1.UuidValue buildingId, [
     _i19.OrderStatus? orderStatus,
     _i1.UuidValue? cashRegisterId,
+    DateTime? fromDate,
+    DateTime? toDate,
   ]) => caller.callServerEndpoint<List<_i18.Order>>(
     'order',
     'getOrdersByBuilingId',
@@ -973,6 +975,8 @@ class EndpointOrder extends _i1.EndpointRef {
       'buildingId': buildingId,
       'orderStatus': orderStatus,
       'cashRegisterId': cashRegisterId,
+      'fromDate': fromDate,
+      'toDate': toDate,
     },
   );
 

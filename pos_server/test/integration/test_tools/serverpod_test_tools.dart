@@ -1889,6 +1889,8 @@ class _OrderEndpoint {
     _i2.UuidValue buildingId, [
     _i20.OrderStatus? orderStatus,
     _i2.UuidValue? cashRegisterId,
+    DateTime? fromDate,
+    DateTime? toDate,
   ]) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1905,6 +1907,8 @@ class _OrderEndpoint {
             'buildingId': buildingId,
             'orderStatus': orderStatus,
             'cashRegisterId': cashRegisterId,
+            'fromDate': fromDate,
+            'toDate': toDate,
           }),
           serializationManager: _serializationManager,
         );

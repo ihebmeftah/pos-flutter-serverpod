@@ -26,6 +26,8 @@ class OrderEndpoint extends Endpoint {
     UuidValue buildingId, [
     OrderStatus? orderStatus,
     UuidValue? cashRegisterId,
+    DateTime? fromDate,
+    DateTime? toDate,
   ]) async {
     session.authorizedTo(['owner', 'employer']);
     Employer? employer;
@@ -66,6 +68,11 @@ class OrderEndpoint extends Endpoint {
               t.cashRegisterId.equals(
                 currentCashRegister?.id ?? cashRegisterId,
               );
+        }
+
+        // Add date range filter if provided
+        if (fromDate != null && toDate != null) {
+          condition = condition & t.createdAt.between(fromDate, toDate);
         }
 
         // Add user filter for non-owners without consultAllOrders permission

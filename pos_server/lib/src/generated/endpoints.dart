@@ -1214,6 +1214,16 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<_i1.UuidValue?>(),
               nullable: true,
             ),
+            'fromDate': _i1.ParameterDescription(
+              name: 'fromDate',
+              type: _i1.getType<DateTime?>(),
+              nullable: true,
+            ),
+            'toDate': _i1.ParameterDescription(
+              name: 'toDate',
+              type: _i1.getType<DateTime?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -1225,6 +1235,8 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['buildingId'],
                     params['orderStatus'],
                     params['cashRegisterId'],
+                    params['fromDate'],
+                    params['toDate'],
                   ),
         ),
         'getOrderById': _i1.MethodConnector(
