@@ -77,11 +77,9 @@
 
    - **Android:**
 
-     ````bash
+     ```bash
      flutter run -d android
-     ```  ```bash
-     flutter run -d android
-     ````
+     ```
 
    - **iOS:**
 
