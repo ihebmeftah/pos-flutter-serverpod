@@ -1,0 +1,7 @@
+class: CategoryRevenue
+fields:
+    category: Categorie
+    totalRevenue: double
+    itemsSold: int
+    orderCount: int
+    percentageOfTotal: double

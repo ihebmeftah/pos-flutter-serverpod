@@ -1,0 +1,6 @@
+class: HourlyRevenueData
+serverOnly: true
+fields:
+    revenue: double, default=0.0
+    orderCount: int, default=0
+    itemsSold: int, default=0

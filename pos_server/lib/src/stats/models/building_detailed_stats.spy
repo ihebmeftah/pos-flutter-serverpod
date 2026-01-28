@@ -1,0 +1,36 @@
+class: BuildingDetailedStats
+fields:
+    # Building Info
+    buildingId: UuidValue
+    buildingName: String?
+    
+    # Overall Financial Performance
+    totalRevenue: double
+    totalOrders: int
+    averageOrderValue: double
+    
+    # Cash Register Breakdown
+    cashRegisterStats: List<CashRegisterSummary>
+    activeCashRegisters: int
+    totalCashRegisters: int
+    
+    # Product Performance
+    totalItemsSold: int
+    topSellingArticles: List<ArticleCount>
+    topSellingCategories: List<CategoryCount>
+    
+    # Category Analysis
+    revenueByCategory: List<CategoryRevenue>
+    
+    # Time-based Analysis
+    dailyRevenue: List<DailyRevenue>
+    hourlyDistribution: List<HourlyRevenue>
+    
+    # Employee Performance
+    topEmployees: List<EmployeeStats>
+    totalEmployees: int
+    
+    # Comparison Metrics
+    avgRevenuePerCashRegister: double
+    bestPerformingCashRegister: CashRegisterSummary?
+    worstPerformingCashRegister: CashRegisterSummary?

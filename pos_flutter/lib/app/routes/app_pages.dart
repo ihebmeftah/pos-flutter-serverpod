@@ -49,6 +49,8 @@ import '../modules/order/bindings/pass_order_binding.dart';
 import '../modules/order/views/order_details_view.dart';
 import '../modules/order/views/order_view.dart';
 import '../modules/order/views/pass_order_view.dart';
+import '../modules/statistics/bindings/statistics_binding.dart';
+import '../modules/statistics/views/statistics_view.dart';
 import '../modules/tables/bindings/form_table_binding.dart';
 import '../modules/tables/bindings/tables_binding.dart';
 import '../modules/tables/views/form_table_view.dart';
@@ -206,6 +208,11 @@ class AppPages {
       name: _Paths.INGREDIENT_FORM,
       page: () => const IngredientFormView(),
       binding: IngredientFormBinding(),
+    ),
+    GetPage(
+      name: _Paths.STATISTICS,
+      page: () => const StatisticsView(),
+      binding: StatisticsBinding(),
     ),
   ];
 

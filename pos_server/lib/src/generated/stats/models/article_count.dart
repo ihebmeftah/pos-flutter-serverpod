@@ -10,11 +10,12 @@
 // ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import '../article/entity/article.dart' as _i2;
-import 'package:pos_client/src/protocol/protocol.dart' as _i3;
+import 'package:serverpod/serverpod.dart' as _i1;
+import '../../article/entity/article.dart' as _i2;
+import 'package:pos_server/src/generated/protocol.dart' as _i3;
 
-abstract class ArticleCount implements _i1.SerializableModel {
+abstract class ArticleCount
+    implements _i1.SerializableModel, _i1.ProtocolSerialization {
   ArticleCount._({
     required this.article,
     required this.count,
@@ -50,6 +51,15 @@ abstract class ArticleCount implements _i1.SerializableModel {
     return {
       '__className__': 'ArticleCount',
       'article': article.toJson(),
+      'count': count,
+    };
+  }
+
+  @override
+  Map<String, dynamic> toJsonForProtocol() {
+    return {
+      '__className__': 'ArticleCount',
+      'article': article.toJsonForProtocol(),
       'count': count,
     };
   }

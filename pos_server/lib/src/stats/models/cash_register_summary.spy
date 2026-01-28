@@ -1,0 +1,10 @@
+class: CashRegisterSummary
+fields:
+    cashRegisterId: UuidValue
+    startTime: DateTime
+    endTime: DateTime?
+    isClosed: bool
+    totalRevenue: double
+    totalOrders: int
+    totalItemsSold: int
+    averageOrderValue: double

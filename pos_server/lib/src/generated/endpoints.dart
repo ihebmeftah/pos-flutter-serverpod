@@ -1456,6 +1456,56 @@ class Endpoints extends _i1.EndpointDispatch {
                 params['buildingId'],
               ),
         ),
+        'getCashRegisterStats': _i1.MethodConnector(
+          name: 'getCashRegisterStats',
+          params: {
+            'cashRegisterId': _i1.ParameterDescription(
+              name: 'cashRegisterId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['stats'] as _i14.StatsEndpoint)
+                  .getCashRegisterStats(
+                    session,
+                    params['cashRegisterId'],
+                  ),
+        ),
+        'getBuildingDetailedStats': _i1.MethodConnector(
+          name: 'getBuildingDetailedStats',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'startDate': _i1.ParameterDescription(
+              name: 'startDate',
+              type: _i1.getType<DateTime?>(),
+              nullable: true,
+            ),
+            'endDate': _i1.ParameterDescription(
+              name: 'endDate',
+              type: _i1.getType<DateTime?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['stats'] as _i14.StatsEndpoint)
+                  .getBuildingDetailedStats(
+                    session,
+                    params['buildingId'],
+                    startDate: params['startDate'],
+                    endDate: params['endDate'],
+                  ),
+        ),
       },
     );
     modules['serverpod_auth_idp'] = _i28.Endpoints()

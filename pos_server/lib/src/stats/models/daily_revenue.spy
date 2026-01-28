@@ -1,0 +1,6 @@
+class: DailyRevenue
+fields:
+    date: DateTime
+    revenue: double
+    orderCount: int
+    itemsSold: int

@@ -1,0 +1,7 @@
+class: CategoryRevenueData
+serverOnly: true
+fields:
+    category: Categorie
+    revenue: double, default=0.0
+    itemsSold: int, default=0
+    orderIds: List<String>

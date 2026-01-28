@@ -1,0 +1,10 @@
+class: CashRegisterStatsData
+serverOnly: true
+fields:
+    cashRegisterId: UuidValue
+    startTime: DateTime
+    endTime: DateTime?
+    isClosed: bool
+    revenue: double, default=0.0
+    orderCount: int, default=0
+    itemsSold: int, default=0

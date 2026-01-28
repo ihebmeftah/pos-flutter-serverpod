@@ -1,0 +1,8 @@
+class: EmployeeStats
+fields:
+    employeeId: UuidValue
+    employeeName: String
+    totalOrders: int
+    totalRevenue: double
+    averageOrderValue: double
+    itemsSold: int

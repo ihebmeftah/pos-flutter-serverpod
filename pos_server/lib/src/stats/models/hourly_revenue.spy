@@ -1,0 +1,6 @@
+class: HourlyRevenue
+fields:
+    hour: int
+    revenue: double
+    orderCount: int
+    itemsSold: int

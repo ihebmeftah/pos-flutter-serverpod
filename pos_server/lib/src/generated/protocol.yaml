@@ -67,3 +67,5 @@ orderItem:
   - payAllItems:
 stats:
   - getStats:
+  - getCashRegisterStats:
+  - getBuildingDetailedStats:

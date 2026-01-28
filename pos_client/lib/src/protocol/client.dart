@@ -46,8 +46,12 @@ import 'package:pos_client/src/protocol/order/dto/append_items.dto.dart'
 import 'package:pos_client/src/protocol/order/entity/order_item.dart' as _i22;
 import 'package:pos_client/src/protocol/order/order_item_status_enum.dart'
     as _i23;
-import 'package:pos_client/src/protocol/stats/stats.dart' as _i24;
-import 'protocol.dart' as _i25;
+import 'package:pos_client/src/protocol/stats/models/stats.dart' as _i24;
+import 'package:pos_client/src/protocol/stats/models/cash_register_stats.dart'
+    as _i25;
+import 'package:pos_client/src/protocol/stats/models/building_detailed_stats.dart'
+    as _i26;
+import 'protocol.dart' as _i27;
 
 /// {@category Endpoint}
 class EndpointAccess extends _i1.EndpointRef {
@@ -1144,6 +1148,30 @@ class EndpointStats extends _i1.EndpointRef {
         'getStats',
         {'buildingId': buildingId},
       );
+
+  /// Get detailed statistics for a specific cash register
+  _i2.Future<_i25.CashRegisterStats> getCashRegisterStats(
+    _i1.UuidValue cashRegisterId,
+  ) => caller.callServerEndpoint<_i25.CashRegisterStats>(
+    'stats',
+    'getCashRegisterStats',
+    {'cashRegisterId': cashRegisterId},
+  );
+
+  /// Get comprehensive detailed statistics for a building
+  _i2.Future<_i26.BuildingDetailedStats> getBuildingDetailedStats(
+    _i1.UuidValue buildingId, {
+    DateTime? startDate,
+    DateTime? endDate,
+  }) => caller.callServerEndpoint<_i26.BuildingDetailedStats>(
+    'stats',
+    'getBuildingDetailedStats',
+    {
+      'buildingId': buildingId,
+      'startDate': startDate,
+      'endDate': endDate,
+    },
+  );
 }
 
 class Modules {
@@ -1177,7 +1205,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i25.Protocol(),
+         _i27.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,

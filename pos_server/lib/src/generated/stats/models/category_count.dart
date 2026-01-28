@@ -11,46 +11,46 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../article/entity/article.dart' as _i2;
+import '../../cateogrie/entity/categorie.dart' as _i2;
 import 'package:pos_server/src/generated/protocol.dart' as _i3;
 
-abstract class ArticleCount
+abstract class CategoryCount
     implements _i1.SerializableModel, _i1.ProtocolSerialization {
-  ArticleCount._({
-    required this.article,
+  CategoryCount._({
+    required this.category,
     required this.count,
   });
 
-  factory ArticleCount({
-    required _i2.Article article,
+  factory CategoryCount({
+    required _i2.Categorie category,
     required int count,
-  }) = _ArticleCountImpl;
+  }) = _CategoryCountImpl;
 
-  factory ArticleCount.fromJson(Map<String, dynamic> jsonSerialization) {
-    return ArticleCount(
-      article: _i3.Protocol().deserialize<_i2.Article>(
-        jsonSerialization['article'],
+  factory CategoryCount.fromJson(Map<String, dynamic> jsonSerialization) {
+    return CategoryCount(
+      category: _i3.Protocol().deserialize<_i2.Categorie>(
+        jsonSerialization['category'],
       ),
       count: jsonSerialization['count'] as int,
     );
   }
 
-  _i2.Article article;
+  _i2.Categorie category;
 
   int count;
 
-  /// Returns a shallow copy of this [ArticleCount]
+  /// Returns a shallow copy of this [CategoryCount]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
-  ArticleCount copyWith({
-    _i2.Article? article,
+  CategoryCount copyWith({
+    _i2.Categorie? category,
     int? count,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
-      '__className__': 'ArticleCount',
-      'article': article.toJson(),
+      '__className__': 'CategoryCount',
+      'category': category.toJson(),
       'count': count,
     };
   }
@@ -58,8 +58,8 @@ abstract class ArticleCount
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
-      '__className__': 'ArticleCount',
-      'article': article.toJsonForProtocol(),
+      '__className__': 'CategoryCount',
+      'category': category.toJsonForProtocol(),
       'count': count,
     };
   }
@@ -70,25 +70,25 @@ abstract class ArticleCount
   }
 }
 
-class _ArticleCountImpl extends ArticleCount {
-  _ArticleCountImpl({
-    required _i2.Article article,
+class _CategoryCountImpl extends CategoryCount {
+  _CategoryCountImpl({
+    required _i2.Categorie category,
     required int count,
   }) : super._(
-         article: article,
+         category: category,
          count: count,
        );
 
-  /// Returns a shallow copy of this [ArticleCount]
+  /// Returns a shallow copy of this [CategoryCount]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
   @override
-  ArticleCount copyWith({
-    _i2.Article? article,
+  CategoryCount copyWith({
+    _i2.Categorie? category,
     int? count,
   }) {
-    return ArticleCount(
-      article: article ?? this.article.copyWith(),
+    return CategoryCount(
+      category: category ?? this.category.copyWith(),
       count: count ?? this.count,
     );
   }

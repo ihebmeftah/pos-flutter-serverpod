@@ -11,9 +11,9 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import '../stats/article_count.dart' as _i2;
-import '../stats/category_count.dart' as _i3;
-import '../stats/funds.dart' as _i4;
+import '../../stats/models/article_count.dart' as _i2;
+import '../../stats/models/category_count.dart' as _i3;
+import '../../stats/models/funds.dart' as _i4;
 import 'package:pos_client/src/protocol/protocol.dart' as _i5;
 
 abstract class Stats implements _i1.SerializableModel {

@@ -1,0 +1,38 @@
+class: CashRegisterStats
+fields:
+    # Cash Register Info
+    cashRegisterId: UuidValue
+    startTime: DateTime
+    endTime: DateTime?
+    isClosed: bool
+    
+    # Financial Overview
+    totalRevenue: double
+    startAmount: double
+    endAmount: double
+    expectedEndAmount: double
+    cashDifference: double
+    
+    # Order Statistics
+    totalOrders: int
+    completedOrders: int
+    cancelledOrders: int
+    averageOrderValue: double
+    
+    # Item Statistics
+    totalItemsSold: int
+    totalItemsCancelled: int
+    
+    # Popular Items
+    topSellingArticles: List<ArticleCount>
+    topSellingCategories: List<CategoryCount>
+    
+    # Revenue by Category
+    revenueByCategory: List<CategoryRevenue>
+    
+    # Time-based Analysis
+    hourlyRevenue: List<HourlyRevenue>
+    peakHour: String?
+    
+    # Employee Performance
+    employeeStats: List<EmployeeStats>?

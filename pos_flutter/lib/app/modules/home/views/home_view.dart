@@ -87,6 +87,14 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ),
                       if (controller.scope.contains(
+                        "owner",
+                      ))
+                        ListTile(
+                          leading: Icon(FluentIcons.chart_multiple_20_regular),
+                          title: Text('Statistics'),
+                          onTap: () => Get.toNamed(Routes.STATISTICS),
+                        ),
+                      if (controller.scope.contains(
                             "owner",
                           ) ||
                           controller
