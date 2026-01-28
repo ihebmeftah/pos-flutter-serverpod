@@ -93,3 +93,9 @@
      ```
 
 The server should now be running and ready to use!
+
+---
+
+### Important Notes
+
+> **Using a Real Device:** If you're running the app on a real device (Android/iOS), you need to update the `config.json` file located in `pos_flutter/assets/` and change `localhost` to your PC's IP address.
