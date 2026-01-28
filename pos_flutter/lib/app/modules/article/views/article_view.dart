@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pos_flutter/app/components/apperrorscreen.dart';
 import 'package:pos_flutter/app/data/local/local_storage.dart';
 import 'package:pos_flutter/app/extensions/currency.extension.dart';
+import 'package:pos_flutter/app/modules/home/controllers/home_controller.dart';
 
 import '../../../components/appemptyscreen.dart';
 import '../../../routes/app_pages.dart';
@@ -20,10 +21,21 @@ class ArticleView extends GetView<ArticleController> {
         elevation: 0,
         title: const Text('Articles'),
         actions: [
-          if (Get.previousRoute != Routes.PASS_ORDER)
+          if (Get.previousRoute != Routes.PASS_ORDER &&
+              !Get.find<HomeController>().scope.contains(
+                "employer",
+              ))
             IconButton(
               onPressed: () => Get.toNamed(Routes.ARTICLE_FORM),
               icon: const Icon(Icons.add),
+            ),
+          if (Get.previousRoute == Routes.PASS_ORDER ||
+              Get.find<HomeController>().scope.contains(
+                "employer",
+              ))
+            TextButton(
+              onPressed: () => Get.offAndToNamed(Routes.CATEGORIE),
+              child: const Text("Categories"),
             ),
         ],
       ),

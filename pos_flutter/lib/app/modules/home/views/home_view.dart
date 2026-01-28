@@ -87,7 +87,7 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ),
                       if (controller.scope.contains(
-                            "admin",
+                            "owner",
                           ) ||
                           controller
                                   .currentUserAccess

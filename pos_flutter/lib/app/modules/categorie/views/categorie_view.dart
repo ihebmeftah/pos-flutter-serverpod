@@ -6,6 +6,7 @@ import '../../../components/appemptyscreen.dart';
 import '../../../components/apperrorscreen.dart';
 import '../../../routes/app_pages.dart';
 import '../../../themes/apptheme.dart';
+import '../../home/controllers/home_controller.dart';
 import '../controllers/categorie_controller.dart';
 
 class CategorieView extends GetView<CategorieController> {
@@ -16,10 +17,22 @@ class CategorieView extends GetView<CategorieController> {
       appBar: AppBar(
         title: const Text('Categories'),
         actions: [
-          IconButton(
-            onPressed: () => Get.toNamed(Routes.CATEGORIE_FORM),
-            icon: const Icon(Icons.add, size: 20),
-          ),
+          if (Get.previousRoute != Routes.PASS_ORDER &&
+              !Get.find<HomeController>().scope.contains(
+                "employer",
+              ))
+            IconButton(
+              onPressed: () => Get.toNamed(Routes.CATEGORIE_FORM),
+              icon: const Icon(Icons.add, size: 20),
+            ),
+          if (Get.previousRoute == Routes.PASS_ORDER ||
+              Get.find<HomeController>().scope.contains(
+                "employer",
+              ))
+            TextButton(
+              onPressed: () => Get.offAndToNamed(Routes.ARTICLE),
+              child: const Text("Articles"),
+            ),
         ],
       ),
       body: controller.obx(
