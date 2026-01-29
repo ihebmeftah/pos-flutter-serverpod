@@ -15,29 +15,6 @@ class OrderView extends GetView<OrderController> {
       length: 3,
       initialIndex: controller.currentTabIndex,
       child: Scaffold(
-        persistentFooterDecoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-        ),
-        persistentFooterButtons: [
-          TabBar(
-            onTap: controller.changeTab,
-            labelStyle: context.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-            dividerHeight: 0,
-            indicator: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            indicatorSize: TabBarIndicatorSize.tab,
-            tabs: [
-              Tab(text: 'All'),
-              Tab(text: 'Progress'),
-              Tab(text: 'Paid'),
-            ],
-          ),
-        ],
         appBar:
             controller.tableId != null &&
                 Get.currentRoute.contains(Routes.ORDERS_TABLES)
@@ -48,22 +25,47 @@ class OrderView extends GetView<OrderController> {
             onRefresh: controller.getOrders,
             child: Padding(
               padding: const EdgeInsets.all(15),
-              child: controller.orders.isEmpty
-                  ? Appemptyscreen(
-                      message: 'No orders found',
-                    )
-                  : ListView.separated(
-                      itemCount: controller.orders.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 15),
-                      itemBuilder: (context, index) {
-                        final order = controller.orders[index];
-
-                        return OrderCard(
-                          order: order,
-                        );
-                      },
+              child: Column(
+                spacing: 15,
+                children: [
+                  TabBar(
+                    onTap: controller.changeTab,
+                    labelStyle: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
+                    dividerHeight: 0,
+                    indicator: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    tabs: [
+                      Tab(text: 'All'),
+                      Tab(text: 'Progress'),
+                      Tab(text: 'Paid'),
+                    ],
+                  ),
+                  Expanded(
+                    child: controller.orders.isEmpty
+                        ? Appemptyscreen(
+                            message: 'No orders found',
+                          )
+                        : ListView.separated(
+                            itemCount: controller.orders.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 15),
+                            itemBuilder: (context, index) {
+                              final order = controller.orders[index];
+
+                              return OrderCard(
+                                order: order,
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
             ),
           ),
           onError: (error) => AppErrorScreen(message: error),

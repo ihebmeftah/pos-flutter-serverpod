@@ -123,12 +123,9 @@ class OrderPaymentButton extends GetView<OrderDetailsController> {
                 ),
               ),
 
-            if (controller.order!.items!.any(
-                  (item) => item.itemStatus != OrderItemStatus.payed,
-                ) &&
-                Get.find<HomeController>().scope.contains(
-                  "employer",
-                ))
+            if (Get.find<HomeController>().scope.contains(
+              "employer",
+            ))
               IconButton(
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.blue,
