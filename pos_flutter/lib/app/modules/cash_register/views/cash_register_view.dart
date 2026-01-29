@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pos_flutter/app/routes/app_pages.dart';
 import '../controllers/cash_register_controller.dart';
 
 class CashRegisterView extends GetView<CashRegisterController> {
@@ -157,6 +158,8 @@ class CashRegisterView extends GetView<CashRegisterController> {
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(
+              onTap: () =>
+                  Get.toNamed('${Routes.CASH_REGISTER_STATS}/${register.id}'),
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(

@@ -33,6 +33,8 @@ abstract class Routes {
   static const CASH_REGISTER = _Paths.CASH_REGISTER;
   static const DASHBOARD = _Paths.DASHBOARD;
   static const STATISTICS = _Paths.STATISTICS;
+  static const CASH_REGISTER_STATS =
+      _Paths.CASH_REGISTER + _Paths.CASH_REGISTER_STATS;
 }
 
 abstract class _Paths {
@@ -64,4 +66,5 @@ abstract class _Paths {
   static const CASH_REGISTER = '/cash-register';
   static const DASHBOARD = '/dashboard';
   static const STATISTICS = '/statistics';
+  static const CASH_REGISTER_STATS = '/cash-register-stats';
 }

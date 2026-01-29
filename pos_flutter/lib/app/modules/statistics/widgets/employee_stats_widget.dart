@@ -89,7 +89,7 @@ class EmployeeStatsWidget extends StatelessWidget {
         boxShadow: rank <= 3
             ? [
                 BoxShadow(
-                  color: _getRankColor(rank).withOpacity(0.2),
+                  color: _getRankColor(rank).withValues(alpha: 0.2),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -108,7 +108,7 @@ class EmployeeStatsWidget extends StatelessWidget {
                     colors: rank <= 3
                         ? [
                             _getRankColor(rank),
-                            _getRankColor(rank).withOpacity(0.7),
+                            _getRankColor(rank).withValues(alpha: 0.7),
                           ]
                         : [Colors.grey.shade400, Colors.grey.shade500],
                     begin: Alignment.topLeft,
