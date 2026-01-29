@@ -558,10 +558,11 @@ class PassOrderView extends GetView<PassOrderController> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed: () => Get.toNamed(Routes.TABLES),
+                    onPressed: () => Get.toNamed(Routes.QRSCAN),
                     icon: const Icon(Icons.qr_code_scanner, size: 24),
                     label: const Text(
                       "Scan Table QR Code",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

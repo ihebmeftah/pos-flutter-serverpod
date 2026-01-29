@@ -7,8 +7,6 @@ import 'package:pos_flutter/config/serverpod_client.dart';
 import '../../../components/app_snackbar.dart';
 import '../../../data/local/local_storage.dart';
 import '../../../routes/app_pages.dart';
-import '../../tables/controllers/tables_controller.dart';
-import 'order_controller.dart';
 
 class PassOrderController extends GetxController with StateMixin {
   BTable? table;
@@ -88,12 +86,6 @@ class PassOrderController extends GetxController with StateMixin {
         }
       }
       reset();
-      if (Get.isRegistered<TablesController>()) {
-        Get.find<TablesController>().getTabels();
-      }
-      if (Get.isRegistered<OrderController>()) {
-        Get.find<OrderController>().getOrders();
-      }
     } on AppException catch (e) {
       AppSnackbar.info(e.message);
       return;

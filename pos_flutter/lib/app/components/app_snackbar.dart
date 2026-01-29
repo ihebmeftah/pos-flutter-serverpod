@@ -37,9 +37,7 @@ class AppSnackbar {
     message: message ?? "Operation failed.",
   );
 
-  static void info(
-    String message,
-  ) => HyperSnackbar.show(
+  static void info(String message, {Widget? content}) => HyperSnackbar.show(
     backgroundColor: Colors.blue.shade700,
     margin: Get.width > 600
         ? EdgeInsetsGeometry.only(
@@ -51,5 +49,6 @@ class AppSnackbar {
         : EdgeInsets.all(10),
     title: "Information",
     message: message,
+    content: content,
   );
 }

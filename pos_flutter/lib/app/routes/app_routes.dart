@@ -35,6 +35,7 @@ abstract class Routes {
   static const STATISTICS = _Paths.STATISTICS;
   static const CASH_REGISTER_STATS =
       _Paths.CASH_REGISTER + _Paths.CASH_REGISTER_STATS;
+  static const QRSCAN = _Paths.QRSCAN;
 }
 
 abstract class _Paths {
@@ -67,4 +68,5 @@ abstract class _Paths {
   static const DASHBOARD = '/dashboard';
   static const STATISTICS = '/statistics';
   static const CASH_REGISTER_STATS = '/cash-register-stats';
+  static const QRSCAN = '/qrscan';
 }

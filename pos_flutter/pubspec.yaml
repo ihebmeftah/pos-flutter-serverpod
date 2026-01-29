@@ -45,6 +45,7 @@ dependencies:
   hyper_snackbar: ^0.4.2
   fl_chart: ^0.69.2
   fluentui_system_icons: ^1.1.273
+  qr_code_scanner_plus: ^2.0.12
 
 dev_dependencies:
   flutter_lints: ">=3.0.0 <7.0.0"

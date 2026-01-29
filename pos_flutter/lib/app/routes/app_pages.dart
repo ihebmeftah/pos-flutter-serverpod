@@ -51,6 +51,8 @@ import '../modules/order/bindings/pass_order_binding.dart';
 import '../modules/order/views/order_details_view.dart';
 import '../modules/order/views/order_view.dart';
 import '../modules/order/views/pass_order_view.dart';
+import '../modules/qrscan/bindings/qrscan_binding.dart';
+import '../modules/qrscan/views/qrscan_view.dart';
 import '../modules/statistics/bindings/statistics_binding.dart';
 import '../modules/statistics/views/statistics_view.dart';
 import '../modules/tables/bindings/form_table_binding.dart';
@@ -116,6 +118,11 @@ class AppPages {
           binding: CashRegisterStatsBinding(),
         ),
       ],
+    ),
+    GetPage(
+      name: _Paths.QRSCAN,
+      page: () => const QrscanView(),
+      binding: QrscanBinding(),
     ),
   ];
 

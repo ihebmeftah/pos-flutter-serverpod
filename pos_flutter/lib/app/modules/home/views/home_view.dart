@@ -22,7 +22,7 @@ class HomeView extends GetView<HomeController> {
       floatingActionButton:
           (controller.currentUserAccess?.orderCreation ?? true) &&
               controller.scope.contains(
-                "owner",
+                "employer",
               )
           ? FloatingActionButton(
               onPressed: () => Get.toNamed(Routes.PASS_ORDER),
@@ -187,7 +187,7 @@ class HomeView extends GetView<HomeController> {
                                 icon: SvgPicture.asset(
                                   "assets/images/svg/order.svg",
                                   colorFilter: ColorFilter.mode(
-                                    controller.currBnb == 2
+                                    controller.currBnb == 1
                                         ? Theme.of(
                                                 context,
                                               )
