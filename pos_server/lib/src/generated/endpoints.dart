@@ -1320,6 +1320,27 @@ class Endpoints extends _i1.EndpointDispatch {
                     params['orderStatus'],
                   ),
         ),
+        'watchChanges': _i1.MethodStreamConnector(
+          name: 'watchChanges',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          streamParams: {},
+          returnType: _i1.MethodStreamReturnType.streamType,
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['order'] as _i12.OrderEndpoint).watchChanges(
+                session,
+                params['buildingId'],
+              ),
+        ),
       },
     );
     connectors['orderItem'] = _i1.EndpointConnector(
@@ -1430,6 +1451,31 @@ class Endpoints extends _i1.EndpointDispatch {
                     session,
                     params['orderId'],
                     params['buildingId'],
+                  ),
+        ),
+        'getItemsByStatus': _i1.MethodConnector(
+          name: 'getItemsByStatus',
+          params: {
+            'buildingId': _i1.ParameterDescription(
+              name: 'buildingId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'status': _i1.ParameterDescription(
+              name: 'status',
+              type: _i1.getType<_i27.OrderItemStatus>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['orderItem'] as _i13.OrderItemEndpoint)
+                  .getItemsByStatus(
+                    session,
+                    params['buildingId'],
+                    status: params['status'],
                   ),
         ),
       },

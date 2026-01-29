@@ -34,28 +34,28 @@
    docker compose up --build --detach
    ```
 
-5. **Seed the database**
-
-   ```bash
-   cd pos_server
-   dart run bin/seed_database.dart
-   cd ..
-   ```
-
-   > **Note:** You can use pgAdmin to consult and manage the database.  
-   > For information about seeded test accounts, see [TEST-ACCOUNTS.MD](TEST-ACCOUNTS.MD).
-
-6. **Generate Serverpod code**
+5. **Generate Serverpod code**
 
    ```bash
    cd pos_server
    serverpod generate
    ```
 
-7. **Apply database migrations**
+6. **Apply migrations and Seed the database**
 
    ```bash
-   dart bin/main.dart --apply-migrations
+   cd pos_server
+   serverpod run seed
+   cd ..
+   ```
+
+   > **Note:** You can use pgAdmin to consult and manage the database.  
+   > For information about seeded test accounts, see [TEST-ACCOUNTS.MD](TEST-ACCOUNTS.MD). > For information about seeded test accounts, see [TEST-ACCOUNTS.MD](TEST-ACCOUNTS.MD).
+
+7. **run serverpod**
+
+   ```bash
+   serverpod run start
    ```
 
    The server should now be running and ready to use!The server should now be running and ready to use!
@@ -72,7 +72,7 @@
    - **Web:**
 
      ```bash
-     flutter run -d web --web-port 8888
+     flutter run -d web-server --web-port=8888
      ```
 
    - **Android:**

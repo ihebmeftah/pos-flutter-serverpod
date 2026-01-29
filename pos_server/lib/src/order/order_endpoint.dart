@@ -260,6 +260,19 @@ class OrderEndpoint extends Endpoint {
           );
         }
       }
+      StreamOrder streamOrder = StreamOrder(
+        action: StreamActionsOrder.new_order,
+        message: 'New order created by ${employer.userProfile!.userName}',
+        orderId: newOrder.id,
+        tableId: newOrder.btableId,
+        itemsids: newOrderItems.map((e) => e.id).toList(),
+        orderCreatedBy: employer.userProfile,
+        itemsCreatedBy: newOrderItems.map((e) => employer.userProfile).toList(),
+      );
+      await session.messages.postMessage(
+        watchNewOrderChannelName(building.id),
+        streamOrder,
+      );
       return newOrder;
     });
   }
@@ -279,6 +292,7 @@ class OrderEndpoint extends Endpoint {
     Order order,
     UuidValue userProfileId,
     UuidValue buildingId,
+    Transaction transaction,
   ) async {
     order.status = OrderStatus.payed;
     order.closedbyId = userProfileId;
@@ -286,6 +300,7 @@ class OrderEndpoint extends Endpoint {
     return await Order.db.updateRow(
       session,
       order,
+      transaction: transaction,
       columns: (t) => [
         t.status,
         t.closedbyId,
@@ -347,5 +362,24 @@ class OrderEndpoint extends Endpoint {
         items: OrderItem.includeList(),
       ),
     );
+  }
+
+  @doNotGenerate
+  String watchNewOrderChannelName(UuidValue buildingId) {
+    return 'orders_$buildingId';
+  }
+
+  Stream<StreamOrder> watchChanges(
+    Session session,
+    UuidValue buildingId,
+  ) async* {
+    final updateStream = session.messages.createStream<StreamOrder>(
+      watchNewOrderChannelName(
+        buildingId,
+      ),
+    );
+    await for (final order in updateStream) {
+      yield order;
+    }
   }
 }

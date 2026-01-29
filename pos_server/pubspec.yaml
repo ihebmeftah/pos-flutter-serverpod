@@ -20,8 +20,7 @@ serverpod:
     # Starts the server and applies migrations
     start: dart bin/main.dart --apply-migrations
     migration: dart bin/main.dart --create-migration
-    reset: docker compose down -v && docker compose up --build -d && dart bin/main.dart --apply-migrations
-
+    seed: dart bin/main.dart --role maintenance --apply-migrations && dart run bin/seed_database.dart
     # Build the Flutter web app and move it to the server's web directory
     #
     # Unfortunately, we can't use the `-o` flag directly because of an error

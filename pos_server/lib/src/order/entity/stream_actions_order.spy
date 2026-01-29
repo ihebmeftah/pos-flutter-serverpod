@@ -1,0 +1,7 @@
+enum: StreamActionsOrder
+serialized: byName
+values:
+  - new_order
+  - append_order_items
+  - pay_items
+  - pay_all_items

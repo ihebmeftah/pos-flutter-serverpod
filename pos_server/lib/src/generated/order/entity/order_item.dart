@@ -217,6 +217,7 @@ abstract class OrderItem
       if (payedTo != null) 'payedTo': payedTo?.toJsonForProtocol(),
       if (preparedById != null) 'preparedById': preparedById?.toJson(),
       if (preparedBy != null) 'preparedBy': preparedBy?.toJsonForProtocol(),
+      if (orderId != null) 'orderId': orderId?.toJson(),
       'createdAt': createdAt.toJson(),
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
       if (preaparedAt != null) 'preaparedAt': preaparedAt?.toJson(),

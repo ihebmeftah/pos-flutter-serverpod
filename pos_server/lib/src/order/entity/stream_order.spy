@@ -1,0 +1,9 @@
+class: StreamOrder
+fields:
+    action: StreamActionsOrder,
+    message: String,
+    orderId: UuidValue,
+    tableId: UuidValue,
+    itemsids: List<UuidValue>,
+    orderCreatedBy: module:serverpod_auth_core:UserProfile?, 
+    itemsCreatedBy: List<module:serverpod_auth_core:UserProfile?>,

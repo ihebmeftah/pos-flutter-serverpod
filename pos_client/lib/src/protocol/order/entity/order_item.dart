@@ -29,6 +29,7 @@ abstract class OrderItem implements _i1.SerializableModel {
     this.payedTo,
     this.preparedById,
     this.preparedBy,
+    this.orderId,
     DateTime? createdAt,
     this.updatedAt,
     this.preaparedAt,
@@ -49,6 +50,7 @@ abstract class OrderItem implements _i1.SerializableModel {
     _i5.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
     _i5.UserProfile? preparedBy,
+    _i1.UuidValue? orderId,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
@@ -95,6 +97,9 @@ abstract class OrderItem implements _i1.SerializableModel {
           : _i6.Protocol().deserialize<_i5.UserProfile>(
               jsonSerialization['preparedBy'],
             ),
+      orderId: jsonSerialization['orderId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['orderId']),
       createdAt: jsonSerialization['createdAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
@@ -136,6 +141,8 @@ abstract class OrderItem implements _i1.SerializableModel {
 
   _i5.UserProfile? preparedBy;
 
+  _i1.UuidValue? orderId;
+
   DateTime createdAt;
 
   DateTime? updatedAt;
@@ -159,6 +166,7 @@ abstract class OrderItem implements _i1.SerializableModel {
     _i5.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
     _i5.UserProfile? preparedBy,
+    _i1.UuidValue? orderId,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
@@ -178,6 +186,7 @@ abstract class OrderItem implements _i1.SerializableModel {
       if (payedTo != null) 'payedTo': payedTo?.toJson(),
       if (preparedById != null) 'preparedById': preparedById?.toJson(),
       if (preparedBy != null) 'preparedBy': preparedBy?.toJson(),
+      if (orderId != null) 'orderId': orderId?.toJson(),
       'createdAt': createdAt.toJson(),
       if (updatedAt != null) 'updatedAt': updatedAt?.toJson(),
       if (preaparedAt != null) 'preaparedAt': preaparedAt?.toJson(),
@@ -205,6 +214,7 @@ class _OrderItemImpl extends OrderItem {
     _i5.UserProfile? payedTo,
     _i1.UuidValue? preparedById,
     _i5.UserProfile? preparedBy,
+    _i1.UuidValue? orderId,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? preaparedAt,
@@ -220,6 +230,7 @@ class _OrderItemImpl extends OrderItem {
          payedTo: payedTo,
          preparedById: preparedById,
          preparedBy: preparedBy,
+         orderId: orderId,
          createdAt: createdAt,
          updatedAt: updatedAt,
          preaparedAt: preaparedAt,
@@ -241,6 +252,7 @@ class _OrderItemImpl extends OrderItem {
     Object? payedTo = _Undefined,
     Object? preparedById = _Undefined,
     Object? preparedBy = _Undefined,
+    Object? orderId = _Undefined,
     DateTime? createdAt,
     Object? updatedAt = _Undefined,
     Object? preaparedAt = _Undefined,
@@ -263,6 +275,7 @@ class _OrderItemImpl extends OrderItem {
       preparedBy: preparedBy is _i5.UserProfile?
           ? preparedBy
           : this.preparedBy?.copyWith(),
+      orderId: orderId is _i1.UuidValue? ? orderId : this.orderId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt is DateTime? ? updatedAt : this.updatedAt,
       preaparedAt: preaparedAt is DateTime? ? preaparedAt : this.preaparedAt,

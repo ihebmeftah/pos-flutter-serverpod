@@ -84,21 +84,44 @@ class OrderItemEndpoint extends Endpoint {
       );
     }
 
-    // Persist new order items to database
-    final newOrderItems = await OrderItem.db.insert(
-      session,
-      orderItem,
-    );
+    return session.db.transaction((transcation) async {
+      // Persist new order items to database
+      final newOrderItems = await OrderItem.db.insert(
+        session,
+        orderItem,
+        transaction: transcation,
+      );
 
-    // Link items to order and update timestamp
-    await Order.db.attach.items(session, order, newOrderItems);
-    order.updatedAt = DateTime.now();
-    final orderUpdated = await Order.db.updateRow(
-      session,
-      order,
-      columns: (t) => [t.updatedAt],
-    );
-    return orderUpdated;
+      // Link items to order and update timestamp
+      await Order.db.attach.items(
+        session,
+        order,
+        newOrderItems,
+        transaction: transcation,
+      );
+      order.updatedAt = DateTime.now();
+      final orderUpdated = await Order.db.updateRow(
+        session,
+        order,
+        columns: (t) => [t.updatedAt],
+        transaction: transcation,
+      );
+      StreamOrder streamOrder = StreamOrder(
+        action: StreamActionsOrder.append_order_items,
+        message:
+            'New items appended by ${employer.userProfile!.userName} to order for table ${order.btable!.number}',
+        tableId: order.btableId,
+        orderId: order.id,
+        itemsids: newOrderItems.map((e) => e.id).toList(),
+        orderCreatedBy: employer.userProfile,
+        itemsCreatedBy: newOrderItems.map((e) => employer.userProfile).toList(),
+      );
+      await session.messages.postMessage(
+        OrderEndpoint().watchNewOrderChannelName(building.id),
+        streamOrder,
+      );
+      return orderUpdated;
+    });
   }
 
   /// Changes status of order items following workflow: progress → picked → ready → served.
@@ -209,44 +232,65 @@ class OrderItemEndpoint extends Endpoint {
 
     // mark items as payed
     final order = await OrderEndpoint().getOrderById(session, orderId);
-    for (var item in order.items!) {
-      if (orderItemPayedIds.contains(item.id)) {
-        if (building.strictMode) {
-          if (item.itemStatus != OrderItemStatus.served) {
-            throw AppException(
-              errorType: ExceptionType.Forbidden,
-              message:
-                  'You have item must be delivered before paying in strict mode, item: ${item.article.name}',
-            );
+    return session.db.transaction((transaction) async {
+      for (var item in order.items!) {
+        if (orderItemPayedIds.contains(item.id)) {
+          if (building.strictMode) {
+            if (item.itemStatus != OrderItemStatus.served) {
+              throw AppException(
+                errorType: ExceptionType.Forbidden,
+                message:
+                    'You have item must be delivered before paying in strict mode, item: ${item.article.name}',
+              );
+            }
           }
+          item.itemStatus = OrderItemStatus.payed;
+          item.payedToId = employer.userProfileId;
+          item.payedAt = DateTime.now();
+          item.updatedAt = DateTime.now();
         }
-        item.itemStatus = OrderItemStatus.payed;
-        item.payedToId = employer.userProfileId;
-        item.payedAt = DateTime.now();
-        item.updatedAt = DateTime.now();
       }
-    }
-    final updatedItems = await OrderItem.db.update(
-      session,
-      order.items!,
-      columns: (cls) => [
-        cls.itemStatus,
-        cls.payedToId,
-        cls.payedAt,
-        cls.updatedAt,
-      ],
-    );
-
-    // if all items are payed mark order as payed
-    if (!order.items!.any((i) => i.itemStatus != OrderItemStatus.payed)) {
-      await OrderEndpoint().makeOrderPayed(
+      final payedItem = order.items!
+          .where((item) => orderItemPayedIds.contains(item.id))
+          .toList();
+      final updatedItems = await OrderItem.db.update(
         session,
-        order,
-        employer.userProfileId,
-        buildingId,
+        order.items!,
+        transaction: transaction,
+        columns: (cls) => [
+          cls.itemStatus,
+          cls.payedToId,
+          cls.payedAt,
+          cls.updatedAt,
+        ],
       );
-    }
-    return updatedItems;
+
+      // if all items are payed mark order as payed
+      if (!order.items!.any((i) => i.itemStatus != OrderItemStatus.payed)) {
+        await OrderEndpoint().makeOrderPayed(
+          session,
+          order,
+          employer.userProfileId,
+          buildingId,
+          transaction,
+        );
+      }
+      StreamOrder streamOrder = StreamOrder(
+        action: StreamActionsOrder.pay_items,
+        message:
+            'Items ${payedItem.map((e) => e.article.name).join(', ')} paid to ${employer.userProfile!.userName} for order of table ${order.btable!.number}',
+        tableId: order.btableId,
+        orderId: order.id,
+        itemsids: orderItemPayedIds,
+        orderCreatedBy: employer.userProfile,
+        itemsCreatedBy: updatedItems.map((e) => employer.userProfile).toList(),
+      );
+      await session.messages.postMessage(
+        OrderEndpoint().watchNewOrderChannelName(building.id),
+        streamOrder,
+      );
+      return updatedItems;
+    });
   }
 
   /// Pays all items in an order at once and marks order as complete.
@@ -294,21 +338,39 @@ class OrderItemEndpoint extends Endpoint {
         );
       }
     }
-    for (var item in order.items!) {
-      if (item.itemStatus != OrderItemStatus.payed) {
-        item.itemStatus = OrderItemStatus.payed;
-        item.payedToId = employer.userProfileId;
-        item.payedAt = DateTime.now();
-        item.updatedAt = DateTime.now();
-        await OrderItem.db.updateRow(session, item);
+    return session.db.transaction((transaction) async {
+      for (var item in order.items!) {
+        if (item.itemStatus != OrderItemStatus.payed) {
+          item.itemStatus = OrderItemStatus.payed;
+          item.payedToId = employer.userProfileId;
+          item.payedAt = DateTime.now();
+          item.updatedAt = DateTime.now();
+          await OrderItem.db.updateRow(session, item);
+        }
       }
-    }
-    return await OrderEndpoint().makeOrderPayed(
-      session,
-      order,
-      employer.userProfileId,
-      buildingId,
-    );
+      final orderPayed = await OrderEndpoint().makeOrderPayed(
+        session,
+        order,
+        employer.userProfileId,
+        buildingId,
+        transaction,
+      );
+      StreamOrder streamOrder = StreamOrder(
+        action: StreamActionsOrder.pay_all_items,
+        message:
+            'All items paid to ${employer.userProfile!.userName} for order of table ${order.btable!.number}',
+        tableId: order.btableId,
+        orderId: order.id,
+        itemsids: order.items!.map((e) => e.id).toList(),
+        orderCreatedBy: employer.userProfile,
+        itemsCreatedBy: order.items!.map((e) => employer.userProfile).toList(),
+      );
+      await session.messages.postMessage(
+        OrderEndpoint().watchNewOrderChannelName(building.id),
+        streamOrder,
+      );
+      return orderPayed;
+    });
   }
 
   Future<List<OrderItem>> getItemsByStatus(

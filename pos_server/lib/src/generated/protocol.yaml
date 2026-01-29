@@ -60,11 +60,13 @@ order:
   - createOrder:
   - getOrderCurrOfTable:
   - getOrdersOfTable:
+  - watchChanges:
 orderItem:
   - appendItemsToOrder:
   - changeOrderItemsStatus:
   - payOrderItem:
   - payAllItems:
+  - getItemsByStatus:
 stats:
   - getStats:
   - getCashRegisterStats:

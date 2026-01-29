@@ -34,37 +34,39 @@ import 'order/dto/append_items.dto.dart' as _i21;
 import 'order/dto/create_order.dto.dart' as _i22;
 import 'order/entity/order.dart' as _i23;
 import 'order/entity/order_item.dart' as _i24;
-import 'order/order_item_status_enum.dart' as _i25;
-import 'order/order_status_enum.dart' as _i26;
-import 'order/pay_methode_enum.dart' as _i27;
-import 'stats/models/article_count.dart' as _i28;
-import 'stats/models/building_detailed_stats.dart' as _i29;
-import 'stats/models/cash_register_stats.dart' as _i30;
-import 'stats/models/cash_register_summary.dart' as _i31;
-import 'stats/models/category_count.dart' as _i32;
-import 'stats/models/category_revenue.dart' as _i33;
-import 'stats/models/daily_revenue.dart' as _i34;
-import 'stats/models/employee_stats.dart' as _i35;
-import 'stats/models/funds.dart' as _i36;
-import 'stats/models/hourly_revenue.dart' as _i37;
-import 'stats/models/stats.dart' as _i38;
-import 'package:pos_client/src/protocol/access/access.dart' as _i39;
-import 'package:pos_client/src/protocol/article/entity/article.dart' as _i40;
+import 'order/entity/stream_actions_order.dart' as _i25;
+import 'order/entity/stream_order.dart' as _i26;
+import 'order/order_item_status_enum.dart' as _i27;
+import 'order/order_status_enum.dart' as _i28;
+import 'order/pay_methode_enum.dart' as _i29;
+import 'stats/models/article_count.dart' as _i30;
+import 'stats/models/building_detailed_stats.dart' as _i31;
+import 'stats/models/cash_register_stats.dart' as _i32;
+import 'stats/models/cash_register_summary.dart' as _i33;
+import 'stats/models/category_count.dart' as _i34;
+import 'stats/models/category_revenue.dart' as _i35;
+import 'stats/models/daily_revenue.dart' as _i36;
+import 'stats/models/employee_stats.dart' as _i37;
+import 'stats/models/funds.dart' as _i38;
+import 'stats/models/hourly_revenue.dart' as _i39;
+import 'stats/models/stats.dart' as _i40;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i41;
-import 'package:pos_client/src/protocol/employer/employer.dart' as _i42;
-import 'package:pos_client/src/protocol/buildings/building.dart' as _i43;
+import 'package:pos_client/src/protocol/access/access.dart' as _i42;
+import 'package:pos_client/src/protocol/article/entity/article.dart' as _i43;
+import 'package:pos_client/src/protocol/employer/employer.dart' as _i44;
+import 'package:pos_client/src/protocol/buildings/building.dart' as _i45;
 import 'package:pos_client/src/protocol/buildings_tables/building_tables.dart'
-    as _i44;
-import 'package:pos_client/src/protocol/cash_register/cash_register.dart'
-    as _i45;
-import 'package:pos_client/src/protocol/cateogrie/entity/categorie.dart'
     as _i46;
-import 'package:pos_client/src/protocol/ingredient/ingredient.dart' as _i47;
-import 'package:pos_client/src/protocol/order/entity/order.dart' as _i48;
-import 'package:pos_client/src/protocol/order/entity/order_item.dart' as _i49;
+import 'package:pos_client/src/protocol/cash_register/cash_register.dart'
+    as _i47;
+import 'package:pos_client/src/protocol/cateogrie/entity/categorie.dart'
+    as _i48;
+import 'package:pos_client/src/protocol/ingredient/ingredient.dart' as _i49;
+import 'package:pos_client/src/protocol/order/entity/order.dart' as _i50;
+import 'package:pos_client/src/protocol/order/entity/order_item.dart' as _i51;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i50;
+    as _i52;
 export 'access/access.dart';
 export 'article/dto/create_article.dto.dart';
 export 'article/dto/update_article.dto.dart';
@@ -88,6 +90,8 @@ export 'order/dto/append_items.dto.dart';
 export 'order/dto/create_order.dto.dart';
 export 'order/entity/order.dart';
 export 'order/entity/order_item.dart';
+export 'order/entity/stream_actions_order.dart';
+export 'order/entity/stream_order.dart';
 export 'order/order_item_status_enum.dart';
 export 'order/order_status_enum.dart';
 export 'order/pay_methode_enum.dart';
@@ -207,47 +211,53 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i24.OrderItem) {
       return _i24.OrderItem.fromJson(data) as T;
     }
-    if (t == _i25.OrderItemStatus) {
-      return _i25.OrderItemStatus.fromJson(data) as T;
+    if (t == _i25.StreamActionsOrder) {
+      return _i25.StreamActionsOrder.fromJson(data) as T;
     }
-    if (t == _i26.OrderStatus) {
-      return _i26.OrderStatus.fromJson(data) as T;
+    if (t == _i26.StreamOrder) {
+      return _i26.StreamOrder.fromJson(data) as T;
     }
-    if (t == _i27.PayMethode) {
-      return _i27.PayMethode.fromJson(data) as T;
+    if (t == _i27.OrderItemStatus) {
+      return _i27.OrderItemStatus.fromJson(data) as T;
     }
-    if (t == _i28.ArticleCount) {
-      return _i28.ArticleCount.fromJson(data) as T;
+    if (t == _i28.OrderStatus) {
+      return _i28.OrderStatus.fromJson(data) as T;
     }
-    if (t == _i29.BuildingDetailedStats) {
-      return _i29.BuildingDetailedStats.fromJson(data) as T;
+    if (t == _i29.PayMethode) {
+      return _i29.PayMethode.fromJson(data) as T;
     }
-    if (t == _i30.CashRegisterStats) {
-      return _i30.CashRegisterStats.fromJson(data) as T;
+    if (t == _i30.ArticleCount) {
+      return _i30.ArticleCount.fromJson(data) as T;
     }
-    if (t == _i31.CashRegisterSummary) {
-      return _i31.CashRegisterSummary.fromJson(data) as T;
+    if (t == _i31.BuildingDetailedStats) {
+      return _i31.BuildingDetailedStats.fromJson(data) as T;
     }
-    if (t == _i32.CategoryCount) {
-      return _i32.CategoryCount.fromJson(data) as T;
+    if (t == _i32.CashRegisterStats) {
+      return _i32.CashRegisterStats.fromJson(data) as T;
     }
-    if (t == _i33.CategoryRevenue) {
-      return _i33.CategoryRevenue.fromJson(data) as T;
+    if (t == _i33.CashRegisterSummary) {
+      return _i33.CashRegisterSummary.fromJson(data) as T;
     }
-    if (t == _i34.DailyRevenue) {
-      return _i34.DailyRevenue.fromJson(data) as T;
+    if (t == _i34.CategoryCount) {
+      return _i34.CategoryCount.fromJson(data) as T;
     }
-    if (t == _i35.EmployeeStats) {
-      return _i35.EmployeeStats.fromJson(data) as T;
+    if (t == _i35.CategoryRevenue) {
+      return _i35.CategoryRevenue.fromJson(data) as T;
     }
-    if (t == _i36.Funds) {
-      return _i36.Funds.fromJson(data) as T;
+    if (t == _i36.DailyRevenue) {
+      return _i36.DailyRevenue.fromJson(data) as T;
     }
-    if (t == _i37.HourlyRevenue) {
-      return _i37.HourlyRevenue.fromJson(data) as T;
+    if (t == _i37.EmployeeStats) {
+      return _i37.EmployeeStats.fromJson(data) as T;
     }
-    if (t == _i38.Stats) {
-      return _i38.Stats.fromJson(data) as T;
+    if (t == _i38.Funds) {
+      return _i38.Funds.fromJson(data) as T;
+    }
+    if (t == _i39.HourlyRevenue) {
+      return _i39.HourlyRevenue.fromJson(data) as T;
+    }
+    if (t == _i40.Stats) {
+      return _i40.Stats.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.Access?>()) {
       return (data != null ? _i2.Access.fromJson(data) : null) as T;
@@ -320,49 +330,56 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i24.OrderItem?>()) {
       return (data != null ? _i24.OrderItem.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i25.OrderItemStatus?>()) {
-      return (data != null ? _i25.OrderItemStatus.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i26.OrderStatus?>()) {
-      return (data != null ? _i26.OrderStatus.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i27.PayMethode?>()) {
-      return (data != null ? _i27.PayMethode.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i28.ArticleCount?>()) {
-      return (data != null ? _i28.ArticleCount.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i29.BuildingDetailedStats?>()) {
-      return (data != null ? _i29.BuildingDetailedStats.fromJson(data) : null)
+    if (t == _i1.getType<_i25.StreamActionsOrder?>()) {
+      return (data != null ? _i25.StreamActionsOrder.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i30.CashRegisterStats?>()) {
-      return (data != null ? _i30.CashRegisterStats.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i26.StreamOrder?>()) {
+      return (data != null ? _i26.StreamOrder.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i31.CashRegisterSummary?>()) {
-      return (data != null ? _i31.CashRegisterSummary.fromJson(data) : null)
+    if (t == _i1.getType<_i27.OrderItemStatus?>()) {
+      return (data != null ? _i27.OrderItemStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i28.OrderStatus?>()) {
+      return (data != null ? _i28.OrderStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i29.PayMethode?>()) {
+      return (data != null ? _i29.PayMethode.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i30.ArticleCount?>()) {
+      return (data != null ? _i30.ArticleCount.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i31.BuildingDetailedStats?>()) {
+      return (data != null ? _i31.BuildingDetailedStats.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i32.CategoryCount?>()) {
-      return (data != null ? _i32.CategoryCount.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i32.CashRegisterStats?>()) {
+      return (data != null ? _i32.CashRegisterStats.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i33.CategoryRevenue?>()) {
-      return (data != null ? _i33.CategoryRevenue.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i33.CashRegisterSummary?>()) {
+      return (data != null ? _i33.CashRegisterSummary.fromJson(data) : null)
+          as T;
     }
-    if (t == _i1.getType<_i34.DailyRevenue?>()) {
-      return (data != null ? _i34.DailyRevenue.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i34.CategoryCount?>()) {
+      return (data != null ? _i34.CategoryCount.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i35.EmployeeStats?>()) {
-      return (data != null ? _i35.EmployeeStats.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i35.CategoryRevenue?>()) {
+      return (data != null ? _i35.CategoryRevenue.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i36.Funds?>()) {
-      return (data != null ? _i36.Funds.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i36.DailyRevenue?>()) {
+      return (data != null ? _i36.DailyRevenue.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i37.HourlyRevenue?>()) {
-      return (data != null ? _i37.HourlyRevenue.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i37.EmployeeStats?>()) {
+      return (data != null ? _i37.EmployeeStats.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i38.Stats?>()) {
-      return (data != null ? _i38.Stats.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i38.Funds?>()) {
+      return (data != null ? _i38.Funds.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i39.HourlyRevenue?>()) {
+      return (data != null ? _i39.HourlyRevenue.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i40.Stats?>()) {
+      return (data != null ? _i40.Stats.fromJson(data) : null) as T;
     }
     if (t == List<_i6.ArticleComposition>) {
       return (data as List)
@@ -394,68 +411,74 @@ class Protocol extends _i1.SerializationManager {
               : null)
           as T;
     }
-    if (t == List<_i31.CashRegisterSummary>) {
+    if (t == List<_i41.UserProfile?>) {
       return (data as List)
-              .map((e) => deserialize<_i31.CashRegisterSummary>(e))
+              .map((e) => deserialize<_i41.UserProfile?>(e))
               .toList()
           as T;
     }
-    if (t == List<_i28.ArticleCount>) {
+    if (t == List<_i33.CashRegisterSummary>) {
       return (data as List)
-              .map((e) => deserialize<_i28.ArticleCount>(e))
+              .map((e) => deserialize<_i33.CashRegisterSummary>(e))
               .toList()
           as T;
     }
-    if (t == List<_i32.CategoryCount>) {
+    if (t == List<_i30.ArticleCount>) {
       return (data as List)
-              .map((e) => deserialize<_i32.CategoryCount>(e))
+              .map((e) => deserialize<_i30.ArticleCount>(e))
               .toList()
           as T;
     }
-    if (t == List<_i33.CategoryRevenue>) {
+    if (t == List<_i34.CategoryCount>) {
       return (data as List)
-              .map((e) => deserialize<_i33.CategoryRevenue>(e))
+              .map((e) => deserialize<_i34.CategoryCount>(e))
               .toList()
           as T;
     }
-    if (t == List<_i34.DailyRevenue>) {
+    if (t == List<_i35.CategoryRevenue>) {
       return (data as List)
-              .map((e) => deserialize<_i34.DailyRevenue>(e))
+              .map((e) => deserialize<_i35.CategoryRevenue>(e))
               .toList()
           as T;
     }
-    if (t == List<_i37.HourlyRevenue>) {
+    if (t == List<_i36.DailyRevenue>) {
       return (data as List)
-              .map((e) => deserialize<_i37.HourlyRevenue>(e))
+              .map((e) => deserialize<_i36.DailyRevenue>(e))
               .toList()
           as T;
     }
-    if (t == List<_i35.EmployeeStats>) {
+    if (t == List<_i39.HourlyRevenue>) {
       return (data as List)
-              .map((e) => deserialize<_i35.EmployeeStats>(e))
+              .map((e) => deserialize<_i39.HourlyRevenue>(e))
               .toList()
           as T;
     }
-    if (t == _i1.getType<List<_i35.EmployeeStats>?>()) {
+    if (t == List<_i37.EmployeeStats>) {
+      return (data as List)
+              .map((e) => deserialize<_i37.EmployeeStats>(e))
+              .toList()
+          as T;
+    }
+    if (t == _i1.getType<List<_i37.EmployeeStats>?>()) {
       return (data != null
               ? (data as List)
-                    .map((e) => deserialize<_i35.EmployeeStats>(e))
+                    .map((e) => deserialize<_i37.EmployeeStats>(e))
                     .toList()
               : null)
           as T;
     }
-    if (t == List<_i39.Access>) {
-      return (data as List).map((e) => deserialize<_i39.Access>(e)).toList()
+    if (t == List<_i42.Access>) {
+      return (data as List).map((e) => deserialize<_i42.Access>(e)).toList()
           as T;
     }
-    if (t == List<_i40.Article>) {
-      return (data as List).map((e) => deserialize<_i40.Article>(e)).toList()
+    if (t == List<_i43.Article>) {
+      return (data as List).map((e) => deserialize<_i43.Article>(e)).toList()
           as T;
     }
     if (t ==
         _i1
             .getType<
-              ({_i41.AuthSuccess authSuccess, _i42.Employer? employer})
+              ({_i41.AuthSuccess authSuccess, _i44.Employer? employer})
             >()) {
       return (
             authSuccess: deserialize<_i41.AuthSuccess>(
@@ -463,42 +486,42 @@ class Protocol extends _i1.SerializationManager {
             ),
             employer: ((data)['n'] as Map)['employer'] == null
                 ? null
-                : deserialize<_i42.Employer>(data['n']['employer']),
+                : deserialize<_i44.Employer>(data['n']['employer']),
           )
           as T;
     }
-    if (t == List<_i43.Building>) {
-      return (data as List).map((e) => deserialize<_i43.Building>(e)).toList()
+    if (t == List<_i45.Building>) {
+      return (data as List).map((e) => deserialize<_i45.Building>(e)).toList()
           as T;
     }
-    if (t == List<_i44.BTable>) {
-      return (data as List).map((e) => deserialize<_i44.BTable>(e)).toList()
+    if (t == List<_i46.BTable>) {
+      return (data as List).map((e) => deserialize<_i46.BTable>(e)).toList()
           as T;
     }
-    if (t == List<_i45.CashRegister>) {
+    if (t == List<_i47.CashRegister>) {
       return (data as List)
-              .map((e) => deserialize<_i45.CashRegister>(e))
+              .map((e) => deserialize<_i47.CashRegister>(e))
               .toList()
           as T;
     }
-    if (t == List<_i46.Categorie>) {
-      return (data as List).map((e) => deserialize<_i46.Categorie>(e)).toList()
+    if (t == List<_i48.Categorie>) {
+      return (data as List).map((e) => deserialize<_i48.Categorie>(e)).toList()
           as T;
     }
-    if (t == List<_i42.Employer>) {
-      return (data as List).map((e) => deserialize<_i42.Employer>(e)).toList()
+    if (t == List<_i44.Employer>) {
+      return (data as List).map((e) => deserialize<_i44.Employer>(e)).toList()
           as T;
     }
-    if (t == List<_i47.Ingredient>) {
-      return (data as List).map((e) => deserialize<_i47.Ingredient>(e)).toList()
+    if (t == List<_i49.Ingredient>) {
+      return (data as List).map((e) => deserialize<_i49.Ingredient>(e)).toList()
           as T;
     }
-    if (t == List<_i48.Order>) {
-      return (data as List).map((e) => deserialize<_i48.Order>(e)).toList()
+    if (t == List<_i50.Order>) {
+      return (data as List).map((e) => deserialize<_i50.Order>(e)).toList()
           as T;
     }
-    if (t == List<_i49.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i49.OrderItem>(e)).toList()
+    if (t == List<_i51.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i51.OrderItem>(e)).toList()
           as T;
     }
     if (t == List<_i1.UuidValue>) {
@@ -506,7 +529,7 @@ class Protocol extends _i1.SerializationManager {
           as T;
     }
     try {
-      return _i50.Protocol().deserialize<T>(data, t);
+      return _i52.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
       return _i41.Protocol().deserialize<T>(data, t);
@@ -539,20 +562,22 @@ class Protocol extends _i1.SerializationManager {
       _i22.CreateOrderDto => 'CreateOrderDto',
       _i23.Order => 'Order',
       _i24.OrderItem => 'OrderItem',
-      _i25.OrderItemStatus => 'OrderItemStatus',
-      _i26.OrderStatus => 'OrderStatus',
-      _i27.PayMethode => 'PayMethode',
-      _i28.ArticleCount => 'ArticleCount',
-      _i29.BuildingDetailedStats => 'BuildingDetailedStats',
-      _i30.CashRegisterStats => 'CashRegisterStats',
-      _i31.CashRegisterSummary => 'CashRegisterSummary',
-      _i32.CategoryCount => 'CategoryCount',
-      _i33.CategoryRevenue => 'CategoryRevenue',
-      _i34.DailyRevenue => 'DailyRevenue',
-      _i35.EmployeeStats => 'EmployeeStats',
-      _i36.Funds => 'Funds',
-      _i37.HourlyRevenue => 'HourlyRevenue',
-      _i38.Stats => 'Stats',
+      _i25.StreamActionsOrder => 'StreamActionsOrder',
+      _i26.StreamOrder => 'StreamOrder',
+      _i27.OrderItemStatus => 'OrderItemStatus',
+      _i28.OrderStatus => 'OrderStatus',
+      _i29.PayMethode => 'PayMethode',
+      _i30.ArticleCount => 'ArticleCount',
+      _i31.BuildingDetailedStats => 'BuildingDetailedStats',
+      _i32.CashRegisterStats => 'CashRegisterStats',
+      _i33.CashRegisterSummary => 'CashRegisterSummary',
+      _i34.CategoryCount => 'CategoryCount',
+      _i35.CategoryRevenue => 'CategoryRevenue',
+      _i36.DailyRevenue => 'DailyRevenue',
+      _i37.EmployeeStats => 'EmployeeStats',
+      _i38.Funds => 'Funds',
+      _i39.HourlyRevenue => 'HourlyRevenue',
+      _i40.Stats => 'Stats',
       _ => null,
     };
   }
@@ -613,36 +638,40 @@ class Protocol extends _i1.SerializationManager {
         return 'Order';
       case _i24.OrderItem():
         return 'OrderItem';
-      case _i25.OrderItemStatus():
+      case _i25.StreamActionsOrder():
+        return 'StreamActionsOrder';
+      case _i26.StreamOrder():
+        return 'StreamOrder';
+      case _i27.OrderItemStatus():
         return 'OrderItemStatus';
-      case _i26.OrderStatus():
+      case _i28.OrderStatus():
         return 'OrderStatus';
-      case _i27.PayMethode():
+      case _i29.PayMethode():
         return 'PayMethode';
-      case _i28.ArticleCount():
+      case _i30.ArticleCount():
         return 'ArticleCount';
-      case _i29.BuildingDetailedStats():
+      case _i31.BuildingDetailedStats():
         return 'BuildingDetailedStats';
-      case _i30.CashRegisterStats():
+      case _i32.CashRegisterStats():
         return 'CashRegisterStats';
-      case _i31.CashRegisterSummary():
+      case _i33.CashRegisterSummary():
         return 'CashRegisterSummary';
-      case _i32.CategoryCount():
+      case _i34.CategoryCount():
         return 'CategoryCount';
-      case _i33.CategoryRevenue():
+      case _i35.CategoryRevenue():
         return 'CategoryRevenue';
-      case _i34.DailyRevenue():
+      case _i36.DailyRevenue():
         return 'DailyRevenue';
-      case _i35.EmployeeStats():
+      case _i37.EmployeeStats():
         return 'EmployeeStats';
-      case _i36.Funds():
+      case _i38.Funds():
         return 'Funds';
-      case _i37.HourlyRevenue():
+      case _i39.HourlyRevenue():
         return 'HourlyRevenue';
-      case _i38.Stats():
+      case _i40.Stats():
         return 'Stats';
     }
-    className = _i50.Protocol().getClassNameForObject(data);
+    className = _i52.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
@@ -728,51 +757,57 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'OrderItem') {
       return deserialize<_i24.OrderItem>(data['data']);
     }
+    if (dataClassName == 'StreamActionsOrder') {
+      return deserialize<_i25.StreamActionsOrder>(data['data']);
+    }
+    if (dataClassName == 'StreamOrder') {
+      return deserialize<_i26.StreamOrder>(data['data']);
+    }
     if (dataClassName == 'OrderItemStatus') {
-      return deserialize<_i25.OrderItemStatus>(data['data']);
+      return deserialize<_i27.OrderItemStatus>(data['data']);
     }
     if (dataClassName == 'OrderStatus') {
-      return deserialize<_i26.OrderStatus>(data['data']);
+      return deserialize<_i28.OrderStatus>(data['data']);
     }
     if (dataClassName == 'PayMethode') {
-      return deserialize<_i27.PayMethode>(data['data']);
+      return deserialize<_i29.PayMethode>(data['data']);
     }
     if (dataClassName == 'ArticleCount') {
-      return deserialize<_i28.ArticleCount>(data['data']);
+      return deserialize<_i30.ArticleCount>(data['data']);
     }
     if (dataClassName == 'BuildingDetailedStats') {
-      return deserialize<_i29.BuildingDetailedStats>(data['data']);
+      return deserialize<_i31.BuildingDetailedStats>(data['data']);
     }
     if (dataClassName == 'CashRegisterStats') {
-      return deserialize<_i30.CashRegisterStats>(data['data']);
+      return deserialize<_i32.CashRegisterStats>(data['data']);
     }
     if (dataClassName == 'CashRegisterSummary') {
-      return deserialize<_i31.CashRegisterSummary>(data['data']);
+      return deserialize<_i33.CashRegisterSummary>(data['data']);
     }
     if (dataClassName == 'CategoryCount') {
-      return deserialize<_i32.CategoryCount>(data['data']);
+      return deserialize<_i34.CategoryCount>(data['data']);
     }
     if (dataClassName == 'CategoryRevenue') {
-      return deserialize<_i33.CategoryRevenue>(data['data']);
+      return deserialize<_i35.CategoryRevenue>(data['data']);
     }
     if (dataClassName == 'DailyRevenue') {
-      return deserialize<_i34.DailyRevenue>(data['data']);
+      return deserialize<_i36.DailyRevenue>(data['data']);
     }
     if (dataClassName == 'EmployeeStats') {
-      return deserialize<_i35.EmployeeStats>(data['data']);
+      return deserialize<_i37.EmployeeStats>(data['data']);
     }
     if (dataClassName == 'Funds') {
-      return deserialize<_i36.Funds>(data['data']);
+      return deserialize<_i38.Funds>(data['data']);
     }
     if (dataClassName == 'HourlyRevenue') {
-      return deserialize<_i37.HourlyRevenue>(data['data']);
+      return deserialize<_i39.HourlyRevenue>(data['data']);
     }
     if (dataClassName == 'Stats') {
-      return deserialize<_i38.Stats>(data['data']);
+      return deserialize<_i40.Stats>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i50.Protocol().deserializeByClassName(data);
+      return _i52.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
@@ -790,7 +825,7 @@ class Protocol extends _i1.SerializationManager {
     if (record == null) {
       return null;
     }
-    if (record is ({_i41.AuthSuccess authSuccess, _i42.Employer? employer})) {
+    if (record is ({_i41.AuthSuccess authSuccess, _i44.Employer? employer})) {
       return {
         "n": {
           "authSuccess": record.authSuccess,
@@ -799,7 +834,7 @@ class Protocol extends _i1.SerializationManager {
       };
     }
     try {
-      return _i50.Protocol().mapRecordToJson(record);
+      return _i52.Protocol().mapRecordToJson(record);
     } catch (_) {}
     try {
       return _i41.Protocol().mapRecordToJson(record);

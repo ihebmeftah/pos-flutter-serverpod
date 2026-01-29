@@ -41,17 +41,18 @@ import 'package:pos_client/src/protocol/order/entity/order.dart' as _i18;
 import 'package:pos_client/src/protocol/order/order_status_enum.dart' as _i19;
 import 'package:pos_client/src/protocol/order/dto/create_order.dto.dart'
     as _i20;
+import 'package:pos_client/src/protocol/order/entity/stream_order.dart' as _i21;
 import 'package:pos_client/src/protocol/order/dto/append_items.dto.dart'
-    as _i21;
-import 'package:pos_client/src/protocol/order/entity/order_item.dart' as _i22;
+    as _i22;
+import 'package:pos_client/src/protocol/order/entity/order_item.dart' as _i23;
 import 'package:pos_client/src/protocol/order/order_item_status_enum.dart'
-    as _i23;
-import 'package:pos_client/src/protocol/stats/models/stats.dart' as _i24;
+    as _i24;
+import 'package:pos_client/src/protocol/stats/models/stats.dart' as _i25;
 import 'package:pos_client/src/protocol/stats/models/cash_register_stats.dart'
-    as _i25;
-import 'package:pos_client/src/protocol/stats/models/building_detailed_stats.dart'
     as _i26;
-import 'protocol.dart' as _i27;
+import 'package:pos_client/src/protocol/stats/models/building_detailed_stats.dart'
+    as _i27;
+import 'protocol.dart' as _i28;
 
 /// {@category Endpoint}
 class EndpointAccess extends _i1.EndpointRef {
@@ -1043,6 +1044,17 @@ class EndpointOrder extends _i1.EndpointRef {
       'orderStatus': orderStatus,
     },
   );
+
+  _i2.Stream<_i21.StreamOrder> watchChanges(_i1.UuidValue buildingId) =>
+      caller.callStreamingServerEndpoint<
+        _i2.Stream<_i21.StreamOrder>,
+        _i21.StreamOrder
+      >(
+        'order',
+        'watchChanges',
+        {'buildingId': buildingId},
+        {},
+      );
 }
 
 /// {@category Endpoint}
@@ -1060,7 +1072,7 @@ class EndpointOrderItem extends _i1.EndpointRef {
   ///
   /// Returns the updated order with all items.
   _i2.Future<_i18.Order> appendItemsToOrder(
-    _i21.AppendItemsDto appendItemDto,
+    _i22.AppendItemsDto appendItemDto,
   ) => caller.callServerEndpoint<_i18.Order>(
     'orderItem',
     'appendItemsToOrder',
@@ -1076,11 +1088,11 @@ class EndpointOrderItem extends _i1.EndpointRef {
   /// [buildingId] Building ID for validation.
   ///
   /// Returns a list of updated order items.
-  _i2.Future<List<_i22.OrderItem>> changeOrderItemsStatus(
+  _i2.Future<List<_i23.OrderItem>> changeOrderItemsStatus(
     List<_i1.UuidValue> orderItemIds,
-    _i23.OrderItemStatus newStatus,
+    _i24.OrderItemStatus newStatus,
     _i1.UuidValue buildingId,
-  ) => caller.callServerEndpoint<List<_i22.OrderItem>>(
+  ) => caller.callServerEndpoint<List<_i23.OrderItem>>(
     'orderItem',
     'changeOrderItemsStatus',
     {
@@ -1099,11 +1111,11 @@ class EndpointOrderItem extends _i1.EndpointRef {
   /// [buildingId] Building ID for validation.
   ///
   /// Returns a list of paid order items.
-  _i2.Future<List<_i22.OrderItem>> payOrderItem(
+  _i2.Future<List<_i23.OrderItem>> payOrderItem(
     _i1.UuidValue orderId,
     List<_i1.UuidValue> orderItemPayedIds,
     _i1.UuidValue buildingId,
-  ) => caller.callServerEndpoint<List<_i22.OrderItem>>(
+  ) => caller.callServerEndpoint<List<_i23.OrderItem>>(
     'orderItem',
     'payOrderItem',
     {
@@ -1132,6 +1144,18 @@ class EndpointOrderItem extends _i1.EndpointRef {
       'buildingId': buildingId,
     },
   );
+
+  _i2.Future<List<_i23.OrderItem>> getItemsByStatus(
+    _i1.UuidValue buildingId, {
+    required _i24.OrderItemStatus status,
+  }) => caller.callServerEndpoint<List<_i23.OrderItem>>(
+    'orderItem',
+    'getItemsByStatus',
+    {
+      'buildingId': buildingId,
+      'status': status,
+    },
+  );
 }
 
 /// {@category Endpoint}
@@ -1142,28 +1166,28 @@ class EndpointStats extends _i1.EndpointRef {
   String get name => 'stats';
 
   /// Compute stats from paid orders
-  _i2.Future<_i24.Stats> getStats(_i1.UuidValue buildingId) =>
-      caller.callServerEndpoint<_i24.Stats>(
+  _i2.Future<_i25.Stats> getStats(_i1.UuidValue buildingId) =>
+      caller.callServerEndpoint<_i25.Stats>(
         'stats',
         'getStats',
         {'buildingId': buildingId},
       );
 
   /// Get detailed statistics for a specific cash register
-  _i2.Future<_i25.CashRegisterStats> getCashRegisterStats(
+  _i2.Future<_i26.CashRegisterStats> getCashRegisterStats(
     _i1.UuidValue cashRegisterId,
-  ) => caller.callServerEndpoint<_i25.CashRegisterStats>(
+  ) => caller.callServerEndpoint<_i26.CashRegisterStats>(
     'stats',
     'getCashRegisterStats',
     {'cashRegisterId': cashRegisterId},
   );
 
   /// Get comprehensive detailed statistics for a building
-  _i2.Future<_i26.BuildingDetailedStats> getBuildingDetailedStats(
+  _i2.Future<_i27.BuildingDetailedStats> getBuildingDetailedStats(
     _i1.UuidValue buildingId, {
     DateTime? startDate,
     DateTime? endDate,
-  }) => caller.callServerEndpoint<_i26.BuildingDetailedStats>(
+  }) => caller.callServerEndpoint<_i27.BuildingDetailedStats>(
     'stats',
     'getBuildingDetailedStats',
     {
@@ -1205,7 +1229,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i27.Protocol(),
+         _i28.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
