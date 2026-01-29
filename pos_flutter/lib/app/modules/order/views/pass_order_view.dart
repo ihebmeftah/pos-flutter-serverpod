@@ -142,37 +142,12 @@ class PassOrderView extends GetView<PassOrderController> {
                                     ),
                                   ),
                                 ),
-                                Row(
-                                  spacing: 5,
-                                  mainAxisAlignment: .spaceEvenly,
-                                  children: [
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colors.red,
-                                      ),
-                                      onPressed: controller.clearAllArticles,
-                                      child: const Text("Clear All"),
-                                    ),
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colors.blue,
-                                      ),
-                                      onPressed: controller.clearAllArticles,
-                                      child: const Text("Specification"),
-                                    ),
-                                    IconButton(
-                                      style: IconButton.styleFrom(
-                                        iconSize: 18,
-                                        backgroundColor: Colors.blue,
-                                        foregroundColor: Colors.white,
-                                      ),
-                                      onPressed: () =>
-                                          Get.toNamed(Routes.ARTICLE),
-                                      icon: const Icon(
-                                        Icons.add,
-                                      ),
-                                    ),
-                                  ],
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.red,
+                                  ),
+                                  onPressed: controller.clearAllArticles,
+                                  child: const Text("Clear All"),
                                 ),
                               ],
                             );
