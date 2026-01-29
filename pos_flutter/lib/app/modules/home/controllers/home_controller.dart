@@ -58,9 +58,9 @@ class HomeController extends GetxController with StateMixin {
       }
     } else {
       if (scope.contains("employer")) {
-        if (index != 2) {
+        if (index != 1) {
           Get.delete<OrderController>();
-        } else if (index == 2) {
+        } else if (index == 1) {
           Get.put<OrderController>(OrderController());
         }
         if (index != 0) {

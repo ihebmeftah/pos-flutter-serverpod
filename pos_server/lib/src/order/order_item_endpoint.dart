@@ -310,4 +310,23 @@ class OrderItemEndpoint extends Endpoint {
       buildingId,
     );
   }
+
+  Future<List<OrderItem>> getItemsByStatus(
+    Session session,
+    UuidValue buildingId, {
+    OrderItemStatus status = OrderItemStatus.progress,
+  }) async {
+    session.authorizedTo(['employer']);
+    final employer = await EndpointHelpers.getEmployerByAuthUserId(
+      session,
+      session.authenticated!.authUserId,
+    );
+    // Verify employer belongs to this building
+    EndpointHelpers.verifyEmployerBuilding(employer, buildingId);
+    return await OrderItem.db.find(
+      session,
+      where: (t) => t.itemStatus.equals(status),
+      orderBy: (cls) => cls.createdAt,
+    );
+  }
 }

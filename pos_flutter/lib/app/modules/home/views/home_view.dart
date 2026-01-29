@@ -10,6 +10,7 @@ import '../../../data/local/local_storage.dart';
 import '../../../routes/app_pages.dart';
 import '../../home/controllers/home_controller.dart';
 import '../../inventory/views/inventory_view.dart';
+import '../../order/controllers/pass_order_controller.dart';
 import '../../order/views/order_view.dart';
 import '../../tables/views/tables_view.dart';
 
@@ -18,10 +19,10 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*   floatingActionButton:
+      floatingActionButton:
           (controller.currentUserAccess?.orderCreation ?? true) &&
               controller.scope.contains(
-                "employer",
+                "owner",
               )
           ? FloatingActionButton(
               onPressed: () => Get.toNamed(Routes.PASS_ORDER),
@@ -48,7 +49,7 @@ class HomeView extends GetView<HomeController> {
                 },
               ),
             )
-          : null, */
+          : null,
       drawer: GetBuilder<HomeController>(
         builder: (ctr) {
           return controller.status.isLoading
@@ -183,16 +184,6 @@ class HomeView extends GetView<HomeController> {
                               ),
 
                               BottomNavigationBarItem(
-                                icon: GestureDetector(
-                                  onTap: () {},
-                                  child: CircleAvatar(
-                                    radius: 25,
-                                    child: Icon(Icons.barcode_reader, size: 20),
-                                  ),
-                                ),
-                                label: 'Scan',
-                              ),
-                              BottomNavigationBarItem(
                                 icon: SvgPicture.asset(
                                   "assets/images/svg/order.svg",
                                   colorFilter: ColorFilter.mode(
@@ -311,7 +302,7 @@ class HomeView extends GetView<HomeController> {
           onPageChanged: controller.changeBnbContent,
           controller: controller.pageVCtr,
           children: controller.scope.contains("employer")
-              ? [TablesView(), SizedBox(), OrderView()]
+              ? [TablesView(), OrderView()]
               : [DashboardView(), InventoryView(), TablesView(), OrderView()],
         ),
       ),
