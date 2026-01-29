@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 import '../../../themes/apptheme.dart';
 
 class TopItemWidget extends StatelessWidget {
@@ -13,7 +15,7 @@ class TopItemWidget extends StatelessWidget {
   final num? price;
   final String title, subtitle;
   final int count;
-  final IconData icon; 
+  final IconData icon;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,7 +88,7 @@ class TopItemWidget extends StatelessWidget {
               if (price != null) ...[
                 const SizedBox(height: 4),
                 Text(
-                  '${price!.toStringAsFixed(2)} DT',
+                  '${price!.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.grey.shade600,
                     fontWeight: FontWeight.w500,

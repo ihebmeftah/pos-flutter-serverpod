@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos_client/pos_client.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 
 class TopItemsWidget extends StatelessWidget {
   final List<ArticleCount>? topArticles;
@@ -218,7 +220,7 @@ class TopItemsWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                '\$${totalRevenue.toStringAsFixed(2)}',
+                '${totalRevenue.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

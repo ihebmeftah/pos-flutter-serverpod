@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pos_client/pos_client.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 
 class HourlyPerformanceWidget extends StatelessWidget {
   final List<HourlyRevenue> hourlyRevenue;
@@ -180,7 +182,8 @@ class HourlyPerformanceWidget extends StatelessWidget {
                   child: percentage > 0.25
                       ? Text(
                           NumberFormat.currency(
-                            symbol: '\$',
+                            symbol:
+                                LocalStorage().building!.currencyCode.symbol,
                             decimalDigits: 0,
                           ).format(hour.revenue),
                           style: const TextStyle(
@@ -204,7 +207,7 @@ class HourlyPerformanceWidget extends StatelessWidget {
               if (percentage <= 0.25)
                 Text(
                   NumberFormat.currency(
-                    symbol: '\$',
+                    symbol: LocalStorage().building!.currencyCode.symbol,
                     decimalDigits: 0,
                   ).format(hour.revenue),
                   style: TextStyle(

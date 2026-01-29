@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 
 class StatCardWidget extends StatelessWidget {
   final String title;
@@ -103,7 +105,10 @@ class StatCardWidget extends StatelessWidget {
   }
 
   static String formatCurrency(double amount) {
-    return NumberFormat.currency(symbol: '\$', decimalDigits: 2).format(amount);
+    return NumberFormat.currency(
+      symbol: LocalStorage().building!.currencyCode.symbol,
+      decimalDigits: 2,
+    ).format(amount);
   }
 
   static String formatNumber(int number) {

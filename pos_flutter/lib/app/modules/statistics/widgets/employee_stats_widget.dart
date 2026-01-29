@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pos_client/pos_client.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 
 class EmployeeStatsWidget extends StatelessWidget {
   final List<EmployeeStats> topEmployees;
@@ -163,7 +165,7 @@ class EmployeeStatsWidget extends StatelessWidget {
                 children: [
                   Text(
                     NumberFormat.currency(
-                      symbol: '\$',
+                      symbol: LocalStorage().building!.currencyCode.symbol,
                       decimalDigits: 2,
                     ).format(employee.totalRevenue),
                     style: TextStyle(
@@ -173,7 +175,7 @@ class EmployeeStatsWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Avg: ${NumberFormat.currency(symbol: '\$', decimalDigits: 2).format(employee.averageOrderValue)}',
+                    'Avg: ${NumberFormat.currency(symbol: LocalStorage().building!.currencyCode.symbol, decimalDigits: 2).format(employee.averageOrderValue)}',
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey.shade500,

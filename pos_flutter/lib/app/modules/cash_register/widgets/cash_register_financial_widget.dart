@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 
 class CashRegisterFinancialWidget extends StatelessWidget {
   final double totalRevenue;
@@ -102,7 +104,7 @@ class CashRegisterFinancialWidget extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 NumberFormat.currency(
-                  symbol: '\$',
+                  symbol: LocalStorage().building!.currencyCode.symbol,
                   decimalDigits: 2,
                 ).format(totalRevenue),
                 style: const TextStyle(
@@ -189,7 +191,7 @@ class CashRegisterFinancialWidget extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             NumberFormat.currency(
-              symbol: '\$',
+              symbol: LocalStorage().building!.currencyCode.symbol,
               decimalDigits: 2,
             ).format(amount),
             style: const TextStyle(
@@ -250,7 +252,7 @@ class CashRegisterFinancialWidget extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '${isPositive && !isPerfect ? '+' : ''}${NumberFormat.currency(symbol: '\$', decimalDigits: 2).format(cashDifference)}',
+            '${isPositive && !isPerfect ? '+' : ''}${NumberFormat.currency(symbol: LocalStorage().building!.currencyCode.symbol, decimalDigits: 2).format(cashDifference)}',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,

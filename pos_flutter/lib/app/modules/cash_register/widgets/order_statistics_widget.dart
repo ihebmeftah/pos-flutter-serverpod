@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 
 class OrderStatisticsWidget extends StatelessWidget {
   final int totalOrders;
@@ -48,7 +50,7 @@ class OrderStatisticsWidget extends StatelessWidget {
               child: _buildStatCard(
                 title: 'Avg Order',
                 value: NumberFormat.currency(
-                  symbol: '\$',
+                  symbol: LocalStorage().building!.currencyCode.symbol,
                   decimalDigits: 2,
                 ).format(averageOrderValue),
                 icon: Icons.analytics,

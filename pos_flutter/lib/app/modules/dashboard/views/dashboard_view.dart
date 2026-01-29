@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 import '../../../routes/app_pages.dart';
 import '../../../themes/apptheme.dart';
 import '../../home/widget/empty_stats_widget.dart';
@@ -13,7 +15,7 @@ import '../controllers/dashboard_controller.dart';
 
 class DashboardView extends GetView<DashboardController> {
   const DashboardView({super.key});
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: controller.obx(
@@ -32,7 +34,7 @@ class DashboardView extends GetView<DashboardController> {
                       child: StatsCardWidget(
                         title: 'Total Revenue',
                         value:
-                            '${controller.stats?.funds.totalSales.toStringAsFixed(2)} DT',
+                            '${controller.stats?.funds.totalSales.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
                         icon: FluentIcons.money_24_filled,
                         color: AppTheme().primary,
                       ),
@@ -42,7 +44,7 @@ class DashboardView extends GetView<DashboardController> {
                       child: StatsCardWidget(
                         title: 'Avg Order Value',
                         value:
-                            '${controller.stats?.funds.avgOrderValue.toStringAsFixed(2)} DT',
+                            '${controller.stats?.funds.avgOrderValue.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
                         icon: FluentIcons.receipt_money_24_filled,
                         color: Colors.green,
                       ),

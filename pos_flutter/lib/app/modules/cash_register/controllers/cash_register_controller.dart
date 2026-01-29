@@ -5,6 +5,7 @@ import 'package:pos_flutter/app/components/app_snackbar.dart';
 
 import '../../../../config/serverpod_client.dart';
 import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 
 class CashRegisterController extends GetxController with StateMixin {
   final cashRegisters = <CashRegister>[].obs;
@@ -133,6 +134,9 @@ class _AmountDialogState extends State<_AmountDialog> {
           autofocus: true,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           decoration: InputDecoration(
+            suffix: Text(
+              LocalStorage().building!.currencyCode.symbol,
+            ),
             labelText: widget.label,
             hintText: '0.00',
             prefixIcon: const Icon(Icons.attach_money),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_client/pos_client.dart';
 import 'package:pos_flutter/app/extensions/datetime.extension.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 import '../../../extensions/status.extension.dart';
 
 class OrderItemOverviewSheet extends StatelessWidget {
@@ -58,6 +60,8 @@ class OrderItemOverviewSheet extends StatelessWidget {
             icon: Icons.restaurant,
             title: 'Article',
             value: orderItem.article.name.capitalize ?? 'N/A',
+            subtitle:
+                '${orderItem.article.price.toStringAsFixed(2)} ${LocalStorage().building!.currencyCode.symbol}',
             color: Colors.brown,
           ),
 

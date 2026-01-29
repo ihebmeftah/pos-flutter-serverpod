@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pos_client/pos_client.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 
 class CashRegisterStatsWidget extends StatelessWidget {
   final List<CashRegisterSummary> cashRegisters;
@@ -164,7 +166,7 @@ class CashRegisterStatsWidget extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   NumberFormat.currency(
-                    symbol: '\$',
+                    symbol: LocalStorage().building!.currencyCode.symbol,
                     decimalDigits: 2,
                   ).format(cashRegister.totalRevenue),
                   style: const TextStyle(
@@ -225,7 +227,7 @@ class CashRegisterStatsWidget extends StatelessWidget {
                   children: [
                     Text(
                       NumberFormat.currency(
-                        symbol: '\$',
+                        symbol: LocalStorage().building!.currencyCode.symbol,
                         decimalDigits: 2,
                       ).format(cr.totalRevenue),
                       style: const TextStyle(
@@ -266,7 +268,7 @@ class CashRegisterStatsWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${cr.totalOrders} orders • Avg: ${NumberFormat.currency(symbol: '\$', decimalDigits: 2).format(cr.averageOrderValue)}',
+                  '${cr.totalOrders} orders • Avg: ${NumberFormat.currency(symbol: LocalStorage().building!.currencyCode.symbol, decimalDigits: 2).format(cr.averageOrderValue)}',
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.grey.shade500,

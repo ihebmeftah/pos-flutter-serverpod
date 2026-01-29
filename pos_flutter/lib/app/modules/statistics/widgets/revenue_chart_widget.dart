@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pos_client/pos_client.dart';
+import '../../../data/local/local_storage.dart';
+import '../../../extensions/currency.extension.dart';
 
 class RevenueChartWidget extends StatelessWidget {
   final List<DailyRevenue>? dailyRevenue;
@@ -87,7 +89,7 @@ class RevenueChartWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        '\$${day.revenue.toStringAsFixed(0)}',
+                        '${LocalStorage().building!.currencyCode.symbol}${day.revenue.toStringAsFixed(0)}',
                         style: const TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
@@ -216,7 +218,7 @@ class RevenueChartWidget extends StatelessWidget {
                             padding: const EdgeInsets.only(right: 8),
                             child: percentage > 0.3
                                 ? Text(
-                                    '\$${hour.revenue.toStringAsFixed(0)}',
+                                    '${LocalStorage().building!.currencyCode.symbol}${hour.revenue.toStringAsFixed(0)}',
                                     style: const TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
@@ -234,7 +236,7 @@ class RevenueChartWidget extends StatelessWidget {
                     width: 60,
                     child: Text(
                       percentage < 0.3
-                          ? '\$${hour.revenue.toStringAsFixed(0)}'
+                          ? '${LocalStorage().building!.currencyCode.symbol}${hour.revenue.toStringAsFixed(0)}'
                           : '${hour.orderCount} orders',
                       style: TextStyle(
                         fontSize: 10,
