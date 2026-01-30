@@ -18,30 +18,24 @@
    cd pos-flutter-serverpod
    ```
 
-2. **Switch to the alpha branch**
-
-   ```bash
-   git checkout alpha
-   ```
-
-3. **Install dependencies**
+2. **Install dependencies**
 
    > **Note:** Install Dart dependencies from the `pubspec.yaml` files in `pos_client`, `pos_flutter`, and `pos_server` directories.
 
-4. **Start Docker services**
+3. **Start Docker services**
 
    ```bash
    docker compose up --build --detach
    ```
 
-5. **Generate Serverpod code**
+4. **Generate Serverpod code**
 
    ```bash
    cd pos_server
    serverpod generate
    ```
 
-6. **Apply migrations and Seed the database**
+5. **Apply migrations and Seed the database**
 
    ```bash
    cd pos_server
@@ -52,7 +46,7 @@
    > **Note:** You can use pgAdmin to consult and manage the database.  
    > For information about seeded test accounts, see [TEST-ACCOUNTS.MD](TEST-ACCOUNTS.MD). > For information about seeded test accounts, see [TEST-ACCOUNTS.MD](TEST-ACCOUNTS.MD).
 
-7. **run serverpod**
+6. **run serverpod**
 
    ```bash
    serverpod run start
@@ -60,7 +54,7 @@
 
    The server should now be running and ready to use!The server should now be running and ready to use!
 
-8. **Run the Flutter application**
+7. **Run the Flutter application**
 
    Navigate to the Flutter project:
 

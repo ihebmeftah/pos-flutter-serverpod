@@ -2,6 +2,12 @@
 
 A modern, multi-platform Point of Sale system built with Flutter and Serverpod for café owners and employees.
 
+> **📖 Getting Started:** For detailed instructions on how to run this project, please refer to [GETTING-STARTED.MD](GETTING-STARTED.MD).
+>
+> **✨ Features Overview:** For a comprehensive list of implemented features, see [FEATURES.MD](FEATURES.MD).
+>
+> **⚠️ Important Note:** This project is actively under development. Some features are not yet stable and require further improvements. Please report any issues you encounter.
+
 ## Inspiration
 
 My inspiration started in my real life - I'm a coffee lover and I see the management of cafés in my country is bad. I thought of a new idea: a modern POS system that is multi-platform for both owners and employees to facilitate working together and managing the café, making customers more comfortable with the service.
