@@ -148,20 +148,6 @@ A brand new customer-facing application that will revolutionize the café experi
 
 ### 🔮 Future Innovations
 
-- Multiple payment options (card, mobile wallet, cash)
-- Save payment methods for quick checkout
-- Digital receipts and order tracking
-- Split bills with friends
-
-#### ⭐ Community Features
-
-- Rate and review your experience
-- Share favorite items with friends
-- Get personalized recommendations
-- Follow your favorite cafés for updates
-
-### 🔮 Future Innovations
-
 - Integration with delivery services
 - AI-powered menu recommendations based on preferences
 - Subscription plans for regular customers
